@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public IdentityObjectMap () {
+	public IdentityObjectMap() {
 		super();
 	}
 
@@ -48,7 +49,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public IdentityObjectMap (int initialCapacity) {
+	public IdentityObjectMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -59,7 +60,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public IdentityObjectMap (int initialCapacity, float loadFactor) {
+	public IdentityObjectMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -68,7 +69,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 *
 	 * @param map an ObjectObjectMap to copy, or a subclass such as this one
 	 */
-	public IdentityObjectMap (ObjectObjectMap<? extends K, ? extends V> map) {
+	public IdentityObjectMap(ObjectObjectMap<? extends K, ? extends V> map) {
 		super(map);
 	}
 
@@ -77,7 +78,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 *
 	 * @param map a Map to copy
 	 */
-	public IdentityObjectMap (Map<? extends K, ? extends V> map) {
+	public IdentityObjectMap(Map<? extends K, ? extends V> map) {
 		super(map);
 	}
 
@@ -88,7 +89,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public IdentityObjectMap (K[] keys, V[] values) {
+	public IdentityObjectMap(K[] keys, V[] values) {
 		super(keys, values);
 	}
 
@@ -99,7 +100,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public IdentityObjectMap (Collection<? extends K> keys, Collection<? extends V> values) {
+	public IdentityObjectMap(Collection<? extends K> keys, Collection<? extends V> values) {
 		super(keys, values);
 	}
 
@@ -114,17 +115,17 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * @param item a non-null Object; its identityHashCode is used here
 	 */
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		return (System.identityHashCode(item) & mask);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		@Nullable K[] keyTable = this.keyTable;
 		@Nullable V[] valueTable = this.valueTable;
@@ -133,7 +134,9 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 			if (key != null) {
 				h ^= System.identityHashCode(key);
 				V value = valueTable[i];
-				if (value != null) {h ^= value.hashCode();}
+				if (value != null) {
+					h ^= value.hashCode();
+				}
 			}
 		}
 		return h;
@@ -165,11 +168,11 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <K>    the type of keys
-	 * @param <V>    the type of values
+	 * @param <K> the type of keys
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <K, V> IdentityObjectMap<K, V> with () {
+	public static <K, V> IdentityObjectMap<K, V> with() {
 		return new IdentityObjectMap<>(0);
 	}
 
@@ -184,7 +187,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K, V> IdentityObjectMap<K, V> with (K key0, V value0) {
+	public static <K, V> IdentityObjectMap<K, V> with(K key0, V value0) {
 		IdentityObjectMap<K, V> map = new IdentityObjectMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -207,7 +210,7 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> IdentityObjectMap<K, V> with (K key0, V value0, Object... rest) {
+	public static <K, V> IdentityObjectMap<K, V> with(K key0, V value0, Object... rest) {
 		IdentityObjectMap<K, V> map = new IdentityObjectMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		map.putPairs(rest);

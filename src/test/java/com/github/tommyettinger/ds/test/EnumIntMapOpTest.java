@@ -28,112 +28,118 @@ import org.junit.Test;
 import java.util.Iterator;
 
 public class EnumIntMapOpTest {
-    enum Chem {
-        HYDROGEN, HELIUM, LITHIUM, BERYLLIUM, BORON, CARBON, NITROGEN, OXYGEN, FLUORINE, NEON,
-        SODIUM, MAGNESIUM, ALUMINIUM, SILICON, PHOSPHORUS, SULFUR, CHLORINE, ARGON, POTASSIUM,
-        CALCIUM, SCANDIUM, TITANIUM, VANADIUM, CHROMIUM, MANGANESE, IRON, COBALT, NICKEL,
-        COPPER, ZINC, GALLIUM, GERMANIUM, ARSENIC, SELENIUM, BROMINE, KRYPTON, RUBIDIUM,
-        STRONTIUM, YTTRIUM, ZIRCONIUM, NIOBIUM, MOLYBDENUM, TECHNETIUM, RUTHENIUM, RHODIUM,
-        PALLADIUM, SILVER, CADMIUM, INDIUM, TIN, ANTIMONY, TELLURIUM, IODINE, XENON, CAESIUM,
-        BARIUM, LANTHANUM, CERIUM, PRASEODYMIUM, NEODYMIUM, PROMETHIUM, SAMARIUM, EUROPIUM,
-        GADOLINIUM, TERBIUM, DYSPROSIUM, HOLMIUM, ERBIUM, THULIUM, YTTERBIUM, LUTETIUM, HAFNIUM,
-        TANTALUM, TUNGSTEN, RHENIUM, OSMIUM, IRIDIUM, PLATINUM, GOLD, MERCURY, THALLIUM, LEAD,
-        BISMUTH, POLONIUM, ASTATINE, RADON, FRANCIUM, RADIUM, ACTINIUM, THORIUM, PROTACTINIUM,
-        URANIUM, NEPTUNIUM, PLUTONIUM, AMERICIUM, CURIUM, BERKELIUM, CALIFORNIUM, EINSTEINIUM,
-        FERMIUM, MENDELEVIUM, NOBELIUM, LAWRENCIUM, RUTHERFORDIUM, DUBNIUM, SEABORGIUM, BOHRIUM,
-        HASSIUM, MEITNERIUM, DARMSTADTIUM, ROENTGENIUM, COPERNICIUM, NIHONIUM, FLEROVIUM, MOSCOVIUM,
-        LIVERMORIUM, TENNESSINE, OGANESSON;
+	enum Chem {
+		HYDROGEN, HELIUM, LITHIUM, BERYLLIUM, BORON, CARBON, NITROGEN, OXYGEN, FLUORINE, NEON,
+		SODIUM, MAGNESIUM, ALUMINIUM, SILICON, PHOSPHORUS, SULFUR, CHLORINE, ARGON, POTASSIUM,
+		CALCIUM, SCANDIUM, TITANIUM, VANADIUM, CHROMIUM, MANGANESE, IRON, COBALT, NICKEL,
+		COPPER, ZINC, GALLIUM, GERMANIUM, ARSENIC, SELENIUM, BROMINE, KRYPTON, RUBIDIUM,
+		STRONTIUM, YTTRIUM, ZIRCONIUM, NIOBIUM, MOLYBDENUM, TECHNETIUM, RUTHENIUM, RHODIUM,
+		PALLADIUM, SILVER, CADMIUM, INDIUM, TIN, ANTIMONY, TELLURIUM, IODINE, XENON, CAESIUM,
+		BARIUM, LANTHANUM, CERIUM, PRASEODYMIUM, NEODYMIUM, PROMETHIUM, SAMARIUM, EUROPIUM,
+		GADOLINIUM, TERBIUM, DYSPROSIUM, HOLMIUM, ERBIUM, THULIUM, YTTERBIUM, LUTETIUM, HAFNIUM,
+		TANTALUM, TUNGSTEN, RHENIUM, OSMIUM, IRIDIUM, PLATINUM, GOLD, MERCURY, THALLIUM, LEAD,
+		BISMUTH, POLONIUM, ASTATINE, RADON, FRANCIUM, RADIUM, ACTINIUM, THORIUM, PROTACTINIUM,
+		URANIUM, NEPTUNIUM, PLUTONIUM, AMERICIUM, CURIUM, BERKELIUM, CALIFORNIUM, EINSTEINIUM,
+		FERMIUM, MENDELEVIUM, NOBELIUM, LAWRENCIUM, RUTHERFORDIUM, DUBNIUM, SEABORGIUM, BOHRIUM,
+		HASSIUM, MEITNERIUM, DARMSTADTIUM, ROENTGENIUM, COPERNICIUM, NIHONIUM, FLEROVIUM, MOSCOVIUM,
+		LIVERMORIUM, TENNESSINE, OGANESSON;
 
-        public static final Chem[] ALL = values();
-    }
+		public static final Chem[] ALL = values();
+	}
 
-    private static final int LIMIT = Chem.ALL.length;
+	private static final int LIMIT = Chem.ALL.length;
 
-    @Test
-    public void addThenRemoveTest() {
-        AceRandom random = new AceRandom(123);
-        EnumIntMap map = new EnumIntMap(Chem.ALL);
-        IntList neo = new IntList(LIMIT);
+	@Test
+	public void addThenRemoveTest() {
+		AceRandom random = new AceRandom(123);
+		EnumIntMap map = new EnumIntMap(Chem.ALL);
+		IntList neo = new IntList(LIMIT);
 
-        for (int i = 0; i < LIMIT; i++) {
-            Chem randomKey = random.randomElement(Chem.ALL);
-            int randomValue = random.nextInt();
-            map.put(randomKey, randomValue);
-            neo.clear(); neo.addAll(map.values()); neo.sort();
-            Assert.assertEquals(neo.size(), map.size());
+		for (int i = 0; i < LIMIT; i++) {
+			Chem randomKey = random.randomElement(Chem.ALL);
+			int randomValue = random.nextInt();
+			map.put(randomKey, randomValue);
+			neo.clear();
+			neo.addAll(map.values());
+			neo.sort();
+			Assert.assertEquals(neo.size(), map.size());
 
-        }
-        System.out.printf("After adding, the map has %d items\n", map.size());
-        for (int i = 0; i < LIMIT; i++) {
-            Chem randomKey = random.randomElement(Chem.ALL);
-            map.remove(randomKey);
-            neo.clear(); neo.addAll(map.values()); neo.sort();
-            Assert.assertEquals(neo.size(), map.size());
-        }
-        System.out.printf("After removing, the map has %d items\n", map.size());
-    }
+		}
+		System.out.printf("After adding, the map has %d items\n", map.size());
+		for (int i = 0; i < LIMIT; i++) {
+			Chem randomKey = random.randomElement(Chem.ALL);
+			map.remove(randomKey);
+			neo.clear();
+			neo.addAll(map.values());
+			neo.sort();
+			Assert.assertEquals(neo.size(), map.size());
+		}
+		System.out.printf("After removing, the map has %d items\n", map.size());
+	}
 
-    @Test
-    public void mixedAddRemoveTest() {
-        AceRandom random = new AceRandom(123);
-        EnumIntMap map = new EnumIntMap(Chem.ALL);
-        IntList neo = new IntList(LIMIT);
+	@Test
+	public void mixedAddRemoveTest() {
+		AceRandom random = new AceRandom(123);
+		EnumIntMap map = new EnumIntMap(Chem.ALL);
+		IntList neo = new IntList(LIMIT);
 
-        for (int i = 0; i < LIMIT; i++) {
-            Chem randomKey = random.randomElement(Chem.ALL);
-            int randomValue = random.nextInt();
-            if (random.nextBoolean(0.7f)) {
-                map.put(randomKey, randomValue);
-            } else {
-                map.remove(randomKey);
-            }
-            neo.clear(); neo.addAll(map.values()); neo.sort();
-            Assert.assertEquals(neo.size(), map.size());
-        }
-        System.out.printf("The map has %d items\n", map.size());
-    }
+		for (int i = 0; i < LIMIT; i++) {
+			Chem randomKey = random.randomElement(Chem.ALL);
+			int randomValue = random.nextInt();
+			if (random.nextBoolean(0.7f)) {
+				map.put(randomKey, randomValue);
+			} else {
+				map.remove(randomKey);
+			}
+			neo.clear();
+			neo.addAll(map.values());
+			neo.sort();
+			Assert.assertEquals(neo.size(), map.size());
+		}
+		System.out.printf("The map has %d items\n", map.size());
+	}
 
-    @Test
-    public void orderingTest() {
-        AceRandom random = new AceRandom(123);
-        EnumIntOrderedMap map = new EnumIntOrderedMap(Chem.ALL);
-        for (int i = 0; i < 100; i++) {
-            map.put(Chem.ALL[i], i);
-        }
-        int startLength = map.size();
-        map.shuffle(random);
-        Assert.assertEquals(startLength, map.size());
-        Assert.assertEquals(startLength, map.order().size());
-        Assert.assertEquals(startLength, map.keySet().size());
+	@Test
+	public void orderingTest() {
+		AceRandom random = new AceRandom(123);
+		EnumIntOrderedMap map = new EnumIntOrderedMap(Chem.ALL);
+		for (int i = 0; i < 100; i++) {
+			map.put(Chem.ALL[i], i);
+		}
+		int startLength = map.size();
+		map.shuffle(random);
+		Assert.assertEquals(startLength, map.size());
+		Assert.assertEquals(startLength, map.order().size());
+		Assert.assertEquals(startLength, map.keySet().size());
 
-        EnumIntOrderedMap byKey = new EnumIntOrderedMap(map), byValue = new EnumIntOrderedMap(map);
-        byKey.sort();
-        byValue.sortByValue(IntComparators.NATURAL_COMPARATOR);
-        for (int i = 0; i < startLength; i++) {
-            Assert.assertEquals(byKey.keyAt(i), byValue.keyAt(i));
-        }
-        Assert.assertEquals(byKey, byValue);
-        Assert.assertEquals(byKey.entrySet(), byValue.entrySet());
-        Assert.assertEquals(byKey.keySet(), byValue.keySet());
-        Assert.assertEquals(byKey.values(), byValue.values());
-        Iterator<Enum<?>> byKeyIt = byKey.keySet().iterator();
-        IntIterator byValIt = byValue.values().iterator();
-        int count = 0;
-        while (byKeyIt.hasNext() && byValIt.hasNext()){
-            Assert.assertEquals(map.get(byKeyIt.next()), byValIt.nextInt());
-            count++;
-        }
-        Assert.assertEquals(byKeyIt.hasNext(), byValIt.hasNext());
-        Assert.assertEquals(startLength, count);
+		EnumIntOrderedMap byKey = new EnumIntOrderedMap(map), byValue = new EnumIntOrderedMap(map);
+		byKey.sort();
+		byValue.sortByValue(IntComparators.NATURAL_COMPARATOR);
+		for (int i = 0; i < startLength; i++) {
+			Assert.assertEquals(byKey.keyAt(i), byValue.keyAt(i));
+		}
+		Assert.assertEquals(byKey, byValue);
+		Assert.assertEquals(byKey.entrySet(), byValue.entrySet());
+		Assert.assertEquals(byKey.keySet(), byValue.keySet());
+		Assert.assertEquals(byKey.values(), byValue.values());
+		Iterator<Enum<?>> byKeyIt = byKey.keySet().iterator();
+		IntIterator byValIt = byValue.values().iterator();
+		int count = 0;
+		while (byKeyIt.hasNext() && byValIt.hasNext()) {
+			Assert.assertEquals(map.get(byKeyIt.next()), byValIt.nextInt());
+			count++;
+		}
+		Assert.assertEquals(byKeyIt.hasNext(), byValIt.hasNext());
+		Assert.assertEquals(startLength, count);
 
-        byKey.reverse();
-        byValue.sortByValue(IntComparators.OPPOSITE_COMPARATOR);
-        for (int i = 0; i < startLength; i++) {
-            Assert.assertEquals(byKey.keyAt(i), byValue.keyAt(i));
-        }
-        Assert.assertEquals(byKey, byValue);
-        Assert.assertEquals(byKey.entrySet(), byValue.entrySet());
-        Assert.assertEquals(byKey.keySet(), byValue.keySet());
-        Assert.assertEquals(byKey.values(), byValue.values());
-    }
+		byKey.reverse();
+		byValue.sortByValue(IntComparators.OPPOSITE_COMPARATOR);
+		for (int i = 0; i < startLength; i++) {
+			Assert.assertEquals(byKey.keyAt(i), byValue.keyAt(i));
+		}
+		Assert.assertEquals(byKey, byValue);
+		Assert.assertEquals(byKey.entrySet(), byValue.entrySet());
+		Assert.assertEquals(byKey.keySet(), byValue.keySet());
+		Assert.assertEquals(byKey.values(), byValue.values());
+	}
 }

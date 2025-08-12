@@ -63,9 +63,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongLongOrderedMap (OrderType ordering) {
+	public LongLongOrderedMap(OrderType ordering) {
 		this(Utilities.getDefaultTableCapacity(), ordering);
 	}
 
@@ -73,9 +74,9 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param ordering determines what implementation {@link #order()} will use
+	 * @param ordering        determines what implementation {@link #order()} will use
 	 */
-	public LongLongOrderedMap (int initialCapacity, OrderType ordering) {
+	public LongLongOrderedMap(int initialCapacity, OrderType ordering) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
@@ -85,16 +86,19 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
-	 * @param ordering determines what implementation {@link #order()} will use
+	 * @param ordering        determines what implementation {@link #order()} will use
 	 */
-	public LongLongOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
+	public LongLongOrderedMap(int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		switch (ordering){
-			case DEQUE: keys = new LongDeque(initialCapacity);
+		switch (ordering) {
+			case DEQUE:
+				keys = new LongDeque(initialCapacity);
 				break;
-			case BAG: keys = new LongBag(initialCapacity);
+			case BAG:
+				keys = new LongBag(initialCapacity);
 				break;
-			default: keys = new LongList(initialCapacity);
+			default:
+				keys = new LongList(initialCapacity);
 		}
 	}
 
@@ -103,20 +107,20 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @param map the map to copy
 	 */
-	public LongLongOrderedMap (LongLongOrderedMap map) {
+	public LongLongOrderedMap(LongLongOrderedMap map) {
 		super(map);
-		if(map.keys instanceof LongDeque) keys = new LongDeque((LongDeque) map.keys);
-		else if(map.keys instanceof LongBag) keys = new LongBag(map.keys);
+		if (map.keys instanceof LongDeque) keys = new LongDeque((LongDeque) map.keys);
+		else if (map.keys instanceof LongBag) keys = new LongBag(map.keys);
 		else keys = new LongList(map.keys);
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map the map to copy
+	 * @param map      the map to copy
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongLongOrderedMap (LongLongMap map, OrderType ordering) {
+	public LongLongOrderedMap(LongLongMap map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
 		hashMultiplier = map.hashMultiplier;
 		LongIterator it = map.keySet().iterator();
@@ -130,11 +134,11 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
+	 * @param keys     an array of keys
+	 * @param values   an array of values
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongLongOrderedMap (long[] keys, long[] values, OrderType ordering) {
+	public LongLongOrderedMap(long[] keys, long[] values, OrderType ordering) {
 		this(Math.min(keys.length, values.length), ordering);
 		putAll(keys, values);
 	}
@@ -143,11 +147,11 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
-	 * @param keys   a PrimitiveCollection of keys
-	 * @param values a PrimitiveCollection of values
+	 * @param keys     a PrimitiveCollection of keys
+	 * @param values   a PrimitiveCollection of values
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongLongOrderedMap (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfLong values, OrderType ordering) {
+	public LongLongOrderedMap(PrimitiveCollection.OfLong keys, PrimitiveCollection.OfLong values, OrderType ordering) {
 		this(Math.min(keys.size(), values.size()), ordering);
 		putAll(keys, values);
 	}
@@ -156,12 +160,12 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * Creates a new set by copying {@code count} items from the given LongLongOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another LongLongOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
+	 * @param other    another LongLongOrderedMap of the same type
+	 * @param offset   the first index in other's ordering to draw an item from
+	 * @param count    how many items to copy from other
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongLongOrderedMap (LongLongOrderedMap other, int offset, int count, OrderType ordering) {
+	public LongLongOrderedMap(LongLongOrderedMap other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
@@ -170,7 +174,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public LongLongOrderedMap () {
+	public LongLongOrderedMap() {
 		this(OrderType.LIST);
 	}
 
@@ -179,7 +183,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public LongLongOrderedMap (int initialCapacity) {
+	public LongLongOrderedMap(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
 
@@ -190,7 +194,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public LongLongOrderedMap (int initialCapacity, float loadFactor) {
+	public LongLongOrderedMap(int initialCapacity, float loadFactor) {
 		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
@@ -199,7 +203,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @param map the map to copy
 	 */
-	public LongLongOrderedMap (LongLongMap map) {
+	public LongLongOrderedMap(LongLongMap map) {
 		this(map, OrderType.LIST);
 	}
 
@@ -210,7 +214,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public LongLongOrderedMap (long[] keys, long[] values) {
+	public LongLongOrderedMap(long[] keys, long[] values) {
 		this(keys, values, OrderType.LIST);
 	}
 
@@ -221,7 +225,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public LongLongOrderedMap (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfLong values) {
+	public LongLongOrderedMap(PrimitiveCollection.OfLong keys, PrimitiveCollection.OfLong values) {
 		this(keys, values, OrderType.LIST);
 	}
 
@@ -233,14 +237,14 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public LongLongOrderedMap (LongLongOrderedMap other, int offset, int count) {
+	public LongLongOrderedMap(LongLongOrderedMap other, int offset, int count) {
 		this(other, offset, count, other.keys instanceof LongBag ? OrderType.BAG
-				: other.keys instanceof LongDeque ? OrderType.DEQUE
-				: OrderType.LIST);
+			: other.keys instanceof LongDeque ? OrderType.DEQUE
+			: OrderType.LIST);
 	}
 
 	@Override
-	public long put (long key, long value) {
+	public long put(long key, long value) {
 		if (key == 0) {
 			long oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -263,7 +267,9 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -277,13 +283,15 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
-	public long put (long key, long value, int index) {
+	public long put(long key, long value, int index) {
 		if (key == 0) {
 			long oldValue = defaultValue;
 			if (hasZeroValue) {
 				oldValue = zeroValue;
 				int oldIndex = keys.indexOf(key);
-				if (oldIndex != index) {keys.insert(index, keys.removeAt(oldIndex));}
+				if (oldIndex != index) {
+					keys.insert(index, keys.removeAt(oldIndex));
+				}
 			} else {
 				keys.insert(index, 0);
 				size++;
@@ -297,22 +305,28 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			long oldValue = valueTable[i];
 			valueTable[i] = value;
 			int oldIndex = keys.indexOf(key);
-			if (oldIndex != index) {keys.insert(index, keys.removeAt(oldIndex));}
+			if (oldIndex != index) {
+				keys.insert(index, keys.removeAt(oldIndex));
+			}
 			return oldValue;
 		}
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.insert(index, key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
 	@Override
-	public long putOrDefault (long key, long value, long defaultValue) {
+	public long putOrDefault(long key, long value, long defaultValue) {
 		if (key == 0) {
 			long oldValue = defaultValue;
-			if (hasZeroValue) {oldValue = zeroValue;} else {
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+			} else {
 				size++;
 				keys.add(key);
 			}
@@ -330,7 +344,9 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -340,7 +356,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (LongLongOrderedMap map) {
+	public void putAll(LongLongOrderedMap map) {
 		ensureCapacity(map.size);
 		LongList ks = map.keys;
 		int kl = ks.size();
@@ -359,7 +375,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 */
-	public void putAll (LongLongOrderedMap other, int offset, int count) {
+	public void putAll(LongLongOrderedMap other, int offset, int count) {
 		putAll(size, other, offset, count);
 	}
 
@@ -372,7 +388,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll (int insertionIndex, LongLongOrderedMap other, int offset, int count) {
+	public void putAll(int insertionIndex, LongLongOrderedMap other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
 		for (int i = offset; i < end; i++) {
@@ -381,9 +397,11 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	}
 
 	@Override
-	public long remove (long key) {
+	public long remove(long key) {
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
-		if (!super.containsKey(key)) {return defaultValue;}
+		if (!super.containsKey(key)) {
+			return defaultValue;
+		}
 		keys.remove(key);
 		return super.remove(key);
 	}
@@ -394,7 +412,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
 	 * @return the value of the removed entry
 	 */
-	public long removeAt (int index) {
+	public long removeAt(int index) {
 		return super.remove(keys.removeAt(index));
 	}
 
@@ -408,7 +426,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(keys.size(), end);
 		for (int i = start; i < end; i++) {
@@ -424,8 +442,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	/**
@@ -435,14 +455,16 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 		keys.ensureCapacity(additionalCapacity);
 	}
 
 	@Override
-	public long getAndIncrement (long key, long defaultValue, long increment) {
+	public long getAndIncrement(long key, long defaultValue, long increment) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				long old = zeroValue;
@@ -465,7 +487,9 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 		keyTable[i] = key;
 		valueTable[i] = defaultValue + increment;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -479,10 +503,14 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (long before, long after) {
-		if (containsKey(after)) {return false;}
+	public boolean alter(long before, long after) {
+		if (containsKey(after)) {
+			return false;
+		}
 		int index = keys.indexOf(before);
-		if (index == -1) {return false;}
+		if (index == -1) {
+			return false;
+		}
 		super.put(after, super.remove(before));
 		keys.set(index, after);
 		return true;
@@ -497,8 +525,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, long after) {
-		if (index < 0 || index >= size || containsKey(after)) {return false;}
+	public boolean alterAt(int index, long after) {
+		if (index < 0 || index >= size || containsKey(after)) {
+			return false;
+		}
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
 		return true;
@@ -513,8 +543,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	public long setAt (int index, long v) {
-		if (index < 0 || index >= size) {return defaultValue;}
+	public long setAt(int index, long v) {
+		if (index < 0 || index >= size) {
+			return defaultValue;
+		}
 		final int pos = locateKey(keys.get(index));
 		final long oldValue = valueTable[pos];
 		valueTable[pos] = v;
@@ -528,7 +560,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	public long getAt (int index) {
+	public long getAt(int index) {
 		return get(keys.get(index));
 	}
 
@@ -539,18 +571,18 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public long keyAt (int index) {
+	public long keyAt(int index) {
 		return keys.get(index);
 	}
 
 	@Override
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		keys.clear();
 		super.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		keys.clear();
 		super.clear();
 	}
@@ -563,14 +595,14 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @return the LongList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public LongList order () {
+	public LongList order() {
 		return keys;
 	}
 
 	/**
 	 * Sorts this LongLongOrderedMap in-place by the keys' natural ordering.
 	 */
-	public void sort () {
+	public void sort() {
 		keys.sort();
 	}
 
@@ -580,7 +612,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @param comp a LongComparator, such as one from {@link LongComparators}, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable LongComparator comp) {
+	public void sort(@Nullable LongComparator comp) {
 		keys.sort(comp);
 	}
 
@@ -591,7 +623,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @param comp a non-null LongComparator, such as one from {@link LongComparators}
 	 */
-	public void sortByValue (LongComparator comp) {
+	public void sortByValue(LongComparator comp) {
 		keys.sort((a, b) -> comp.compare(get(a), get(b)));
 	}
 
@@ -615,7 +647,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys keySet () {
+	public Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys(this);
 			keys2 = new OrderedMapKeys(this);
@@ -640,7 +672,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @return a {@link PrimitiveCollection.OfLong} backed by this map
 	 */
 	@Override
-	public Values values () {
+	public Values values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues(this);
 			values2 = new OrderedMapValues(this);
@@ -667,7 +699,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @return a {@link PrimitiveCollection.OfLong} of {@link Entry} key-value pairs
 	 */
 	@Override
-	public Entries entrySet () {
+	public Entries entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries(this);
 			entries2 = new OrderedMapEntries(this);
@@ -694,10 +726,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator iterator () {
+	public @NonNull EntryIterator iterator() {
 		return entrySet().iterator();
 	}
-	
+
 	/**
 	 * Appends to a StringBuilder from the contents of this LongLongOrderedMap, but uses the given {@link LongAppender} and
 	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
@@ -715,10 +747,14 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		LongAppender keyAppender, LongAppender valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+								  LongAppender keyAppender, LongAppender valueAppender) {
+		if (size == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
 		LongList keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			long key = keys.get(i);
@@ -727,29 +763,35 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 			keyAppender.apply(sb, key).append(keyValueSeparator);
 			valueAppender.apply(sb, get(key));
 		}
-		if (braces) {sb.append('}');}
+		if (braces) {
+			sb.append('}');
+		}
 		return sb;
 	}
 
 	public static class OrderedMapEntries extends Entries {
 		protected LongList keys;
 
-		public OrderedMapEntries (LongLongOrderedMap map) {
+		public OrderedMapEntries(LongLongOrderedMap map) {
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public Entry next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Entry next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
 					entry.value = map.get(entry.key);
@@ -759,8 +801,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(entry.key);
 					nextIndex--;
 					currentIndex = -1;
@@ -773,22 +817,26 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	public static class OrderedMapKeys extends Keys {
 		private final LongList keys;
 
-		public OrderedMapKeys (LongLongOrderedMap map) {
+		public OrderedMapKeys(LongLongOrderedMap map) {
 			super(map);
 			keys = map.keys;
 			iter = new KeyIterator(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public long nextLong () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public long nextLong() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					long key = keys.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -797,8 +845,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -811,22 +861,26 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	public static class OrderedMapValues extends Values {
 		private final LongList keys;
 
-		public OrderedMapValues (LongLongOrderedMap map) {
+		public OrderedMapValues(LongLongOrderedMap map) {
 			super(map);
 			keys = map.keys;
 			iter = new ValueIterator(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public long nextLong () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public long nextLong() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					long value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -835,8 +889,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -853,7 +909,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static LongLongOrderedMap with () {
+	public static LongLongOrderedMap with() {
 		return new LongLongOrderedMap(0);
 	}
 
@@ -868,7 +924,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param value0 the first and only value; will be converted to primitive long
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static LongLongOrderedMap with (Number key0, Number value0) {
+	public static LongLongOrderedMap with(Number key0, Number value0) {
 		LongLongOrderedMap map = new LongLongOrderedMap(1);
 		map.put(key0.longValue(), value0.longValue());
 		return map;
@@ -887,7 +943,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param value1 a Number for a value; will be converted to primitive long
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongLongOrderedMap with (Number key0, Number value0, Number key1, Number value1) {
+	public static LongLongOrderedMap with(Number key0, Number value0, Number key1, Number value1) {
 		LongLongOrderedMap map = new LongLongOrderedMap(2);
 		map.put(key0.longValue(), value0.longValue());
 		map.put(key1.longValue(), value1.longValue());
@@ -909,7 +965,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param value2 a Number for a value; will be converted to primitive long
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongLongOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+	public static LongLongOrderedMap with(Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
 		LongLongOrderedMap map = new LongLongOrderedMap(3);
 		map.put(key0.longValue(), value0.longValue());
 		map.put(key1.longValue(), value1.longValue());
@@ -934,7 +990,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param value3 a Number for a value; will be converted to primitive long
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongLongOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+	public static LongLongOrderedMap with(Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
 		LongLongOrderedMap map = new LongLongOrderedMap(4);
 		map.put(key0.longValue(), value0.longValue());
 		map.put(key1.longValue(), value1.longValue());
@@ -958,7 +1014,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param rest   an array or varargs of Number elements
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongLongOrderedMap with (Number key0, Number value0, Number... rest) {
+	public static LongLongOrderedMap with(Number key0, Number value0, Number... rest) {
 		LongLongOrderedMap map = new LongLongOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0.longValue(), value0.longValue());
 		map.putPairs(rest);
@@ -972,7 +1028,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static LongLongOrderedMap withPrimitive () {
+	public static LongLongOrderedMap withPrimitive() {
 		return new LongLongOrderedMap(0);
 	}
 
@@ -986,7 +1042,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static LongLongOrderedMap withPrimitive (long key0, long value0) {
+	public static LongLongOrderedMap withPrimitive(long key0, long value0) {
 		LongLongOrderedMap map = new LongLongOrderedMap(1);
 		map.put(key0, value0);
 		return map;
@@ -1004,7 +1060,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param value1 a long value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongLongOrderedMap withPrimitive (long key0, long value0, long key1, long value1) {
+	public static LongLongOrderedMap withPrimitive(long key0, long value0, long key1, long value1) {
 		LongLongOrderedMap map = new LongLongOrderedMap(2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1025,7 +1081,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param value2 a long value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongLongOrderedMap withPrimitive (long key0, long value0, long key1, long value1, long key2, long value2) {
+	public static LongLongOrderedMap withPrimitive(long key0, long value0, long key1, long value1, long key2, long value2) {
 		LongLongOrderedMap map = new LongLongOrderedMap(3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1049,7 +1105,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param value3 a long value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongLongOrderedMap withPrimitive (long key0, long value0, long key1, long value1, long key2, long value2, long key3, long value3) {
+	public static LongLongOrderedMap withPrimitive(long key0, long value0, long key1, long value1, long key2, long value2, long key3, long value3) {
 		LongLongOrderedMap map = new LongLongOrderedMap(4);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1075,7 +1131,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param rest   an array or varargs of primitive long elements
 	 * @return a new map containing the given keys and values
 	 */
-	public static LongLongOrderedMap withPrimitive (long key0, long value0, long... rest) {
+	public static LongLongOrderedMap withPrimitive(long key0, long value0, long... rest) {
 		LongLongOrderedMap map = new LongLongOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		map.putPairsPrimitive(rest);

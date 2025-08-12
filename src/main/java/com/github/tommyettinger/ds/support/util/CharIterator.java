@@ -39,7 +39,7 @@ public interface CharIterator extends Iterator<Character> {
 	 * @return the next {@code char} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	char nextChar ();
+	char nextChar();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -55,8 +55,10 @@ public interface CharIterator extends Iterator<Character> {
 	 *         action.accept(nextChar());
 	 * }</pre>
 	 */
-	default void forEachRemaining (CharConsumer action) {
-		while (hasNext()) {action.accept(nextChar());}
+	default void forEachRemaining(CharConsumer action) {
+		while (hasNext()) {
+			action.accept(nextChar());
+		}
 	}
 
 	/**
@@ -66,7 +68,7 @@ public interface CharIterator extends Iterator<Character> {
 	 * {@link #nextChar()}, and returns that boxed result.
 	 */
 	@Override
-	default Character next () {
+	default Character next() {
 		return nextChar();
 	}
 }

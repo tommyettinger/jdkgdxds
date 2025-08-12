@@ -42,19 +42,19 @@ package com.github.tommyettinger.ds;
  * If a type of ordering isn't available for a given item type, this should default to {@link #LIST}.
  */
 public enum OrderType {
-    /**
-     * The {@code order()} method will return a list, such as {@link ObjectList} or {@link IntList}.
-     */
-    LIST,
-    /**
-     * The {@code order()} method will return a bag with non-persistent iteration order, such as {@link ObjectBag}
-     * or {@link IntBag}.
-     */
-    BAG,
-    /**
-     * The {@code order()} method will return a deque (which is also always a list here), such as {@link LongDeque}
-     * or {@link IntDeque}. This will not be valid for Object-based types, because {@link ObjectDeque} is not a subclass
-     * of {@link ObjectList}.
-     */
-    DEQUE;
+	/**
+	 * The {@code order()} method will return a list, such as {@link ObjectList} or {@link IntList}.
+	 */
+	LIST,
+	/**
+	 * The {@code order()} method will return a bag with non-persistent iteration order, such as {@link ObjectBag}
+	 * or {@link IntBag}.
+	 */
+	BAG,
+	/**
+	 * The {@code order()} method will return a deque (which is also always a list here), such as {@link LongDeque}
+	 * or {@link IntDeque}. This will not be valid for Object-based types, because {@link ObjectDeque} is not a subclass
+	 * of {@link ObjectList}.
+	 */
+	DEQUE;
 }

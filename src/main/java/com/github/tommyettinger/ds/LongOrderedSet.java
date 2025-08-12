@@ -52,38 +52,42 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	protected final LongList items;
 
-	public LongOrderedSet () {
+	public LongOrderedSet() {
 		this(Utilities.getDefaultTableCapacity());
 	}
 
 	/**
 	 * Creates an LongOrderedSet with the option to use an LongDeque or LongBag for keeping order.
+	 *
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (OrderType ordering) {
+	public LongOrderedSet(OrderType ordering) {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor(), ordering);
 	}
 
-	public LongOrderedSet (int initialCapacity, float loadFactor) {
+	public LongOrderedSet(int initialCapacity, float loadFactor) {
 		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
-	public LongOrderedSet (int initialCapacity, float loadFactor, OrderType ordering) {
+	public LongOrderedSet(int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		switch (ordering){
-			case DEQUE: items = new LongDeque(initialCapacity);
-			break;
-			case BAG: items = new LongBag(initialCapacity);
-			break;
-			default: items = new LongList(initialCapacity);
+		switch (ordering) {
+			case DEQUE:
+				items = new LongDeque(initialCapacity);
+				break;
+			case BAG:
+				items = new LongBag(initialCapacity);
+				break;
+			default:
+				items = new LongList(initialCapacity);
 		}
 	}
 
-	public LongOrderedSet (int initialCapacity, OrderType ordering) {
+	public LongOrderedSet(int initialCapacity, OrderType ordering) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
-	public LongOrderedSet (int initialCapacity) {
+	public LongOrderedSet(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
 
@@ -92,43 +96,48 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public LongOrderedSet (LongIterator coll) {
+	public LongOrderedSet(LongIterator coll) {
 		this();
 		addAll(coll);
 	}
 
-	public LongOrderedSet (LongOrderedSet set, OrderType ordering) {
+	public LongOrderedSet(LongOrderedSet set, OrderType ordering) {
 		super(set);
-		switch (ordering){
-			case DEQUE: items = new LongDeque(set.items.iterator());
-			break;
-			case BAG: items = new LongBag(set.items);
-			break;
-			default: items = new LongList(set.items);
+		switch (ordering) {
+			case DEQUE:
+				items = new LongDeque(set.items.iterator());
+				break;
+			case BAG:
+				items = new LongBag(set.items);
+				break;
+			default:
+				items = new LongList(set.items);
 		}
 	}
 
-	public LongOrderedSet (LongOrderedSet set) {
+	public LongOrderedSet(LongOrderedSet set) {
 		super(set);
-		if(set.items instanceof LongDeque) items = new LongDeque((LongDeque) set.items);
-		else if(set.items instanceof LongBag) items = new LongBag(set.items);
+		if (set.items instanceof LongDeque) items = new LongDeque((LongDeque) set.items);
+		else if (set.items instanceof LongBag) items = new LongBag(set.items);
 		else items = new LongList(set.items);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
+	 *
 	 * @param set a LongSet without an order
 	 */
-	public LongOrderedSet (LongSet set) {
+	public LongOrderedSet(LongSet set) {
 		this(set, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
-	 * @param set a LongSet without an order
+	 *
+	 * @param set      a LongSet without an order
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (LongSet set, OrderType ordering) {
+	public LongOrderedSet(LongSet set, OrderType ordering) {
 		this(set.size(), set.loadFactor, ordering);
 		hashMultiplier = set.hashMultiplier;
 		addAll(set);
@@ -137,16 +146,17 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public LongOrderedSet (OfLong coll) {
+	public LongOrderedSet(OfLong coll) {
 		this(coll, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
-	 * @param coll any {@link PrimitiveCollection.OfLong}
+	 *
+	 * @param coll     any {@link PrimitiveCollection.OfLong}
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (OfLong coll, OrderType ordering) {
+	public LongOrderedSet(OfLong coll, OrderType ordering) {
 		this(coll.size(), Utilities.getDefaultLoadFactor(), ordering);
 		addAll(coll);
 	}
@@ -159,7 +169,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public LongOrderedSet (Ordered.OfLong other, int offset, int count) {
+	public LongOrderedSet(Ordered.OfLong other, int offset, int count) {
 		this(other, offset, count, OrderType.LIST);
 	}
 
@@ -167,12 +177,12 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 *
-	 * @param other  another Ordered.OfLong
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
+	 * @param other    another Ordered.OfLong
+	 * @param offset   the first index in other's ordering to draw an item from
+	 * @param count    how many items to copy from other
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (Ordered.OfLong other, int offset, int count, OrderType ordering) {
+	public LongOrderedSet(Ordered.OfLong other, int offset, int count, OrderType ordering) {
 		this(count, Utilities.getDefaultLoadFactor(), ordering);
 		addAll(0, other, offset, count);
 	}
@@ -184,19 +194,19 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public LongOrderedSet (long[] array, int offset, int length) {
+	public LongOrderedSet(long[] array, int offset, int length) {
 		this(array, offset, length, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
 	 *
-	 * @param array  an array to draw items from
-	 * @param offset the first index in array to draw an item from
-	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 * @param array    an array to draw items from
+	 * @param offset   the first index in array to draw an item from
+	 * @param length   how many items to take from array; bounds-checking is the responsibility of the using code
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (long[] array, int offset, int length, OrderType ordering) {
+	public LongOrderedSet(long[] array, int offset, int length, OrderType ordering) {
 		this(length, Utilities.getDefaultLoadFactor(), ordering);
 		addAll(array, offset, length);
 	}
@@ -206,22 +216,22 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 *
 	 * @param items an array that will be used in full, except for duplicate items
 	 */
-	public LongOrderedSet (long[] items) {
+	public LongOrderedSet(long[] items) {
 		this(items, 0, items.length, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code items}.
 	 *
-	 * @param items an array that will be used in full, except for duplicate items
+	 * @param items    an array that will be used in full, except for duplicate items
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public LongOrderedSet (long[] items, OrderType ordering) {
+	public LongOrderedSet(long[] items, OrderType ordering) {
 		this(items, 0, items.length, ordering);
 	}
 
 	@Override
-	public boolean add (long key) {
+	public boolean add(long key) {
 		return super.add(key) && items.add(key);
 	}
 
@@ -234,10 +244,12 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param key   what long item to try to add, if not already present
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
-	public boolean add (int index, long key) {
+	public boolean add(int index, long key) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index) {items.insert(index, items.removeAt(oldIndex));}
+			if (oldIndex != index) {
+				items.insert(index, items.removeAt(oldIndex));
+			}
 			return false;
 		}
 		items.insert(index, key);
@@ -253,7 +265,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(LongSet)} does
 	 */
-	public boolean addAll (Ordered.OfLong other, int offset, int count) {
+	public boolean addAll(Ordered.OfLong other, int offset, int count) {
 		return addAll(size, other, offset, count);
 	}
 
@@ -267,7 +279,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(LongSet)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered.OfLong other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered.OfLong other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -279,7 +291,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	}
 
 	@Override
-	public boolean remove (long key) {
+	public boolean remove(long key) {
 		return super.remove(key) && items.remove(key);
 	}
 
@@ -289,7 +301,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param index the index of the item to remove
 	 * @return the removed item
 	 */
-	public long removeAt (int index) {
+	public long removeAt(int index) {
 		long key = items.removeAt(index);
 		super.remove(key);
 		return key;
@@ -305,7 +317,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(items.size(), end);
 		for (int i = start; i < end; i++) {
@@ -315,7 +327,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	}
 
 	@Override
-	public long first () {
+	public long first() {
 		if (size == 0)
 			throw new IllegalStateException("Cannot get the first() item of an empty LongOrderedSet.");
 		return items.items[0];
@@ -328,9 +340,11 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 		items.ensureCapacity(additionalCapacity);
 	}
 
@@ -344,9 +358,13 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param after  an item that must not be in this set for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (long before, long after) {
-		if (contains(after)) {return false;}
-		if (!super.remove(before)) {return false;}
+	public boolean alter(long before, long after) {
+		if (contains(after)) {
+			return false;
+		}
+		if (!super.remove(before)) {
+			return false;
+		}
 		super.add(after);
 		items.set(items.indexOf(before), after);
 		return true;
@@ -361,8 +379,10 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, long after) {
-		if (index < 0 || index >= size || contains(after)) {return false;}
+	public boolean alterAt(int index, long after) {
+		if (index < 0 || index >= size || contains(after)) {
+			return false;
+		}
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
@@ -376,18 +396,18 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public long getAt (int index) {
+	public long getAt(int index) {
 		return items.get(index);
 	}
 
 	@Override
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		items.clear();
 		super.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		items.clear();
 		super.clear();
 	}
@@ -400,14 +420,14 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public LongList order () {
+	public LongList order() {
 		return items;
 	}
 
 	/**
 	 * Sorts this ObjectOrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
 	 */
-	public void sort () {
+	public void sort() {
 		items.sort();
 	}
 
@@ -419,7 +439,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public LongSetIterator iterator () {
+	public LongSetIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongOrderedSetIterator(this);
 			iterator2 = new LongOrderedSetIterator(this);
@@ -444,15 +464,17 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		LongList order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
 			long key = order.get(i);
-			h += (int)(key ^ key >>> 32);
+			h += (int) (key ^ key >>> 32);
 		}
 		// Using any bitwise operation can help by keeping results in int range on GWT.
 		// This also can improve the low-order bits on problematic item types like Vector2.
 		return h ^ h >>> 16;
 	}
 
-	public String toString (String separator) {
-		if (size == 0) {return "{}";}
+	public String toString(String separator) {
+		if (size == 0) {
+			return "{}";
+		}
 		LongList items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
@@ -472,28 +494,34 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	public static class LongOrderedSetIterator extends LongSet.LongSetIterator {
 		private final LongList items;
 
-		public LongOrderedSetIterator (LongOrderedSet set) {
+		public LongOrderedSetIterator(LongOrderedSet set) {
 			super(set);
 			items = set.items;
 		}
 
 		@Override
-		public void reset () {
+		public void reset() {
 			nextIndex = 0;
 			hasNext = set.size > 0;
 		}
 
 		@Override
-		public long nextLong () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public long nextLong() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			long key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
@@ -501,8 +529,10 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		}
 
 		@Override
-		public void remove () {
-			if (nextIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+		public void remove() {
+			if (nextIndex < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			nextIndex--;
 			set.remove(items.get(nextIndex));
 		}
@@ -515,16 +545,17 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 *
 	 * @return a new set containing nothing
 	 */
-	public static LongOrderedSet with () {
+	public static LongOrderedSet with() {
 		return new LongOrderedSet(0);
 	}
 
 	/**
 	 * Creates a new LongOrderedSet that holds only the given item, but can be resized.
+	 *
 	 * @param item a long item
 	 * @return a new LongOrderedSet that holds the given item
 	 */
-	public static LongOrderedSet with (long item) {
+	public static LongOrderedSet with(long item) {
 		LongOrderedSet set = new LongOrderedSet(1);
 		set.add(item);
 		return set;
@@ -532,11 +563,12 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @return a new LongOrderedSet that holds the given items
 	 */
-	public static LongOrderedSet with (long item0, long item1) {
+	public static LongOrderedSet with(long item0, long item1) {
 		LongOrderedSet set = new LongOrderedSet(2);
 		set.add(item0);
 		set.add(item1);
@@ -545,12 +577,13 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
 	 * @return a new LongOrderedSet that holds the given items
 	 */
-	public static LongOrderedSet with (long item0, long item1, long item2) {
+	public static LongOrderedSet with(long item0, long item1, long item2) {
 		LongOrderedSet set = new LongOrderedSet(3);
 		set.add(item0);
 		set.add(item1);
@@ -560,13 +593,14 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
 	 * @param item3 a long item
 	 * @return a new LongOrderedSet that holds the given items
 	 */
-	public static LongOrderedSet with (long item0, long item1, long item2, long item3) {
+	public static LongOrderedSet with(long item0, long item1, long item2, long item3) {
 		LongOrderedSet set = new LongOrderedSet(4);
 		set.add(item0);
 		set.add(item1);
@@ -577,6 +611,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
@@ -584,7 +619,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param item4 a long item
 	 * @return a new LongOrderedSet that holds the given items
 	 */
-	public static LongOrderedSet with (long item0, long item1, long item2, long item3, long item4) {
+	public static LongOrderedSet with(long item0, long item1, long item2, long item3, long item4) {
 		LongOrderedSet set = new LongOrderedSet(5);
 		set.add(item0);
 		set.add(item1);
@@ -596,6 +631,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
@@ -604,7 +640,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param item5 a long item
 	 * @return a new LongOrderedSet that holds the given items
 	 */
-	public static LongOrderedSet with (long item0, long item1, long item2, long item3, long item4, long item5) {
+	public static LongOrderedSet with(long item0, long item1, long item2, long item3, long item4, long item5) {
 		LongOrderedSet set = new LongOrderedSet(6);
 		set.add(item0);
 		set.add(item1);
@@ -617,6 +653,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
@@ -626,7 +663,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param item6 a long item
 	 * @return a new LongOrderedSet that holds the given items
 	 */
-	public static LongOrderedSet with (long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
+	public static LongOrderedSet with(long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
 		LongOrderedSet set = new LongOrderedSet(7);
 		set.add(item0);
 		set.add(item1);
@@ -640,6 +677,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Creates a new LongOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
@@ -649,7 +687,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * @param item6 a long item
 	 * @return a new LongOrderedSet that holds the given items
 	 */
-	public static LongOrderedSet with (long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
+	public static LongOrderedSet with(long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
 		LongOrderedSet set = new LongOrderedSet(8);
 		set.add(item0);
 		set.add(item1);
@@ -667,10 +705,11 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a long varargs or long array; remember that varargs allocate
 	 * @return a new LongOrderedSet that holds the given items
 	 */
-	public static LongOrderedSet with (long... varargs) {
+	public static LongOrderedSet with(long... varargs) {
 		return new LongOrderedSet(varargs);
 	}
 }

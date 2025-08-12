@@ -35,10 +35,10 @@ public interface IntComparator extends Comparator<Integer> {
 	 * is less than, equal to, or greater than the second.
 	 * @see Comparator
 	 */
-	int compare (int k1, int k2);
+	int compare(int k1, int k2);
 
 	@Override
-	default IntComparator reversed () {
+	default IntComparator reversed() {
 		return IntComparators.oppositeComparator(this);
 	}
 
@@ -51,7 +51,7 @@ public interface IntComparator extends Comparator<Integer> {
 	 */
 	@Deprecated
 	@Override
-	default int compare (Integer ok1, Integer ok2) {
+	default int compare(Integer ok1, Integer ok2) {
 		return compare(ok1.intValue(), ok2.intValue());
 	}
 
@@ -61,7 +61,7 @@ public interface IntComparator extends Comparator<Integer> {
 	 *
 	 * @see Comparator#thenComparing(Comparator)
 	 */
-	default IntComparator thenComparing (IntComparator second) {
+	default IntComparator thenComparing(IntComparator second) {
 		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
@@ -69,8 +69,10 @@ public interface IntComparator extends Comparator<Integer> {
 	}
 
 	@Override
-	default Comparator<Integer> thenComparing (Comparator<? super Integer> second) {
-		if (second instanceof IntComparator) {return thenComparing((IntComparator)second);}
+	default Comparator<Integer> thenComparing(Comparator<? super Integer> second) {
+		if (second instanceof IntComparator) {
+			return thenComparing((IntComparator) second);
+		}
 		return Comparator.super.thenComparing(second);
 	}
 }

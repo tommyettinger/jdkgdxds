@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
+
 import com.github.tommyettinger.function.DoubleToDoubleFunction;
 
 /**
@@ -40,50 +41,55 @@ import com.github.tommyettinger.function.DoubleToDoubleFunction;
 public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDouble, Arrangeable {
 	/**
 	 * Returns true if this implementation retains order, which it does.
+	 *
 	 * @return true
 	 */
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return true;
 	}
 
 	public double[] items;
 	protected int size;
-	@Nullable protected transient DoubleListIterator iterator1;
-	@Nullable protected transient DoubleListIterator iterator2;
+	@Nullable
+	protected transient DoubleListIterator iterator1;
+	@Nullable
+	protected transient DoubleListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.
 	 */
-	public DoubleList () {
+	public DoubleList() {
 		this(10);
 	}
 
 	/**
 	 * Creates an ordered list with the specified capacity.
+	 *
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public DoubleList (int capacity) {
+	public DoubleList(int capacity) {
 		items = new double[capacity];
 	}
 
 	/**
 	 * Creates an ordered list with the specified capacity.
 	 *
-	 * @param ordered ignored; for an unordered list use {@link DoubleBag}
+	 * @param ordered  ignored; for an unordered list use {@link DoubleBag}
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 * @deprecated DoubleList is always ordered; for an unordered list use {@link DoubleBag}
 	 */
 	@Deprecated
-	public DoubleList (boolean ordered, int capacity) {
+	public DoubleList(boolean ordered, int capacity) {
 		this(capacity);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
 	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param list another DoubleList (or DoubleBag) to copy from
 	 */
-	public DoubleList (DoubleList list) {
+	public DoubleList(DoubleList list) {
 		size = list.size;
 		items = new double[size];
 		System.arraycopy(list.items, 0, items, 0, size);
@@ -92,9 +98,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param array a double array to copy from
 	 */
-	public DoubleList (double[] array) {
+	public DoubleList(double[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -102,11 +109,11 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null double array to add to this list
+	 * @param array      a non-null double array to add to this list
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public DoubleList (double[] array, int startIndex, int count) {
+	public DoubleList(double[] array, int startIndex, int count) {
 		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
@@ -116,14 +123,14 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered ignored; for an unordered list use {@link DoubleBag}
-	 * @param array a non-null double array to add to this list
+	 * @param ordered    ignored; for an unordered list use {@link DoubleBag}
+	 * @param array      a non-null double array to add to this list
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 * @deprecated DoubleList is always ordered; for an unordered list use {@link DoubleBag}
 	 */
 	@Deprecated
-	public DoubleList (boolean ordered, double[] array, int startIndex, int count) {
+	public DoubleList(boolean ordered, double[] array, int startIndex, int count) {
 		this(array, startIndex, count);
 	}
 
@@ -132,7 +139,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public DoubleList (OfDouble coll) {
+	public DoubleList(OfDouble coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -142,7 +149,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public DoubleList (DoubleIterator coll) {
+	public DoubleList(DoubleIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -152,7 +159,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @param other another Ordered.OfDouble that will have its contents copied into this
 	 */
-	public DoubleList (Ordered.OfDouble other) {
+	public DoubleList(Ordered.OfDouble other) {
 		this(other.order());
 	}
 
@@ -164,47 +171,53 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public DoubleList (Ordered.OfDouble other, int offset, int count) {
+	public DoubleList(Ordered.OfDouble other, int offset, int count) {
 		this(count);
 		addAll(0, other, offset, count);
 	}
 
 	// Newly-added
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	// Modified from libGDX
 	@Override
-	public boolean add (double value) {
+	public boolean add(double value) {
 		double[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size++] = value;
 		return true;
 	}
 
-	public void add (double value1, double value2) {
+	public void add(double value1, double value2) {
 		double[] items = this.items;
-		if (size + 1 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size + 1 >= items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		size += 2;
 	}
 
-	public void add (double value1, double value2, double value3) {
+	public void add(double value1, double value2, double value3) {
 		double[] items = this.items;
-		if (size + 2 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size + 2 >= items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		items[size + 2] = value3;
 		size += 3;
 	}
 
-	public void add (double value1, double value2, double value3, double value4) {
+	public void add(double value1, double value2, double value3, double value4) {
 		double[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(9, (int)(size * 1.75f)));
+			items = resize(Math.max(9, (int) (size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -214,13 +227,15 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	// Modified from libGDX
-	public boolean addAll (DoubleList list) {
+	public boolean addAll(DoubleList list) {
 		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (DoubleList list, int offset, int count) {
-		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+	public boolean addAll(DoubleList list, int offset, int count) {
+		if (offset + count > list.size) {
+			throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);
+		}
 		return addAll(list.items, offset, count);
 	}
 
@@ -233,7 +248,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(DoubleList)} does
 	 */
-	public boolean addAll (Ordered.OfDouble other, int offset, int count) {
+	public boolean addAll(Ordered.OfDouble other, int offset, int count) {
 		return addAll(size(), other, offset, count);
 	}
 
@@ -247,7 +262,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(DoubleList)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered.OfDouble other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered.OfDouble other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -259,35 +274,43 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	// Modified from libGDX
-	public boolean addAll (double... array) {
+	public boolean addAll(double... array) {
 		return addAll(array, 0, array.length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (double[] array, int offset, int length) {
+	public boolean addAll(double[] array, int offset, int length) {
 		double[] items = this.items;
 		int sizeNeeded = size + length;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
 		return true;
 	}
 
 	//Kotlin-friendly operator
-	public double get (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public double get(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		return items[index];
 	}
 
 	//Kotlin-friendly operator
-	public void set (int index, double value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void set(int index, double value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] = value;
 	}
 
 	// Modified from libGDX
-	public void plus (int index, double value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void plus(int index, double value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] += value;
 	}
 
@@ -301,15 +324,19 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public DoubleList plus (double value) {
+	public DoubleList plus(double value) {
 		double[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] += value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] += value;
+		}
 		return this;
 	}
 
 	// Modified from libGDX
-	public void times (int index, double value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void times(int index, double value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] *= value;
 	}
 
@@ -323,15 +350,19 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public DoubleList times (double value) {
+	public DoubleList times(double value) {
 		double[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] *= value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] *= value;
+		}
 		return this;
 	}
 
 	// Newly-added
-	public void minus (int index, double value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void minus(int index, double value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] -= value;
 	}
 
@@ -346,15 +377,19 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public DoubleList minus (double value) {
+	public DoubleList minus(double value) {
 		double[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] -= value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] -= value;
+		}
 		return this;
 	}
 
 	// Newly-added
-	public void div (int index, double value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void div(int index, double value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] /= value;
 	}
 
@@ -368,15 +403,19 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public DoubleList div (double value) {
+	public DoubleList div(double value) {
 		double[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] /= value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] /= value;
+		}
 		return this;
 	}
 
 	// Newly-added
-	public void rem (int index, double value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void rem(int index, double value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] %= value;
 	}
 
@@ -390,16 +429,22 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public DoubleList rem (double value) {
+	public DoubleList rem(double value) {
 		double[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] %= value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] %= value;
+		}
 		return this;
 	}
 
-	public void insert (int index, double value) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, double value) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		double[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
@@ -408,13 +453,18 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 *
 	 * @param index the first index to duplicate
 	 * @param count how many items to duplicate
 	 */
-	public boolean duplicateRange (int index, int count) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public boolean duplicateRange(int index, int count) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		int sizeNeeded = size + count;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
 		return count > 0;
@@ -427,14 +477,18 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @return this DoubleList
 	 */
 	@Override
-	public DoubleList order () {
+	public DoubleList order() {
 		return this;
 	}
 
 	@Override
-	public void swap (int first, int second) {
-		if (first >= size) {throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);}
-		if (second >= size) {throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);}
+	public void swap(int first, int second) {
+		if (first >= size) {
+			throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);
+		}
+		if (second >= size) {
+			throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);
+		}
 		double[] items = this.items;
 		double firstValue = items[first];
 		items[first] = items[second];
@@ -442,10 +496,14 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	@Override
-	public boolean contains (double value) {
+	public boolean contains(double value) {
 		int i = size - 1;
 		double[] items = this.items;
-		while (i >= 0) {if (items[i--] == value) {return true;}}
+		while (i >= 0) {
+			if (items[i--] == value) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -456,11 +514,13 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
-	public boolean containsAll (DoubleList other) {
+	public boolean containsAll(DoubleList other) {
 		double[] others = other.items;
 		int otherSize = other.size;
 		for (int i = 0; i < otherSize; i++) {
-			if (!contains(others[i])) {return false;}
+			if (!contains(others[i])) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -471,9 +531,13 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param value a double value to search for
 	 * @return the first index of the given value, or -1 if it is not present
 	 */
-	public int indexOf (double value) {
+	public int indexOf(double value) {
 		double[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {if (items[i] == value) {return i;}}
+		for (int i = 0, n = size; i < n; i++) {
+			if (items[i] == value) {
+				return i;
+			}
+		}
 		return -1;
 	}
 
@@ -483,9 +547,13 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param value a double value to search for
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
-	public int lastIndexOf (double value) {
+	public int lastIndexOf(double value) {
 		double[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) {if (items[i] == value) {return i;}}
+		for (int i = size - 1; i >= 0; i--) {
+			if (items[i] == value) {
+				return i;
+			}
+		}
 		return -1;
 	}
 
@@ -498,7 +566,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	// Modified from libGDX
 	@Override
-	public boolean remove (double value) {
+	public boolean remove(double value) {
 		double[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
 			if (items[i] == value) {
@@ -517,8 +585,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param index the index of the item to remove and return
 	 * @return the removed item
 	 */
-	public double removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public double removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		double[] items = this.items;
 		double value = items[index];
 		size--;
@@ -535,10 +605,14 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param start the first index to remove, inclusive
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start;
 		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
@@ -550,7 +624,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param c a primitive collection of int items to remove fully, such as another DoubleList or a DoubleDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (OfDouble c) {
+	public boolean removeAll(OfDouble c) {
 		int size = this.size;
 		int startSize = size;
 		double[] items = this.items;
@@ -576,7 +650,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param c a primitive collection of int items to remove one-by-one, such as another DoubleList or a DoubleDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (OfDouble c) {
+	public boolean removeEach(OfDouble c) {
 		int size = this.size;
 		int startSize = size;
 		double[] items = this.items;
@@ -601,7 +675,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @return true if this DoubleList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (OfDouble other) {
+	public boolean retainAll(OfDouble other) {
 		final int size = this.size;
 		final double[] items = this.items;
 		int r = 0, w = 0;
@@ -620,7 +694,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @param operator a DoubleToDoubleFunction (a functional interface defined in funderby)
 	 */
-	public void replaceAll (DoubleToDoubleFunction operator) {
+	public void replaceAll(DoubleToDoubleFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsDouble(items[i]);
 		}
@@ -631,8 +705,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @return the last item, removed from this
 	 */
-	public double pop () {
-		if (size == 0) {throw new IndexOutOfBoundsException("DoubleList is empty.");}
+	public double pop() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("DoubleList is empty.");
+		}
 		return items[--size];
 	}
 
@@ -641,8 +717,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @return the last item, without modifying this
 	 */
-	public double peek () {
-		if (size == 0) {throw new IndexOutOfBoundsException("DoubleList is empty.");}
+	public double peek() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("DoubleList is empty.");
+		}
 		return items[size - 1];
 	}
 
@@ -652,8 +730,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @return the first item, without modifying this
 	 */
 	// Modified from libGDX
-	public double first () {
-		if (size == 0) {throw new IndexOutOfBoundsException("DoubleList is empty.");}
+	public double first() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("DoubleList is empty.");
+		}
 		return items[0];
 	}
 
@@ -662,7 +742,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @return true if the list has one or more items, or false otherwise
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -672,7 +752,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -681,7 +761,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * This is done simply by setting size to 0; because a {@code double} item isn't a reference, it doesn't need to be set to null.
 	 */
 	@Override
-	public void clear () {
+	public void clear() {
 		size = 0;
 	}
 
@@ -691,8 +771,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
-	public double[] shrink () {
-		if (items.length != size) {resize(size);}
+	public double[] shrink() {
+		if (items.length != size) {
+			resize(size);
+		}
 		return items;
 	}
 
@@ -706,10 +788,14 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
-	public double[] ensureCapacity (int additionalCapacity) {
-		if (additionalCapacity < 0) {throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);}
+	public double[] ensureCapacity(int additionalCapacity) {
+		if (additionalCapacity < 0) {
+			throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);
+		}
 		int sizeNeeded = size + additionalCapacity;
-		if (sizeNeeded > items.length) {resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		return items;
 	}
 
@@ -718,14 +804,18 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
-	public double[] setSize (int newSize) {
-		if (newSize < 0) {throw new IllegalArgumentException("newSize must be >= 0: " + newSize);}
-		if (newSize > items.length) {resize(Math.max(8, newSize));}
+	public double[] setSize(int newSize) {
+		if (newSize < 0) {
+			throw new IllegalArgumentException("newSize must be >= 0: " + newSize);
+		}
+		if (newSize > items.length) {
+			resize(Math.max(8, newSize));
+		}
 		size = newSize;
 		return items;
 	}
 
-	protected double[] resize (int newSize) {
+	protected double[] resize(int newSize) {
 		double[] newItems = new double[newSize];
 		double[] items = this.items;
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));
@@ -733,7 +823,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		return newItems;
 	}
 
-	public void sort () {
+	public void sort() {
 		Arrays.sort(items, 0, size);
 	}
 
@@ -750,7 +840,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @param c the comparator to determine the order of the DoubleList
 	 */
-	public void sort (@Nullable final DoubleComparator c) {
+	public void sort(@Nullable final DoubleComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -768,12 +858,12 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param to   the index of the last element (exclusive) to be sorted.
 	 * @param c    the comparator to determine the order of the DoubleList
 	 */
-	public void sort (final int from, final int to, final DoubleComparator c) {
+	public void sort(final int from, final int to, final DoubleComparator c) {
 		DoubleComparators.sort(items, from, to, c);
 	}
 
 	@Override
-	public void reverse () {
+	public void reverse() {
 		double[] items = this.items;
 		for (int i = 0, lastIndex = size - 1, n = size / 2; i < n; i++) {
 			int ii = lastIndex - i;
@@ -785,7 +875,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (Random random) {
+	public void shuffle(Random random) {
 		double[] items = this.items;
 		for (int i = size - 1; i > 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -799,9 +889,11 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		newSize = Math.max(0, newSize);
-		if (size > newSize) {size = newSize;}
+		if (size > newSize) {
+			size = newSize;
+		}
 	}
 
 	/**
@@ -810,8 +902,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
-	public double random (Random random) {
-		if (size == 0) {return 0;}
+	public double random(Random random) {
+		if (size == 0) {
+			return 0;
+		}
 		return items[random.nextInt(size)];
 	}
 
@@ -820,7 +914,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @return a new double array with the same contents as this
 	 */
-	public double[] toArray () {
+	public double[] toArray() {
 		double[] array = new double[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -834,7 +928,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param array a double array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
-	public double[] toArray (double[] array) {
+	public double[] toArray(double[] array) {
 		if (array.length < size)
 			array = new double[size];
 		System.arraycopy(items, 0, array, 0, size);
@@ -842,7 +936,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		double[] items = this.items;
 
 		int h = size;
@@ -854,33 +948,53 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	@Override
-	public boolean equals (Object object) {
-		if (object == this) {return true;}
-		if (!(object instanceof DoubleList)) {return false;}
-		DoubleList list = (DoubleList)object;
+	public boolean equals(Object object) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof DoubleList)) {
+			return false;
+		}
+		DoubleList list = (DoubleList) object;
 		int n = size;
-		if (n != list.size()) {return false;}
+		if (n != list.size()) {
+			return false;
+		}
 		double[] items1 = this.items, items2 = list.items;
-		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
+		for (int i = 0; i < n; i++) {
+			if (items1[i] != items2[i]) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	/**
 	 * Compares double items with the given tolerance for error.
 	 */
-	public boolean equals (Object object, double tolerance) {
-		if (object == this) {return true;}
-		if (!(object instanceof DoubleList)) {return false;}
-		DoubleList array = (DoubleList)object;
+	public boolean equals(Object object, double tolerance) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof DoubleList)) {
+			return false;
+		}
+		DoubleList array = (DoubleList) object;
 		int n = size;
-		if (n != array.size) {return false;}
+		if (n != array.size) {
+			return false;
+		}
 		double[] items1 = this.items, items2 = array.items;
-		for (int i = 0; i < n; i++) {if (Math.abs(items1[i] - items2[i]) > tolerance) {return false;}}
+		for (int i = 0; i < n; i++) {
+			if (Math.abs(items1[i] - items2[i]) > tolerance) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -894,7 +1008,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @return a {@link DoubleIterator}; use its nextDouble() method instead of next()
 	 */
 	@Override
-	public DoubleListIterator iterator () {
+	public DoubleListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new DoubleListIterator(this);
 			iterator2 = new DoubleListIterator(this);
@@ -925,11 +1039,11 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 */
 		public boolean valid = true;
 
-		public DoubleListIterator (DoubleList list) {
+		public DoubleListIterator(DoubleList list) {
 			this.list = list;
 		}
 
-		public DoubleListIterator (DoubleList list, int index) {
+		public DoubleListIterator(DoubleList list, int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("DoubleListIterator does not satisfy index >= 0 && index < list.size()");
 			this.list = list;
@@ -943,9 +1057,13 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public double nextDouble () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= list.size()) {throw new NoSuchElementException();}
+		public double nextDouble() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			return list.get(latest = index++);
 		}
 
@@ -957,8 +1075,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index < list.size();
 		}
 
@@ -971,8 +1091,10 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 * @return {@code true} if the list iterator has more elements when
 		 * traversing the list in the reverse direction
 		 */
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -988,9 +1110,13 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public double previousDouble () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index <= 0 || list.isEmpty()) {throw new NoSuchElementException();}
+		public double previousDouble() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index <= 0 || list.isEmpty()) {
+				throw new NoSuchElementException();
+			}
 			return list.get(latest = --index);
 		}
 
@@ -1003,7 +1129,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 * subsequent call to {@code next}, or list size if the list
 		 * iterator is at the end of the list
 		 */
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -1016,7 +1142,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 * subsequent call to {@code previous}, or -1 if the list
 		 * iterator is at the beginning of the list
 		 */
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -1035,9 +1161,13 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -1063,9 +1193,13 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (double t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void set(double t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.set(latest, t);
 		}
 
@@ -1089,20 +1223,24 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (double t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > list.size()) {throw new NoSuchElementException();}
+		public void add(double t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.insert(index, t);
-			if(list.keepsOrder()) ++index;
+			if (list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = 0;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("DoubleListIterator does not satisfy index >= 0 && index < list.size()");
 			this.index = index;
@@ -1114,7 +1252,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 *
 		 * @return this same DoubleListIterator.
 		 */
-		public DoubleList.DoubleListIterator iterator () {
+		public DoubleList.DoubleListIterator iterator() {
 			return this;
 		}
 	}
@@ -1126,17 +1264,18 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @return a new list containing nothing
 	 */
-	public static DoubleList with () {
+	public static DoubleList with() {
 		return new DoubleList(0);
 	}
 
 	/**
 	 * Creates a new DoubleList that holds only the given item, but can be resized.
+	 *
 	 * @param item a double item
 	 * @return a new DoubleList that holds the given item
 	 */
 
-	public static DoubleList with (double item) {
+	public static DoubleList with(double item) {
 		DoubleList list = new DoubleList(1);
 		list.add(item);
 		return list;
@@ -1144,11 +1283,12 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	/**
 	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double item0, double item1) {
+	public static DoubleList with(double item0, double item1) {
 		DoubleList list = new DoubleList(2);
 		list.add(item0);
 		list.add(item1);
@@ -1157,12 +1297,13 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	/**
 	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
 	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double item0, double item1, double item2) {
+	public static DoubleList with(double item0, double item1, double item2) {
 		DoubleList list = new DoubleList(3);
 		list.add(item0);
 		list.add(item1);
@@ -1172,13 +1313,14 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	/**
 	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
 	 * @param item3 a double item
 	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double item0, double item1, double item2, double item3) {
+	public static DoubleList with(double item0, double item1, double item2, double item3) {
 		DoubleList list = new DoubleList(4);
 		list.add(item0);
 		list.add(item1);
@@ -1189,6 +1331,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	/**
 	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -1196,7 +1339,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param item4 a double item
 	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double item0, double item1, double item2, double item3, double item4) {
+	public static DoubleList with(double item0, double item1, double item2, double item3, double item4) {
 		DoubleList list = new DoubleList(5);
 		list.add(item0);
 		list.add(item1);
@@ -1208,6 +1351,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	/**
 	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -1216,7 +1360,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param item5 a double item
 	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double item0, double item1, double item2, double item3, double item4, double item5) {
+	public static DoubleList with(double item0, double item1, double item2, double item3, double item4, double item5) {
 		DoubleList list = new DoubleList(6);
 		list.add(item0);
 		list.add(item1);
@@ -1229,6 +1373,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	/**
 	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -1238,7 +1383,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param item6 a double item
 	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
+	public static DoubleList with(double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
 		DoubleList list = new DoubleList(7);
 		list.add(item0);
 		list.add(item1);
@@ -1252,6 +1397,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	/**
 	 * Creates a new DoubleList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -1261,7 +1407,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param item6 a double item
 	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
+	public static DoubleList with(double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
 		DoubleList list = new DoubleList(8);
 		list.add(item0);
 		list.add(item1);
@@ -1279,10 +1425,11 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a double varargs or double array; remember that varargs allocate
 	 * @return a new DoubleList that holds the given items
 	 */
-	public static DoubleList with (double... varargs) {
+	public static DoubleList with(double... varargs) {
 		return new DoubleList(varargs);
 	}
 }

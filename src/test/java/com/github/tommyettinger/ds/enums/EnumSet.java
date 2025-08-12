@@ -30,7 +30,7 @@ public class EnumSet<E extends Enum<E>> extends ObjectSet<E> {
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public EnumSet () {
+	public EnumSet() {
 		super();
 	}
 
@@ -40,7 +40,7 @@ public class EnumSet<E extends Enum<E>> extends ObjectSet<E> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public EnumSet (int initialCapacity) {
+	public EnumSet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -51,7 +51,7 @@ public class EnumSet<E extends Enum<E>> extends ObjectSet<E> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public EnumSet (int initialCapacity, float loadFactor) {
+	public EnumSet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -60,7 +60,7 @@ public class EnumSet<E extends Enum<E>> extends ObjectSet<E> {
 	 *
 	 * @param set an ObjectSet or subclass to copy, such as another EnumSet
 	 */
-	public EnumSet (ObjectSet<? extends E> set) {
+	public EnumSet(ObjectSet<? extends E> set) {
 		super(set);
 	}
 
@@ -69,7 +69,7 @@ public class EnumSet<E extends Enum<E>> extends ObjectSet<E> {
 	 *
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that doesn't subclass ObjectSet
 	 */
-	public EnumSet (Collection<? extends E> coll) {
+	public EnumSet(Collection<? extends E> coll) {
 		super(coll);
 	}
 
@@ -81,7 +81,7 @@ public class EnumSet<E extends Enum<E>> extends ObjectSet<E> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public EnumSet (E[] array, int offset, int length) {
+	public EnumSet(E[] array, int offset, int length) {
 		super(array, offset, length);
 	}
 
@@ -91,43 +91,45 @@ public class EnumSet<E extends Enum<E>> extends ObjectSet<E> {
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public EnumSet (E[] array) {
+	public EnumSet(E[] array) {
 		super(array);
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
-			return ((Enum<?>)item).ordinal() & mask;
+			return ((Enum<?>) item).ordinal() & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		Enum[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			Enum key = keyTable[i];
-			if (key != null) {h += key.ordinal() * 421;}
+			if (key != null) {
+				h += key.ordinal() * 421;
+			}
 		}
 		return h;
 	}
 
-	public static <E extends Enum<E>> EnumSet<E> with (E item) {
+	public static <E extends Enum<E>> EnumSet<E> with(E item) {
 		EnumSet<E> set = new EnumSet<>(1);
 		set.add(item);
 		return set;
 	}
 
 	@SafeVarargs
-	public static <E extends Enum<E>> EnumSet<E> with (E... array) {
+	public static <E extends Enum<E>> EnumSet<E> with(E... array) {
 		return new EnumSet<>(array);
 	}
 

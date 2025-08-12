@@ -28,7 +28,7 @@ public class FilteredTest {
 			ObjectList.with("zzz", "bee", "binturong"),
 			ObjectDeque.with("hm?", "bee", "BINTURONG"),
 			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")
-			);
+		);
 		Assert.assertEquals(2, fil.size());
 
 		fil.add(ObjectList.with("let's"));
@@ -36,6 +36,7 @@ public class FilteredTest {
 		fil.add(ObjectList.with("party"));
 		fil.add(ObjectList.with("started"));
 	}
+
 	@Test
 	public void testStringSet() {
 		FilteredStringSet fil = FilteredStringSet.with(
@@ -62,44 +63,45 @@ public class FilteredTest {
 		FilteredIterableMap<String, Iterable<String>, Integer> fil = FilteredIterableMap.with(
 			(String s) -> s.length() > 3, String::toUpperCase,
 			ObjectList.with("zzz", "bee", "binturong"), -1,
-				new Object[]{
-			ObjectDeque.with("hm?", "bee", "BINTURONG"), 1,
-			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2}
-			);
+			new Object[]{
+				ObjectDeque.with("hm?", "bee", "BINTURONG"), 1,
+				ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2}
+		);
 		System.out.println(fil);
 		Assert.assertEquals(2, fil.size());
 
 		fil = FilteredIterableMap.with(
-				(String s) -> s.length() > 3, String::toUpperCase,
-				ObjectList.with("zzz", "bee", "binturong"), 1234,
-				ObjectList.with("hm?", "bee", "BINTURONG"), -5678,
-				ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), Integer.MIN_VALUE
+			(String s) -> s.length() > 3, String::toUpperCase,
+			ObjectList.with("zzz", "bee", "binturong"), 1234,
+			ObjectList.with("hm?", "bee", "BINTURONG"), -5678,
+			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), Integer.MIN_VALUE
 		);
 
 		System.out.println(fil);
 		Assert.assertEquals(2, fil.size());
 
 
-
 	}
+
 	@Test
 	public void testIterableSetSubtype() {
 		FilteredIterableSet<String, ObjectList<String>> fil = FilteredIterableSet.with(
 			(String s) -> s.length() > 3, String::toUpperCase, new Iterable[]{
-			ObjectList.with("zzz", "bee", "binturong"),
-			ObjectList.with("hm?", "bee", "BINTURONG"),
-			ObjectList.with(":D", "bee", "Aardvark", "bandicoot")}
-			);
+				ObjectList.with("zzz", "bee", "binturong"),
+				ObjectList.with("hm?", "bee", "BINTURONG"),
+				ObjectList.with(":D", "bee", "Aardvark", "bandicoot")}
+		);
 		Assert.assertEquals(2, fil.size());
 	}
+
 	@Test
 	public void testIterableMapSubtype() {
 		FilteredIterableMap<String, ObjectList<String>, Integer> fil = FilteredIterableMap.with(
 			(String s) -> s.length() > 3, String::toUpperCase,
 			ObjectList.with("zzz", "bee", "binturong"), -1,
-				new Object[]{
-			ObjectList.with("hm?", "bee", "BINTURONG"), 1,
-			ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2}
+			new Object[]{
+				ObjectList.with("hm?", "bee", "BINTURONG"), 1,
+				ObjectList.with(":D", "bee", "Aardvark", "bandicoot"), 2}
 		);
 		System.out.println(fil);
 		Assert.assertEquals(2, fil.size());

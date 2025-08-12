@@ -69,7 +69,7 @@ public class IteratorTest {
 	public void testObjectListIterator() {
 		ObjectList<String> data = ObjectList.with(strings);
 		int counter = 0, size = data.size();
-		for(String item : data){
+		for (String item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -85,7 +85,7 @@ public class IteratorTest {
 		WhiskerRandom random = new WhiskerRandom(12345678901L);
 		while (it.hasNext()) {
 			String item = it.next();
-			if(random.nextBoolean()) {
+			if (random.nextBoolean()) {
 				//System.out.println("Removing " + item);
 				it.remove();
 				--counter;
@@ -96,7 +96,7 @@ public class IteratorTest {
 		//System.out.println("\n Going backwards now...\n");
 		while (it.hasPrevious()) {
 			String item = it.previous();
-			if(random.nextBoolean()) {
+			if (random.nextBoolean()) {
 				//System.out.println("Removing " + item);
 				//System.out.println("Before: " + data);
 				it.remove();
@@ -126,7 +126,7 @@ public class IteratorTest {
 		it = data.listIterator();
 		while (it.hasNext()) {
 			String item = it.next();
-			if("ccc".equals(item))
+			if ("ccc".equals(item))
 				it.remove();
 		}
 		//System.out.println(data);
@@ -139,7 +139,7 @@ public class IteratorTest {
 	public void testArrayListIterator() {
 		ArrayList<String> data = new ArrayList<>(ObjectList.with(strings));
 		int counter = 0, size = data.size();
-		for(String item : data){
+		for (String item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -155,7 +155,7 @@ public class IteratorTest {
 		WhiskerRandom random = new WhiskerRandom(12345678901L);
 		while (it.hasNext()) {
 			String item = it.next();
-			if(random.nextBoolean()) {
+			if (random.nextBoolean()) {
 				//System.out.println("Removing " + item);
 				it.remove();
 				--counter;
@@ -166,7 +166,7 @@ public class IteratorTest {
 		//System.out.println("\n Going backwards now...\n");
 		while (it.hasPrevious()) {
 			String item = it.previous();
-			if(random.nextBoolean()) {
+			if (random.nextBoolean()) {
 				//System.out.println("Removing " + item);
 				it.remove();
 				--counter;
@@ -194,7 +194,7 @@ public class IteratorTest {
 		it = data.listIterator();
 		while (it.hasNext()) {
 			String item = it.next();
-			if("ccc".equals(item))
+			if ("ccc".equals(item))
 				it.remove();
 		}
 		//System.out.println(data);
@@ -204,7 +204,7 @@ public class IteratorTest {
 	public void testObjectDequeIterator() {
 		ObjectDeque<String> data = ObjectDeque.with(strings);
 		int counter = 0, size = data.size();
-		for(String item : data){
+		for (String item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -221,7 +221,7 @@ public class IteratorTest {
 		WhiskerRandom random = new WhiskerRandom(12345678901L);
 		while (it.hasNext()) {
 			String item = it.next();
-			if(random.nextBoolean()) {
+			if (random.nextBoolean()) {
 				//System.out.println("Removing " + item);
 				it.remove();
 				--counter;
@@ -232,7 +232,7 @@ public class IteratorTest {
 		//System.out.println("\n Going backwards now...\n");
 		while (it.hasPrevious()) {
 			String item = it.previous();
-			if(random.nextBoolean()) {
+			if (random.nextBoolean()) {
 				//System.out.println("Removing " + item);
 				//System.out.println("Before: " + data);
 				it.remove();
@@ -262,7 +262,7 @@ public class IteratorTest {
 		it = data.iterator();
 		while (it.hasNext()) {
 			String item = it.next();
-			if("ccc".equals(item))
+			if ("ccc".equals(item))
 				it.remove();
 		}
 		//System.out.println(data);
@@ -272,7 +272,7 @@ public class IteratorTest {
 	public void testObjectSetIterator() {
 		ObjectSet<String> data = ObjectSet.with(strings);
 		int counter = 0, size = data.size();
-		for(String item : data){
+		for (String item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -290,7 +290,7 @@ public class IteratorTest {
 	public void testObjectOrderedSetIterator() {
 		ObjectOrderedSet<String> data = ObjectOrderedSet.with(strings);
 		int counter = 0, size = data.size();
-		for(String item : data){
+		for (String item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -308,7 +308,7 @@ public class IteratorTest {
 	public void testObjectObjectMapIterator() {
 		ObjectObjectMap<String, String> data = new ObjectObjectMap<>(strings, strings);
 		int counter = 0, size = data.size();
-		for(Map.Entry<String, String> item : data){
+		for (Map.Entry<String, String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -340,7 +340,7 @@ public class IteratorTest {
 	public void testObjectObjectOrderedMapIterator() {
 		ObjectObjectOrderedMap<String, String> data = new ObjectObjectOrderedMap<>(strings, strings);
 		int counter = 0, size = data.size();
-		for(Map.Entry<String, String> item : data){
+		for (Map.Entry<String, String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -372,7 +372,7 @@ public class IteratorTest {
 	public void testObjectIntMapIterator() {
 		ObjectIntMap<String> data = new ObjectIntMap<>(strings, ints);
 		int counter = 0, size = data.size();
-		for(ObjectIntMap.Entry<String> item : data){
+		for (ObjectIntMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -404,7 +404,7 @@ public class IteratorTest {
 	public void testObjectIntOrderedMapIterator() {
 		ObjectIntOrderedMap<String> data = new ObjectIntOrderedMap<>(strings, ints);
 		int counter = 0, size = data.size();
-		for(ObjectIntMap.Entry<String> item : data){
+		for (ObjectIntMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -436,7 +436,7 @@ public class IteratorTest {
 	public void testObjectLongMapIterator() {
 		ObjectLongMap<String> data = new ObjectLongMap<>(strings, longs);
 		int counter = 0, size = data.size();
-		for(ObjectLongMap.Entry<String> item : data){
+		for (ObjectLongMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -468,7 +468,7 @@ public class IteratorTest {
 	public void testObjectLongOrderedMapIterator() {
 		ObjectLongOrderedMap<String> data = new ObjectLongOrderedMap<>(strings, longs);
 		int counter = 0, size = data.size();
-		for(ObjectLongMap.Entry<String> item : data){
+		for (ObjectLongMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -500,7 +500,7 @@ public class IteratorTest {
 	public void testObjectFloatMapIterator() {
 		ObjectFloatMap<String> data = new ObjectFloatMap<>(strings, floats);
 		int counter = 0, size = data.size();
-		for(ObjectFloatMap.Entry<String> item : data){
+		for (ObjectFloatMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -532,7 +532,7 @@ public class IteratorTest {
 	public void testObjectFloatOrderedMapIterator() {
 		ObjectFloatOrderedMap<String> data = new ObjectFloatOrderedMap<>(strings, floats);
 		int counter = 0, size = data.size();
-		for(ObjectFloatMap.Entry<String> item : data){
+		for (ObjectFloatMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -559,12 +559,12 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 	}
-	
+
 	@Test
 	public void testLongObjectMapIterator() {
 		LongObjectMap<String> data = new LongObjectMap<>(longs, strings);
 		int counter = 0, size = data.size();
-		for(LongObjectMap.Entry<String> item : data){
+		for (LongObjectMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -596,7 +596,7 @@ public class IteratorTest {
 	public void testLongObjectOrderedMapIterator() {
 		LongObjectOrderedMap<String> data = new LongObjectOrderedMap<>(longs, strings);
 		int counter = 0, size = data.size();
-		for(LongObjectMap.Entry<String> item : data){
+		for (LongObjectMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -628,7 +628,7 @@ public class IteratorTest {
 	public void testLongIntMapIterator() {
 		LongIntMap data = new LongIntMap(longs, ints);
 		int counter = 0, size = data.size();
-		for(LongIntMap.Entry item : data){
+		for (LongIntMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -660,7 +660,7 @@ public class IteratorTest {
 	public void testLongIntOrderedMapIterator() {
 		LongIntOrderedMap data = new LongIntOrderedMap(longs, ints);
 		int counter = 0, size = data.size();
-		for(LongIntMap.Entry item : data){
+		for (LongIntMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -692,7 +692,7 @@ public class IteratorTest {
 	public void testLongLongMapIterator() {
 		LongLongMap data = new LongLongMap(longs, longs);
 		int counter = 0, size = data.size();
-		for(LongLongMap.Entry item : data){
+		for (LongLongMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -724,7 +724,7 @@ public class IteratorTest {
 	public void testLongLongOrderedMapIterator() {
 		LongLongOrderedMap data = new LongLongOrderedMap(longs, longs);
 		int counter = 0, size = data.size();
-		for(LongLongMap.Entry item : data){
+		for (LongLongMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -756,7 +756,7 @@ public class IteratorTest {
 	public void testLongFloatMapIterator() {
 		LongFloatMap data = new LongFloatMap(longs, floats);
 		int counter = 0, size = data.size();
-		for(LongFloatMap.Entry item : data){
+		for (LongFloatMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -788,7 +788,7 @@ public class IteratorTest {
 	public void testLongFloatOrderedMapIterator() {
 		LongFloatOrderedMap data = new LongFloatOrderedMap(longs, floats);
 		int counter = 0, size = data.size();
-		for(LongFloatMap.Entry item : data){
+		for (LongFloatMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -815,12 +815,12 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 	}
-	
+
 	@Test
 	public void testIntObjectMapIterator() {
 		IntObjectMap<String> data = new IntObjectMap<>(ints, strings);
 		int counter = 0, size = data.size();
-		for(IntObjectMap.Entry<String> item : data){
+		for (IntObjectMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -852,7 +852,7 @@ public class IteratorTest {
 	public void testIntObjectOrderedMapIterator() {
 		IntObjectOrderedMap<String> data = new IntObjectOrderedMap<>(ints, strings);
 		int counter = 0, size = data.size();
-		for(IntObjectMap.Entry<String> item : data){
+		for (IntObjectMap.Entry<String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -884,7 +884,7 @@ public class IteratorTest {
 	public void testIntIntMapIterator() {
 		IntIntMap data = new IntIntMap(ints, ints);
 		int counter = 0, size = data.size();
-		for(IntIntMap.Entry item : data){
+		for (IntIntMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -916,7 +916,7 @@ public class IteratorTest {
 	public void testIntIntOrderedMapIterator() {
 		IntIntOrderedMap data = new IntIntOrderedMap(ints, ints);
 		int counter = 0, size = data.size();
-		for(IntIntMap.Entry item : data){
+		for (IntIntMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -948,7 +948,7 @@ public class IteratorTest {
 	public void testIntLongMapIterator() {
 		IntLongMap data = new IntLongMap(ints, longs);
 		int counter = 0, size = data.size();
-		for(IntLongMap.Entry item : data){
+		for (IntLongMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -980,7 +980,7 @@ public class IteratorTest {
 	public void testIntLongOrderedMapIterator() {
 		IntLongOrderedMap data = new IntLongOrderedMap(ints, longs);
 		int counter = 0, size = data.size();
-		for(IntLongMap.Entry item : data){
+		for (IntLongMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1012,7 +1012,7 @@ public class IteratorTest {
 	public void testIntFloatMapIterator() {
 		IntFloatMap data = new IntFloatMap(ints, floats);
 		int counter = 0, size = data.size();
-		for(IntFloatMap.Entry item : data){
+		for (IntFloatMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1044,7 +1044,7 @@ public class IteratorTest {
 	public void testIntFloatOrderedMapIterator() {
 		IntFloatOrderedMap data = new IntFloatOrderedMap(ints, floats);
 		int counter = 0, size = data.size();
-		for(IntFloatMap.Entry item : data){
+		for (IntFloatMap.Entry item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1155,7 +1155,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 	}
-	
+
 	@Test
 	public void testBooleanListIterator() {
 		BooleanList data = BooleanList.with(booleans);
@@ -1251,7 +1251,7 @@ public class IteratorTest {
 		}
 		Assert.assertEquals(size, counter);
 	}
-	
+
 	@Test
 	public void testBooleanDequeIterator() {
 		BooleanDeque data = BooleanDeque.with(booleans);
@@ -1316,7 +1316,7 @@ public class IteratorTest {
 	public void testCaseInsensitiveSetIterator() {
 		CaseInsensitiveSet data = CaseInsensitiveSet.with(strings);
 		int counter = 0, size = data.size();
-		for(CharSequence item : data){
+		for (CharSequence item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1334,7 +1334,7 @@ public class IteratorTest {
 	public void testCaseInsensitiveOrderedSetIterator() {
 		CaseInsensitiveOrderedSet data = CaseInsensitiveOrderedSet.with(strings);
 		int counter = 0, size = data.size();
-		for(CharSequence item : data){
+		for (CharSequence item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1352,7 +1352,7 @@ public class IteratorTest {
 	public void testCaseInsensitiveMapIterator() {
 		CaseInsensitiveMap<String> data = new CaseInsensitiveMap<>(strings, strings);
 		int counter = 0, size = data.size();
-		for(Map.Entry<CharSequence, String> item : data){
+		for (Map.Entry<CharSequence, String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1384,7 +1384,7 @@ public class IteratorTest {
 	public void testCaseInsensitiveOrderedMapIterator() {
 		CaseInsensitiveOrderedMap<String> data = new CaseInsensitiveOrderedMap<>(strings, strings);
 		int counter = 0, size = data.size();
-		for(Map.Entry<CharSequence, String> item : data){
+		for (Map.Entry<CharSequence, String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1416,7 +1416,7 @@ public class IteratorTest {
 	public void testNumberedSetIterator() {
 		NumberedSet<String> data = NumberedSet.with(strings);
 		int counter = 0, size = data.size();
-		for(String item : data){
+		for (String item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1435,7 +1435,7 @@ public class IteratorTest {
 	public void testHolderSetIterator() {
 		HolderSet<String, Integer> data = HolderSet.with(String::hashCode, strings);
 		int counter = 0, size = data.size();
-		for(String item : data){
+		for (String item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1453,7 +1453,7 @@ public class IteratorTest {
 	public void testHolderOrderedSetIterator() {
 		HolderOrderedSet<String, Integer> data = HolderOrderedSet.with(String::hashCode, strings);
 		int counter = 0, size = data.size();
-		for(String item : data){
+		for (String item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1471,7 +1471,7 @@ public class IteratorTest {
 	public void testIdentityObjectMapIterator() {
 		IdentityObjectMap<String, String> data = new IdentityObjectMap<>(strings, strings);
 		int counter = 0, size = data.size();
-		for(Map.Entry<String, String> item : data){
+		for (Map.Entry<String, String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1503,7 +1503,7 @@ public class IteratorTest {
 	public void testIdentityObjectOrderedMapIterator() {
 		IdentityObjectMap<String, String> data = new IdentityObjectMap<>(strings, strings);
 		int counter = 0, size = data.size();
-		for(Map.Entry<String, String> item : data){
+		for (Map.Entry<String, String> item : data) {
 			Assert.assertNotNull(item);
 			++counter;
 		}
@@ -1533,16 +1533,18 @@ public class IteratorTest {
 
 	private static class IntNode extends BinaryHeap.Node {
 		public int v;
-		public IntNode (int value) {
+
+		public IntNode(int value) {
 			super(value);
 			v = value;
 		}
 
 		@Override
-		public float getValue () {
+		public float getValue() {
 			return super.getValue();
 		}
 	}
+
 	@Test
 	public void testBinaryHeapIterator() {
 		BinaryHeap<IntNode> data = BinaryHeap.minHeapWith(

@@ -23,6 +23,7 @@ import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.ds.Utilities;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -91,13 +92,15 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 */
 	protected int mask;
 
-	@Nullable protected transient ObjectSetIterator<T> iterator1;
-	@Nullable protected transient ObjectSetIterator<T> iterator2;
+	@Nullable
+	protected transient ObjectSetIterator<T> iterator1;
+	@Nullable
+	protected transient ObjectSetIterator<T> iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public ObjectQuadSet () {
+	public ObjectQuadSet() {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
@@ -106,7 +109,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next-nearest power of two.
 	 */
-	public ObjectQuadSet (int initialCapacity) {
+	public ObjectQuadSet(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -117,22 +120,24 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public ObjectQuadSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public ObjectQuadSet(int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
+		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		keyTable = (T[])new Object[tableSize];
+		keyTable = (T[]) new Object[tableSize];
 	}
 
 	/**
 	 * Creates a new set identical to the specified set.
 	 */
-	public ObjectQuadSet (ObjectQuadSet<? extends T> set) {
+	public ObjectQuadSet(ObjectQuadSet<? extends T> set) {
 		loadFactor = set.loadFactor;
 		threshold = set.threshold;
 		mask = set.mask;
@@ -146,7 +151,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public ObjectQuadSet (Collection<? extends T> coll) {
+	public ObjectQuadSet(Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -158,7 +163,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public ObjectQuadSet (T[] array, int offset, int length) {
+	public ObjectQuadSet(T[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
@@ -168,7 +173,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public ObjectQuadSet (T[] array) {
+	public ObjectQuadSet(T[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -204,8 +209,8 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (Object item) {
-		return (int)(item.hashCode() * hashMultiplier >>> shift);
+	protected int place(Object item) {
+		return (int) (item.hashCode() * hashMultiplier >>> shift);
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
@@ -221,7 +226,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left.equals(right);
 	}
 
@@ -232,7 +237,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @param key a non-null K key
 	 * @return a negative index if the key was not found, or the non-negative index of the existing key if found
 	 */
-	protected int locateKey (Object key) {
+	protected int locateKey(Object key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			T other = keyTable[i];
@@ -248,7 +253,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * and returns false.
 	 */
 	@Override
-	public boolean add (T key) {
+	public boolean add(T key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			T other = keyTable[i];
@@ -256,41 +261,49 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 				return false; // Existing key was found.
 			if (other == null) {
 				keyTable[i] = key;
-				if (++size >= threshold) {resize(keyTable.length << 1);}
+				if (++size >= threshold) {
+					resize(keyTable.length << 1);
+				}
 				return true;
 			}
 		}
 	}
 
 	@Override
-	public boolean containsAll (Collection<?> c) {
+	public boolean containsAll(Collection<?> c) {
 		for (Object o : c) {
-			if (!contains(o)) {return false;}
+			if (!contains(o)) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	@Override
-	public boolean addAll (Collection<? extends T> coll) {
+	public boolean addAll(Collection<? extends T> coll) {
 		final int length = coll.size();
 		ensureCapacity(length);
 		int oldSize = size;
-		for (T t : coll) {add(t);}
+		for (T t : coll) {
+			add(t);
+		}
 		return oldSize != size;
 
 	}
 
 	@Override
-	public boolean retainAll (Collection<?> c) {
+	public boolean retainAll(Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
-			if (!c.contains(o)) {modified |= remove(o);}
+			if (!c.contains(o)) {
+				modified |= remove(o);
+			}
 		}
 		return modified;
 	}
 
 	@Override
-	public boolean removeAll (Collection<?> c) {
+	public boolean removeAll(Collection<?> c) {
 		boolean modified = false;
 		for (Object o : c) {
 			modified |= remove(o);
@@ -298,24 +311,28 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		return modified;
 	}
 
-	public boolean addAll (T[] array) {
+	public boolean addAll(T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
-	public boolean addAll (T[] array, int offset, int length) {
+	public boolean addAll(T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
-		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
+		for (int i = offset, n = i + length; i < n; i++) {
+			add(array[i]);
+		}
 		return oldSize != size;
 	}
 
-	public boolean addAll (ObjectQuadSet<T> set) {
+	public boolean addAll(ObjectQuadSet<T> set) {
 		ensureCapacity(set.size);
 		T[] keyTable = set.keyTable;
 		int oldSize = size;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) {add(key);}
+			if (key != null) {
+				add(key);
+			}
 		}
 		return size != oldSize;
 	}
@@ -323,7 +340,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	/**
 	 * Like {@link #add(Object)}, but skips checks for existing keys, and doesn't increment size.
 	 */
-	protected void addResize (T key) {
+	protected void addResize(T key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			if (keyTable[i] == null) {
@@ -337,15 +354,17 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * Returns true if the key was removed.
 	 */
 	@Override
-	public boolean remove (Object key) {
+	public boolean remove(Object key) {
 		int i = locateKey(key);
-		if (i < 0) {return false;}
+		if (i < 0) {
+			return false;
+		}
 		T[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask, dist = 1;
 		while ((key = keyTable[next]) != null) {
 			int placement = place(key);
 			if ((next - placement & mask) > (i - placement & mask)) {
-				keyTable[i] = (T)key;
+				keyTable[i] = (T) key;
 				i = next;
 			}
 			next = next + ++dist & mask;
@@ -376,7 +395,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	/**
 	 * Returns true if the set has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -388,7 +407,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @return the number of elements in this set (its cardinality)
 	 */
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -396,7 +415,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * Returns true if the set is empty.
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -405,10 +424,14 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * nothing is done. If the set contains more items than the specified capacity, the next highest power of two capacity is used
 	 * instead.
 	 */
-	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
+	public void shrink(int maximumCapacity) {
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) {resize(tableSize);}
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
@@ -416,7 +439,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * The reduction is done by allocating new arrays, though for large arrays this can be faster than clearing the existing
 	 * array.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
 			clear();
@@ -431,14 +454,16 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * iteration can be unnecessarily slow. {@link #clear(int)} can be used to reduce the capacity.
 	 */
 	@Override
-	public void clear () {
-		if (size == 0) {return;}
+	public void clear() {
+		if (size == 0) {
+			return;
+		}
 		size = 0;
 		Arrays.fill(keyTable, null);
 	}
 
 	@Override
-	public boolean contains (Object key) {
+	public boolean contains(Object key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			T other = keyTable[i];
@@ -450,7 +475,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	@Nullable
-	public T get (T key) {
+	public T get(T key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			T other = keyTable[i];
@@ -461,9 +486,13 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		}
 	}
 
-	public T first () {
+	public T first() {
 		T[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {if (keyTable[i] != null) {return keyTable[i];}}
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			if (keyTable[i] != null) {
+				return keyTable[i];
+			}
+		}
 		throw new IllegalStateException("ObjectSet is empty.");
 	}
 
@@ -473,14 +502,16 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 *
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
+		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -493,18 +524,20 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511];
 		T[] oldKeyTable = keyTable;
 
-		keyTable = (T[])new Object[newSize];
+		keyTable = (T[]) new Object[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				T key = oldKeyTable[i];
-				if (key != null) {addResize(key);}
+				if (key != null) {
+					addResize(key);
+				}
 			}
 		}
 	}
 
 	@Override
-	public Object[] toArray () {
+	public Object[] toArray() {
 		return toArray(new Object[size()]);
 	}
 
@@ -524,7 +557,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> E[] toArray (E[] a) {
+	public <E> E[] toArray(E[] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -540,12 +573,14 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		return a;
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return loadFactor;
 	}
 
-	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public void setLoadFactor(float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -554,23 +589,25 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) {h += key.hashCode();}
+			if (key != null) {
+				h += key.hashCode();
+			}
 		}
 		return h;
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if (o == this)
 			return true;
 		if (!(o instanceof Set))
 			return false;
-		Set<?> s = (Set<?>)o;
+		Set<?> s = (Set<?>) o;
 		if (s.size() != size())
 			return false;
 		try {
@@ -581,24 +618,30 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return '{' + toString(", ") + '}';
 	}
 
-	public String toString (String separator) {
-		if (size == 0) {return "";}
+	public String toString(String separator) {
+		if (size == 0) {
+			return "";
+		}
 		StringBuilder buffer = new StringBuilder(32);
 		T[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) {continue;}
+			if (key == null) {
+				continue;
+			}
 			buffer.append(key == this ? "(this)" : key);
 			break;
 		}
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) {continue;}
+			if (key == null) {
+				continue;
+			}
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 		}
@@ -612,7 +655,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		T[] keyTable = this.keyTable;
 		for (int i = 0; i < keyTable.length && size > newSize; i++) {
 			if (keyTable[i] != null) {
@@ -629,7 +672,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(ObjectQuadSet)}.
 	 */
 	@Override
-	public Iterator<T> iterator () {
+	public Iterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);
@@ -653,18 +696,18 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public ObjectSetIterator (ObjectQuadSet<T> set) {
+		public ObjectSetIterator(ObjectQuadSet<T> set) {
 			this.set = set;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = -1;
 			nextIndex = -1;
 			findNextIndex();
 		}
 
-		private void findNextIndex () {
+		private void findNextIndex() {
 			T[] keyTable = set.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
@@ -676,9 +719,11 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		}
 
 		@Override
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
-			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
+			if (i < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			T[] keyTable = set.keyTable;
 			int mask = set.mask, next = i + 1 & mask;
 			T key;
@@ -692,20 +737,28 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 			}
 			keyTable[i] = null;
 			set.size--;
-			if (i != currentIndex) {--nextIndex;}
+			if (i != currentIndex) {
+				--nextIndex;
+			}
 			currentIndex = -1;
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 
 		@Override
-		public T next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public T next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			T key = set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -713,7 +766,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		}
 
 		@Override
-		public ObjectSetIterator<T> iterator () {
+		public ObjectSetIterator<T> iterator() {
 			return this;
 		}
 
@@ -721,11 +774,13 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<T> toList () {
+		public ObjectList<T> toList() {
 			ObjectList<T> list = new ObjectList<>(set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {list.add(next());}
+			while (hasNext) {
+				list.add(next());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -733,14 +788,14 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		}
 	}
 
-	public static <T> ObjectQuadSet<T> with (T item) {
+	public static <T> ObjectQuadSet<T> with(T item) {
 		ObjectQuadSet<T> set = new ObjectQuadSet<>(1);
 		set.add(item);
 		return set;
 	}
 
 	@SafeVarargs
-	public static <T> ObjectQuadSet<T> with (T... array) {
+	public static <T> ObjectQuadSet<T> with(T... array) {
 		return new ObjectQuadSet<>(array);
 	}
 }

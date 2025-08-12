@@ -31,38 +31,38 @@ import java.util.NoSuchElementException;
  * and can also just change the Iterator with {@link #set(BooleanIterator)}.
  */
 public class EditingBooleanIterator implements BooleanIterator {
-    public BooleanIterator iterator;
-    public BooleanPredicate editor;
+	public BooleanIterator iterator;
+	public BooleanPredicate editor;
 
-    public EditingBooleanIterator() {
-    }
+	public EditingBooleanIterator() {
+	}
 
-    public EditingBooleanIterator(final BooleanIterator iterator, final BooleanPredicate editor) {
-        set(iterator, editor);
-    }
+	public EditingBooleanIterator(final BooleanIterator iterator, final BooleanPredicate editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final BooleanIterator iterator, final BooleanPredicate editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final BooleanIterator iterator, final BooleanPredicate editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final BooleanIterator iterator) {
-        set(iterator, editor);
-    }
+	public void set(final BooleanIterator iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public boolean nextBoolean () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.test(iterator.nextBoolean());
-    }
+	@Override
+	public boolean nextBoolean() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.test(iterator.nextBoolean());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

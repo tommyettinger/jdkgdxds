@@ -30,38 +30,38 @@ import java.util.NoSuchElementException;
  * and can also just change the Iterator with {@link #set(IntIterator)}.
  */
 public class EditingIntIterator implements IntIterator {
-    public IntIterator iterator;
-    public IntToIntFunction editor;
+	public IntIterator iterator;
+	public IntToIntFunction editor;
 
-    public EditingIntIterator() {
-    }
+	public EditingIntIterator() {
+	}
 
-    public EditingIntIterator(final IntIterator iterator, final IntToIntFunction editor) {
-        set(iterator, editor);
-    }
+	public EditingIntIterator(final IntIterator iterator, final IntToIntFunction editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final IntIterator iterator, final IntToIntFunction editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final IntIterator iterator, final IntToIntFunction editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final IntIterator iterator) {
-        set(iterator, editor);
-    }
+	public void set(final IntIterator iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public int nextInt () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.applyAsInt(iterator.nextInt());
-    }
+	@Override
+	public int nextInt() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.applyAsInt(iterator.nextInt());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

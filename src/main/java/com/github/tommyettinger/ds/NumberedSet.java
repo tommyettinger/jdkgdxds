@@ -20,6 +20,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -41,41 +42,41 @@ import java.util.Set;
 public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T> {
 
 	protected class InternalMap extends ObjectIntOrderedMap<T> {
-		public InternalMap () {
+		public InternalMap() {
 			super();
 		}
 
-		public InternalMap (int initialCapacity) {
+		public InternalMap(int initialCapacity) {
 			super(initialCapacity);
 		}
 
-		public InternalMap (int initialCapacity, float loadFactor) {
+		public InternalMap(int initialCapacity, float loadFactor) {
 			super(initialCapacity, loadFactor);
 		}
 
-		public InternalMap (ObjectIntOrderedMap<? extends T> map) {
+		public InternalMap(ObjectIntOrderedMap<? extends T> map) {
 			super(map);
 		}
 
-		public InternalMap (ObjectIntMap<? extends T> map) {
+		public InternalMap(ObjectIntMap<? extends T> map) {
 			super(map);
 		}
 
-		public InternalMap (T[] keys, int[] values) {
+		public InternalMap(T[] keys, int[] values) {
 			super(keys, values);
 		}
 
-		public InternalMap (Collection<? extends T> keys, PrimitiveCollection.OfInt values) {
+		public InternalMap(Collection<? extends T> keys, PrimitiveCollection.OfInt values) {
 			super(keys, values);
 		}
 
 		@Override
-		protected int place (@NonNull Object item) {
+		protected int place(@NonNull Object item) {
 			return NumberedSet.this.place(item);
 		}
 
 		@Override
-		protected boolean equate (Object left, @Nullable Object right) {
+		protected boolean equate(Object left, @Nullable Object right) {
 			return NumberedSet.this.equate(left, right);
 		}
 
@@ -90,23 +91,25 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	protected transient InternalMap map;
-	@Nullable protected transient NumberedSetIterator<T> iterator1;
-	@Nullable protected transient NumberedSetIterator<T> iterator2;
+	@Nullable
+	protected transient NumberedSetIterator<T> iterator1;
+	@Nullable
+	protected transient NumberedSetIterator<T> iterator2;
 
-	public NumberedSet () {
+	public NumberedSet() {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
-	public NumberedSet (int initialCapacity, float loadFactor) {
+	public NumberedSet(int initialCapacity, float loadFactor) {
 		map = new InternalMap(initialCapacity, loadFactor);
 		map.setDefaultValue(-1);
 	}
 
-	public NumberedSet (int initialCapacity) {
+	public NumberedSet(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
-	public NumberedSet (NumberedSet<? extends T> other) {
+	public NumberedSet(NumberedSet<? extends T> other) {
 		map = new InternalMap(other.map);
 	}
 
@@ -116,7 +119,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 *
 	 * @param ordered any {@link Ordered} with the same type as this NumberSet
 	 */
-	public NumberedSet (Ordered<? extends T> ordered) {
+	public NumberedSet(Ordered<? extends T> ordered) {
 		this(ordered.size());
 		addAll(ordered.order());
 	}
@@ -126,7 +129,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 *
 	 * @param coll all distinct items in this Collection will become items in this NumberedSet
 	 */
-	public NumberedSet (Iterator<? extends T> coll) {
+	public NumberedSet(Iterator<? extends T> coll) {
 		this();
 		addAll(coll);
 	}
@@ -136,7 +139,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 *
 	 * @param coll all distinct items in this Collection will become items in this NumberedSet
 	 */
-	public NumberedSet (Collection<? extends T> coll) {
+	public NumberedSet(Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -146,7 +149,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 *
 	 * @param items all distinct elements in this array will become items in this NumberedSet
 	 */
-	public NumberedSet (T[] items) {
+	public NumberedSet(T[] items) {
 		this(items.length);
 		addAll(items);
 	}
@@ -159,7 +162,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public NumberedSet (Ordered<T> other, int offset, int count) {
+	public NumberedSet(Ordered<T> other, int offset, int count) {
 		this(count);
 		addAll(0, other, offset, count);
 	}
@@ -170,7 +173,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link InternalMap#mask} (both inclusive)
 	 */
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		return BitConversion.imul(item.hashCode(), map.hashMultiplier) >>> map.shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & map.mask;
@@ -189,12 +192,12 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left.equals(right);
 	}
 
 	@Override
-	public ObjectList<T> order () {
+	public ObjectList<T> order() {
 		return map.keys;
 	}
 
@@ -206,7 +209,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * Note that you can remove multiple items using the iterator, and only need to renumber just before
 	 * you need the indices (such as for {@link #indexOf(Object)}).
 	 */
-	public void renumber () {
+	public void renumber() {
 		final int s = size();
 		for (int i = 0; i < s; i++) {
 			map.valueTable[map.locateKey(map.keys.get(i))] = i;
@@ -223,7 +226,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 *
 	 * @param start the first index to reassign, which must be non-negative
 	 */
-	public void renumber (final int start) {
+	public void renumber(final int start) {
 		final int s = size();
 		for (int i = start; i < s; i++) {
 			map.valueTable[map.locateKey(map.keys.get(i))] = i;
@@ -232,11 +235,12 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Tries to remove an item from this set and calls {@link #renumber(int)} if that item was removed
+	 *
 	 * @param item object to be removed from this set, if present
 	 * @return true if this set was modified, or false if it wasn't
 	 */
 	@Override
-	public boolean remove (Object item) {
+	public boolean remove(Object item) {
 		int prev = size();
 		int oldIndex = map.remove(item);
 		if (size() != prev) {
@@ -247,7 +251,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public boolean containsAll (Collection<@NonNull ?> c) {
+	public boolean containsAll(Collection<@NonNull ?> c) {
 		for (Object e : c) {
 			if (!map.containsKey(e))
 				return false;
@@ -255,7 +259,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return true;
 	}
 
-	public boolean containsAll (@NonNull Object[] values) {
+	public boolean containsAll(@NonNull Object[] values) {
 		for (Object e : values) {
 			if (!map.containsKey(e))
 				return false;
@@ -263,7 +267,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return true;
 	}
 
-	public boolean containsAll (@NonNull Object[] values, int offset, int length) {
+	public boolean containsAll(@NonNull Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			if (!map.containsKey(values[i]))
 				return false;
@@ -279,7 +283,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return false;
 	}
 
-	public boolean containsAny (@NonNull Object[] values) {
+	public boolean containsAny(@NonNull Object[] values) {
 		for (Object e : values) {
 			if (map.containsKey(e))
 				return true;
@@ -287,7 +291,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return false;
 	}
 
-	public boolean containsAny (@NonNull Object[] values, int offset, int length) {
+	public boolean containsAny(@NonNull Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			if (map.containsKey(values[i]))
 				return true;
@@ -296,7 +300,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public boolean addAll (Collection<@NonNull ? extends T> c) {
+	public boolean addAll(Collection<@NonNull ? extends T> c) {
 		boolean modified = false;
 		for (T t : c)
 			modified |= add(t);
@@ -312,7 +316,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (Ordered<@NonNull T> other, int offset, int count) {
+	public boolean addAll(Ordered<@NonNull T> other, int offset, int count) {
 		return addAll(map.size, other, offset, count);
 	}
 
@@ -326,7 +330,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered<@NonNull T> other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered<@NonNull T> other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -340,10 +344,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	/**
 	 * Adds all items in the T array {@code array} to this set, inserting at the end of the iteration order.
 	 *
-	 * @param array          a non-null array of {@code T}
+	 * @param array a non-null array of {@code T}
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (@NonNull T[] array) {
+	public boolean addAll(@NonNull T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
@@ -351,17 +355,20 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * Adds up to {@code length} items, starting from {@code offset}, in the T array {@code array} to this set,
 	 * inserting at the end of the iteration order.
 	 *
-	 * @param array          a non-null array of {@code T}
-	 * @param offset         the first index in {@code other} to use
-	 * @param length          how many indices in {@code other} to use
+	 * @param array  a non-null array of {@code T}
+	 * @param offset the first index in {@code other} to use
+	 * @param length how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (@NonNull T[] array, int offset, int length) {
+	public boolean addAll(@NonNull T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size();
-		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
+		for (int i = offset, n = i + length; i < n; i++) {
+			add(array[i]);
+		}
 		return oldSize != size();
 	}
+
 	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the T array {@code array} to this set,
 	 * inserting starting at {@code insertionIndex} in the iteration order.
@@ -372,7 +379,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (int insertionIndex, @NonNull T[] array, int offset, int count) {
+	public boolean addAll(int insertionIndex, @NonNull T[] array, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, array.length);
 		ensureCapacity(end - offset);
@@ -384,7 +391,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public boolean retainAll (@NonNull Collection<@NonNull ?> c) {
+	public boolean retainAll(@NonNull Collection<@NonNull ?> c) {
 		boolean modified = false;
 		Iterator<T> it = iterator();
 		while (it.hasNext()) {
@@ -401,7 +408,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public boolean removeAll (@NonNull Collection<?> c) {
+	public boolean removeAll(@NonNull Collection<?> c) {
 		boolean modified = false;
 		Iterator<?> it = iterator();
 		while (it.hasNext()) {
@@ -423,10 +430,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * time it appeared, and won't spend as long processing later items. This calls
 	 * {@link #renumber()} only after all removals were completed, and only if one or more items
 	 * were actually removed.
+	 *
 	 * @param arr a non-null array of items to remove from this set
 	 * @return true if this had one or more items removed, or false if it is unchanged
 	 */
-	public boolean removeAll (@NonNull Object[] arr) {
+	public boolean removeAll(@NonNull Object[] arr) {
 		int prevSize = size();
 		for (int i = 0, len = arr.length; i < len; i++) {
 			map.remove(arr[i]);
@@ -444,12 +452,13 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * time it appeared, and won't spend as long processing later items. This calls
 	 * {@link #renumber()} only after all removals were completed, and only if one or more items
 	 * were actually removed.
+	 *
 	 * @param values a non-null array of items to remove from this set
 	 * @param offset the index of the first item in values to remove
 	 * @param length how many items, at most, to get from values and remove from this
 	 * @return true if this had one or more items removed, or false if it is unchanged
 	 */
-	public boolean removeAll (@NonNull Object[] values, int offset, int length) {
+	public boolean removeAll(@NonNull Object[] values, int offset, int length) {
 		int prevSize = size();
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			map.remove(values[i]);
@@ -467,7 +476,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param index the index of the item to remove
 	 * @return the removed item
 	 */
-	public T removeAt (int index) {
+	public T removeAt(int index) {
 		T old = map.keyAt(index);
 		map.removeAt(index);
 		renumber(index);
@@ -477,9 +486,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	/**
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor.
 	 * Useful before adding many items to avoid multiple backing array resizes.
+	 *
 	 * @param additionalCapacity how many more items this must be able to hold; the load factor increases the actual capacity change
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		map.ensureCapacity(additionalCapacity);
 	}
 
@@ -509,6 +519,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be
 	 * entered. This length is equal to the length of the array used to store all values, and empty space for values,
 	 * here. This is also called the capacity.
+	 *
 	 * @return the length of the internal array that holds all keys
 	 */
 	public int getTableSize() {
@@ -525,7 +536,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param after  an item that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (T before, T after) {
+	public boolean alter(T before, T after) {
 		return map.alter(before, after);
 	}
 
@@ -538,73 +549,78 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the item at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, T after) {
+	public boolean alterAt(int index, T after) {
 		return map.alterAt(index, after);
 	}
 
 	/**
 	 * Returns the item at the given index, which must be at least 0 and less than {@link #size()}.
+	 *
 	 * @param index the index to retrieve; must be between 0, inclusive, and {@link #size()}, exclusive
 	 * @return the item at {@code index}
 	 */
-	public T getAt (int index) {
+	public T getAt(int index) {
 		return map.keyAt(index);
 	}
 
 	/**
 	 * Clears the map and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		map.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		map.clear();
 	}
 
 	/**
 	 * Gets the index of a given item in this set's ordering. Unlike most collections, this takes O(1) time here.
 	 * This returns {@link #getDefaultValue()} (usually -1) if the item was not present.
+	 *
 	 * @param item the item to retrieve the index for
 	 * @return the index of the item, or {@link #getDefaultValue()} (usually -1) if it was not found
 	 */
-	public int indexOf (Object item) {
+	public int indexOf(Object item) {
 		return map.get(item);
 	}
 
 	/**
 	 * Gets the index of a given item in this set's ordering. Unlike most collections, this takes O(1) time here.
 	 * This returns {@code defaultValue} if the item was not present.
+	 *
 	 * @param item the item to retrieve the index for
 	 * @return the index of the item, or {@code defaultValue} if it was not found
 	 */
-	public int indexOfOrDefault (Object item, int defaultValue) {
+	public int indexOfOrDefault(Object item, int defaultValue) {
 		return map.getOrDefault(item, defaultValue);
 	}
 
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return map.notEmpty();
 	}
 
 	@Override
-	public int size () {
+	public int size() {
 		return map.size();
 	}
 
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return map.isEmpty();
 	}
+
 	/**
 	 * Gets the default value, a {@code int} which is returned by {@link #indexOf(Object)} if the key is not found.
 	 * If not changed, the default value is -1 .
 	 *
 	 * @return the current default value
 	 */
-	public int getDefaultValue () {
+	public int getDefaultValue() {
 		return map.getDefaultValue();
 	}
+
 	/**
 	 * Sets the default value, a {@code int} which is returned by {@link #indexOf(Object)} if the key is not found.
 	 * If not changed, the default value is -1 . Note that {@link #indexOfOrDefault(Object, int)} is also available,
@@ -612,21 +628,22 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 *
 	 * @param defaultValue may be any int; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (int defaultValue) {
+	public void setDefaultValue(int defaultValue) {
 		map.setDefaultValue(defaultValue);
 	}
 
-	public void shrink (int maximumCapacity) {
+	public void shrink(int maximumCapacity) {
 		map.shrink(maximumCapacity);
 	}
 
 	/**
 	 * Returns true if this NumberedSet contains the given item, or false otherwise.
+	 *
 	 * @param item element whose presence in this set is to be tested
 	 * @return true if this set contains item, or false otherwise
 	 */
 	@Override
-	public boolean contains (Object item) {
+	public boolean contains(Object item) {
 		return map.containsKey(item);
 	}
 
@@ -636,8 +653,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
-		if (size() > newSize) {removeRange(newSize, size());}
+	public void truncate(int newSize) {
+		if (size() > newSize) {
+			removeRange(newSize, size());
+		}
 	}
 
 	/**
@@ -647,10 +666,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * {@link NumberedSetIterator#NumberedSetIterator(NumberedSet)} if
 	 * you need nested iteration.
 	 * This is equivalent to {@link #listIterator()}.
+	 *
 	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
 	 */
 	@Override
-	public @NonNull NumberedSetIterator<T> iterator () {
+	public @NonNull NumberedSetIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new NumberedSetIterator<>(this);
 			iterator2 = new NumberedSetIterator<>(this);
@@ -666,15 +686,17 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		iterator1.valid = false;
 		return iterator2;
 	}
+
 	/**
 	 * Returns a {@link ListIterator} starting at index 0.
 	 * This caches the iterator to avoid repeated allocation, and so is not
 	 * suitable for nested iteration. You can use
 	 * {@link NumberedSetIterator#NumberedSetIterator(NumberedSet)} if
 	 * you need nested iteration.
+	 *
 	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
 	 */
-	public NumberedSetIterator<T> listIterator () {
+	public NumberedSetIterator<T> listIterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new NumberedSetIterator<>(this);
 			iterator2 = new NumberedSetIterator<>(this);
@@ -698,10 +720,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * {@link NumberedSetIterator#NumberedSetIterator(NumberedSet, int)} if
 	 * you need nested iteration. Giving an index of 0 is equivalent to calling
 	 * {@link #listIterator()}, and starts at the first item in the order.
+	 *
 	 * @param index the first index in this set's order to iterate from
 	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
 	 */
-	public NumberedSetIterator<T> listIterator (int index) {
+	public NumberedSetIterator<T> listIterator(int index) {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new NumberedSetIterator<>(this, index);
 			iterator2 = new NumberedSetIterator<>(this, index);
@@ -728,22 +751,22 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		map.removeRange(start, end);
 	}
 
 	@Override
-	public Object @NonNull [] toArray () {
+	public Object @NonNull [] toArray() {
 		return map.keySet().toArray();
 	}
 
 	@Override
-	public <T1> T1 @NonNull [] toArray (T1 @NonNull [] a) {
+	public <T1> T1 @NonNull [] toArray(T1 @NonNull [] a) {
 		return map.keySet().toArray(a);
 	}
 
 	@Override
-	public boolean add (T t) {
+	public boolean add(T t) {
 		final int s = size();
 		map.putIfAbsent(t, s);
 		return s != size();
@@ -756,7 +779,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param t an item to get the index of, adding it if not present
 	 * @return the index of {@code t} in this Arrangement
 	 */
-	public int addOrIndex (final T t) {
+	public int addOrIndex(final T t) {
 		return map.addOrIndex(t);
 	}
 
@@ -769,7 +792,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param key   what T item to try to add, if not already present
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
-	public boolean add (int index, T key) {
+	public boolean add(int index, T key) {
 		int old = map.get(key);
 		if (old != -1) {
 			if (old != index) {
@@ -784,12 +807,12 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return true;
 	}
 
-	public void resize (int newSize) {
+	public void resize(int newSize) {
 		map.resize(newSize);
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if (o == this)
 			return true;
 
@@ -805,27 +828,27 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		}
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return map.getLoadFactor();
 	}
 
-	public void setLoadFactor (float loadFactor) {
+	public void setLoadFactor(float loadFactor) {
 		map.setLoadFactor(loadFactor);
 	}
 
-	public T first () {
+	public T first() {
 		if (size() == 0)
 			throw new IllegalStateException("Cannot get the first() item of an empty NumberedSet.");
 		return map.keyAt(0);
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		return map.hashCode();
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return map.toString(", ", true);
 	}
 
@@ -836,13 +859,14 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param itemSeparator how to separate set items, such as {@code ", "}
 	 * @return a new String representing this set
 	 */
-	public String toString (String itemSeparator) {
+	public String toString(String itemSeparator) {
 		return map.keys.toString(itemSeparator, false);
 	}
 
-	public String toString (String itemSeparator, boolean braces) {
+	public String toString(String itemSeparator, boolean braces) {
 		return map.keys.appendTo(new StringBuilder(32), itemSeparator, braces).toString();
 	}
+
 	/**
 	 * Makes a String from the contents of this NumberedSet, but uses the given {@link Appender}
 	 * to convert all set items to a customizable representation and append them
@@ -850,14 +874,15 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
 	 * @param entrySeparator how to separate set items, such as {@code ", "}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and a T, and returns the modified StringBuilder
+	 * @param braces         true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender    a function that takes a StringBuilder and a T, and returns the modified StringBuilder
 	 * @return a new String representing this set
 	 */
-	public String toString (String entrySeparator, boolean braces, Appender<T> keyAppender){
+	public String toString(String entrySeparator, boolean braces, Appender<T> keyAppender) {
 		return map.keys.appendTo(new StringBuilder(), entrySeparator, braces, keyAppender).toString();
 	}
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
+
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
 		return map.keys.appendTo(sb, entrySeparator, braces, StringBuilder::append);
 	}
 
@@ -867,19 +892,20 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * to a StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
-	 * @param sb a StringBuilder that this can append to
+	 * @param sb            a StringBuilder that this can append to
 	 * @param itemSeparator how to separate set items, such as {@code ", "}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and a T, and returns the modified StringBuilder
+	 * @param braces        true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender   a function that takes a StringBuilder and a T, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended items of this set
 	 */
-	public StringBuilder appendTo (StringBuilder sb, String itemSeparator, boolean braces,
-		Appender<T> keyAppender) {
+	public StringBuilder appendTo(StringBuilder sb, String itemSeparator, boolean braces,
+								  Appender<T> keyAppender) {
 		return map.keys.appendTo(sb, itemSeparator, braces, keyAppender);
 	}
 
 	/**
 	 * An {@link Iterator} and {@link ListIterator} over the elements of an ObjectList, while also an {@link Iterable}.
+	 *
 	 * @param <T> the generic type for the ObjectList this iterates over
 	 */
 	public static class NumberedSetIterator<T> implements Iterable<T>, ListIterator<T> {
@@ -887,11 +913,11 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		protected NumberedSet<T> ns;
 		protected boolean valid = true;
 
-		public NumberedSetIterator (NumberedSet<T> ns) {
+		public NumberedSetIterator(NumberedSet<T> ns) {
 			this.ns = ns;
 		}
 
-		public NumberedSetIterator (NumberedSet<T> ns, int index) {
+		public NumberedSetIterator(NumberedSet<T> ns, int index) {
 			if (index < 0 || index >= ns.size())
 				throw new IndexOutOfBoundsException("NumberedSetIterator does not satisfy index >= 0 && index < list.size()");
 			this.ns = ns;
@@ -906,9 +932,13 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		@Nullable
-		public T next () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= ns.size()) {throw new NoSuchElementException();}
+		public T next() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index >= ns.size()) {
+				throw new NoSuchElementException();
+			}
 			return ns.getAt(latest = index++);
 		}
 
@@ -920,8 +950,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index < ns.size();
 		}
 
@@ -935,8 +967,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 * traversing the list in the reverse direction
 		 */
 		@Override
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index > 0 && ns.notEmpty();
 		}
 
@@ -954,9 +988,13 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		@Nullable
-		public T previous () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index <= 0 || ns.isEmpty()) {throw new NoSuchElementException();}
+		public T previous() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index <= 0 || ns.isEmpty()) {
+				throw new NoSuchElementException();
+			}
 			return ns.getAt(latest = --index);
 		}
 
@@ -970,7 +1008,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 * iterator is at the end of the list
 		 */
 		@Override
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -984,7 +1022,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 * iterator is at the beginning of the list
 		 */
 		@Override
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -1003,9 +1041,13 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= ns.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= ns.size()) {
+				throw new NoSuchElementException();
+			}
 			ns.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -1032,9 +1074,13 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void set (T t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= ns.size()) {throw new NoSuchElementException();}
+		public void set(T t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= ns.size()) {
+				throw new NoSuchElementException();
+			}
 			ns.alterAt(latest, t);
 		}
 
@@ -1059,19 +1105,23 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 *                                       prevents it from being added to this list
 		 */
 		@Override
-		public void add (@Nullable T t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > ns.size()) {throw new NoSuchElementException();}
+		public void add(@Nullable T t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > ns.size()) {
+				throw new NoSuchElementException();
+			}
 			ns.add(index++, t);
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = 0;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= ns.size())
 				throw new IndexOutOfBoundsException("NumberedSetIterator does not satisfy index >= 0 && index < list.size()");
 			this.index = index;
@@ -1084,7 +1134,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 * @return a ListIterator; really this same NumberedSetIterator.
 		 */
 		@Override
-		public @NonNull NumberedSetIterator<T> iterator () {
+		public @NonNull NumberedSetIterator<T> iterator() {
 			return this;
 		}
 	}
@@ -1095,20 +1145,21 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <T>    the type of items; must be given explicitly
+	 * @param <T> the type of items; must be given explicitly
 	 * @return a new set containing nothing
 	 */
-	public static <T> NumberedSet<T> with () {
+	public static <T> NumberedSet<T> with() {
 		return new NumberedSet<>(0);
 	}
 
 	/**
 	 * Creates a new NumberedSet that holds only the given item, but can be resized.
+	 *
 	 * @param item one T item
+	 * @param <T>  the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given item
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> NumberedSet<T> with (T item) {
+	public static <T> NumberedSet<T> with(T item) {
 		NumberedSet<T> set = new NumberedSet<>(1);
 		set.add(item);
 		return set;
@@ -1116,12 +1167,13 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> NumberedSet<T> with (T item0, T item1) {
+	public static <T> NumberedSet<T> with(T item0, T item1) {
 		NumberedSet<T> set = new NumberedSet<>(2);
 		set.add(item0, item1);
 		return set;
@@ -1129,13 +1181,14 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> NumberedSet<T> with (T item0, T item1, T item2) {
+	public static <T> NumberedSet<T> with(T item0, T item1, T item2) {
 		NumberedSet<T> set = new NumberedSet<>(3);
 		set.add(item0, item1, item2);
 		return set;
@@ -1143,14 +1196,15 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3) {
+	public static <T> NumberedSet<T> with(T item0, T item1, T item2, T item3) {
 		NumberedSet<T> set = new NumberedSet<>(4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -1158,15 +1212,16 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3, T item4) {
+	public static <T> NumberedSet<T> with(T item0, T item1, T item2, T item3, T item4) {
 		NumberedSet<T> set = new NumberedSet<>(5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -1175,16 +1230,17 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
 	 * @param item5 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+	public static <T> NumberedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		NumberedSet<T> set = new NumberedSet<>(6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -1193,6 +1249,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -1200,10 +1257,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+	public static <T> NumberedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		NumberedSet<T> set = new NumberedSet<>(7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -1212,6 +1269,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 
 	/**
 	 * Creates a new NumberedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -1219,10 +1277,10 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> NumberedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+	public static <T> NumberedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		NumberedSet<T> set = new NumberedSet<>(8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -1234,12 +1292,13 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @param <T>     the type of item, typically inferred
 	 * @return a new NumberedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
 	@SafeVarargs
-	public static <T> NumberedSet<T> with (T... varargs) {
+	public static <T> NumberedSet<T> with(T... varargs) {
 		return new NumberedSet<>(varargs);
 	}
 }

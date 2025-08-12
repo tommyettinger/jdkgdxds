@@ -32,56 +32,56 @@ import java.util.NoSuchElementException;
  * to handle primitive items.
  */
 public class FilteringByteIterator implements ByteIterator {
-    public ByteIterator iterator;
-    public BytePredicate filter;
-    protected boolean end = false;
-    protected boolean available = false;
-    protected byte next;
+	public ByteIterator iterator;
+	public BytePredicate filter;
+	protected boolean end = false;
+	protected boolean available = false;
+	protected byte next;
 
-    public FilteringByteIterator() {
-    }
+	public FilteringByteIterator() {
+	}
 
-    public FilteringByteIterator(final ByteIterator iterator, final BytePredicate filter) {
-        set(iterator, filter);
-    }
+	public FilteringByteIterator(final ByteIterator iterator, final BytePredicate filter) {
+		set(iterator, filter);
+	}
 
-    public void set(final ByteIterator iterator, final BytePredicate predicate) {
-        this.iterator = iterator;
-        this.filter = predicate;
-        end = available = false;
-    }
+	public void set(final ByteIterator iterator, final BytePredicate predicate) {
+		this.iterator = iterator;
+		this.filter = predicate;
+		end = available = false;
+	}
 
-    public void set(final ByteIterator iterator) {
-        set(iterator, filter);
-    }
+	public void set(final ByteIterator iterator) {
+		set(iterator, filter);
+	}
 
-    @Override
-    public boolean hasNext() {
-        if (end) return false;
-        if (available) return true;
-        while (iterator.hasNext()) {
-            final byte n = iterator.nextByte();
-            if (filter.test(n)) {
-                next = n;
-                available = true;
-                return true;
-            }
-        }
-        end = true;
-        return false;
-    }
+	@Override
+	public boolean hasNext() {
+		if (end) return false;
+		if (available) return true;
+		while (iterator.hasNext()) {
+			final byte n = iterator.nextByte();
+			if (filter.test(n)) {
+				next = n;
+				available = true;
+				return true;
+			}
+		}
+		end = true;
+		return false;
+	}
 
-    @Override
-    public byte nextByte() {
-        if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
-        final byte result = next;
-        available = false;
-        return result;
-    }
+	@Override
+	public byte nextByte() {
+		if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
+		final byte result = next;
+		available = false;
+		return result;
+	}
 
-    @Override
-    public void remove() {
-        if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
+		iterator.remove();
+	}
 }

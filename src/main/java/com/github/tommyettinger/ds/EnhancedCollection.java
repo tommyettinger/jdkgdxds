@@ -32,6 +32,7 @@ import java.util.Iterator;
 public interface EnhancedCollection<T> extends Collection<T> {
 	/**
 	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @return true if this modified the set
@@ -42,6 +43,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 
 	/**
 	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -53,6 +55,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 
 	/**
 	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -65,6 +68,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 
 	/**
 	 * Gets the {@link Iterable#iterator()} from the parameter and delegates to {@link #addAll(Iterator)}.
+	 *
 	 * @param it an Iterable of items to append to this EnhancedCollection
 	 * @return true if this collection was modified.
 	 */
@@ -75,10 +79,11 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	/**
 	 * Goes through the given Iterator until it is exhausted, adding every item to this EnhancedCollection using
 	 * {@link #add(Object)}.
+	 *
 	 * @param it an Iterator of items to append to this EnhancedCollection
 	 * @return true if this collection was modified.
 	 */
-	default boolean addAll (Iterator<? extends T> it) {
+	default boolean addAll(Iterator<? extends T> it) {
 		int oldSize = size();
 		while (it.hasNext()) {
 			add(it.next());
@@ -86,11 +91,11 @@ public interface EnhancedCollection<T> extends Collection<T> {
 		return oldSize != size();
 	}
 
-	default boolean addAll (T[] array) {
+	default boolean addAll(T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
-	default boolean addAll (T[] array, int offset, int length) {
+	default boolean addAll(T[] array, int offset, int length) {
 		boolean changed = false;
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			changed |= add(array[i]);
@@ -110,8 +115,10 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	default boolean addVarargs(T... varargs) {
 		return varargs != null && addAll(varargs, 0, varargs.length);
 	}
+
 	/**
 	 * Gets the {@link Iterable#iterator()} from the parameter and delegates to {@link #removeAll(Iterator)}.
+	 *
 	 * @param it an Iterable of items to remove fully
 	 * @return true if this collection was modified.
 	 */
@@ -125,7 +132,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param it an Iterator of items to remove fully
 	 * @return true if this collection was modified.
 	 */
-	default boolean removeAll (Iterator<? extends T> it) {
+	default boolean removeAll(Iterator<? extends T> it) {
 		Iterator<T> me;
 		int originalSize = size();
 		while (it.hasNext()) {
@@ -146,7 +153,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param array a non-null array of items to remove fully
 	 * @return true if this collection was modified.
 	 */
-	default boolean removeAll (Object[] array) {
+	default boolean removeAll(Object[] array) {
 		return removeAll(array, 0, array.length);
 	}
 
@@ -154,12 +161,12 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * Removes from this collection all occurrences of any elements contained in the specified array, but only starts
 	 * reading elements from the array starting at the given {@code offset} and only uses {@code length} items.
 	 *
-	 * @param array a non-null array of items to remove fully
+	 * @param array  a non-null array of items to remove fully
 	 * @param offset the first index in {@code array} to use
 	 * @param length how many items from {@code array} should be used
 	 * @return true if this collection was modified.
 	 */
-	default boolean removeAll (Object[] array, int offset, int length) {
+	default boolean removeAll(Object[] array, int offset, int length) {
 		Iterator<T> me;
 		int originalSize = size();
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
@@ -196,7 +203,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param it an Iterator of any items to remove one-by-one, such as an ObjectList or ObjectSet
 	 * @return true if this collection was modified.
 	 */
-	default boolean removeEach (Iterator<?> it) {
+	default boolean removeEach(Iterator<?> it) {
 		boolean changed = false;
 		while (it.hasNext()) {
 			changed |= remove(it.next());
@@ -213,7 +220,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param array an array of any items to remove one-by-one, such as an ObjectList or ObjectSet
 	 * @return true if this collection was modified.
 	 */
-	default boolean removeEach (Object[] array) {
+	default boolean removeEach(Object[] array) {
 		return removeEach(array, 0, array.length);
 	}
 
@@ -223,12 +230,12 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * will be removed for each occurrence of that value in {@code other}. If {@code other} has the same
 	 * contents as this collection or has additional items, then removing each of {@code other} will clear this.
 	 *
-	 * @param array an array of any items to remove one-by-one, such as an ObjectList or ObjectSet
+	 * @param array  an array of any items to remove one-by-one, such as an ObjectList or ObjectSet
 	 * @param offset the first index in {@code array} to use
 	 * @param length how many items from {@code array} should be used
 	 * @return true if this collection was modified.
 	 */
-	default boolean removeEach (Object[] array, int offset, int length) {
+	default boolean removeEach(Object[] array, int offset, int length) {
 		boolean changed = false;
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			changed |= remove(array[i]);
@@ -260,9 +267,9 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @throws NullPointerException if the specified Iterator is null.
 	 * @see #contains(Object)
 	 */
-	default boolean containsAll (Iterator<?> it) {
+	default boolean containsAll(Iterator<?> it) {
 		while (it.hasNext()) {
-			if(!contains(it.next())) return false;
+			if (!contains(it.next())) return false;
 		}
 		return true;
 	}
@@ -277,7 +284,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @throws NullPointerException if the specified collection is null.
 	 * @see #contains(Object)
 	 */
-	default boolean containsAll (Object[] array) {
+	default boolean containsAll(Object[] array) {
 		return containsAll(array, 0, array.length);
 	}
 
@@ -285,7 +292,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * Returns {@code true} if this collection contains all the elements
 	 * in the specified array starting from {@code offset} and using {@code length} items from the array.
 	 *
-	 * @param array a non-null array to have items checked for containment in this collection
+	 * @param array  a non-null array to have items checked for containment in this collection
 	 * @param offset the first index in {@code array} to use
 	 * @param length how many items from {@code array} should be used
 	 * @return {@code true} if this collection contains all the elements
@@ -293,9 +300,9 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @throws NullPointerException if the specified collection is null.
 	 * @see #contains(Object)
 	 */
-	default boolean containsAll (Object[] array, int offset, int length) {
+	default boolean containsAll(Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			if(!contains(array[i])) return false;
+			if (!contains(array[i])) return false;
 		}
 		return true;
 	}
@@ -303,6 +310,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	/**
 	 * Like {@link Collection#containsAll(Collection)}, but returns true immediately if any item in the given Iterable
 	 * {@code other} is present in this EnhancedCollection.
+	 *
 	 * @param other a Collection or other Iterable of any type to look through
 	 * @return true if any items from the Iterable are present in this EnhancedCollection
 	 */
@@ -313,31 +321,33 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	/**
 	 * Like {@link Collection#containsAll(Collection)}, but returns true immediately if any item in the given Iterator
 	 * {@code it} is present in this EnhancedCollection.
+	 *
 	 * @param it an Iterator of any type to look through
 	 * @return true if any items from the Iterator are present in this EnhancedCollection
 	 */
-	default boolean containsAny (Iterator<?> it) {
+	default boolean containsAny(Iterator<?> it) {
 		while (it.hasNext()) {
-			if(contains(it.next())) return true;
+			if (contains(it.next())) return true;
 		}
 		return false;
 	}
 
-	default boolean containsAny (Object[] array) {
+	default boolean containsAny(Object[] array) {
 		return containsAny(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link Collection#containsAll(Collection)}, but returns true immediately if any item in the given {@code array}
 	 * is present in this EnhancedCollection.
-	 * @param array an array to look through; will not be modified
+	 *
+	 * @param array  an array to look through; will not be modified
 	 * @param offset the first index in array to check
 	 * @param length how many items in array to check
 	 * @return true if any items from array are present in this EnhancedCollection
 	 */
-	default boolean containsAny (Object[] array, int offset, int length) {
+	default boolean containsAny(Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			if(contains(array[i])) return true;
+			if (contains(array[i])) return true;
 		}
 		return false;
 	}
@@ -359,7 +369,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @return the first item in this EnhancedCollection, as produced by {@link #iterator()}
 	 * @throws IllegalStateException if this is empty
 	 */
-	default T first () {
+	default T first() {
 		Iterator<T> it = iterator();
 		if (it.hasNext())
 			return it.next();
@@ -374,7 +384,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param itemSeparator how to separate items, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
-	default String toString (String itemSeparator) {
+	default String toString(String itemSeparator) {
 		return toString(itemSeparator, false);
 	}
 
@@ -386,10 +396,10 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * Delegates to {@link #appendTo(StringBuilder, String, boolean)}.
 	 *
 	 * @param itemSeparator how to separate items, such as {@code ", "}
-	 * @param brackets true to wrap the result in square brackets, or false to leave the items unadorned
+	 * @param brackets      true to wrap the result in square brackets, or false to leave the items unadorned
 	 * @return a new String representing this EnhancedCollection
 	 */
-	default String toString (String itemSeparator, boolean brackets) {
+	default String toString(String itemSeparator, boolean brackets) {
 		return appendTo(new StringBuilder(32), itemSeparator, brackets).toString();
 	}
 
@@ -406,12 +416,12 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * Delegates to {@link #appendTo(StringBuilder, String, boolean, Appender)}.
 	 *
 	 * @param separator how to separate items, such as {@code ", "}
-	 * @param brackets true to wrap the output in square brackets, or false to omit them
-	 * @param appender a function that takes a StringBuilder and a T, and returns the modified StringBuilder
+	 * @param brackets  true to wrap the output in square brackets, or false to omit them
+	 * @param appender  a function that takes a StringBuilder and a T, and returns the modified StringBuilder
 	 * @return a new String representing this EnhancedCollection
 	 */
-	default String toString (String separator, boolean brackets,
-		Appender<T> appender){
+	default String toString(String separator, boolean brackets,
+							Appender<T> appender) {
 		return appendTo(new StringBuilder(), separator, brackets, appender).toString();
 	}
 
@@ -427,12 +437,12 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * <br>
 	 * Delegates to {@link #appendTo(StringBuilder, String, boolean, Appender)}.
 	 *
-	 * @param sb a StringBuilder that this can append to
+	 * @param sb        a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
-	 * @param brackets true to wrap the output in square brackets, or false to omit them
+	 * @param brackets  true to wrap the output in square brackets, or false to omit them
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
 	 */
-    default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets) {
+	default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets) {
 		return appendTo(sb, separator, brackets, StringBuilder::append);
 	}
 
@@ -444,17 +454,21 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
 	 * {@code public static final Appender<String> STRING_APPENDER = StringBuilder::append;}
 	 *
-	 * @param sb a StringBuilder that this can append to
+	 * @param sb        a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
-	 * @param brackets true to wrap the output in square brackets, or false to omit them
-	 * @param appender a function that takes a StringBuilder and a T, and returns the modified StringBuilder
+	 * @param brackets  true to wrap the output in square brackets, or false to omit them
+	 * @param appender  a function that takes a StringBuilder and a T, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
 	 */
-	default StringBuilder appendTo (StringBuilder sb, String separator, boolean brackets, Appender<T> appender) {
-		if (isEmpty()) {return brackets ? sb.append("[]") : sb;}
-		if (brackets) {sb.append('[');}
+	default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets, Appender<T> appender) {
+		if (isEmpty()) {
+			return brackets ? sb.append("[]") : sb;
+		}
+		if (brackets) {
+			sb.append('[');
+		}
 		Iterator<T> it = iterator();
-		if(it.hasNext()) {
+		if (it.hasNext()) {
 			while (true) {
 				T next = it.next();
 				if (next == this) sb.append("(this)");
@@ -473,9 +487,10 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * A PartialParser will be used to parse items from sections of {@code str}. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing string representations of items
+	 *
+	 * @param str       a String containing string representations of items
 	 * @param delimiter the String separating every item in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
 	 */
 	default void addLegible(String str, String delimiter, PartialParser<T> parser) {
 		addLegible(str, delimiter, parser, 0, -1);
@@ -487,23 +502,25 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * A PartialParser will be used to parse items from sections of {@code str}. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing string representations of items
+	 *
+	 * @param str       a String containing string representations of items
 	 * @param delimiter the String separating every item in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
-	 * @param offset the first position to read items from in {@code str}
-	 * @param length how many chars to read; -1 is treated as maximum length
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param offset    the first position to read items from in {@code str}
+	 * @param length    how many chars to read; -1 is treated as maximum length
 	 */
 	default void addLegible(String str, String delimiter, PartialParser<T> parser, int offset, int length) {
 		int sl, dl;
-		if(str == null || delimiter == null || parser == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1) return;
+		if (str == null || delimiter == null || parser == null || (sl = str.length()) < 1 || (dl = delimiter.length()) < 1 || offset < 0 || offset > sl - 1)
+			return;
 		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
-		int end = str.indexOf(delimiter, offset+1);
+		int end = str.indexOf(delimiter, offset + 1);
 		while (end != -1 && end + dl < lim) {
 			add(parser.parse(str, offset, end));
 			offset = end + dl;
-			end = str.indexOf(delimiter, offset+1);
+			end = str.indexOf(delimiter, offset + 1);
 		}
-		if(offset < lim){
+		if (offset < lim) {
 			add(parser.parse(str, offset, lim));
 		}
 	}

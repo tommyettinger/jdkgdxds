@@ -24,13 +24,13 @@ import com.github.tommyettinger.function.ObjCharToObjBiFunction;
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, char)}.
  */
 public interface CharAppender extends ObjCharToObjBiFunction<StringBuilder, StringBuilder> {
-    /**
-     * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
-     * {@code StringBuilder::append} is present at a call-site. This should be used in place of
-     * {@link StringBuilder#append(char)} when you want to use that as a CharAppender.
-     * <br>
-     * This functional interface doesn't have a {@code DENSE} method reference because appending one shown char per char
-     * item is really as dense as you can get already.
-     */
-    CharAppender DEFAULT = StringBuilder::append;
+	/**
+	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
+	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
+	 * {@link StringBuilder#append(char)} when you want to use that as a CharAppender.
+	 * <br>
+	 * This functional interface doesn't have a {@code DENSE} method reference because appending one shown char per char
+	 * item is really as dense as you can get already.
+	 */
+	CharAppender DEFAULT = StringBuilder::append;
 }

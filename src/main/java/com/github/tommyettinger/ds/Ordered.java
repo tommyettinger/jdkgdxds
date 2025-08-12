@@ -26,6 +26,7 @@ import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
@@ -47,7 +48,7 @@ public interface Ordered<T> extends Arrangeable {
 	 *
 	 * @return the ObjectList of T items that this data structure holds
 	 */
-	ObjectList<T> order ();
+	ObjectList<T> order();
 
 	/**
 	 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -56,7 +57,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
 	@Override
-	default void swap (int first, int second) {
+	default void swap(int first, int second) {
 		ObjectList<T> order = order();
 		order.set(first, order.set(second, order.get(first)));
 	}
@@ -69,7 +70,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * @param rng any {@link Random}, such as {@link com.github.tommyettinger.digital.AlternateRandom} or one from juniper
 	 */
 	@Override
-	default void shuffle (Random rng) {
+	default void shuffle(Random rng) {
 		ObjectList<T> order = order();
 		for (int i = order.size() - 1; i > 0; i--) {
 			order.set(i, order.set(rng.nextInt(i + 1), order.get(i)));
@@ -80,7 +81,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * Reverses the order of this Ordered in-place.
 	 */
 	@Override
-	default void reverse () {
+	default void reverse() {
 		Collections.reverse(order());
 	}
 
@@ -93,7 +94,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * @param rng any {@link Random} class
 	 * @return a random T value from this Ordered
 	 */
-	default T random (Random rng) {
+	default T random(Random rng) {
 		return order().random(rng);
 	}
 
@@ -113,7 +114,7 @@ public interface Ordered<T> extends Arrangeable {
 	 *
 	 * @param comparator used to sort the T items this contains; may be null if T implements Comparable
 	 */
-	default void sort (@Nullable Comparator<? super T> comparator) {
+	default void sort(@Nullable Comparator<? super T> comparator) {
 		order().sort(comparator);
 	}
 
@@ -127,7 +128,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * @return the value of the kth lowest ranked object.
 	 * @see Select
 	 */
-	default T selectRanked (Comparator<T> comparator, int kthLowest) {
+	default T selectRanked(Comparator<T> comparator, int kthLowest) {
 		if (kthLowest < 1) {
 			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 		}
@@ -144,7 +145,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * @return the index of the kth lowest ranked object.
 	 * @see Ordered#selectRanked(Comparator, int)
 	 */
-	default int selectRankedIndex (Comparator<T> comparator, int kthLowest) {
+	default int selectRankedIndex(Comparator<T> comparator, int kthLowest) {
 		if (kthLowest < 1) {
 			throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 		}
@@ -158,13 +159,13 @@ public interface Ordered<T> extends Arrangeable {
 	 * @param start inclusive start of the range to remove from the ordering
 	 * @param end   exclusive end of the range to remove from the ordering
 	 */
-	default void removeRange (int start, int end) {
+	default void removeRange(int start, int end) {
 		order().removeRange(start, end);
 	}
 
 	default OrderType getOrderType() {
 		ObjectList<T> o = order();
-		if(o instanceof ObjectBag) return OrderType.BAG;
+		if (o instanceof ObjectBag) return OrderType.BAG;
 		return OrderType.LIST;
 	}
 
@@ -179,7 +180,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @return the IntList of int items that this data structure holds
 		 */
-		IntList order ();
+		IntList order();
 
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -188,7 +189,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int first, int second) {
+		default void swap(int first, int second) {
 			order().swap(first, second);
 		}
 
@@ -200,7 +201,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (Random rng) {
+		default void shuffle(Random rng) {
 			IntList order = order();
 			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -211,7 +212,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Reverses the order of this Ordered in-place.
 		 */
 		@Override
-		default void reverse () {
+		default void reverse() {
 			order().reverse();
 		}
 
@@ -223,7 +224,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class
 		 * @return a random int value from this Ordered.OfInt
 		 */
-		default int random (Random rng) {
+		default int random(Random rng) {
 			return order().random(rng);
 		}
 
@@ -237,7 +238,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort (@Nullable IntComparator comparator) {
+		default void sort(@Nullable IntComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -251,7 +252,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the value of the kth lowest ranked item.
 		 * @see Select
 		 */
-		default int selectRanked (IntComparator comparator, int kthLowest) {
+		default int selectRanked(IntComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -268,7 +269,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the index of the kth lowest ranked item.
 		 * @see Ordered.OfInt#selectRanked(Comparator, int)
 		 */
-		default int selectRankedIndex (IntComparator comparator, int kthLowest) {
+		default int selectRankedIndex(IntComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -282,14 +283,14 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param start inclusive start of the range to remove from the ordering
 		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange (int start, int end) {
+		default void removeRange(int start, int end) {
 			order().removeRange(start, end);
 		}
 
 		default OrderType getOrderType() {
 			IntList o = order();
-			if(o instanceof IntBag) return OrderType.BAG;
-			if(o instanceof IntDeque) return OrderType.DEQUE;
+			if (o instanceof IntBag) return OrderType.BAG;
+			if (o instanceof IntDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
 	}
@@ -305,7 +306,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @return the LongList of long items that this data structure holds
 		 */
-		LongList order ();
+		LongList order();
 
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -314,7 +315,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int first, int second) {
+		default void swap(int first, int second) {
 			order().swap(first, second);
 		}
 
@@ -326,7 +327,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (Random rng) {
+		default void shuffle(Random rng) {
 			LongList order = order();
 			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -337,7 +338,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Reverses the order of this Ordered in-place.
 		 */
 		@Override
-		default void reverse () {
+		default void reverse() {
 			order().reverse();
 		}
 
@@ -349,7 +350,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class
 		 * @return a random long value from this Ordered.OfLong
 		 */
-		default long random (Random rng) {
+		default long random(Random rng) {
 			return order().random(rng);
 		}
 
@@ -363,7 +364,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort (@Nullable LongComparator comparator) {
+		default void sort(@Nullable LongComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -377,7 +378,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the value of the kth lowest ranked item.
 		 * @see Select
 		 */
-		default long selectRanked (LongComparator comparator, int kthLowest) {
+		default long selectRanked(LongComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -394,7 +395,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the index of the kth lowest ranked item.
 		 * @see Ordered.OfLong#selectRanked(LongComparator, int)
 		 */
-		default int selectRankedIndex (LongComparator comparator, int kthLowest) {
+		default int selectRankedIndex(LongComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -408,14 +409,14 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param start inclusive start of the range to remove from the ordering
 		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange (int start, int end) {
+		default void removeRange(int start, int end) {
 			order().removeRange(start, end);
 		}
 
 		default OrderType getOrderType() {
 			LongList o = order();
-			if(o instanceof LongBag) return OrderType.BAG;
-			if(o instanceof LongDeque) return OrderType.DEQUE;
+			if (o instanceof LongBag) return OrderType.BAG;
+			if (o instanceof LongDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
 	}
@@ -431,7 +432,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @return the FloatList of float items that this data structure holds
 		 */
-		FloatList order ();
+		FloatList order();
 
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -440,7 +441,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int first, int second) {
+		default void swap(int first, int second) {
 			order().swap(first, second);
 		}
 
@@ -452,7 +453,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (Random rng) {
+		default void shuffle(Random rng) {
 			FloatList order = order();
 			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -463,7 +464,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Reverses the order of this Ordered in-place.
 		 */
 		@Override
-		default void reverse () {
+		default void reverse() {
 			order().reverse();
 		}
 
@@ -475,7 +476,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class
 		 * @return a random float value from this Ordered.OfFloat
 		 */
-		default float random (Random rng) {
+		default float random(Random rng) {
 			return order().random(rng);
 		}
 
@@ -489,7 +490,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort (@Nullable FloatComparator comparator) {
+		default void sort(@Nullable FloatComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -503,7 +504,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the value of the kth lowest ranked item.
 		 * @see Select
 		 */
-		default float selectRanked (FloatComparator comparator, int kthLowest) {
+		default float selectRanked(FloatComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -520,7 +521,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the index of the kth lowest ranked item.
 		 * @see Ordered.OfFloat#selectRanked(FloatComparator, int)
 		 */
-		default int selectRankedIndex (FloatComparator comparator, int kthLowest) {
+		default int selectRankedIndex(FloatComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -534,14 +535,14 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param start inclusive start of the range to remove from the ordering
 		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange (int start, int end) {
+		default void removeRange(int start, int end) {
 			order().removeRange(start, end);
 		}
 
 		default OrderType getOrderType() {
 			FloatList o = order();
-			if(o instanceof FloatBag) return OrderType.BAG;
-			if(o instanceof FloatDeque) return OrderType.DEQUE;
+			if (o instanceof FloatBag) return OrderType.BAG;
+			if (o instanceof FloatDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
 	}
@@ -557,7 +558,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @return the DoubleList of double items that this data structure holds
 		 */
-		DoubleList order ();
+		DoubleList order();
 
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -566,7 +567,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int first, int second) {
+		default void swap(int first, int second) {
 			order().swap(first, second);
 		}
 
@@ -578,7 +579,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (Random rng) {
+		default void shuffle(Random rng) {
 			DoubleList order = order();
 			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -589,7 +590,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Reverses the order of this Ordered in-place.
 		 */
 		@Override
-		default void reverse () {
+		default void reverse() {
 			order().reverse();
 		}
 
@@ -601,7 +602,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class
 		 * @return a random double value from this Ordered.OfDouble
 		 */
-		default double random (Random rng) {
+		default double random(Random rng) {
 			return order().random(rng);
 		}
 
@@ -615,7 +616,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort (@Nullable DoubleComparator comparator) {
+		default void sort(@Nullable DoubleComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -629,7 +630,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the value of the kth lowest ranked item.
 		 * @see Select
 		 */
-		default double selectRanked (DoubleComparator comparator, int kthLowest) {
+		default double selectRanked(DoubleComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -646,7 +647,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the index of the kth lowest ranked item.
 		 * @see Ordered.OfDouble#selectRanked(DoubleComparator, int)
 		 */
-		default int selectRankedIndex (DoubleComparator comparator, int kthLowest) {
+		default int selectRankedIndex(DoubleComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -660,14 +661,14 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param start inclusive start of the range to remove from the ordering
 		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange (int start, int end) {
+		default void removeRange(int start, int end) {
 			order().removeRange(start, end);
 		}
 
 		default OrderType getOrderType() {
 			DoubleList o = order();
-			if(o instanceof DoubleBag) return OrderType.BAG;
-			if(o instanceof DoubleDeque) return OrderType.DEQUE;
+			if (o instanceof DoubleBag) return OrderType.BAG;
+			if (o instanceof DoubleDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
 	}
@@ -680,7 +681,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @return the ShortList of short items that this data structure holds
 		 */
-		ShortList order ();
+		ShortList order();
 
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -689,7 +690,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int first, int second) {
+		default void swap(int first, int second) {
 			order().swap(first, second);
 		}
 
@@ -701,7 +702,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (Random rng) {
+		default void shuffle(Random rng) {
 			ShortList order = order();
 			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -712,7 +713,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Reverses the order of this Ordered in-place.
 		 */
 		@Override
-		default void reverse () {
+		default void reverse() {
 			order().reverse();
 		}
 
@@ -724,7 +725,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class
 		 * @return a random short value from this Ordered.OfShort
 		 */
-		default short random (Random rng) {
+		default short random(Random rng) {
 			return order().random(rng);
 		}
 
@@ -738,7 +739,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort (@Nullable ShortComparator comparator) {
+		default void sort(@Nullable ShortComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -752,7 +753,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the value of the kth lowest ranked item.
 		 * @see Select
 		 */
-		default short selectRanked (ShortComparator comparator, int kthLowest) {
+		default short selectRanked(ShortComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -769,7 +770,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the index of the kth lowest ranked item.
 		 * @see Ordered.OfShort#selectRanked(ShortComparator, int)
 		 */
-		default int selectRankedIndex (ShortComparator comparator, int kthLowest) {
+		default int selectRankedIndex(ShortComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -783,14 +784,14 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param start inclusive start of the range to remove from the ordering
 		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange (int start, int end) {
+		default void removeRange(int start, int end) {
 			order().removeRange(start, end);
 		}
 
 		default OrderType getOrderType() {
 			ShortList o = order();
-			if(o instanceof ShortBag) return OrderType.BAG;
-			if(o instanceof ShortDeque) return OrderType.DEQUE;
+			if (o instanceof ShortBag) return OrderType.BAG;
+			if (o instanceof ShortDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
 	}
@@ -803,7 +804,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @return the ByteList of byte items that this data structure holds
 		 */
-		ByteList order ();
+		ByteList order();
 
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -812,7 +813,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int first, int second) {
+		default void swap(int first, int second) {
 			order().swap(first, second);
 		}
 
@@ -824,7 +825,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (Random rng) {
+		default void shuffle(Random rng) {
 			ByteList order = order();
 			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -835,7 +836,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Reverses the order of this Ordered in-place.
 		 */
 		@Override
-		default void reverse () {
+		default void reverse() {
 			order().reverse();
 		}
 
@@ -847,7 +848,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class
 		 * @return a random byte value from this Ordered.OfByte
 		 */
-		default byte random (Random rng) {
+		default byte random(Random rng) {
 			return order().random(rng);
 		}
 
@@ -861,7 +862,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort (@Nullable ByteComparator comparator) {
+		default void sort(@Nullable ByteComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -875,7 +876,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the value of the kth lowest ranked item.
 		 * @see Select
 		 */
-		default byte selectRanked (ByteComparator comparator, int kthLowest) {
+		default byte selectRanked(ByteComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -892,7 +893,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the index of the kth lowest ranked item.
 		 * @see Ordered.OfByte#selectRanked(ByteComparator, int)
 		 */
-		default int selectRankedIndex (ByteComparator comparator, int kthLowest) {
+		default int selectRankedIndex(ByteComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -906,14 +907,14 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param start inclusive start of the range to remove from the ordering
 		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange (int start, int end) {
+		default void removeRange(int start, int end) {
 			order().removeRange(start, end);
 		}
 
 		default OrderType getOrderType() {
 			ByteList o = order();
-			if(o instanceof ByteBag) return OrderType.BAG;
-			if(o instanceof ByteDeque) return OrderType.DEQUE;
+			if (o instanceof ByteBag) return OrderType.BAG;
+			if (o instanceof ByteDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
 	}
@@ -926,7 +927,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @return the CharList of char items that this data structure holds
 		 */
-		CharList order ();
+		CharList order();
 
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -935,7 +936,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int first, int second) {
+		default void swap(int first, int second) {
 			order().swap(first, second);
 		}
 
@@ -947,7 +948,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (Random rng) {
+		default void shuffle(Random rng) {
 			CharList order = order();
 			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -958,7 +959,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Reverses the order of this Ordered in-place.
 		 */
 		@Override
-		default void reverse () {
+		default void reverse() {
 			order().reverse();
 		}
 
@@ -970,7 +971,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class
 		 * @return a random char value from this Ordered.OfChar
 		 */
-		default char random (Random rng) {
+		default char random(Random rng) {
 			return order().random(rng);
 		}
 
@@ -984,7 +985,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort (@Nullable CharComparator comparator) {
+		default void sort(@Nullable CharComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -998,7 +999,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the value of the kth lowest ranked item.
 		 * @see Select
 		 */
-		default char selectRanked (CharComparator comparator, int kthLowest) {
+		default char selectRanked(CharComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -1015,7 +1016,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the index of the kth lowest ranked item.
 		 * @see Ordered.OfChar#selectRanked(CharComparator, int)
 		 */
-		default int selectRankedIndex (CharComparator comparator, int kthLowest) {
+		default int selectRankedIndex(CharComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -1029,67 +1030,66 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param start inclusive start of the range to remove from the ordering
 		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange (int start, int end) {
+		default void removeRange(int start, int end) {
 			order().removeRange(start, end);
 		}
 
 		default OrderType getOrderType() {
 			CharList o = order();
-			if(o instanceof CharBag) return OrderType.BAG;
-			if(o instanceof CharDeque) return OrderType.DEQUE;
+			if (o instanceof CharBag) return OrderType.BAG;
+			if (o instanceof CharDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
 
-        /**
-         * Compatibility alias for {@link #size()}.
-         * Here for compatibility with CharSequence.
-         *
-         * @return how many items are contained in this data structure
-         */
-        @Override
-        default int length() {
-            return size();
-        }
+		/**
+		 * Compatibility alias for {@link #size()}.
+		 * Here for compatibility with CharSequence.
+		 *
+		 * @return how many items are contained in this data structure
+		 */
+		@Override
+		default int length() {
+			return size();
+		}
 
-        /**
-         * Equivalent to calling {@link CharList#get(int)} on {@link #order()}.
-         * Here for compatibility with CharSequence.
-         *
-         * @param index   the index of the {@code char} value to be returned
-         * @return the char at the given index in the ordering
-         */
-        @Override
-        default char charAt(int index) {
-            return order().get(index);
-        }
+		/**
+		 * Equivalent to calling {@link CharList#get(int)} on {@link #order()}.
+		 * Here for compatibility with CharSequence.
+		 *
+		 * @param index the index of the {@code char} value to be returned
+		 * @return the char at the given index in the ordering
+		 */
+		@Override
+		default char charAt(int index) {
+			return order().get(index);
+		}
 
-        /**
-         * Returns true if this data structure has no items (its {@link #size()} is 0), or false otherwise.
-         * Here for compatibility with CharSequence.
-         *
-         * @return true if this data structure has no items, or false otherwise.
-         */
-        @SuppressWarnings("Since15")
-        default boolean isEmpty() {
-            return size() == 0;
-        }
+		/**
+		 * Returns true if this data structure has no items (its {@link #size()} is 0), or false otherwise.
+		 * Here for compatibility with CharSequence.
+		 *
+		 * @return true if this data structure has no items, or false otherwise.
+		 */
+		@SuppressWarnings("Since15")
+		default boolean isEmpty() {
+			return size() == 0;
+		}
 
-        /**
-         * Creates a new sub-list (not a view) of the given range of this data structure.
-         * Here for compatibility with CharSequence.
-         * <br>
-         * This is typically overridden to return the same type as this data structure, though this is not required.
-         *
-         * @param start   the start index, inclusive
-         * @param end     the end index, exclusive
-         *
-         * @return a new sub-list of this data structure, which is also a CharSequence
-         */
-        @Override
-        default CharList subSequence(int start, int end){
-            return order().subSequence(start, end);
-        }
-    }
+		/**
+		 * Creates a new sub-list (not a view) of the given range of this data structure.
+		 * Here for compatibility with CharSequence.
+		 * <br>
+		 * This is typically overridden to return the same type as this data structure, though this is not required.
+		 *
+		 * @param start the start index, inclusive
+		 * @param end   the end index, exclusive
+		 * @return a new sub-list of this data structure, which is also a CharSequence
+		 */
+		@Override
+		default CharList subSequence(int start, int end) {
+			return order().subSequence(start, end);
+		}
+	}
 
 	interface OfBoolean extends Arrangeable {
 		/**
@@ -1099,7 +1099,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @return the BooleanList of boolean items that this data structure holds
 		 */
-		BooleanList order ();
+		BooleanList order();
 
 		/**
 		 * Switches the ordering of positions {@code first} and {@code second}, without changing any items beyond that.
@@ -1108,7 +1108,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param second the second position, must not be negative and must be less than {@link #size()}
 		 */
 		@Override
-		default void swap (int first, int second) {
+		default void swap(int first, int second) {
 			order().swap(first, second);
 		}
 
@@ -1120,7 +1120,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class, such as one from juniper
 		 */
 		@Override
-		default void shuffle (Random rng) {
+		default void shuffle(Random rng) {
 			BooleanList order = order();
 			for (int i = order.size() - 1; i > 0; i--) {
 				order.swap(i, rng.nextInt(i + 1));
@@ -1131,7 +1131,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * Reverses the order of this Ordered in-place.
 		 */
 		@Override
-		default void reverse () {
+		default void reverse() {
 			order().reverse();
 		}
 
@@ -1143,7 +1143,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param rng any {@link Random} class
 		 * @return a random boolean value from this Ordered.OfBoolean
 		 */
-		default boolean random (Random rng) {
+		default boolean random(Random rng) {
 			return order().random(rng);
 		}
 
@@ -1157,7 +1157,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort (@Nullable BooleanComparator comparator) {
+		default void sort(@Nullable BooleanComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -1171,7 +1171,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the value of the kth lowest ranked item.
 		 * @see Select
 		 */
-		default boolean selectRanked (BooleanComparator comparator, int kthLowest) {
+		default boolean selectRanked(BooleanComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -1188,7 +1188,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @return the index of the kth lowest ranked item.
 		 * @see Ordered.OfBoolean#selectRanked(BooleanComparator, int)
 		 */
-		default int selectRankedIndex (BooleanComparator comparator, int kthLowest) {
+		default int selectRankedIndex(BooleanComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {
 				throw new RuntimeException("kthLowest must be greater than 0; 1 = first, 2 = second...");
 			}
@@ -1202,14 +1202,14 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param start inclusive start of the range to remove from the ordering
 		 * @param end   exclusive end of the range to remove from the ordering
 		 */
-		default void removeRange (int start, int end) {
+		default void removeRange(int start, int end) {
 			order().removeRange(start, end);
 		}
 
 		default OrderType getOrderType() {
 			BooleanList o = order();
-			if(o instanceof BooleanBag) return OrderType.BAG;
-			if(o instanceof BooleanDeque) return OrderType.DEQUE;
+			if (o instanceof BooleanBag) return OrderType.BAG;
+			if (o instanceof BooleanDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
 	}

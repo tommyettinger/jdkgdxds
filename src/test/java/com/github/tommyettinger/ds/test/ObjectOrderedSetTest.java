@@ -36,13 +36,15 @@ public class ObjectOrderedSetTest {
 			objArray[i] = new Integer(i);
 	}
 
-	@Test public void test_Constructor () {
+	@Test
+	public void test_Constructor() {
 		// Test for method com.github.tommyettinger.ds.ObjectOrderedSet()
 		ObjectOrderedSet hs2 = new ObjectOrderedSet();
 		Assert.assertEquals("Created incorrect ObjectOrderedSet", 0, hs2.size());
 	}
 
-	@Test public void test_ConstructorI () {
+	@Test
+	public void test_ConstructorI() {
 		// Test for method com.github.tommyettinger.ds.ObjectOrderedSet(int)
 		ObjectOrderedSet hs2 = new ObjectOrderedSet(5);
 		Assert.assertEquals("Created incorrect ObjectOrderedSet", 0, hs2.size());
@@ -54,9 +56,10 @@ public class ObjectOrderedSetTest {
 		Assert.fail("Failed to throw IllegalArgumentException for capacity < 0");
 	}
 
-	@Test public void test_ConstructorIF () {
+	@Test
+	public void test_ConstructorIF() {
 		// Test for method com.github.tommyettinger.ds.ObjectOrderedSet(int, float)
-		ObjectOrderedSet hs2 = new ObjectOrderedSet(5, (float)0.5);
+		ObjectOrderedSet hs2 = new ObjectOrderedSet(5, (float) 0.5);
 		Assert.assertEquals("Created incorrect ObjectOrderedSet", 0, hs2.size());
 		try {
 			new ObjectOrderedSet(0, 0);
@@ -66,7 +69,8 @@ public class ObjectOrderedSetTest {
 		Assert.fail("Failed to throw IllegalArgumentException for initial load factor <= 0");
 	}
 
-	@Test public void test_ConstructorLjava_util_Collection () {
+	@Test
+	public void test_ConstructorLjava_util_Collection() {
 		// Test for method com.github.tommyettinger.ds.ObjectOrderedSet(java.util.Collection)
 		ObjectOrderedSet hs2 = ObjectOrderedSet.with(objArray);
 		for (int counter = 0; counter < objArray.length; counter++)
@@ -74,7 +78,8 @@ public class ObjectOrderedSetTest {
 		Assert.assertTrue("ObjectOrderedSet created from collection incorrect size", hs2.size() == objArray.length);
 	}
 
-	@Test public void test_addLjava_lang_Object () {
+	@Test
+	public void test_addLjava_lang_Object() {
 		// Test for method boolean com.github.tommyettinger.ds.ObjectOrderedSet.add(java.lang.Object)
 		int size = hs.size();
 		hs.add(new Integer(8));
@@ -84,7 +89,8 @@ public class ObjectOrderedSetTest {
 		Assert.assertTrue("Failed to add element to set", hs.contains(new Integer(-9)));
 	}
 
-	@Test public void test_clear () {
+	@Test
+	public void test_clear() {
 		// Test for method void com.github.tommyettinger.ds.ObjectOrderedSet.clear()
 		ObjectOrderedSet orgSet = new ObjectOrderedSet(hs);
 		hs.clear();
@@ -94,20 +100,23 @@ public class ObjectOrderedSetTest {
 			Assert.assertTrue("Failed to clear set", !hs.contains(i.next()));
 	}
 
-	@Test public void test_containsLjava_lang_Object () {
+	@Test
+	public void test_containsLjava_lang_Object() {
 		// Test for method boolean
 		// com.github.tommyettinger.ds.ObjectOrderedSet.contains(java.lang.Object)
 		Assert.assertTrue("Returned false for valid object", hs.contains(objArray[90]));
 		Assert.assertTrue("Returned true for invalid Object", !hs.contains(new Object()));
 	}
 
-	@Test public void test_isEmpty () {
+	@Test
+	public void test_isEmpty() {
 		// Test for method boolean com.github.tommyettinger.ds.ObjectOrderedSet.isEmpty()
 		Assert.assertTrue("Empty set returned false", new ObjectOrderedSet().isEmpty());
 		Assert.assertTrue("Non-empty set returned true", !hs.isEmpty());
 	}
 
-	@Test public void test_iterator () {
+	@Test
+	public void test_iterator() {
 		// Test for method java.util.Iterator com.github.tommyettinger.ds.ObjectOrderedSet.iterator()
 		Iterator i = hs.iterator();
 		int x = 0;
@@ -115,7 +124,7 @@ public class ObjectOrderedSetTest {
 		for (j = 0; i.hasNext(); j++) {
 			Object oo = i.next();
 			if (oo != null) {
-				Integer ii = (Integer)oo;
+				Integer ii = (Integer) oo;
 				Assert.assertTrue("Incorrect element found", ii.intValue() == j);
 			}
 			++x;
@@ -123,7 +132,8 @@ public class ObjectOrderedSetTest {
 		Assert.assertTrue("Returned iteration of incorrect size", hs.size() == x);
 	}
 
-	@Test public void test_removeLjava_lang_Object () {
+	@Test
+	public void test_removeLjava_lang_Object() {
 		// Test for method boolean
 		// com.github.tommyettinger.ds.ObjectOrderedSet.remove(java.lang.Object)
 		int size = hs.size();
@@ -132,7 +142,8 @@ public class ObjectOrderedSetTest {
 		Assert.assertTrue("Failed to decrement set size", hs.size() == size - 1);
 	}
 
-	@Test public void test_size () {
+	@Test
+	public void test_size() {
 		// Test for method int com.github.tommyettinger.ds.ObjectOrderedSet.size
 		Assert.assertTrue("Returned incorrect size", hs.size() == objArray.length);
 		hs.clear();
@@ -143,7 +154,8 @@ public class ObjectOrderedSetTest {
 	 * Sets up the fixture, for example, open a network connection. This method
 	 * is called before a test is executed.
 	 */
-	@Before public void setUp () {
+	@Before
+	public void setUp() {
 		hs = new ObjectOrderedSet();
 		for (int i = 0; i < objArray.length; i++)
 			hs.add(objArray[i]);
@@ -153,6 +165,7 @@ public class ObjectOrderedSetTest {
 	 * Tears down the fixture, for example, close a network connection. This
 	 * method is called after a test is executed.
 	 */
-	@After public void tearDown () {
+	@After
+	public void tearDown() {
 	}
 }

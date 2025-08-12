@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -88,13 +89,15 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 */
 	protected int hashMultiplier;
 
-	@Nullable protected transient ObjectSetIterator<T> iterator1;
-	@Nullable protected transient ObjectSetIterator<T> iterator2;
+	@Nullable
+	protected transient ObjectSetIterator<T> iterator1;
+	@Nullable
+	protected transient ObjectSetIterator<T> iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public ObjectSet () {
+	public ObjectSet() {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
@@ -103,7 +106,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public ObjectSet (int initialCapacity) {
+	public ObjectSet(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -114,16 +117,18 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public ObjectSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public ObjectSet(int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
+		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
-		keyTable = (T[])new Object[tableSize];
+		keyTable = (T[]) new Object[tableSize];
 	}
 
 	/**
@@ -131,7 +136,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public ObjectSet (Iterator<? extends T> coll) {
+	public ObjectSet(Iterator<? extends T> coll) {
 		this();
 		addAll(coll);
 	}
@@ -139,7 +144,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	/**
 	 * Creates a new set identical to the specified set.
 	 */
-	public ObjectSet (ObjectSet<? extends T> set) {
+	public ObjectSet(ObjectSet<? extends T> set) {
 		loadFactor = set.loadFactor;
 		threshold = set.threshold;
 		mask = set.mask;
@@ -152,7 +157,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public ObjectSet (Collection<? extends T> coll) {
+	public ObjectSet(Collection<? extends T> coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -164,7 +169,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public ObjectSet (T[] array, int offset, int length) {
+	public ObjectSet(T[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
@@ -174,7 +179,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public ObjectSet (T[] array) {
+	public ObjectSet(T[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -184,7 +189,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -201,7 +206,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left.equals(right);
 	}
 
@@ -212,7 +217,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param key a non-null K key
 	 * @return a negative index if the key was not found, or the non-negative index of the existing key if found
 	 */
-	protected int locateKey (Object key) {
+	protected int locateKey(Object key) {
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -228,8 +233,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * and returns false.
 	 */
 	@Override
-	public boolean add (T key) {
-		if(key == null) return false;
+	public boolean add(T key) {
+		if (key == null) return false;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -237,28 +242,33 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 				return false; // Existing key was found.
 			if (other == null) {
 				keyTable[i] = key;
-				if (++size >= threshold) {resize(keyTable.length << 1);}
+				if (++size >= threshold) {
+					resize(keyTable.length << 1);
+				}
 				return true;
 			}
 		}
 	}
 
 	@Override
-	public boolean containsAll (Collection<@NonNull ?> c) {
+	public boolean containsAll(Collection<@NonNull ?> c) {
 		for (Object o : c) {
-			if (!contains(o)) {return false;}
+			if (!contains(o)) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	/**
 	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
-	 * @see #containsAll(Collection)
+	 *
 	 * @param array array to be checked for containment in this set
 	 * @return {@code true} if this set contains all the elements
 	 * in the specified array
+	 * @see #containsAll(Collection)
 	 */
-	public boolean containsAll (@NonNull Object[] array) {
+	public boolean containsAll(@NonNull Object[] array) {
 		for (Object o : array) {
 			if (!contains(o))
 				return false;
@@ -268,16 +278,17 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Like {@link #containsAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #containsAll(Object[])
-	 * @param array array to be checked for containment in this set
+	 *
+	 * @param array  array to be checked for containment in this set
 	 * @param offset the index of the first item in array to check
 	 * @param length how many items, at most, to check from array
 	 * @return {@code true} if this set contains all the elements
 	 * in the specified range of array
+	 * @see #containsAll(Object[])
 	 */
-	public boolean containsAll (@NonNull Object[] array, int offset, int length) {
+	public boolean containsAll(@NonNull Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			if(!contains(array[i])) return false;
+			if (!contains(array[i])) return false;
 		}
 		return true;
 	}
@@ -290,7 +301,9 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 */
 	public boolean containsAnyIterable(Iterable<@NonNull ?> values) {
 		for (Object v : values) {
-			if (contains(v)) {return true;}
+			if (contains(v)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -301,9 +314,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny (@NonNull Object[] values) {
+	public boolean containsAny(@NonNull Object[] values) {
 		for (Object v : values) {
-			if (contains(v)) {return true;}
+			if (contains(v)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -316,34 +331,40 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param length how many items to check from values
 	 * @return true if this set contains any of the items in the given range of {@code values}, false otherwise
 	 */
-	public boolean containsAny (@NonNull Object[] values, int offset, int length) {
+	public boolean containsAny(@NonNull Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
-			if (contains(values[i])) {return true;}
+			if (contains(values[i])) {
+				return true;
+			}
 		}
 		return false;
 	}
 
 	@Override
-	public boolean addAll (Collection<? extends T> coll) {
+	public boolean addAll(Collection<? extends T> coll) {
 		final int length = coll.size();
 		ensureCapacity(length);
 		int oldSize = size;
-		for (T t : coll) {add(t);}
+		for (T t : coll) {
+			add(t);
+		}
 		return oldSize != size;
 
 	}
 
 	@Override
-	public boolean retainAll (@NonNull Collection<?> c) {
+	public boolean retainAll(@NonNull Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
-			if (!c.contains(o)) {modified |= remove(o);}
+			if (!c.contains(o)) {
+				modified |= remove(o);
+			}
 		}
 		return modified;
 	}
 
 	@Override
-	public boolean removeAll (Collection<?> c) {
+	public boolean removeAll(Collection<?> c) {
 		boolean modified = false;
 		for (Object o : c) {
 			modified |= remove(o);
@@ -351,7 +372,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		return modified;
 	}
 
-	public boolean removeAll (@NonNull Object[] values) {
+	public boolean removeAll(@NonNull Object[] values) {
 		boolean modified = false;
 		for (Object o : values) {
 			modified |= remove(o);
@@ -359,7 +380,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		return modified;
 	}
 
-	public boolean removeAll (@NonNull Object[] values, int offset, int length) {
+	public boolean removeAll(@NonNull Object[] values, int offset, int length) {
 		boolean modified = false;
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			modified |= remove(values[i]);
@@ -367,11 +388,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		return modified;
 	}
 
-	public boolean addAll (T[] array) {
+	public boolean addAll(T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
-	public boolean addAll (T[] array, int offset, int length) {
+	public boolean addAll(T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
 		for (int i = offset, n = i + length; i < n; i++) {
@@ -380,13 +401,15 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		return oldSize != size;
 	}
 
-	public boolean addAll (ObjectSet<T> set) {
+	public boolean addAll(ObjectSet<T> set) {
 		ensureCapacity(set.size);
 		@Nullable T[] keyTable = set.keyTable;
 		int oldSize = size;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) {add(key);}
+			if (key != null) {
+				add(key);
+			}
 		}
 		return size != oldSize;
 	}
@@ -394,7 +417,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	/**
 	 * Like {@link #add(Object)}, but skips checks for existing keys, and doesn't increment size.
 	 */
-	protected void addResize (T key) {
+	protected void addResize(T key) {
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
@@ -408,17 +431,17 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * Returns true if the key was removed.
 	 */
 	@Override
-	public boolean remove (@NonNull Object key) {
-		if(key == null) return false;
+	public boolean remove(@NonNull Object key) {
+		if (key == null) return false;
 		int pos = locateKey(key);
 		if (pos < 0) return false;
 		@Nullable T[] keyTable = this.keyTable;
 		int mask = this.mask, last, slot;
 		size--;
 		@Nullable T rem;
-		for (;;) {
+		for (; ; ) {
 			pos = ((last = pos) + 1) & mask;
-			for (;;) {
+			for (; ; ) {
 				if ((rem = keyTable[pos]) == null) {
 					keyTable[last] = null;
 					return true;
@@ -434,7 +457,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	/**
 	 * Returns true if the set has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -446,7 +469,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @return the number of elements in this set (its cardinality)
 	 */
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -454,7 +477,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * Returns true if the set is empty.
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -463,10 +486,14 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * nothing is done. If the set contains more items than the specified capacity, the next highest power of two capacity is used
 	 * instead.
 	 */
-	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
+	public void shrink(int maximumCapacity) {
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) {resize(tableSize);}
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
@@ -474,7 +501,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * The reduction is done by allocating new arrays, though for large arrays this can be faster than clearing the existing
 	 * array.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
 			clear();
@@ -489,15 +516,17 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * iteration can be unnecessarily slow. {@link #clear(int)} can be used to reduce the capacity.
 	 */
 	@Override
-	public void clear () {
-		if (size == 0) {return;}
+	public void clear() {
+		if (size == 0) {
+			return;
+		}
 		size = 0;
 		Utilities.clear(keyTable);
 	}
 
 	@Override
-	public boolean contains (@NonNull Object key) {
-		if(key == null) return false;
+	public boolean contains(@NonNull Object key) {
+		if (key == null) return false;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -509,8 +538,8 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	@Nullable
-	public T get (T key) {
-		if(key == null) return null;
+	public T get(T key) {
+		if (key == null) return null;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			T other = keyTable[i];
@@ -521,10 +550,12 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		}
 	}
 
-	public @Nullable T first () {
+	public @Nullable T first() {
 		@Nullable T[] keyTable = this.keyTable;
 		@Nullable T k = null;
-		for (int i = 0, n = keyTable.length; i < n; i++) {if ((k = keyTable[i]) != null) break;}
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			if ((k = keyTable[i]) != null) break;
+		}
 		return k;
 	}
 
@@ -534,55 +565,60 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 *
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
+		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 
 		@Nullable T[] oldKeyTable = keyTable;
 
-		keyTable = (T[])new Object[newSize];
+		keyTable = (T[]) new Object[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				T key = oldKeyTable[i];
-				if (key != null) {addResize(key);}
+				if (key != null) {
+					addResize(key);
+				}
 			}
 		}
 	}
 
-    /**
-     * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
+	/**
+	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
 	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
-     *
-     * @return the current hashMultiplier
-     */
-    public int getHashMultiplier() {
-        return hashMultiplier;
-    }
+	 *
+	 * @return the current hashMultiplier
+	 */
+	public int getHashMultiplier() {
+		return hashMultiplier;
+	}
 
-    /**
-     * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
+	/**
+	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
 	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
 	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
-     *
-     * @param hashMultiplier any int; will be made odd if even.
-     */
-    public void setHashMultiplier(int hashMultiplier) {
+	 *
+	 * @param hashMultiplier any int; will be made odd if even.
+	 */
+	public void setHashMultiplier(int hashMultiplier) {
 		this.hashMultiplier = hashMultiplier | 0x80000001;
-    }
+	}
 
 	/**
 	 * Gets the length of the internal array used to store all items, as well as empty space awaiting more items to be
 	 * entered. This is also called the capacity.
+	 *
 	 * @return the length of the internal array that holds all items
 	 */
 	public int getTableSize() {
@@ -590,7 +626,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	@Override
-	public Object @NonNull [] toArray () {
+	public Object @NonNull [] toArray() {
 		return toArray(new Object[size()]);
 	}
 
@@ -610,7 +646,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> @Nullable E @NonNull [] toArray (@Nullable E[] a) {
+	public <E> @Nullable E @NonNull [] toArray(@Nullable E[] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -626,12 +662,14 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		return a;
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return loadFactor;
 	}
 
-	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public void setLoadFactor(float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -640,23 +678,25 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) {h += key.hashCode();}
+			if (key != null) {
+				h += key.hashCode();
+			}
 		}
 		return h ^ h >>> 16;
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if (o == this)
 			return true;
 		if (!(o instanceof Set))
 			return false;
-		Set<?> s = (Set<?>)o;
+		Set<?> s = (Set<?>) o;
 		if (s.size() != size())
 			return false;
 		try {
@@ -665,19 +705,26 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 			return false;
 		}
 	}
-	public StringBuilder appendTo (StringBuilder builder, String separator) {
-		if (size == 0) {return builder;}
+
+	public StringBuilder appendTo(StringBuilder builder, String separator) {
+		if (size == 0) {
+			return builder;
+		}
 		@Nullable T[] keyTable = this.keyTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) {continue;}
+			if (key == null) {
+				continue;
+			}
 			builder.append(key == this ? "(this)" : key);
 			break;
 		}
 		while (i-- > 0) {
 			T key = keyTable[i];
-			if (key == null) {continue;}
+			if (key == null) {
+				continue;
+			}
 			builder.append(separator);
 			builder.append(key == this ? "(this)" : key);
 		}
@@ -685,7 +732,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -700,7 +747,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		@Nullable T[] keyTable = this.keyTable;
 		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
@@ -718,7 +765,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(ObjectSet)}.
 	 */
 	@Override
-	public @NonNull ObjectSetIterator<T> iterator () {
+	public @NonNull ObjectSetIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);
@@ -759,18 +806,18 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		 */
 		protected final ObjectSet<T> set;
 
-		public ObjectSetIterator (ObjectSet<T> set) {
+		public ObjectSetIterator(ObjectSet<T> set) {
 			this.set = set;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = -1;
 			nextIndex = -1;
 			findNextIndex();
 		}
 
-		protected void findNextIndex () {
+		protected void findNextIndex() {
 			@Nullable T[] keyTable = set.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
@@ -782,9 +829,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		}
 
 		@Override
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
-			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
+			if (i < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			@Nullable T[] keyTable = set.keyTable;
 			int mask = set.mask, next = i + 1 & mask;
 			T key;
@@ -798,29 +847,38 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 			}
 			keyTable[i] = null;
 			set.size--;
-			if (i != currentIndex) {--nextIndex;}
+			if (i != currentIndex) {
+				--nextIndex;
+			}
 			currentIndex = -1;
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 
 		@Override
-		public T next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public T next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			T key = set.keyTable[nextIndex];
-			if(key == null) throw new IllegalStateException("Impossible scenario! A key that should never be null, is null.");
+			if (key == null)
+				throw new IllegalStateException("Impossible scenario! A key that should never be null, is null.");
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
 		}
 
 		@Override
-		public @NonNull ObjectSetIterator<T> iterator () {
+		public @NonNull ObjectSetIterator<T> iterator() {
 			return this;
 		}
 
@@ -828,11 +886,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<T> toList () {
+		public ObjectList<T> toList() {
 			ObjectList<T> list = new ObjectList<>(set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {list.add(next());}
+			while (hasNext) {
+				list.add(next());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -842,13 +902,16 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public Collection<T> appendInto(Collection<T> coll) {
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {coll.add(next());}
+			while (hasNext) {
+				coll.add(next());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -861,20 +924,21 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <T>    the type of items; must be given explicitly
+	 * @param <T> the type of items; must be given explicitly
 	 * @return a new set containing nothing
 	 */
-	public static <T> ObjectSet<T> with () {
+	public static <T> ObjectSet<T> with() {
 		return new ObjectSet<>(0);
 	}
 
 	/**
 	 * Creates a new ObjectSet that holds only the given item, but can be resized.
+	 *
 	 * @param item one T item
+	 * @param <T>  the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given item
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectSet<T> with (T item) {
+	public static <T> ObjectSet<T> with(T item) {
 		ObjectSet<T> set = new ObjectSet<>(1);
 		set.add(item);
 		return set;
@@ -882,12 +946,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectSet<T> with (T item0, T item1) {
+	public static <T> ObjectSet<T> with(T item0, T item1) {
 		ObjectSet<T> set = new ObjectSet<>(2);
 		set.add(item0, item1);
 		return set;
@@ -895,13 +960,14 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectSet<T> with (T item0, T item1, T item2) {
+	public static <T> ObjectSet<T> with(T item0, T item1, T item2) {
 		ObjectSet<T> set = new ObjectSet<>(3);
 		set.add(item0, item1, item2);
 		return set;
@@ -909,14 +975,15 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3) {
+	public static <T> ObjectSet<T> with(T item0, T item1, T item2, T item3) {
 		ObjectSet<T> set = new ObjectSet<>(4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -924,15 +991,16 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3, T item4) {
+	public static <T> ObjectSet<T> with(T item0, T item1, T item2, T item3, T item4) {
 		ObjectSet<T> set = new ObjectSet<>(5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -941,16 +1009,17 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
 	 * @param item5 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+	public static <T> ObjectSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		ObjectSet<T> set = new ObjectSet<>(6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -959,6 +1028,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -966,10 +1036,10 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+	public static <T> ObjectSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		ObjectSet<T> set = new ObjectSet<>(7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -978,6 +1048,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Creates a new ObjectSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -985,10 +1056,10 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+	public static <T> ObjectSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		ObjectSet<T> set = new ObjectSet<>(8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -1000,12 +1071,13 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @param <T>     the type of item, typically inferred
 	 * @return a new ObjectSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
 	@SafeVarargs
-	public static <T> ObjectSet<T> with (T... varargs) {
+	public static <T> ObjectSet<T> with(T... varargs) {
 		return new ObjectSet<>(varargs);
 	}
 }

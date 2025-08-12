@@ -39,7 +39,7 @@ public interface ShortIterator extends Iterator<Short> {
 	 * @return the next {@code short} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	short nextShort ();
+	short nextShort();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -55,8 +55,10 @@ public interface ShortIterator extends Iterator<Short> {
 	 *         action.accept(nextShort());
 	 * }</pre>
 	 */
-	default void forEachRemaining (ShortConsumer action) {
-		while (hasNext()) {action.accept(nextShort());}
+	default void forEachRemaining(ShortConsumer action) {
+		while (hasNext()) {
+			action.accept(nextShort());
+		}
 	}
 
 	/**
@@ -66,7 +68,7 @@ public interface ShortIterator extends Iterator<Short> {
 	 * {@link #nextShort()}, and returns that boxed result.
 	 */
 	@Override
-	default Short next () {
+	default Short next() {
 		return nextShort();
 	}
 }

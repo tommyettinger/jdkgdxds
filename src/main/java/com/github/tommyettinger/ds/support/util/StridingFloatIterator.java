@@ -29,64 +29,64 @@ import java.util.NoSuchElementException;
  * change the iterator with {@link #set(FloatIterator)}.
  */
 public class StridingFloatIterator implements FloatIterator {
-    public FloatIterator iterator;
-    protected int offset = 0;
-    protected int stride = 2;
-    protected int index = -1;
-    protected boolean end = false;
-    protected boolean available = false;
-    protected float next;
+	public FloatIterator iterator;
+	protected int offset = 0;
+	protected int stride = 2;
+	protected int index = -1;
+	protected boolean end = false;
+	protected boolean available = false;
+	protected float next;
 
-    public StridingFloatIterator() {
-    }
+	public StridingFloatIterator() {
+	}
 
-    public StridingFloatIterator(final FloatIterator iterator, int offset, int stride) {
-        set(iterator, offset, stride);
-    }
+	public StridingFloatIterator(final FloatIterator iterator, int offset, int stride) {
+		set(iterator, offset, stride);
+	}
 
-    public void set (final FloatIterator iterator, int offset, int stride) {
-        this.iterator = iterator;
-        this.offset = Math.max(0, offset);
-        this.stride = Math.max(1, stride);
-        index = -1;
-        end = available = false;
-    }
+	public void set(final FloatIterator iterator, int offset, int stride) {
+		this.iterator = iterator;
+		this.offset = Math.max(0, offset);
+		this.stride = Math.max(1, stride);
+		index = -1;
+		end = available = false;
+	}
 
-    public void set (final FloatIterator iterator) {
-        set(iterator, offset, stride);
-    }
+	public void set(final FloatIterator iterator) {
+		set(iterator, offset, stride);
+	}
 
-    @Override
-    public boolean hasNext () {
-        if (end) return false;
-        if (available) return true;
-        while (iterator.hasNext()) {
-            final float n = iterator.next();
-            if (++index >= offset && (index - offset) % stride == 0) {
-                next = n;
-                available = true;
-                return true;
-            }
-        }
-        end = true;
-        return false;
-    }
+	@Override
+	public boolean hasNext() {
+		if (end) return false;
+		if (available) return true;
+		while (iterator.hasNext()) {
+			final float n = iterator.next();
+			if (++index >= offset && (index - offset) % stride == 0) {
+				next = n;
+				available = true;
+				return true;
+			}
+		}
+		end = true;
+		return false;
+	}
 
-    @Override
-    public float nextFloat () {
-        if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
-        final float result = next;
-        available = false;
-        return result;
-    }
+	@Override
+	public float nextFloat() {
+		if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
+		final float result = next;
+		available = false;
+		return result;
+	}
 
-    /**
-     * NOTE: this does not change the stride or offset, so the same sequence of values will be returned regardless of if
-     * some elements are removed with this method.
-     */
-    @Override
-    public void remove () {
-        if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
-        iterator.remove();
-    }
+	/**
+	 * NOTE: this does not change the stride or offset, so the same sequence of values will be returned regardless of if
+	 * some elements are removed with this method.
+	 */
+	@Override
+	public void remove() {
+		if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
+		iterator.remove();
+	}
 }

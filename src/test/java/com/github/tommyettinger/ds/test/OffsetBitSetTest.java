@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class OffsetBitSetTest {
 
 	@Test
-	public void testHashcodeAndEquals () {
+	public void testHashcodeAndEquals() {
 		OffsetBitSet b1 = new OffsetBitSet(1);
 		OffsetBitSet b2 = new OffsetBitSet(1);
 
@@ -79,7 +79,7 @@ public class OffsetBitSetTest {
 	}
 
 	@Test
-	public void testXor () {
+	public void testXor() {
 		OffsetBitSet b1 = new OffsetBitSet();
 		OffsetBitSet b2 = new OffsetBitSet();
 
@@ -97,7 +97,7 @@ public class OffsetBitSetTest {
 	}
 
 	@Test
-	public void testOr () {
+	public void testOr() {
 		OffsetBitSet b1 = new OffsetBitSet();
 		OffsetBitSet b2 = new OffsetBitSet();
 
@@ -115,7 +115,7 @@ public class OffsetBitSetTest {
 	}
 
 	@Test
-	public void testAnd () {
+	public void testAnd() {
 		OffsetBitSet b1 = new OffsetBitSet();
 		OffsetBitSet b2 = new OffsetBitSet();
 
@@ -132,7 +132,7 @@ public class OffsetBitSetTest {
 	}
 
 	@Test
-	public void testCopyConstructor () {
+	public void testCopyConstructor() {
 		OffsetBitSet b1 = new OffsetBitSet();
 		b1.add(50);
 		b1.add(100);
@@ -147,40 +147,40 @@ public class OffsetBitSetTest {
 	}
 
 	@Test
-	public void testNextSetBit () {
+	public void testNextSetBit() {
 		OffsetBitSet b1 = OffsetBitSet.with(50, 100, 200);
 		b1.setOffset(-1000);
 		int bit = b1.nextSetBit(-1000);
-		Assert.assertEquals(50-1000, bit);
-		bit = b1.nextSetBit(bit+1);
-		Assert.assertEquals(100-1000, bit);
-		bit = b1.nextSetBit(bit+1);
-		Assert.assertEquals(200-1000, bit);
-		bit = b1.nextSetBit(bit+1);
-		Assert.assertEquals(-1-1000, bit);
+		Assert.assertEquals(50 - 1000, bit);
+		bit = b1.nextSetBit(bit + 1);
+		Assert.assertEquals(100 - 1000, bit);
+		bit = b1.nextSetBit(bit + 1);
+		Assert.assertEquals(200 - 1000, bit);
+		bit = b1.nextSetBit(bit + 1);
+		Assert.assertEquals(-1 - 1000, bit);
 	}
 
 	@Test
-	public void testNextClearBit () {
+	public void testNextClearBit() {
 		OffsetBitSet b1 = new OffsetBitSet(256);
 		b1.addAll(ArrayTools.range(1, 50));
 		b1.addAll(ArrayTools.range(51, 100));
 		b1.addAll(ArrayTools.range(101, 256));
 		b1.changeOffset(-5);
-		int bit = b1.nextClearBit(0-5);
-		Assert.assertEquals(0-5, bit);
-		bit = b1.nextClearBit(bit+1);
-		Assert.assertEquals(50-5, bit);
-		bit = b1.nextClearBit(bit+1);
-		Assert.assertEquals(100-5, bit);
-		bit = b1.nextClearBit(bit+1);
-		Assert.assertEquals(256-5, bit);
-		bit = b1.nextClearBit(bit+1);
-		Assert.assertEquals(256-5, bit);
+		int bit = b1.nextClearBit(0 - 5);
+		Assert.assertEquals(0 - 5, bit);
+		bit = b1.nextClearBit(bit + 1);
+		Assert.assertEquals(50 - 5, bit);
+		bit = b1.nextClearBit(bit + 1);
+		Assert.assertEquals(100 - 5, bit);
+		bit = b1.nextClearBit(bit + 1);
+		Assert.assertEquals(256 - 5, bit);
+		bit = b1.nextClearBit(bit + 1);
+		Assert.assertEquals(256 - 5, bit);
 	}
 
 	@Test
-	public void testIterator () {
+	public void testIterator() {
 //		int[] items = new int[]{0, 1, 4, 20, 50, 9, 100};
 //		OffsetBitSet b1 = OffsetBitSet.with(items);
 //		b1.changeOffset(1000);
@@ -200,15 +200,15 @@ public class OffsetBitSetTest {
 		OffsetBitSet b1 = OffsetBitSet.with(items);
 		b1.changeOffset(1000);
 		IntIterator it = b1.iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			int n = it.nextInt();
-			if(n == 1009) it.remove();
+			if (n == 1009) it.remove();
 		}
 		Assert.assertEquals(IntList.with(1000, 1001, 1004, 1020, 1050, 1100), b1.iterator().toList());
 	}
 
 	@Test
-	public void testToString () {
+	public void testToString() {
 		OffsetBitSet o1 = OffsetBitSet.with(3, 99, 2, 0, 1);
 		o1.changeOffset(-5);
 		Assert.assertEquals("[-5, -4, -3, -2, 94]", o1.toString());

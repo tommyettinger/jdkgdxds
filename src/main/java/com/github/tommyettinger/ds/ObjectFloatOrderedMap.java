@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.FloatAppender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -65,9 +66,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectFloatOrderedMap (OrderType ordering) {
+	public ObjectFloatOrderedMap(OrderType ordering) {
 		this(Utilities.getDefaultTableCapacity(), ordering);
 	}
 
@@ -75,9 +77,9 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param ordering determines what implementation {@link #order()} will use
+	 * @param ordering        determines what implementation {@link #order()} will use
 	 */
-	public ObjectFloatOrderedMap (int initialCapacity, OrderType ordering) {
+	public ObjectFloatOrderedMap(int initialCapacity, OrderType ordering) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
@@ -87,15 +89,15 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
-	 * @param ordering determines what implementation {@link #order()} will use
+	 * @param ordering        determines what implementation {@link #order()} will use
 	 */
-	public ObjectFloatOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
+	public ObjectFloatOrderedMap(int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-        if (ordering == OrderType.BAG) {
-            keys = new ObjectBag<>(initialCapacity);
-        } else {
-            keys = new ObjectList<>(initialCapacity);
-        }
+		if (ordering == OrderType.BAG) {
+			keys = new ObjectBag<>(initialCapacity);
+		} else {
+			keys = new ObjectList<>(initialCapacity);
+		}
 	}
 
 	/**
@@ -103,22 +105,22 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 *
 	 * @param map the map to copy
 	 */
-	public ObjectFloatOrderedMap (ObjectFloatOrderedMap<? extends K> map) {
+	public ObjectFloatOrderedMap(ObjectFloatOrderedMap<? extends K> map) {
 		super(map);
-		if(map.keys instanceof ObjectBag) keys = new ObjectBag<>(map.keys);
+		if (map.keys instanceof ObjectBag) keys = new ObjectBag<>(map.keys);
 		else keys = new ObjectList<>(map.keys);
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map the map to copy
+	 * @param map      the map to copy
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectFloatOrderedMap (ObjectFloatMap<? extends K> map, OrderType ordering) {
+	public ObjectFloatOrderedMap(ObjectFloatMap<? extends K> map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
 		hashMultiplier = map.hashMultiplier;
-		for(K k : map.keySet()) {
+		for (K k : map.keySet()) {
 			put(k, map.get(k));
 		}
 	}
@@ -131,10 +133,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public ObjectFloatOrderedMap (ObjectFloatOrderedMap<? extends K> other, int offset, int count) {
+	public ObjectFloatOrderedMap(ObjectFloatOrderedMap<? extends K> other, int offset, int count) {
 		this(other, offset, count,
-				other.keys instanceof ObjectBag ? OrderType.BAG
-						: OrderType.LIST);
+			other.keys instanceof ObjectBag ? OrderType.BAG
+				: OrderType.LIST);
 	}
 
 	/**
@@ -142,7 +144,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 *
 	 * @param map the map to copy
 	 */
-	public ObjectFloatOrderedMap (ObjectFloatMap<? extends K> map) {
+	public ObjectFloatOrderedMap(ObjectFloatMap<? extends K> map) {
 		this(map, OrderType.LIST);
 
 	}
@@ -151,12 +153,12 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * Creates a new set by copying {@code count} items from the given ObjectFloatOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another ObjectFloatOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
+	 * @param other    another ObjectFloatOrderedMap of the same type
+	 * @param offset   the first index in other's ordering to draw an item from
+	 * @param count    how many items to copy from other
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectFloatOrderedMap (ObjectFloatOrderedMap<? extends K> other, int offset, int count, OrderType ordering) {
+	public ObjectFloatOrderedMap(ObjectFloatOrderedMap<? extends K> other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
@@ -166,11 +168,11 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
+	 * @param keys     an array of keys
+	 * @param values   an array of values
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectFloatOrderedMap (K[] keys, float[] values, OrderType ordering) {
+	public ObjectFloatOrderedMap(K[] keys, float[] values, OrderType ordering) {
 		this(Math.min(keys.length, values.length), ordering);
 		putAll(keys, values);
 	}
@@ -179,11 +181,11 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
-	 * @param keys   a Collection of keys
-	 * @param values a PrimitiveCollection of values
+	 * @param keys     a Collection of keys
+	 * @param values   a PrimitiveCollection of values
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public ObjectFloatOrderedMap (Collection<? extends K> keys, PrimitiveCollection.OfFloat values, OrderType ordering) {
+	public ObjectFloatOrderedMap(Collection<? extends K> keys, PrimitiveCollection.OfFloat values, OrderType ordering) {
 		this(Math.min(keys.size(), values.size()), ordering);
 		putAll(keys, values);
 	}
@@ -191,7 +193,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public ObjectFloatOrderedMap () {
+	public ObjectFloatOrderedMap() {
 		this(OrderType.LIST);
 	}
 
@@ -200,7 +202,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public ObjectFloatOrderedMap (int initialCapacity) {
+	public ObjectFloatOrderedMap(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
 
@@ -211,7 +213,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public ObjectFloatOrderedMap (int initialCapacity, float loadFactor) {
+	public ObjectFloatOrderedMap(int initialCapacity, float loadFactor) {
 		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
@@ -222,7 +224,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public ObjectFloatOrderedMap (K[] keys, float[] values) {
+	public ObjectFloatOrderedMap(K[] keys, float[] values) {
 		this(keys, values, OrderType.LIST);
 	}
 
@@ -233,13 +235,13 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param keys   a Collection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public ObjectFloatOrderedMap (Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
+	public ObjectFloatOrderedMap(Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
 		this(keys, values, OrderType.LIST);
 	}
 
 	@Override
-	public float put (K key, float value) {
-		if(key == null) return defaultValue;
+	public float put(K key, float value) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -250,7 +252,9 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -264,27 +268,31 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
-	public float put (K key, float value, int index) {
-		if(key == null) return defaultValue;
+	public float put(K key, float value, int index) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
 			valueTable[i] = value;
 			int oldIndex = keys.indexOf(key);
-			if (oldIndex != index) {keys.insert(index, keys.removeAt(oldIndex));}
+			if (oldIndex != index) {
+				keys.insert(index, keys.removeAt(oldIndex));
+			}
 			return oldValue;
 		}
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.insert(index, key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
 	@Override
-	public float putOrDefault (K key, float value, float defaultValue) {
-		if(key == null) return defaultValue;
+	public float putOrDefault(K key, float value, float defaultValue) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -295,7 +303,9 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -305,7 +315,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (ObjectFloatOrderedMap<? extends K> map) {
+	public void putAll(ObjectFloatOrderedMap<? extends K> map) {
 		ensureCapacity(map.size);
 		for (int i = 0, kl = map.size; i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
@@ -320,7 +330,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 */
-	public void putAll (ObjectFloatOrderedMap<? extends K> other, int offset, int count) {
+	public void putAll(ObjectFloatOrderedMap<? extends K> other, int offset, int count) {
 		putAll(size, other, offset, count);
 	}
 
@@ -333,7 +343,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll (int insertionIndex, ObjectFloatOrderedMap<? extends K> other, int offset, int count) {
+	public void putAll(int insertionIndex, ObjectFloatOrderedMap<? extends K> other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
 		for (int i = offset; i < end; i++) {
@@ -342,10 +352,12 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	}
 
 	@Override
-	public float remove (Object key) {
-		if(key == null) return defaultValue;
+	public float remove(Object key) {
+		if (key == null) return defaultValue;
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
-		if (!super.containsKey(key)) {return defaultValue;}
+		if (!super.containsKey(key)) {
+			return defaultValue;
+		}
 		keys.remove(key);
 		return super.remove(key);
 	}
@@ -356,7 +368,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
 	 * @return the value of the removed entry
 	 */
-	public float removeAt (int index) {
+	public float removeAt(int index) {
 		return super.remove(keys.removeAt(index));
 	}
 
@@ -370,7 +382,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(keys.size(), end);
 		for (int i = start; i < end; i++) {
@@ -386,8 +398,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	/**
@@ -397,16 +411,18 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 		keys.ensureCapacity(additionalCapacity);
 
 	}
 
 	@Override
-	public float getAndIncrement (K key, float defaultValue, float increment) {
-		if(key == null) return defaultValue;
+	public float getAndIncrement(K key, float defaultValue, float increment) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			float oldValue = valueTable[i];
@@ -417,7 +433,9 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		keyTable[i] = key;
 		valueTable[i] = defaultValue + increment;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -431,10 +449,14 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (K before, K after) {
-		if (before == null || after == null || containsKey(after)) {return false;}
+	public boolean alter(K before, K after) {
+		if (before == null || after == null || containsKey(after)) {
+			return false;
+		}
 		int index = keys.indexOf(before);
-		if (index == -1) {return false;}
+		if (index == -1) {
+			return false;
+		}
 		super.put(after, super.remove(before));
 		keys.set(index, after);
 		return true;
@@ -449,8 +471,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, K after) {
-		if (after == null || index < 0 || index >= size || containsKey(after)) {return false;}
+	public boolean alterAt(int index, K after) {
+		if (after == null || index < 0 || index >= size || containsKey(after)) {
+			return false;
+		}
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
 		return true;
@@ -465,8 +489,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	public float setAt (int index, float v) {
-		if (index < 0 || index >= size) {return defaultValue;}
+	public float setAt(int index, float v) {
+		if (index < 0 || index >= size) {
+			return defaultValue;
+		}
 		final int pos = locateKey(keys.get(index));
 		final float oldValue = valueTable[pos];
 		valueTable[pos] = v;
@@ -480,7 +506,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	public float getAt (int index) {
+	public float getAt(int index) {
 		return get(keys.get(index));
 	}
 
@@ -491,18 +517,18 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public K keyAt (int index) {
+	public K keyAt(int index) {
 		return keys.get(index);
 	}
 
 	@Override
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		keys.clear();
 		super.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		keys.clear();
 		super.clear();
 	}
@@ -515,14 +541,14 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return the ObjectList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public ObjectList<K> order () {
+	public ObjectList<K> order() {
 		return keys;
 	}
 
 	/**
 	 * Sorts this ObjectFloatOrderedMap in-place by the keys' natural ordering; {@code K} must implement {@link Comparable}.
 	 */
-	public void sort () {
+	public void sort() {
 		keys.sort(null);
 	}
 
@@ -532,7 +558,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 *
 	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable Comparator<? super K> comp) {
+	public void sort(@Nullable Comparator<? super K> comp) {
 		keys.sort(comp);
 	}
 
@@ -544,7 +570,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 *
 	 * @param comp a non-null {@link FloatComparator}
 	 */
-	public void sortByValue (FloatComparator comp) {
+	public void sortByValue(FloatComparator comp) {
 		keys.sort((a, b) -> comp.compare(get(a), get(b)));
 	}
 
@@ -568,7 +594,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys<K> keySet () {
+	public Keys<K> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
@@ -593,7 +619,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return a {@link PrimitiveCollection.OfFloat} of the float values
 	 */
 	@Override
-	public Values<K> values () {
+	public Values<K> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -619,7 +645,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public Entries<K> entrySet () {
+	public Entries<K> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -646,7 +672,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator<K> iterator () {
+	public @NonNull EntryIterator<K> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -667,43 +693,55 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<K> keyAppender, FloatAppender valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<K> keyAppender, FloatAppender valueAppender) {
+		if (size == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
 		ObjectList<K> keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			K key = keys.get(i);
-			if (i > 0) {sb.append(entrySeparator);}
-			if(key == this)
+			if (i > 0) {
+				sb.append(entrySeparator);
+			}
+			if (key == this)
 				sb.append("(this)");
 			else
 				keyAppender.apply(sb, key);
 			sb.append(keyValueSeparator);
 			valueAppender.apply(sb, get(key));
 		}
-		if (braces) {sb.append('}');}
+		if (braces) {
+			sb.append('}');
+		}
 		return sb;
 	}
 
 	public static class OrderedMapEntries<K> extends Entries<K> {
 		protected ObjectList<K> keys;
 
-		public OrderedMapEntries (ObjectFloatOrderedMap<K> map) {
+		public OrderedMapEntries(ObjectFloatOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator<K>(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public Entry<K> next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Entry<K> next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
 					entry.value = map.get(entry.key);
@@ -713,8 +751,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					if (entry.key != null) {
 						map.remove(entry.key);
 					}
@@ -729,22 +769,26 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	public static class OrderedMapKeys<K> extends Keys<K> {
 		private final ObjectList<K> keys;
 
-		public OrderedMapKeys (ObjectFloatOrderedMap<K> map) {
+		public OrderedMapKeys(ObjectFloatOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
 			iter = new KeyIterator<K>(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public K next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public K next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					K key = keys.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -753,8 +797,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -767,22 +813,26 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	public static class OrderedMapValues<K> extends Values<K> {
 		private final ObjectList<K> keys;
 
-		public OrderedMapValues (ObjectFloatOrderedMap<K> map) {
+		public OrderedMapValues(ObjectFloatOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
 			iter = new ValueIterator<K>(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public float nextFloat () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public float nextFloat() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					float value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -791,8 +841,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -807,10 +859,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <K>    the type of keys
+	 * @param <K> the type of keys
 	 * @return a new map containing nothing
 	 */
-	public static <K> ObjectFloatOrderedMap<K> with () {
+	public static <K> ObjectFloatOrderedMap<K> with() {
 		return new ObjectFloatOrderedMap<>(0);
 	}
 
@@ -825,7 +877,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of key0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K> ObjectFloatOrderedMap<K> with (K key0, Number value0) {
+	public static <K> ObjectFloatOrderedMap<K> with(K key0, Number value0) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(1);
 		map.put(key0, value0.floatValue());
 		return map;
@@ -844,7 +896,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectFloatOrderedMap<K> with (K key0, Number value0, K key1, Number value1) {
+	public static <K> ObjectFloatOrderedMap<K> with(K key0, Number value0, K key1, Number value1) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(2);
 		map.put(key0, value0.floatValue());
 		map.put(key1, value1.floatValue());
@@ -866,7 +918,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectFloatOrderedMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2) {
+	public static <K> ObjectFloatOrderedMap<K> with(K key0, Number value0, K key1, Number value1, K key2, Number value2) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(3);
 		map.put(key0, value0.floatValue());
 		map.put(key1, value1.floatValue());
@@ -891,7 +943,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectFloatOrderedMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2, K key3, Number value3) {
+	public static <K> ObjectFloatOrderedMap<K> with(K key0, Number value0, K key1, Number value1, K key2, Number value2, K key3, Number value3) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(4);
 		map.put(key0, value0.floatValue());
 		map.put(key1, value1.floatValue());
@@ -916,7 +968,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of keys, inferred from key0
 	 * @return a new map containing the given keys and values
 	 */
-	public static <K> ObjectFloatOrderedMap<K> with (K key0, Number value0, Object... rest) {
+	public static <K> ObjectFloatOrderedMap<K> with(K key0, Number value0, Object... rest) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.floatValue());
 		map.putPairs(rest);
@@ -928,10 +980,10 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <K>    the type of keys
+	 * @param <K> the type of keys
 	 * @return a new map containing nothing
 	 */
-	public static <K> ObjectFloatOrderedMap<K> withPrimitive () {
+	public static <K> ObjectFloatOrderedMap<K> withPrimitive() {
 		return new ObjectFloatOrderedMap<>(0);
 	}
 
@@ -946,7 +998,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of key0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K> ObjectFloatOrderedMap<K> withPrimitive (K key0, float value0) {
+	public static <K> ObjectFloatOrderedMap<K> withPrimitive(K key0, float value0) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -965,7 +1017,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectFloatOrderedMap<K> withPrimitive (K key0, float value0, K key1, float value1) {
+	public static <K> ObjectFloatOrderedMap<K> withPrimitive(K key0, float value0, K key1, float value1) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -987,7 +1039,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectFloatOrderedMap<K> withPrimitive (K key0, float value0, K key1, float value1, K key2, float value2) {
+	public static <K> ObjectFloatOrderedMap<K> withPrimitive(K key0, float value0, K key1, float value1, K key2, float value2) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1012,7 +1064,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectFloatOrderedMap<K> withPrimitive (K key0, float value0, K key1, float value1, K key2, float value2, K key3, float value3) {
+	public static <K> ObjectFloatOrderedMap<K> withPrimitive(K key0, float value0, K key1, float value1, K key2, float value2, K key3, float value3) {
 		ObjectFloatOrderedMap<K> map = new ObjectFloatOrderedMap<>(4);
 		map.put(key0, value0);
 		map.put(key1, value1);

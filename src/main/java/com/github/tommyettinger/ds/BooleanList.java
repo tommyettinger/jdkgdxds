@@ -38,50 +38,55 @@ import java.util.Random;
 public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoolean, Arrangeable {
 	/**
 	 * Returns true if this implementation retains order, which it does.
+	 *
 	 * @return true
 	 */
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return true;
 	}
 
 	public boolean[] items;
 	protected int size;
-	@Nullable protected transient BooleanListIterator iterator1;
-	@Nullable protected transient BooleanListIterator iterator2;
+	@Nullable
+	protected transient BooleanListIterator iterator1;
+	@Nullable
+	protected transient BooleanListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.
 	 */
-	public BooleanList () {
+	public BooleanList() {
 		this(10);
 	}
 
 	/**
 	 * Creates an ordered list with the specified capacity.
+	 *
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public BooleanList (int capacity) {
+	public BooleanList(int capacity) {
 		items = new boolean[capacity];
 	}
 
 	/**
 	 * Creates an ordered list with the specified capacity.
 	 *
-	 * @param ordered ignored; for an unordered list use {@link BooleanBag}
+	 * @param ordered  ignored; for an unordered list use {@link BooleanBag}
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 * @deprecated BooleanList is always ordered; for an unordered list use {@link BooleanBag}
 	 */
 	@Deprecated
-	public BooleanList (boolean ordered, int capacity) {
+	public BooleanList(boolean ordered, int capacity) {
 		this(capacity);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
 	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param list another BooleanList (or BooleanBag) to copy from
 	 */
-	public BooleanList (BooleanList list) {
+	public BooleanList(BooleanList list) {
 		size = list.size;
 		items = new boolean[size];
 		System.arraycopy(list.items, 0, items, 0, size);
@@ -90,9 +95,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param array a boolean array to copy from
 	 */
-	public BooleanList (boolean[] array) {
+	public BooleanList(boolean[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -100,11 +106,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null boolean array to add to this list
+	 * @param array      a non-null boolean array to add to this list
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public BooleanList (boolean[] array, int startIndex, int count) {
+	public BooleanList(boolean[] array, int startIndex, int count) {
 		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
@@ -114,14 +120,14 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered ignored; for an unordered list use {@link BooleanBag}
-	 * @param array a non-null boolean array to add to this list
+	 * @param ordered    ignored; for an unordered list use {@link BooleanBag}
+	 * @param array      a non-null boolean array to add to this list
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 * @deprecated BooleanList is always ordered; for an unordered list use {@link BooleanBag}
 	 */
 	@Deprecated
-	public BooleanList (boolean ordered, boolean[] array, int startIndex, int count) {
+	public BooleanList(boolean ordered, boolean[] array, int startIndex, int count) {
 		this(array, startIndex, count);
 	}
 
@@ -130,7 +136,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public BooleanList (OfBoolean coll) {
+	public BooleanList(OfBoolean coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -140,7 +146,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public BooleanList (BooleanIterator coll) {
+	public BooleanList(BooleanIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -150,7 +156,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @param other another Ordered.OfBoolean that will have its contents copied into this
 	 */
-	public BooleanList (Ordered.OfBoolean other) {
+	public BooleanList(Ordered.OfBoolean other) {
 		this(other.order());
 	}
 
@@ -162,47 +168,53 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public BooleanList (Ordered.OfBoolean other, int offset, int count) {
+	public BooleanList(Ordered.OfBoolean other, int offset, int count) {
 		this(count);
 		addAll(0, other, offset, count);
 	}
 
 	// Newly-added
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	// Modified from libGDX
 	@Override
-	public boolean add (boolean value) {
+	public boolean add(boolean value) {
 		boolean[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size++] = value;
 		return true;
 	}
 
-	public void add (boolean value1, boolean value2) {
+	public void add(boolean value1, boolean value2) {
 		boolean[] items = this.items;
-		if (size + 1 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size + 1 >= items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		size += 2;
 	}
 
-	public void add (boolean value1, boolean value2, boolean value3) {
+	public void add(boolean value1, boolean value2, boolean value3) {
 		boolean[] items = this.items;
-		if (size + 2 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size + 2 >= items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		items[size + 2] = value3;
 		size += 3;
 	}
 
-	public void add (boolean value1, boolean value2, boolean value3, boolean value4) {
+	public void add(boolean value1, boolean value2, boolean value3, boolean value4) {
 		boolean[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(9, (int)(size * 1.75f)));
+			items = resize(Math.max(9, (int) (size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -212,13 +224,15 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	// Modified from libGDX
-	public boolean addAll (BooleanList list) {
+	public boolean addAll(BooleanList list) {
 		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (BooleanList list, int offset, int count) {
-		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+	public boolean addAll(BooleanList list, int offset, int count) {
+		if (offset + count > list.size) {
+			throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);
+		}
 		return addAll(list.items, offset, count);
 	}
 
@@ -231,7 +245,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(BooleanList)} does
 	 */
-	public boolean addAll (Ordered.OfBoolean other, int offset, int count) {
+	public boolean addAll(Ordered.OfBoolean other, int offset, int count) {
 		return addAll(size(), other, offset, count);
 	}
 
@@ -245,7 +259,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(BooleanList)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered.OfBoolean other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered.OfBoolean other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -257,56 +271,74 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	// Modified from libGDX
-	public boolean addAll (boolean... array) {
+	public boolean addAll(boolean... array) {
 		return addAll(array, 0, array.length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (boolean[] array, int offset, int length) {
+	public boolean addAll(boolean[] array, int offset, int length) {
 		boolean[] items = this.items;
 		int sizeNeeded = size + length;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
 		return true;
 	}
 
 	//Kotlin-friendly operator
-	public boolean get (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public boolean get(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		return items[index];
 	}
 
 	//Kotlin-friendly operator
-	public void set (int index, boolean value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void set(int index, boolean value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] = value;
 	}
 
-	public void and (int index, boolean value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void and(int index, boolean value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] &= value;
 	}
 
-	public void or (int index, boolean value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void or(int index, boolean value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] |= value;
 	}
 
-	public void xor (int index, boolean value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void xor(int index, boolean value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] ^= value;
 	}
 
-	public void not (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void not(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] ^= true;
 	}
 
-	public void insert (int index, boolean value) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, boolean value) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		boolean[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
@@ -315,13 +347,18 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 *
 	 * @param index the first index to duplicate
 	 * @param count how many items to duplicate
 	 */
-	public boolean duplicateRange (int index, int count) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public boolean duplicateRange(int index, int count) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		int sizeNeeded = size + count;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
 		return count > 0;
@@ -334,14 +371,18 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @return this BooleanList
 	 */
 	@Override
-	public BooleanList order () {
+	public BooleanList order() {
 		return this;
 	}
 
 	@Override
-	public void swap (int first, int second) {
-		if (first >= size) {throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);}
-		if (second >= size) {throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);}
+	public void swap(int first, int second) {
+		if (first >= size) {
+			throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);
+		}
+		if (second >= size) {
+			throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);
+		}
 		boolean[] items = this.items;
 		boolean firstValue = items[first];
 		items[first] = items[second];
@@ -349,10 +390,14 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	@Override
-	public boolean contains (boolean value) {
+	public boolean contains(boolean value) {
 		int i = size - 1;
 		boolean[] items = this.items;
-		while (i >= 0) {if (items[i--] == value) {return true;}}
+		while (i >= 0) {
+			if (items[i--] == value) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -363,11 +408,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
-	public boolean containsAll (BooleanList other) {
+	public boolean containsAll(BooleanList other) {
 		boolean[] others = other.items;
 		int otherSize = other.size;
 		for (int i = 0; i < otherSize; i++) {
-			if (!contains(others[i])) {return false;}
+			if (!contains(others[i])) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -378,9 +425,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param value a boolean value to search for
 	 * @return the first index of the given value, or -1 if it is not present
 	 */
-	public int indexOf (boolean value) {
+	public int indexOf(boolean value) {
 		boolean[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {if (items[i] == value) {return i;}}
+		for (int i = 0, n = size; i < n; i++) {
+			if (items[i] == value) {
+				return i;
+			}
+		}
 		return -1;
 	}
 
@@ -390,9 +441,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param value a boolean value to search for
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
-	public int lastIndexOf (boolean value) {
+	public int lastIndexOf(boolean value) {
 		boolean[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) {if (items[i] == value) {return i;}}
+		for (int i = size - 1; i >= 0; i--) {
+			if (items[i] == value) {
+				return i;
+			}
+		}
 		return -1;
 	}
 
@@ -405,7 +460,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	// Modified from libGDX
 	@Override
-	public boolean remove (boolean value) {
+	public boolean remove(boolean value) {
 		boolean[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
 			if (items[i] == value) {
@@ -424,8 +479,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param index the index of the item to remove and return
 	 * @return the removed item
 	 */
-	public boolean removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public boolean removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		boolean[] items = this.items;
 		boolean value = items[index];
 		size--;
@@ -442,10 +499,14 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param start the first index to remove, inclusive
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start;
 		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
@@ -457,7 +518,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param c a primitive collection of int items to remove fully, such as another BooleanList or a BooleanDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (OfBoolean c) {
+	public boolean removeAll(OfBoolean c) {
 		int size = this.size;
 		int startSize = size;
 		boolean[] items = this.items;
@@ -483,7 +544,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param c a primitive collection of int items to remove one-by-one, such as another BooleanList or a BooleanDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (OfBoolean c) {
+	public boolean removeEach(OfBoolean c) {
 		int size = this.size;
 		int startSize = size;
 		boolean[] items = this.items;
@@ -508,7 +569,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @return true if this BooleanList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (OfBoolean other) {
+	public boolean retainAll(OfBoolean other) {
 		final int size = this.size;
 		final boolean[] items = this.items;
 		int r = 0, w = 0;
@@ -527,7 +588,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @param operator a BooleanPredicate (a functional interface defined in funderby)
 	 */
-	public void replaceAll (BooleanPredicate operator) {
+	public void replaceAll(BooleanPredicate operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.test(items[i]);
 		}
@@ -538,8 +599,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @return the last item, removed from this
 	 */
-	public boolean pop () {
-		if (size == 0) {throw new IndexOutOfBoundsException("BooleanList is empty.");}
+	public boolean pop() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("BooleanList is empty.");
+		}
 		return items[--size];
 	}
 
@@ -548,8 +611,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @return the last item, without modifying this
 	 */
-	public boolean peek () {
-		if (size == 0) {throw new IndexOutOfBoundsException("BooleanList is empty.");}
+	public boolean peek() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("BooleanList is empty.");
+		}
 		return items[size - 1];
 	}
 
@@ -559,8 +624,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @return the first item, without modifying this
 	 */
 	// Modified from libGDX
-	public boolean first () {
-		if (size == 0) {throw new IndexOutOfBoundsException("BooleanList is empty.");}
+	public boolean first() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("BooleanList is empty.");
+		}
 		return items[0];
 	}
 
@@ -569,7 +636,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @return true if the list has one or more items, or false otherwise
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -579,7 +646,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -588,7 +655,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * This is done simply by setting size to 0; because a {@code boolean} item isn't a reference, it doesn't need to be set to null.
 	 */
 	@Override
-	public void clear () {
+	public void clear() {
 		size = 0;
 	}
 
@@ -598,8 +665,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
-	public boolean[] shrink () {
-		if (items.length != size) {resize(size);}
+	public boolean[] shrink() {
+		if (items.length != size) {
+			resize(size);
+		}
 		return items;
 	}
 
@@ -613,10 +682,14 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
-	public boolean[] ensureCapacity (int additionalCapacity) {
-		if (additionalCapacity < 0) {throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);}
+	public boolean[] ensureCapacity(int additionalCapacity) {
+		if (additionalCapacity < 0) {
+			throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);
+		}
 		int sizeNeeded = size + additionalCapacity;
-		if (sizeNeeded > items.length) {resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		return items;
 	}
 
@@ -625,14 +698,18 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
-	public boolean[] setSize (int newSize) {
-		if (newSize < 0) {throw new IllegalArgumentException("newSize must be >= 0: " + newSize);}
-		if (newSize > items.length) {resize(Math.max(8, newSize));}
+	public boolean[] setSize(int newSize) {
+		if (newSize < 0) {
+			throw new IllegalArgumentException("newSize must be >= 0: " + newSize);
+		}
+		if (newSize > items.length) {
+			resize(Math.max(8, newSize));
+		}
 		size = newSize;
 		return items;
 	}
 
-	protected boolean[] resize (int newSize) {
+	protected boolean[] resize(int newSize) {
 		boolean[] newItems = new boolean[newSize];
 		boolean[] items = this.items;
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));
@@ -640,9 +717,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		return newItems;
 	}
 
-	public void sort () {
+	public void sort() {
 		sort(BooleanComparators.NATURAL_COMPARATOR);
 	}
+
 	/**
 	 * Sorts all elements according to the order induced by the specified
 	 * comparator using {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)}.
@@ -655,7 +733,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @param c the comparator to determine the order of the BooleanList
 	 */
-	public void sort (@Nullable final BooleanComparator c) {
+	public void sort(@Nullable final BooleanComparator c) {
 		if (c == null) {
 			sort(0, size, BooleanComparators.NATURAL_COMPARATOR);
 		} else {
@@ -673,12 +751,12 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param to   the index of the last element (exclusive) to be sorted.
 	 * @param c    the comparator to determine the order of the BooleanList
 	 */
-	public void sort (final int from, final int to, final BooleanComparator c) {
+	public void sort(final int from, final int to, final BooleanComparator c) {
 		BooleanComparators.sort(items, from, to, c);
 	}
 
 	@Override
-	public void reverse () {
+	public void reverse() {
 		boolean[] items = this.items;
 		for (int i = 0, lastIndex = size - 1, n = size / 2; i < n; i++) {
 			int ii = lastIndex - i;
@@ -690,7 +768,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (Random random) {
+	public void shuffle(Random random) {
 		boolean[] items = this.items;
 		for (int i = size - 1; i > 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -704,9 +782,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		newSize = Math.max(0, newSize);
-		if (size > newSize) {size = newSize;}
+		if (size > newSize) {
+			size = newSize;
+		}
 	}
 
 	/**
@@ -715,8 +795,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code false} if this is empty
 	 */
-	public boolean random (Random random) {
-		if (size == 0) {return false;}
+	public boolean random(Random random) {
+		if (size == 0) {
+			return false;
+		}
 		return items[random.nextInt(size)];
 	}
 
@@ -725,7 +807,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @return a new boolean array with the same contents as this
 	 */
-	public boolean[] toArray () {
+	public boolean[] toArray() {
 		boolean[] array = new boolean[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -739,7 +821,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param array a boolean array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
-	public boolean[] toArray (boolean[] array) {
+	public boolean[] toArray(boolean[] array) {
 		if (array.length < size)
 			array = new boolean[size];
 		System.arraycopy(items, 0, array, 0, size);
@@ -747,7 +829,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		boolean[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -757,19 +839,29 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	@Override
-	public boolean equals (Object object) {
-		if (object == this) {return true;}
-		if (!(object instanceof BooleanList)) {return false;}
-		BooleanList list = (BooleanList)object;
+	public boolean equals(Object object) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof BooleanList)) {
+			return false;
+		}
+		BooleanList list = (BooleanList) object;
 		int n = size;
-		if (n != list.size()) {return false;}
+		if (n != list.size()) {
+			return false;
+		}
 		boolean[] items1 = this.items, items2 = list.items;
-		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
+		for (int i = 0; i < n; i++) {
+			if (items1[i] != items2[i]) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -783,7 +875,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @return a {@link BooleanIterator}; use its nextBoolean() method instead of next()
 	 */
 	@Override
-	public BooleanListIterator iterator () {
+	public BooleanListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new BooleanListIterator(this);
 			iterator2 = new BooleanListIterator(this);
@@ -814,11 +906,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 */
 		public boolean valid = true;
 
-		public BooleanListIterator (BooleanList list) {
+		public BooleanListIterator(BooleanList list) {
 			this.list = list;
 		}
 
-		public BooleanListIterator (BooleanList list, int index) {
+		public BooleanListIterator(BooleanList list, int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("BooleanListIterator does not satisfy index >= 0 && index < list.size()");
 			this.list = list;
@@ -832,9 +924,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public boolean nextBoolean () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= list.size()) {throw new NoSuchElementException();}
+		public boolean nextBoolean() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			return list.get(latest = index++);
 		}
 
@@ -846,8 +942,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index < list.size();
 		}
 
@@ -860,8 +958,10 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 * @return {@code true} if the list iterator has more elements when
 		 * traversing the list in the reverse direction
 		 */
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -877,9 +977,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public boolean previousBoolean () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index <= 0 || list.isEmpty()) {throw new NoSuchElementException();}
+		public boolean previousBoolean() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index <= 0 || list.isEmpty()) {
+				throw new NoSuchElementException();
+			}
 			return list.get(latest = --index);
 		}
 
@@ -892,7 +996,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 * subsequent call to {@code next}, or list size if the list
 		 * iterator is at the end of the list
 		 */
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -905,7 +1009,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 * subsequent call to {@code previous}, or -1 if the list
 		 * iterator is at the beginning of the list
 		 */
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -924,9 +1028,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -952,9 +1060,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (boolean t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void set(boolean t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.set(latest, t);
 		}
 
@@ -978,20 +1090,24 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (boolean t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > list.size()) {throw new NoSuchElementException();}
+		public void add(boolean t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.insert(index, t);
-			if(list.keepsOrder()) ++index;
+			if (list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = 0;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("BooleanListIterator does not satisfy index >= 0 && index < list.size()");
 			this.index = index;
@@ -1003,7 +1119,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 *
 		 * @return this same BooleanListIterator.
 		 */
-		public BooleanList.BooleanListIterator iterator () {
+		public BooleanList.BooleanListIterator iterator() {
 			return this;
 		}
 	}
@@ -1015,17 +1131,18 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @return a new list containing nothing
 	 */
-	public static BooleanList with () {
+	public static BooleanList with() {
 		return new BooleanList(0);
 	}
 
 	/**
 	 * Creates a new BooleanList that holds only the given item, but can be resized.
+	 *
 	 * @param item a boolean item
 	 * @return a new BooleanList that holds the given item
 	 */
 
-	public static BooleanList with (boolean item) {
+	public static BooleanList with(boolean item) {
 		BooleanList list = new BooleanList(1);
 		list.add(item);
 		return list;
@@ -1033,11 +1150,12 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	/**
 	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean item0, boolean item1) {
+	public static BooleanList with(boolean item0, boolean item1) {
 		BooleanList list = new BooleanList(2);
 		list.add(item0);
 		list.add(item1);
@@ -1046,12 +1164,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	/**
 	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
 	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean item0, boolean item1, boolean item2) {
+	public static BooleanList with(boolean item0, boolean item1, boolean item2) {
 		BooleanList list = new BooleanList(3);
 		list.add(item0);
 		list.add(item1);
@@ -1061,13 +1180,14 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	/**
 	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
 	 * @param item3 a boolean item
 	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3) {
+	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3) {
 		BooleanList list = new BooleanList(4);
 		list.add(item0);
 		list.add(item1);
@@ -1078,6 +1198,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	/**
 	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
@@ -1085,7 +1206,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param item4 a boolean item
 	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
+	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
 		BooleanList list = new BooleanList(5);
 		list.add(item0);
 		list.add(item1);
@@ -1097,6 +1218,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	/**
 	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
@@ -1105,7 +1227,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param item5 a boolean item
 	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
+	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
 		BooleanList list = new BooleanList(6);
 		list.add(item0);
 		list.add(item1);
@@ -1118,6 +1240,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	/**
 	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
@@ -1127,7 +1250,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param item6 a boolean item
 	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
+	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
 		BooleanList list = new BooleanList(7);
 		list.add(item0);
 		list.add(item1);
@@ -1141,6 +1264,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	/**
 	 * Creates a new BooleanList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
@@ -1150,7 +1274,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param item6 a boolean item
 	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
+	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
 		BooleanList list = new BooleanList(8);
 		list.add(item0);
 		list.add(item1);
@@ -1168,10 +1292,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a boolean varargs or boolean array; remember that varargs allocate
 	 * @return a new BooleanList that holds the given items
 	 */
-	public static BooleanList with (boolean... varargs) {
+	public static BooleanList with(boolean... varargs) {
 		return new BooleanList(varargs);
 	}
 }

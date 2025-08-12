@@ -32,56 +32,56 @@ import java.util.NoSuchElementException;
  * to handle primitive items.
  */
 public class FilteringDoubleIterator implements DoubleIterator {
-    public DoubleIterator iterator;
-    public DoublePredicate filter;
-    protected boolean end = false;
-    protected boolean available = false;
-    protected double next;
+	public DoubleIterator iterator;
+	public DoublePredicate filter;
+	protected boolean end = false;
+	protected boolean available = false;
+	protected double next;
 
-    public FilteringDoubleIterator() {
-    }
+	public FilteringDoubleIterator() {
+	}
 
-    public FilteringDoubleIterator(final DoubleIterator iterator, final DoublePredicate filter) {
-        set(iterator, filter);
-    }
+	public FilteringDoubleIterator(final DoubleIterator iterator, final DoublePredicate filter) {
+		set(iterator, filter);
+	}
 
-    public void set(final DoubleIterator iterator, final DoublePredicate predicate) {
-        this.iterator = iterator;
-        this.filter = predicate;
-        end = available = false;
-    }
+	public void set(final DoubleIterator iterator, final DoublePredicate predicate) {
+		this.iterator = iterator;
+		this.filter = predicate;
+		end = available = false;
+	}
 
-    public void set(final DoubleIterator iterator) {
-        set(iterator, filter);
-    }
+	public void set(final DoubleIterator iterator) {
+		set(iterator, filter);
+	}
 
-    @Override
-    public boolean hasNext() {
-        if (end) return false;
-        if (available) return true;
-        while (iterator.hasNext()) {
-            final double n = iterator.nextDouble();
-            if (filter.test(n)) {
-                next = n;
-                available = true;
-                return true;
-            }
-        }
-        end = true;
-        return false;
-    }
+	@Override
+	public boolean hasNext() {
+		if (end) return false;
+		if (available) return true;
+		while (iterator.hasNext()) {
+			final double n = iterator.nextDouble();
+			if (filter.test(n)) {
+				next = n;
+				available = true;
+				return true;
+			}
+		}
+		end = true;
+		return false;
+	}
 
-    @Override
-    public double nextDouble() {
-        if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
-        final double result = next;
-        available = false;
-        return result;
-    }
+	@Override
+	public double nextDouble() {
+		if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
+		final double result = next;
+		available = false;
+		return result;
+	}
 
-    @Override
-    public void remove() {
-        if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
+		iterator.remove();
+	}
 }

@@ -96,19 +96,25 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable protected transient Entries<K> entries1;
-	@Nullable protected transient Entries<K> entries2;
-	@Nullable protected transient Values<K> values1;
-	@Nullable protected transient Values<K> values2;
-	@Nullable protected transient Keys<K> keys1;
-	@Nullable protected transient Keys<K> keys2;
+	@Nullable
+	protected transient Entries<K> entries1;
+	@Nullable
+	protected transient Entries<K> entries2;
+	@Nullable
+	protected transient Values<K> values1;
+	@Nullable
+	protected transient Values<K> values2;
+	@Nullable
+	protected transient Keys<K> keys1;
+	@Nullable
+	protected transient Keys<K> keys2;
 
 	public long defaultValue = 0L;
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public ObjectLongMap () {
+	public ObjectLongMap() {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
@@ -117,7 +123,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public ObjectLongMap (int initialCapacity) {
+	public ObjectLongMap(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -128,16 +134,18 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public ObjectLongMap (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public ObjectLongMap(int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
+		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
-		keyTable = (K[])new Object[tableSize];
+		keyTable = (K[]) new Object[tableSize];
 		valueTable = new long[tableSize];
 	}
 
@@ -146,8 +154,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param map the map to copy
 	 */
-	public ObjectLongMap (ObjectLongMap<? extends K> map) {
-		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
+	public ObjectLongMap(ObjectLongMap<? extends K> map) {
+		this((int) (map.keyTable.length * map.loadFactor), map.loadFactor);
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -162,7 +170,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public ObjectLongMap (K[] keys, long[] values) {
+	public ObjectLongMap(K[] keys, long[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -174,7 +182,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param keys   a Collection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public ObjectLongMap (Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
+	public ObjectLongMap(Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -185,7 +193,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param keys   a Collection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public void putAll (Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
+	public void putAll(Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
 		K key;
@@ -205,7 +213,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -222,7 +230,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left.equals(right);
 	}
 
@@ -233,7 +241,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param key a non-null K key
 	 * @return a negative index if the key was not found, or the non-negative index of the existing key if found
 	 */
-	protected int locateKey (Object key) {
+	protected int locateKey(Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -247,7 +255,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
-	public long put (K key, long value) {
+	public long put(K key, long value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			long oldValue = valueTable[i];
@@ -257,14 +265,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
 	/**
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
-	public long putOrDefault (K key, long value, long defaultValue) {
+	public long putOrDefault(K key, long value, long defaultValue) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			long oldValue = valueTable[i];
@@ -274,7 +284,9 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -284,14 +296,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (ObjectLongMap<? extends K> map) {
+	public void putAll(ObjectLongMap<? extends K> map) {
 		ensureCapacity(map.size);
 		K[] keyTable = map.keyTable;
 		long[] valueTable = map.valueTable;
 		K key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != null) {put(key, valueTable[i]);}
+			if (key != null) {
+				put(key, valueTable[i]);
+			}
 		}
 	}
 
@@ -301,7 +315,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public void putAll (K[] keys, long[] values) {
+	public void putAll(K[] keys, long[] values) {
 		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
 	}
 
@@ -312,7 +326,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
-	public void putAll (K[] keys, long[] values, int length) {
+	public void putAll(K[] keys, long[] values, int length) {
 		putAll(keys, 0, values, 0, length);
 	}
 
@@ -325,20 +339,22 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param valueOffset the first index in values to insert
 	 * @param length      how many items from keys and values to insert, at-most
 	 */
-	public void putAll (K[] keys, int keyOffset, long[] values, int valueOffset, int length) {
+	public void putAll(K[] keys, int keyOffset, long[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
 		ensureCapacity(length);
 		K key;
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
 			key = keys[k];
-			if (key != null) {put(key, values[v]);}
+			if (key != null) {
+				put(key, values[v]);
+			}
 		}
 	}
 
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	protected void putResize (K key, long value) {
+	protected void putResize(K key, long value) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
@@ -354,8 +370,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
-	public long get (Object key) {
-		if(key == null) return defaultValue;
+	public long get(Object key) {
+		if (key == null) return defaultValue;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -369,8 +385,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	public long getOrDefault (Object key, long defaultValue) {
-		if(key == null) return defaultValue;
+	public long getOrDefault(Object key, long defaultValue) {
+		if (key == null) return defaultValue;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -385,8 +401,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
 	 * put into the map and defaultValue is returned.
 	 */
-	public long getAndIncrement (K key, long defaultValue, long increment) {
-		if(key == null) return defaultValue;
+	public long getAndIncrement(K key, long defaultValue, long increment) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			long oldValue = valueTable[i];
@@ -396,12 +412,14 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = defaultValue + increment;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
-	public long remove (Object key) {
-		if(key == null) return defaultValue;
+	public long remove(Object key) {
+		if (key == null) return defaultValue;
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		K rem;
@@ -411,9 +429,9 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		int mask = this.mask, last, slot;
 		size--;
-		for (;;) {
+		for (; ; ) {
 			pos = ((last = pos) + 1) & mask;
-			for (;;) {
+			for (; ; ) {
 				if ((rem = keyTable[pos]) == null) {
 					keyTable[last] = null;
 					return oldValue;
@@ -430,7 +448,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	/**
 	 * Returns true if the map has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -441,14 +459,14 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @return the number of key-value mappings in this map
 	 */
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	/**
 	 * Returns true if the map is empty.
 	 */
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -458,7 +476,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @return the current default value
 	 */
-	public long getDefaultValue () {
+	public long getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -469,7 +487,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param defaultValue may be any long; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (long defaultValue) {
+	public void setDefaultValue(long defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -478,16 +496,20 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * nothing is done. If the map contains more items than the specified capacity, the next highest power of two capacity is used
 	 * instead.
 	 */
-	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
+	public void shrink(int maximumCapacity) {
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) {resize(tableSize);}
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
 	 * Clears the map and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
 			clear();
@@ -497,8 +519,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		resize(tableSize);
 	}
 
-	public void clear () {
-		if (size == 0) {return;}
+	public void clear() {
+		if (size == 0) {
+			return;
+		}
 		size = 0;
 		Utilities.clear(keyTable);
 	}
@@ -507,17 +531,19 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 */
-	public boolean containsValue (long value) {
+	public boolean containsValue(long value) {
 		long[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != null && valueTable[i] == value) {return true;}
+			if (keyTable[i] != null && valueTable[i] == value) {
+				return true;
+			}
 		}
 		return false;
 	}
 
-	public boolean containsKey (Object key) {
-		if(key == null) return false;
+	public boolean containsKey(Object key) {
+		if (key == null) return false;
 		K[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			K other = keyTable[i];
@@ -533,15 +559,18 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Returns a key that maps to the specified value, or null if value is not in the map.
 	 * Note, this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
+	 *
 	 * @param value the value to search for
 	 * @return a key that maps to value, if present, or null if value cannot be found
 	 */
 	@Nullable
-	public K findKey (long value) {
+	public K findKey(long value) {
 		long[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != null && valueTable[i] == value) {return keyTable[i];}
+			if (keyTable[i] != null && valueTable[i] == value) {
+				return keyTable[i];
+			}
 		}
 
 		return null;
@@ -551,14 +580,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
+		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
@@ -566,13 +597,15 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		@Nullable K[] oldKeyTable = keyTable;
 		long[] oldValueTable = valueTable;
 
-		keyTable = (K[])new Object[newSize];
+		keyTable = (K[]) new Object[newSize];
 		valueTable = new long[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				K key = oldKeyTable[i];
-				if (key != null) {putResize(key, oldValueTable[i]);}
+				if (key != null) {
+					putResize(key, oldValueTable[i]);
+				}
 			}
 		}
 	}
@@ -603,18 +636,21 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be
 	 * entered. This length is equal to the length of the array used to store all values, and empty space for values,
 	 * here. This is also called the capacity.
+	 *
 	 * @return the length of the internal array that holds all keys
 	 */
 	public int getTableSize() {
 		return keyTable.length;
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return loadFactor;
 	}
 
-	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public void setLoadFactor(float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -623,7 +659,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		long h = size;
 		@Nullable K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
@@ -634,15 +670,21 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 				h += valueTable[i];
 			}
 		}
-		return (int)(h ^ h >>> 32);
+		return (int) (h ^ h >>> 32);
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof ObjectLongMap)) {return false;}
-		ObjectLongMap other = (ObjectLongMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof ObjectLongMap)) {
+			return false;
+		}
+		ObjectLongMap other = (ObjectLongMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -659,7 +701,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -670,13 +712,14 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator) {
+	public String toString(String entrySeparator) {
 		return toString(entrySeparator, false);
 	}
 
-	public String toString (String entrySeparator, boolean braces) {
+	public String toString(String entrySeparator, boolean braces) {
 		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
 	}
+
 	/**
 	 * Makes a String from the contents of this ObjectLongMap, but uses the given {@link Appender} and
 	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
@@ -685,18 +728,19 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
 	 *
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<K> keyAppender, LongAppender valueAppender){
+	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
+						   Appender<K> keyAppender, LongAppender valueAppender) {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
+
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, StringBuilder::append, LongAppender.DEFAULT);
 	}
 
@@ -708,25 +752,31 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
 	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<K> keyAppender, LongAppender valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+								  Appender<K> keyAppender, LongAppender valueAppender) {
+		if (size == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
 		K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			K key = keyTable[i];
-			if (key == null) {continue;}
-			if(key == this) sb.append("(this)");
+			if (key == null) {
+				continue;
+			}
+			if (key == this) sb.append("(this)");
 			else keyAppender.apply(sb, key);
 			sb.append(keyValueSeparator);
 			valueAppender.apply(sb, valueTable[i]);
@@ -734,14 +784,18 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 		while (i-- > 0) {
 			K key = keyTable[i];
-			if (key == null) {continue;}
+			if (key == null) {
+				continue;
+			}
 			sb.append(entrySeparator);
-			if(key == this) sb.append("(this)");
+			if (key == this) sb.append("(this)");
 			else keyAppender.apply(sb, key);
 			sb.append(keyValueSeparator);
 			valueAppender.apply(sb, valueTable[i]);
 		}
-		if (braces) {sb.append('}');}
+		if (braces) {
+			sb.append('}');
+		}
 		return sb;
 	}
 
@@ -754,7 +808,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (ObjLongBiConsumer<? super K> action) {
+	public void forEach(ObjLongBiConsumer<? super K> action) {
 		for (Entry<K> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
@@ -768,7 +822,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (ObjLongToLongBiFunction<? super K> function) {
+	public void replaceAll(ObjLongToLongBiFunction<? super K> function) {
 		for (Entry<K> entry : entrySet()) {
 			entry.setValue(function.applyAsLong(entry.getKey(), entry.getValue()));
 		}
@@ -785,7 +839,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		K[] keyTable = this.keyTable;
 		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
@@ -805,7 +859,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator<K> iterator () {
+	public @NonNull EntryIterator<K> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -828,7 +882,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public Keys<K> keySet () {
+	public Keys<K> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -851,7 +905,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @return a {@link Collection} of long values
 	 */
-	public Values<K> values () {
+	public Values<K> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -875,7 +929,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 *
 	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
-	public Entries<K> entrySet () {
+	public Entries<K> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -893,24 +947,25 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public static class Entry<K> {
-		@Nullable public K key;
+		@Nullable
+		public K key;
 		public long value;
 
-		public Entry () {
+		public Entry() {
 		}
 
-		public Entry (@Nullable K key, long value) {
+		public Entry(@Nullable K key, long value) {
 			this.key = key;
 			this.value = value;
 		}
 
-		public Entry (Entry<K> entry) {
+		public Entry(Entry<K> entry) {
 			this.key = entry.key;
 			this.value = entry.value;
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return key + "=" + value;
 		}
 
@@ -922,7 +977,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 *                               required to, throw this exception if the entry has been
 		 *                               removed from the backing map.
 		 */
-		public K getKey () {
+		public K getKey() {
 			assert key != null;
 			return key;
 		}
@@ -934,7 +989,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		public long getValue () {
+		public long getValue() {
 			return value;
 		}
 
@@ -958,28 +1013,34 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 *                                       required to, throw this exception if the entry has been
 		 *                                       removed from the backing map.
 		 */
-		public long setValue (long value) {
+		public long setValue(long value) {
 			long old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals (@Nullable Object o) {
-			if (this == o) {return true;}
-			if (o == null || getClass() != o.getClass() || key == null) {return false;}
+		public boolean equals(@Nullable Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass() || key == null) {
+				return false;
+			}
 
-			Entry<?> entry = (Entry<?>)o;
+			Entry<?> entry = (Entry<?>) o;
 
-			if (!key.equals(entry.key)) {return false;}
+			if (!key.equals(entry.key)) {
+				return false;
+			}
 			return value == entry.value;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			assert key != null;
 			long result = key.hashCode() * 31L + value;
-			return (int)(result ^ result >>> 32);
+			return (int) (result ^ result >>> 32);
 		}
 	}
 
@@ -990,18 +1051,18 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		protected int nextIndex, currentIndex;
 		public boolean valid = true;
 
-		public MapIterator (ObjectLongMap<K> map) {
+		public MapIterator(ObjectLongMap<K> map) {
 			this.map = map;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = -1;
 			nextIndex = -1;
 			findNextIndex();
 		}
 
-		void findNextIndex () {
+		void findNextIndex() {
 			K[] keyTable = map.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
@@ -1012,9 +1073,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			hasNext = false;
 		}
 
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
-			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
+			if (i < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			K[] keyTable = map.keyTable;
 			long[] valueTable = map.valueTable;
 			int mask = map.mask, next = i + 1 & mask;
@@ -1031,32 +1094,40 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			keyTable[i] = null;
 
 			map.size--;
-			if (i != currentIndex) {--nextIndex;}
+			if (i != currentIndex) {
+				--nextIndex;
+			}
 			currentIndex = -1;
 		}
 	}
 
 	public static class KeyIterator<K> extends MapIterator<K> implements Iterable<K>, Iterator<K> {
 
-		public KeyIterator (ObjectLongMap<K> map) {
+		public KeyIterator(ObjectLongMap<K> map) {
 			super(map);
 		}
 
 		@Override
-		public @NonNull KeyIterator<K> iterator () {
+		public @NonNull KeyIterator<K> iterator() {
 			return this;
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 
 		@Override
-		public K next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public K next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			K key = map.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -1065,7 +1136,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public static class ValueIterator<K> extends MapIterator<K> implements LongIterator {
-		public ValueIterator (ObjectLongMap<K> map) {
+		public ValueIterator(ObjectLongMap<K> map) {
 			super(map);
 		}
 
@@ -1076,9 +1147,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public long nextLong () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public long nextLong() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			long value = map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -1086,8 +1161,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 	}
@@ -1095,12 +1172,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	public static class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
 		protected Entry<K> entry = new Entry<>();
 
-		public EntryIterator (ObjectLongMap<K> map) {
+		public EntryIterator(ObjectLongMap<K> map) {
 			super(map);
 		}
 
 		@Override
-		public @NonNull EntryIterator<K> iterator () {
+		public @NonNull EntryIterator<K> iterator() {
 			return this;
 		}
 
@@ -1108,9 +1185,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * Note the same entry instance is returned each time this method is called.
 		 */
 		@Override
-		public Entry<K> next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public Entry<K> next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			K[] keyTable = map.keyTable;
 			entry.key = keyTable[nextIndex];
 			entry.value = map.valueTable[nextIndex];
@@ -1120,8 +1201,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 	}
@@ -1129,7 +1212,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	public static class Entries<K> extends AbstractSet<Entry<K>> implements EnhancedCollection<Entry<K>> {
 		protected EntryIterator<K> iter;
 
-		public Entries (ObjectLongMap<K> map) {
+		public Entries(ObjectLongMap<K> map) {
 			iter = new EntryIterator<>(map);
 		}
 
@@ -1139,17 +1222,17 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator<K> iterator () {
+		public @NonNull EntryIterator<K> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1161,7 +1244,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
@@ -1169,7 +1252,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1177,11 +1260,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<Entry<K>> toList () {
+		public ObjectList<Entry<K>> toList() {
 			ObjectList<Entry<K>> list = new ObjectList<>(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(new Entry<>(iter.next()));}
+			while (iter.hasNext) {
+				list.add(new Entry<>(iter.next()));
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1191,13 +1276,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public Collection<Entry<K>> appendInto(Collection<Entry<K>> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(new Entry<>(iter.next()));}
+			while (iter.hasNext) {
+				coll.add(new Entry<>(iter.next()));
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1207,6 +1295,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Map.
 		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 *
 		 * @param coll any modifiable Map; may have items appended into it
 		 * @return the given map
 		 */
@@ -1229,36 +1318,36 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		protected ValueIterator<K> iter;
 
 		@Override
-		public boolean add (long item) {
+		public boolean add(long item) {
 			throw new UnsupportedOperationException("ObjectLongMap.Values is read-only");
 		}
 
 		@Override
-		public boolean remove (long item) {
+		public boolean remove(long item) {
 			throw new UnsupportedOperationException("ObjectLongMap.Values is read-only");
 		}
 
 		@Override
-		public boolean contains (long item) {
+		public boolean contains(long item) {
 			return iter.map.containsValue(item);
 		}
 
 		@Override
-		public void clear () {
+		public void clear() {
 			throw new UnsupportedOperationException("ObjectLongMap.Values is read-only");
 		}
 
 		@Override
-		public ValueIterator<K> iterator () {
+		public ValueIterator<K> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
-		public Values (ObjectLongMap<K> map) {
+		public Values(ObjectLongMap<K> map) {
 			iter = new ValueIterator<>(map);
 		}
 
@@ -1266,7 +1355,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1274,11 +1363,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public LongList toList () {
+		public LongList toList() {
 			LongList list = new LongList(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.nextLong());}
+			while (iter.hasNext) {
+				list.add(iter.nextLong());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1288,13 +1379,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.nextLong());}
+			while (iter.hasNext) {
+				coll.add(iter.nextLong());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1302,7 +1396,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 	}
@@ -1310,27 +1404,27 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	public static class Keys<K> extends AbstractSet<K> implements EnhancedCollection<K> {
 		protected KeyIterator<K> iter;
 
-		public Keys (ObjectLongMap<K> map) {
+		public Keys(ObjectLongMap<K> map) {
 			iter = new KeyIterator<>(map);
 		}
 
 		@Override
-		public boolean contains (Object o) {
+		public boolean contains(Object o) {
 			return iter.map.containsKey(o);
 		}
 
 		@Override
-		public @NonNull KeyIterator<K> iterator () {
+		public @NonNull KeyIterator<K> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1342,7 +1436,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
@@ -1350,7 +1444,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1358,11 +1452,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<K> toList () {
+		public ObjectList<K> toList() {
 			ObjectList<K> list = new ObjectList<>(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.next());}
+			while (iter.hasNext) {
+				list.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1372,13 +1468,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public Collection<K> appendInto(Collection<K> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.next());}
+			while (iter.hasNext) {
+				coll.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1386,8 +1485,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 	}
 
-	public long putIfAbsent (K key, long value) {
-		if(key == null) return defaultValue;
+	public long putIfAbsent(K key, long value) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			return valueTable[i];
@@ -1395,7 +1494,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		return put(key, value);
 	}
 
-	public boolean replace (K key, long oldValue, long newValue) {
+	public boolean replace(K key, long oldValue, long newValue) {
 		long curValue = get(key);
 		if (curValue != oldValue || !containsKey(key)) {
 			return false;
@@ -1404,8 +1503,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		return true;
 	}
 
-	public long replace (K key, long value) {
-		if(key == null) return defaultValue;
+	public long replace(K key, long value) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) {
 			long oldValue = valueTable[i];
@@ -1415,8 +1514,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		return defaultValue;
 	}
 
-	public long computeIfAbsent (K key, ObjToLongFunction<? super K> mappingFunction) {
-		if(key == null) return defaultValue;
+	public long computeIfAbsent(K key, ObjToLongFunction<? super K> mappingFunction) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i < 0) {
 			long newValue = mappingFunction.applyAsLong(key);
@@ -1426,8 +1525,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			return valueTable[i];
 	}
 
-	public boolean remove (Object key, long value) {
-		if(key != null) {
+	public boolean remove(Object key, long value) {
+		if (key != null) {
 			int i = locateKey(key);
 			if (i >= 0 && valueTable[i] == value) {
 				remove(key);
@@ -1442,15 +1541,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
 	 * that isn't possible with primitive types).
 	 * This uses a functional interface from Funderby.
-	 * @param key key with which the resulting value is to be associated
-	 * @param value the value to be merged with the existing value
-	 *        associated with the key or, if no existing value
-	 *        is associated with the key, to be associated with the key
+	 *
+	 * @param key               key with which the resulting value is to be associated
+	 * @param value             the value to be merged with the existing value
+	 *                          associated with the key or, if no existing value
+	 *                          is associated with the key, to be associated with the key
 	 * @param remappingFunction given a long from this and the long {@code value}, this should return what long to use
 	 * @return the value now associated with key
 	 */
-	public long combine (K key, long value, LongLongToLongBiFunction remappingFunction) {
-		if(key == null) return defaultValue;
+	public long combine(K key, long value, LongLongToLongBiFunction remappingFunction) {
+		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		long next = (i < 0) ? value : remappingFunction.applyAsLong(valueTable[i], value);
 		put(key, next);
@@ -1461,10 +1561,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * Simply calls {@link #combine(Object, long, LongLongToLongBiFunction)} on this map using every
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
-	 * @param other a non-null ObjectLongMap (or subclass) with a compatible key type
+	 *
+	 * @param other             a non-null ObjectLongMap (or subclass) with a compatible key type
 	 * @param remappingFunction given a long value from this and a value from other, this should return what long to use
 	 */
-	public void combine (ObjectLongMap<? extends K> other, LongLongToLongBiFunction remappingFunction) {
+	public void combine(ObjectLongMap<? extends K> other, LongLongToLongBiFunction remappingFunction) {
 		for (Entry<? extends K> e : other.entrySet()) {
 			combine(e.key, e.value, remappingFunction);
 		}
@@ -1475,10 +1576,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <K>    the type of keys
+	 * @param <K> the type of keys
 	 * @return a new map containing nothing
 	 */
-	public static <K> ObjectLongMap<K> with () {
+	public static <K> ObjectLongMap<K> with() {
 		return new ObjectLongMap<>(0);
 	}
 
@@ -1493,7 +1594,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of key0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K> ObjectLongMap<K> with (K key0, Number value0) {
+	public static <K> ObjectLongMap<K> with(K key0, Number value0) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(1);
 		map.put(key0, value0.longValue());
 		return map;
@@ -1512,7 +1613,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectLongMap<K> with (K key0, Number value0, K key1, Number value1) {
+	public static <K> ObjectLongMap<K> with(K key0, Number value0, K key1, Number value1) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(2);
 		map.put(key0, value0.longValue());
 		map.put(key1, value1.longValue());
@@ -1534,7 +1635,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectLongMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2) {
+	public static <K> ObjectLongMap<K> with(K key0, Number value0, K key1, Number value1, K key2, Number value2) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(3);
 		map.put(key0, value0.longValue());
 		map.put(key1, value1.longValue());
@@ -1559,7 +1660,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectLongMap<K> with (K key0, Number value0, K key1, Number value1, K key2, Number value2, K key3, Number value3) {
+	public static <K> ObjectLongMap<K> with(K key0, Number value0, K key1, Number value1, K key2, Number value2, K key3, Number value3) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(4);
 		map.put(key0, value0.longValue());
 		map.put(key1, value1.longValue());
@@ -1584,7 +1685,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of keys, inferred from key0
 	 * @return a new map containing the given keys and values
 	 */
-	public static <K> ObjectLongMap<K> with (K key0, Number value0, Object... rest) {
+	public static <K> ObjectLongMap<K> with(K key0, Number value0, Object... rest) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.longValue());
 		map.putPairs(rest);
@@ -1606,11 +1707,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void putPairs(Object... pairs) {
-		if(pairs != null) {
+		if (pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
 				try {
-					if(pairs[i-1] != null && pairs[i] != null)
-						put((K) pairs[i - 1], ((Number)pairs[i]).longValue());
+					if (pairs[i - 1] != null && pairs[i] != null)
+						put((K) pairs[i - 1], ((Number) pairs[i]).longValue());
 				} catch (ClassCastException ignored) {
 				}
 			}
@@ -1626,7 +1727,8 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * {@link Base#readLong(CharSequence, int, int)}. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing parseable text
+	 *
+	 * @param str       a String containing parseable text
 	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
 	 */
 	public void putLegible(String str, PartialParser<K> keyParser) {
@@ -1642,9 +1744,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * {@link Base#readLong(CharSequence, int, int)}. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing parseable text
+	 *
+	 * @param str            a String containing parseable text
 	 * @param entrySeparator the String separating every key-value pair
-	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param keyParser      a PartialParser that returns a {@code K} key from a section of {@code str}
 	 */
 	public void putLegible(String str, String entrySeparator, PartialParser<K> keyParser) {
 		putLegible(str, entrySeparator, "=", keyParser, 0, -1);
@@ -1657,10 +1760,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * {@link Base#readLong(CharSequence, int, int)}. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing parseable text
-	 * @param entrySeparator the String separating every key-value pair
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<K> keyParser) {
 		putLegible(str, entrySeparator, keyValueSeparator, keyParser, 0, -1);
@@ -1673,35 +1777,36 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * {@link Base#readLong(CharSequence, int, int)}. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing parseable text
-	 * @param entrySeparator the String separating every key-value pair
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param keyParser a PartialParser that returns a {@code K} key from a section of {@code str}
-	 * @param offset the first position to read parseable text from in {@code str}
-	 * @param length how many chars to read; -1 is treated as maximum length
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<K> keyParser, int offset, int length) {
 		int sl, el, kvl;
-		if(str == null || entrySeparator == null || keyValueSeparator == null || keyParser == null
-				|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
-				|| offset < 0 || offset > sl - 1) return;
+		if (str == null || entrySeparator == null || keyValueSeparator == null || keyParser == null
+			|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
+			|| offset < 0 || offset > sl - 1) return;
 		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
-		int end = str.indexOf(keyValueSeparator, offset+1);
+		int end = str.indexOf(keyValueSeparator, offset + 1);
 		K k = null;
 		boolean incomplete = false;
 		while (end != -1 && end + kvl < lim) {
 			k = keyParser.parse(str, offset, end);
 			offset = end + kvl;
-			end = str.indexOf(entrySeparator, offset+1);
-			if(end != -1 && end + el < lim){
+			end = str.indexOf(entrySeparator, offset + 1);
+			if (end != -1 && end + el < lim) {
 				put(k, Base.BASE10.readLong(str, offset, end));
 				offset = end + el;
-				end = str.indexOf(keyValueSeparator, offset+1);
+				end = str.indexOf(keyValueSeparator, offset + 1);
 			} else {
 				incomplete = true;
 			}
 		}
-		if(incomplete && offset < lim){
+		if (incomplete && offset < lim) {
 			put(k, Base.BASE10.readLong(str, offset, lim));
 		}
 	}
@@ -1711,10 +1816,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <K>    the type of keys
+	 * @param <K> the type of keys
 	 * @return a new map containing nothing
 	 */
-	public static <K> ObjectLongMap<K> withPrimitive () {
+	public static <K> ObjectLongMap<K> withPrimitive() {
 		return new ObjectLongMap<>(0);
 	}
 
@@ -1729,7 +1834,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of key0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K> ObjectLongMap<K> withPrimitive (K key0, long value0) {
+	public static <K> ObjectLongMap<K> withPrimitive(K key0, long value0) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -1748,7 +1853,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectLongMap<K> withPrimitive (K key0, long value0, K key1, long value1) {
+	public static <K> ObjectLongMap<K> withPrimitive(K key0, long value0, K key1, long value1) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1770,7 +1875,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectLongMap<K> withPrimitive (K key0, long value0, K key1, long value1, K key2, long value2) {
+	public static <K> ObjectLongMap<K> withPrimitive(K key0, long value0, K key1, long value1, K key2, long value2) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1795,7 +1900,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <K> ObjectLongMap<K> withPrimitive (K key0, long value0, K key1, long value1, K key2, long value2, K key3, long value3) {
+	public static <K> ObjectLongMap<K> withPrimitive(K key0, long value0, K key1, long value1, K key2, long value2, K key3, long value3) {
 		ObjectLongMap<K> map = new ObjectLongMap<>(4);
 		map.put(key0, value0);
 		map.put(key1, value1);

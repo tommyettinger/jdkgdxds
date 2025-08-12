@@ -25,39 +25,39 @@ package com.github.tommyettinger.ds.support.util;
  * change the Iterator with {@link #set(IntIterator)}.
  */
 public class LimitingIntIterator implements IntIterator {
-    public IntIterator iterator;
-    protected int limit = 1;
-    protected int remaining = 1;
+	public IntIterator iterator;
+	protected int limit = 1;
+	protected int remaining = 1;
 
-    public LimitingIntIterator() {
-    }
+	public LimitingIntIterator() {
+	}
 
-    public LimitingIntIterator(final IntIterator iterator, int limit) {
-        set(iterator, limit);
-    }
+	public LimitingIntIterator(final IntIterator iterator, int limit) {
+		set(iterator, limit);
+	}
 
-    public void set (final IntIterator iterator, int limit) {
-        this.iterator = iterator;
-        this.remaining = this.limit = Math.max(0, limit);
-    }
+	public void set(final IntIterator iterator, int limit) {
+		this.iterator = iterator;
+		this.remaining = this.limit = Math.max(0, limit);
+	}
 
-    public void set (final IntIterator iterator) {
-        set(iterator, limit);
-    }
+	public void set(final IntIterator iterator) {
+		set(iterator, limit);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return (iterator.hasNext() && remaining > 0);
-    }
+	@Override
+	public boolean hasNext() {
+		return (iterator.hasNext() && remaining > 0);
+	}
 
-    @Override
-    public int nextInt () {
-        remaining--;
-        return iterator.next();
-    }
+	@Override
+	public int nextInt() {
+		remaining--;
+		return iterator.next();
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

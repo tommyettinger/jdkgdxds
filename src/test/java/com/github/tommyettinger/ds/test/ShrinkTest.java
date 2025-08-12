@@ -39,9 +39,9 @@ public class ShrinkTest {
 
 				//// This line can end up in an infinite loop if the keyTable is 100% full.
 				//// Normal Map API usage should never allow that, but shrink() could, maybe.
-				if(!points.containsKey(k))
+				if (!points.containsKey(k))
 					points.put(k, points.size());
-				if(points.size() >= 127)
+				if (points.size() >= 127)
 					System.out.println(points.size() + ": " + points);
 			}
 		}

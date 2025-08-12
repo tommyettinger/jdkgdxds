@@ -25,6 +25,7 @@ import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -66,9 +67,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntObjectOrderedMap (OrderType ordering) {
+	public IntObjectOrderedMap(OrderType ordering) {
 		this(Utilities.getDefaultTableCapacity(), ordering);
 	}
 
@@ -76,9 +78,9 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param ordering determines what implementation {@link #order()} will use
+	 * @param ordering        determines what implementation {@link #order()} will use
 	 */
-	public IntObjectOrderedMap (int initialCapacity, OrderType ordering) {
+	public IntObjectOrderedMap(int initialCapacity, OrderType ordering) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
@@ -88,16 +90,19 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
-	 * @param ordering determines what implementation {@link #order()} will use
+	 * @param ordering        determines what implementation {@link #order()} will use
 	 */
-	public IntObjectOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
+	public IntObjectOrderedMap(int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		switch (ordering){
-			case DEQUE: keys = new IntDeque(initialCapacity);
+		switch (ordering) {
+			case DEQUE:
+				keys = new IntDeque(initialCapacity);
 				break;
-			case BAG: keys = new IntBag(initialCapacity);
+			case BAG:
+				keys = new IntBag(initialCapacity);
 				break;
-			default: keys = new IntList(initialCapacity);
+			default:
+				keys = new IntList(initialCapacity);
 		}
 	}
 
@@ -106,20 +111,20 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 *
 	 * @param map the map to copy
 	 */
-	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> map) {
+	public IntObjectOrderedMap(IntObjectOrderedMap<? extends V> map) {
 		super(map);
-		if(map.keys instanceof IntDeque) keys = new IntDeque((IntDeque) map.keys);
-		else if(map.keys instanceof IntBag) keys = new IntBag(map.keys);
+		if (map.keys instanceof IntDeque) keys = new IntDeque((IntDeque) map.keys);
+		else if (map.keys instanceof IntBag) keys = new IntBag(map.keys);
 		else keys = new IntList(map.keys);
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map the map to copy
+	 * @param map      the map to copy
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntObjectOrderedMap (IntObjectMap<? extends V> map, OrderType ordering) {
+	public IntObjectOrderedMap(IntObjectMap<? extends V> map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
 		hashMultiplier = map.hashMultiplier;
 		IntIterator it = map.keySet().iterator();
@@ -137,11 +142,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count) {
+	public IntObjectOrderedMap(IntObjectOrderedMap<? extends V> other, int offset, int count) {
 		this(other, offset, count,
-				other.keys instanceof IntBag ? OrderType.BAG
-						: other.keys instanceof IntDeque ? OrderType.DEQUE
-						: OrderType.LIST);
+			other.keys instanceof IntBag ? OrderType.BAG
+				: other.keys instanceof IntDeque ? OrderType.DEQUE
+				: OrderType.LIST);
 	}
 
 	/**
@@ -149,7 +154,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 *
 	 * @param map the map to copy
 	 */
-	public IntObjectOrderedMap (IntObjectMap<? extends V> map) {
+	public IntObjectOrderedMap(IntObjectMap<? extends V> map) {
 		this(map, OrderType.LIST);
 
 	}
@@ -158,12 +163,12 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Creates a new set by copying {@code count} items from the given IntObjectOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another IntObjectOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
+	 * @param other    another IntObjectOrderedMap of the same type
+	 * @param offset   the first index in other's ordering to draw an item from
+	 * @param count    how many items to copy from other
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntObjectOrderedMap (IntObjectOrderedMap<? extends V> other, int offset, int count, OrderType ordering) {
+	public IntObjectOrderedMap(IntObjectOrderedMap<? extends V> other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
@@ -173,11 +178,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
+	 * @param keys     an array of keys
+	 * @param values   an array of values
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntObjectOrderedMap (int[] keys, V[] values, OrderType ordering) {
+	public IntObjectOrderedMap(int[] keys, V[] values, OrderType ordering) {
 		this(Math.min(keys.length, values.length), ordering);
 		putAll(keys, values);
 	}
@@ -186,11 +191,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
-	 * @param keys   a PrimitiveCollection of keys
-	 * @param values a PrimitiveCollection of values
+	 * @param keys     a PrimitiveCollection of keys
+	 * @param values   a PrimitiveCollection of values
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntObjectOrderedMap (PrimitiveCollection.OfInt keys, Collection<? extends V> values, OrderType ordering) {
+	public IntObjectOrderedMap(PrimitiveCollection.OfInt keys, Collection<? extends V> values, OrderType ordering) {
 		this(Math.min(keys.size(), values.size()), ordering);
 		putAll(keys, values);
 	}
@@ -198,7 +203,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public IntObjectOrderedMap () {
+	public IntObjectOrderedMap() {
 		this(OrderType.LIST);
 	}
 
@@ -207,7 +212,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public IntObjectOrderedMap (int initialCapacity) {
+	public IntObjectOrderedMap(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
 
@@ -218,7 +223,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public IntObjectOrderedMap (int initialCapacity, float loadFactor) {
+	public IntObjectOrderedMap(int initialCapacity, float loadFactor) {
 		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
@@ -229,7 +234,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public IntObjectOrderedMap (int[] keys, V[] values) {
+	public IntObjectOrderedMap(int[] keys, V[] values) {
 		this(keys, values, OrderType.LIST);
 	}
 
@@ -240,12 +245,12 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public IntObjectOrderedMap (PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
+	public IntObjectOrderedMap(PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
 		this(keys, values, OrderType.LIST);
 	}
 
 	@Override
-	public V put (int key, @Nullable V value) {
+	public V put(int key, @Nullable V value) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -268,7 +273,9 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -283,13 +290,15 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return the previous value associated with key, if there was one, or null otherwise
 	 */
 	@Nullable
-	public V put (int key, @Nullable V value, int index) {
+	public V put(int key, @Nullable V value, int index) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
 				oldValue = zeroValue;
 				int oldIndex = keys.indexOf(key);
-				if (oldIndex != index) {keys.insert(index, keys.removeAt(oldIndex));}
+				if (oldIndex != index) {
+					keys.insert(index, keys.removeAt(oldIndex));
+				}
 			} else {
 				keys.insert(index, 0);
 				size++;
@@ -303,23 +312,29 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 			V oldValue = valueTable[i];
 			valueTable[i] = value;
 			int oldIndex = keys.indexOf(key);
-			if (oldIndex != index) {keys.insert(index, keys.removeAt(oldIndex));}
+			if (oldIndex != index) {
+				keys.insert(index, keys.removeAt(oldIndex));
+			}
 			return oldValue;
 		}
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.insert(index, key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return null;
 	}
 
 	@Nullable
 	@Override
-	public V putOrDefault (int key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(int key, @Nullable V value, @Nullable V defaultValue) {
 		if (key == 0) {
 			V oldValue = defaultValue;
-			if (hasZeroValue) {oldValue = zeroValue;} else {
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+			} else {
 				size++;
 				keys.add(key);
 			}
@@ -337,7 +352,9 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -347,7 +364,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (IntObjectOrderedMap<? extends V> map) {
+	public void putAll(IntObjectOrderedMap<? extends V> map) {
 		ensureCapacity(map.size);
 		IntList ks = map.keys;
 		int kl = ks.size();
@@ -366,7 +383,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 */
-	public void putAll (IntObjectOrderedMap<? extends V> other, int offset, int count) {
+	public void putAll(IntObjectOrderedMap<? extends V> other, int offset, int count) {
 		putAll(size, other, offset, count);
 	}
 
@@ -379,7 +396,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll (int insertionIndex, IntObjectOrderedMap<? extends V> other, int offset, int count) {
+	public void putAll(int insertionIndex, IntObjectOrderedMap<? extends V> other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
 		for (int i = offset; i < end; i++) {
@@ -389,9 +406,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 
 	@Override
 	@Nullable
-	public V remove (int key) {
+	public V remove(int key) {
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
-		if (!super.containsKey(key)) {return defaultValue;}
+		if (!super.containsKey(key)) {
+			return defaultValue;
+		}
 		keys.remove(key);
 		return super.remove(key);
 	}
@@ -403,7 +422,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return the value of the removed entry
 	 */
 	@Nullable
-	public V removeAt (int index) {
+	public V removeAt(int index) {
 		return super.remove(keys.removeAt(index));
 	}
 
@@ -417,7 +436,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(keys.size(), end);
 		for (int i = start; i < end; i++) {
@@ -433,8 +452,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	/**
@@ -444,9 +465,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 		keys.ensureCapacity(additionalCapacity);
 
 	}
@@ -461,10 +484,14 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (int before, int after) {
-		if (containsKey(after)) {return false;}
+	public boolean alter(int before, int after) {
+		if (containsKey(after)) {
+			return false;
+		}
 		int index = keys.indexOf(before);
-		if (index == -1) {return false;}
+		if (index == -1) {
+			return false;
+		}
 		super.put(after, super.remove(before));
 		keys.set(index, after);
 		return true;
@@ -479,8 +506,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, int after) {
-		if (index < 0 || index >= size || containsKey(after)) {return false;}
+	public boolean alterAt(int index, int after) {
+		if (index < 0 || index >= size || containsKey(after)) {
+			return false;
+		}
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
 		return true;
@@ -496,8 +525,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
 	@Nullable
-	public V setAt (int index, V v) {
-		if (index < 0 || index >= size) {return null;}
+	public V setAt(int index, V v) {
+		if (index < 0 || index >= size) {
+			return null;
+		}
 		final int pos = locateKey(keys.get(index));
 		final V oldValue = valueTable[pos];
 		valueTable[pos] = v;
@@ -512,7 +543,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return the value at the given index
 	 */
 	@Nullable
-	public V getAt (int index) {
+	public V getAt(int index) {
 		return get(keys.get(index));
 	}
 
@@ -523,18 +554,18 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public int keyAt (int index) {
+	public int keyAt(int index) {
 		return keys.get(index);
 	}
 
 	@Override
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		keys.clear();
 		super.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		keys.clear();
 		super.clear();
 	}
@@ -547,14 +578,14 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return the IntList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public IntList order () {
+	public IntList order() {
 		return keys;
 	}
 
 	/**
 	 * Sorts this IntObjectOrderedMap in-place by the keys' natural ordering.
 	 */
-	public void sort () {
+	public void sort() {
 		keys.sort();
 	}
 
@@ -564,7 +595,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 *
 	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable IntComparator comp) {
+	public void sort(@Nullable IntComparator comp) {
 		keys.sort(comp);
 	}
 
@@ -577,10 +608,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 *
 	 * @param comp a Comparator that can compare {@code V} values; may be null to use natural order of Comparable values
 	 */
-	public void sortByValue (@Nullable Comparator<V> comp) {
-		if(comp == null)
-            //noinspection unchecked
-            keys.sort((a, b) -> ((Comparator<V>) ObjectComparators.NATURAL_COMPARATOR).compare(get(a), get(b)));
+	public void sortByValue(@Nullable Comparator<V> comp) {
+		if (comp == null)
+			//noinspection unchecked
+			keys.sort((a, b) -> ((Comparator<V>) ObjectComparators.NATURAL_COMPARATOR).compare(get(a), get(b)));
 		else
 			keys.sort((a, b) -> comp.compare(get(a), get(b)));
 	}
@@ -605,7 +636,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys<V> keySet () {
+	public Keys<V> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
@@ -630,7 +661,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public Values<V> values () {
+	public Values<V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -656,7 +687,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public Entries<V> entrySet () {
+	public Entries<V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -683,7 +714,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator<V> iterator () {
+	public @NonNull EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -704,10 +735,14 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		IntAppender keyAppender, Appender<V> valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+								  IntAppender keyAppender, Appender<V> valueAppender) {
+		if (size == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
 		IntList keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			int key = keys.get(i);
@@ -715,35 +750,41 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 				sb.append(entrySeparator);
 			keyAppender.apply(sb, key).append(keyValueSeparator);
 			V value = get(key);
-			if(value == this)
+			if (value == this)
 				sb.append("(this)");
 			else
 				valueAppender.apply(sb, value);
 
 		}
-		if (braces) {sb.append('}');}
+		if (braces) {
+			sb.append('}');
+		}
 		return sb;
 	}
 
 	public static class OrderedMapEntries<V> extends Entries<V> {
 		protected IntList keys;
 
-		public OrderedMapEntries (IntObjectOrderedMap<V> map) {
+		public OrderedMapEntries(IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator<V>(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public Entry<V> next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Entry<V> next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
 					entry.value = map.get(entry.key);
@@ -753,8 +794,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(entry.key);
 					nextIndex--;
 					currentIndex = -1;
@@ -767,22 +810,26 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	public static class OrderedMapKeys<V> extends Keys<V> {
 		private final IntList keys;
 
-		public OrderedMapKeys (IntObjectOrderedMap<V> map) {
+		public OrderedMapKeys(IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new KeyIterator<V>(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public int nextInt () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public int nextInt() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					int key = keys.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -791,8 +838,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -805,13 +854,13 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	public static class OrderedMapValues<V> extends Values<V> {
 		private final IntList keys;
 
-		public OrderedMapValues (IntObjectOrderedMap<V> map) {
+		public OrderedMapValues(IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
 			iter = new ValueIterator<V>(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
@@ -819,9 +868,13 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 
 				@Override
 				@Nullable
-				public V next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public V next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					V value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -830,8 +883,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -846,10 +901,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> IntObjectOrderedMap<V> with () {
+	public static <V> IntObjectOrderedMap<V> with() {
 		return new IntObjectOrderedMap<>(0);
 	}
 
@@ -864,7 +919,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> IntObjectOrderedMap<V> with (Number key0, V value0) {
+	public static <V> IntObjectOrderedMap<V> with(Number key0, V value0) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(1);
 		map.put(key0.intValue(), value0);
 		return map;
@@ -883,7 +938,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectOrderedMap<V> with (Number key0, V value0, Number key1, V value1) {
+	public static <V> IntObjectOrderedMap<V> with(Number key0, V value0, Number key1, V value1) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(2);
 		map.put(key0.intValue(), value0);
 		map.put(key1.intValue(), value1);
@@ -905,7 +960,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectOrderedMap<V> with (Number key0, V value0, Number key1, V value1, Number key2, V value2) {
+	public static <V> IntObjectOrderedMap<V> with(Number key0, V value0, Number key1, V value1, Number key2, V value2) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(3);
 		map.put(key0.intValue(), value0);
 		map.put(key1.intValue(), value1);
@@ -930,7 +985,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectOrderedMap<V> with (Number key0, V value0, Number key1, V value1, Number key2, V value2, Number key3, V value3) {
+	public static <V> IntObjectOrderedMap<V> with(Number key0, V value0, Number key1, V value1, Number key2, V value2, Number key3, V value3) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(4);
 		map.put(key0.intValue(), value0);
 		map.put(key1.intValue(), value1);
@@ -955,7 +1010,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	public static <V> IntObjectOrderedMap<V> with (Number key0, V value0, Object... rest) {
+	public static <V> IntObjectOrderedMap<V> with(Number key0, V value0, Object... rest) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0);
 		map.putPairs(rest);
@@ -967,10 +1022,10 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> IntObjectOrderedMap<V> withPrimitive () {
+	public static <V> IntObjectOrderedMap<V> withPrimitive() {
 		return new IntObjectOrderedMap<>(0);
 	}
 
@@ -985,7 +1040,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> IntObjectOrderedMap<V> withPrimitive (int key0, V value0) {
+	public static <V> IntObjectOrderedMap<V> withPrimitive(int key0, V value0) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -1004,7 +1059,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectOrderedMap<V> withPrimitive (int key0, V value0, int key1, V value1) {
+	public static <V> IntObjectOrderedMap<V> withPrimitive(int key0, V value0, int key1, V value1) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1026,7 +1081,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectOrderedMap<V> withPrimitive (int key0, V value0, int key1, V value1, int key2, V value2) {
+	public static <V> IntObjectOrderedMap<V> withPrimitive(int key0, V value0, int key1, V value1, int key2, V value2) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1051,7 +1106,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectOrderedMap<V> withPrimitive (int key0, V value0, int key1, V value1, int key2, V value2, int key3, V value3) {
+	public static <V> IntObjectOrderedMap<V> withPrimitive(int key0, V value0, int key1, V value1, int key2, V value2, int key3, V value3) {
 		IntObjectOrderedMap<V> map = new IntObjectOrderedMap<>(4);
 		map.put(key0, value0);
 		map.put(key1, value1);

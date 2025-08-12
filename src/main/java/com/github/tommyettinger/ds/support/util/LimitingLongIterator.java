@@ -25,39 +25,39 @@ package com.github.tommyettinger.ds.support.util;
  * change the Iterator with {@link #set(LongIterator)}.
  */
 public class LimitingLongIterator implements LongIterator {
-    public LongIterator iterator;
-    protected int limit = 1;
-    protected int remaining = 1;
+	public LongIterator iterator;
+	protected int limit = 1;
+	protected int remaining = 1;
 
-    public LimitingLongIterator() {
-    }
+	public LimitingLongIterator() {
+	}
 
-    public LimitingLongIterator(final LongIterator iterator, int limit) {
-        set(iterator, limit);
-    }
+	public LimitingLongIterator(final LongIterator iterator, int limit) {
+		set(iterator, limit);
+	}
 
-    public void set (final LongIterator iterator, int limit) {
-        this.iterator = iterator;
-        this.remaining = this.limit = Math.max(0, limit);
-    }
+	public void set(final LongIterator iterator, int limit) {
+		this.iterator = iterator;
+		this.remaining = this.limit = Math.max(0, limit);
+	}
 
-    public void set (final LongIterator iterator) {
-        set(iterator, limit);
-    }
+	public void set(final LongIterator iterator) {
+		set(iterator, limit);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return (iterator.hasNext() && remaining > 0);
-    }
+	@Override
+	public boolean hasNext() {
+		return (iterator.hasNext() && remaining > 0);
+	}
 
-    @Override
-    public long nextLong () {
-        remaining--;
-        return iterator.next();
-    }
+	@Override
+	public long nextLong() {
+		remaining--;
+		return iterator.next();
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

@@ -20,6 +20,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -85,13 +86,15 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 */
 	protected int mask;
 
-	@Nullable protected transient IntSetIterator iterator1;
-	@Nullable protected transient IntSetIterator iterator2;
+	@Nullable
+	protected transient IntSetIterator iterator1;
+	@Nullable
+	protected transient IntSetIterator iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public IntSet () {
+	public IntSet() {
 		this(51, Utilities.getDefaultLoadFactor());
 	}
 
@@ -100,7 +103,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public IntSet (int initialCapacity) {
+	public IntSet(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -111,13 +114,15 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public IntSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public IntSet(int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		mask = tableSize - 1;
-		threshold = Math.min((int)(tableSize * (double)loadFactor + 1), mask);
+		threshold = Math.min((int) (tableSize * (double) loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 
@@ -129,7 +134,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public IntSet (IntIterator coll) {
+	public IntSet(IntIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -137,8 +142,8 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	/**
 	 * Creates a new set identical to the specified set.
 	 */
-	public IntSet (IntSet set) {
-		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
+	public IntSet(IntSet set) {
+		this((int) (set.keyTable.length * set.loadFactor), set.loadFactor);
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
 		hasZeroValue = set.hasZeroValue;
@@ -151,7 +156,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 *
 	 * @param coll a PrimitiveCollection that will be used in full, except for duplicate items
 	 */
-	public IntSet (PrimitiveCollection.OfInt coll) {
+	public IntSet(PrimitiveCollection.OfInt coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -163,7 +168,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public IntSet (int[] array, int offset, int length) {
+	public IntSet(int[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
@@ -173,7 +178,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public IntSet (int[] array) {
+	public IntSet(int[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -184,7 +189,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * @param item any int; it is usually mixed or masked here
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (int item) {
+	protected int place(int item) {
 		return BitConversion.imul(item, hashMultiplier) >>> shift;
 	}
 
@@ -193,7 +198,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * While this can be overridden to compare for equality differently than {@code ==} between ints, that
 	 * isn't recommended because this has to treat zero keys differently, and it finds those with {@code ==}.
 	 */
-	protected int locateKey (int key) {
+	protected int locateKey(int key) {
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -210,9 +215,11 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * Returns true if the key was not already in the set.
 	 */
 	@Override
-	public boolean add (int key) {
+	public boolean add(int key) {
 		if (key == 0) {
-			if (hasZeroValue) {return false;}
+			if (hasZeroValue) {
+				return false;
+			}
 			hasZeroValue = true;
 			size++;
 			return true;
@@ -224,40 +231,50 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 				return false; // Existing key was found.
 			if (other == 0) {
 				keyTable[i] = key;
-				if (++size >= threshold) {resize(keyTable.length << 1);}
+				if (++size >= threshold) {
+					resize(keyTable.length << 1);
+				}
 				return true;
 			}
 		}
 	}
 
-	public boolean addAll (IntList array) {
+	public boolean addAll(IntList array) {
 		return addAll(array.items, 0, array.size());
 	}
 
-	public boolean addAll (IntList array, int offset, int length) {
-		if (offset + length > array.size()) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size());}
+	public boolean addAll(IntList array, int offset, int length) {
+		if (offset + length > array.size()) {
+			throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size());
+		}
 		return addAll(array.items, offset, length);
 	}
 
-	public boolean addAll (int... array) {
+	public boolean addAll(int... array) {
 		return addAll(array, 0, array.length);
 	}
 
-	public boolean addAll (int[] array, int offset, int length) {
+	public boolean addAll(int[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
-		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
+		for (int i = offset, n = i + length; i < n; i++) {
+			add(array[i]);
+		}
 		return size != oldSize;
 	}
 
-	public boolean addAll (IntSet set) {
+	public boolean addAll(IntSet set) {
 		ensureCapacity(set.size);
 		int oldSize = size;
-		if (set.hasZeroValue) {add(0);}
+		if (set.hasZeroValue) {
+			add(0);
+		}
 		int[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
-			if (key != 0) {add(key);}
+			if (key != 0) {
+				add(key);
+			}
 		}
 		return size != oldSize;
 	}
@@ -265,7 +282,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	/**
 	 * Skips checks for existing keys, doesn't increment size, doesn't need to handle key 0.
 	 */
-	protected void addResize (int key) {
+	protected void addResize(int key) {
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
@@ -279,16 +296,20 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * Returns true if the key was removed.
 	 */
 	@Override
-	public boolean remove (int key) {
+	public boolean remove(int key) {
 		if (key == 0) {
-			if (!hasZeroValue) {return false;}
+			if (!hasZeroValue) {
+				return false;
+			}
 			hasZeroValue = false;
 			size--;
 			return true;
 		}
 
 		int i = locateKey(key);
-		if (i < 0) {return false;}
+		if (i < 0) {
+			return false;
+		}
 		int[] keyTable = this.keyTable;
 		int mask = this.mask, next = i + 1 & mask;
 		while ((key = keyTable[next]) != 0) {
@@ -307,7 +328,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	/**
 	 * Returns true if the set has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -315,7 +336,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * Returns true if the set is empty.
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -324,16 +345,20 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * nothing is done. If the set contains more items than the specified capacity, the next highest power of two capacity is used
 	 * instead.
 	 */
-	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
+	public void shrink(int maximumCapacity) {
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(maximumCapacity, loadFactor);
-		if (keyTable.length > tableSize) {resize(tableSize);}
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
 	 * Clears the set and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
 			clear();
@@ -345,16 +370,20 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	@Override
-	public void clear () {
-		if (size == 0) {return;}
+	public void clear() {
+		if (size == 0) {
+			return;
+		}
 		size = 0;
 		Arrays.fill(keyTable, 0);
 		hasZeroValue = false;
 	}
 
 	@Override
-	public boolean contains (int key) {
-		if (key == 0) {return hasZeroValue;}
+	public boolean contains(int key) {
+		if (key == 0) {
+			return hasZeroValue;
+		}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -365,10 +394,16 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		}
 	}
 
-	public int first () {
-		if (hasZeroValue) {return 0;}
+	public int first() {
+		if (hasZeroValue) {
+			return 0;
+		}
 		int[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {if (keyTable[i] != 0) {return keyTable[i];}}
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			if (keyTable[i] != 0) {
+				return keyTable[i];
+			}
+		}
 		throw new IllegalStateException("IntSet is empty.");
 	}
 
@@ -376,15 +411,17 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		int oldCapacity = keyTable.length;
 		mask = newSize - 1;
-		threshold = Math.min((int)(newSize * (double)loadFactor + 1), mask);
+		threshold = Math.min((int) (newSize * (double) loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
@@ -395,20 +432,22 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				int key = oldKeyTable[i];
-				if (key != 0) {addResize(key);}
+				if (key != 0) {
+					addResize(key);
+				}
 			}
 		}
 	}
 
-    /**
-     * Effectively does nothing here because the hashMultiplier is no longer stored or used.
-     * Subclasses can use this as some kind of identifier or user data, though.
-     *
-     * @return any int; the value isn't used internally, but may be used by subclasses to identify something
-     */
-    public int getHashMultiplier() {
-        return 0;
-    }
+	/**
+	 * Effectively does nothing here because the hashMultiplier is no longer stored or used.
+	 * Subclasses can use this as some kind of identifier or user data, though.
+	 *
+	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
+	 */
+	public int getHashMultiplier() {
+		return 0;
+	}
 
 	/**
 	 * Sets the current hash multiplier, then immediately calls {@link #resize(int)} without changing the target size;
@@ -426,19 +465,22 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * in the data structure. If you in a situation where you are worried about hash flooding, you also shouldn't permit
 	 * adversaries to cause this method to be called frequently. Also be advised that because of how resize() works, the
 	 * result of {@link #getHashMultiplier()} after calling this will only very rarely be the same as the parameter here.
+	 *
 	 * @param hashMultiplier any int; will not be used as-is
 	 */
-	public void setHashMultiplier (int hashMultiplier) {
+	public void setHashMultiplier(int hashMultiplier) {
 		this.hashMultiplier = hashMultiplier | 0x80000001;
 		resize(keyTable.length);
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return loadFactor;
 	}
 
-	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public void setLoadFactor(float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -447,38 +489,48 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		int[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
-			if (key != 0) {h += key;}
+			if (key != 0) {
+				h += key;
+			}
 		}
 		return h;
 	}
 
 	@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		return SetOfInt.super.equalContents(o);
 	}
 
-	public StringBuilder appendTo (StringBuilder builder) {
-		if (size == 0) {return builder.append("[]");}
+	public StringBuilder appendTo(StringBuilder builder) {
+		if (size == 0) {
+			return builder.append("[]");
+		}
 		builder.append('[');
 		int[] keyTable = this.keyTable;
 		int i = keyTable.length;
-		if (hasZeroValue) {builder.append('0');} else {
+		if (hasZeroValue) {
+			builder.append('0');
+		} else {
 			while (i-- > 0) {
 				int key = keyTable[i];
-				if (key == 0) {continue;}
+				if (key == 0) {
+					continue;
+				}
 				builder.append(key);
 				break;
 			}
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0) {continue;}
+			if (key == 0) {
+				continue;
+			}
 			builder.append(", ");
 			builder.append(key);
 		}
@@ -487,7 +539,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -502,7 +554,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		int[] keyTable = this.keyTable;
 		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
@@ -523,7 +575,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 * Use the {@link IntSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public IntSetIterator iterator () {
+	public IntSetIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntSetIterator(this);
 			iterator2 = new IntSetIterator(this);
@@ -541,7 +593,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -572,18 +624,22 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		 */
 		protected final IntSet set;
 
-		public IntSetIterator (IntSet set) {
+		public IntSetIterator(IntSet set) {
 			this.set = set;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (set.hasZeroValue) {hasNext = true;} else {findNextIndex();}
+			if (set.hasZeroValue) {
+				hasNext = true;
+			} else {
+				findNextIndex();
+			}
 		}
 
-		protected void findNextIndex () {
+		protected void findNextIndex() {
 			int[] keyTable = set.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != 0) {
@@ -602,13 +658,15 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 
 		@Override
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
 			if (i == INDEX_ZERO && set.hasZeroValue) {
 				set.hasZeroValue = false;
@@ -626,16 +684,22 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
-				if (i != currentIndex) {--nextIndex;}
+				if (i != currentIndex) {
+					--nextIndex;
+				}
 			}
 			currentIndex = INDEX_ILLEGAL;
 			set.size--;
 		}
 
 		@Override
-		public int nextInt () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public int nextInt() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			int key = nextIndex == INDEX_ZERO ? 0 : set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -646,26 +710,32 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		 * Returns a new {@link IntList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public IntList toList () {
+		public IntList toList() {
 			IntList list = new IntList(set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {list.add(nextInt());}
+			while (hasNext) {
+				list.add(nextInt());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
 			return list;
 		}
+
 		/**
 		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfInt.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable PrimitiveCollection.OfInt; may have items appended into it
 		 * @return the given primitive collection
 		 */
 		public PrimitiveCollection.OfInt appendInto(PrimitiveCollection.OfInt coll) {
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {coll.add(nextInt());}
+			while (hasNext) {
+				coll.add(nextInt());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -673,13 +743,13 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		}
 	}
 
-	public static IntSet with (int item) {
+	public static IntSet with(int item) {
 		IntSet set = new IntSet(1);
 		set.add(item);
 		return set;
 	}
 
-	public static IntSet with (int... array) {
+	public static IntSet with(int... array) {
 		return new IntSet(array);
 	}
 }

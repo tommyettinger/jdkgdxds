@@ -76,7 +76,7 @@ Highest pileup    : 28
 					 * Lowest pileup     : 9
 					 * Highest pileup    : 23
 					 */
-					int hashMul = (int)((g >>> 32 & -16) | (g & 15));
+					int hashMul = (int) ((g >>> 32 & -16) | (g & 15));
 
 //					@Override
 //					protected int place (Object item) {
@@ -153,13 +153,13 @@ Highest pileup    : 28
 					 * Highest pileup    : 23
 					 */
 					@Override
-					protected int place (@NonNull Object item) {
+					protected int place(@NonNull Object item) {
 						final int h = item.hashCode() * hashMul;
 						return (h >>> shift) ^ (h & mask);
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -173,9 +173,9 @@ Highest pileup    : 28
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -192,17 +192,19 @@ Highest pileup    : 28
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
-						if(collisionTotal > 40000) {
+						if (collisionTotal > 40000) {
 							problems.put(g, collisionTotal);
 //							throw new RuntimeException();
 						}
 					}
 
 					@Override
-					public void clear () {
+					public void clear() {
 						System.out.print("Original 0x" + Base.BASE16.unsigned(g));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						minMax[0] = Math.min(minMax[0], collisionTotal);
@@ -212,13 +214,13 @@ Highest pileup    : 28
 						super.clear();
 					}
 				};
-				if(a != -1)
-					set.setHashMultiplier((int)g);
+				if (a != -1)
+					set.setHashMultiplier((int) g);
 				try {
 					for (int i = 0, n = words.size(); i < n; i++) {
 						set.add(words.get(i));
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					System.out.println(g + " FAILURE");
 					continue;
 				}

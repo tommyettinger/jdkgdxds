@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.random.WhiskerRandom;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -69,12 +70,13 @@ public class ExhaustiveWordHashTest {
 					int longestPileup = 0;
 					int originalMul, originalAdd;
 					int hashMul = 0x9E377, hashAdd = 0xD192ED03;
+
 					{
 						long hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
 							hashMultiplier = hashMultiplier * hashMultiplier + (ctr += 0x9E3779B97F4A7C16L);
-							hashMul = hashMul + (int)ctr & 0xFFFFF;
+							hashMul = hashMul + (int) ctr & 0xFFFFF;
 							hashAdd += ctr;
 						}
 						originalMultiplier = hashMultiplier;
@@ -98,7 +100,7 @@ public class ExhaustiveWordHashTest {
 //						originalAdd = hashAdd;
 //					}
 
-//					long originalMultiplier;
+					//					long originalMultiplier;
 //					int hashAddend = 0xD1B54A32;
 //					{
 //						hashMultiplier = 0xD1B54A32D192ED03L;
@@ -109,7 +111,7 @@ public class ExhaustiveWordHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place (@NonNull Object item) {
+					protected int place(@NonNull Object item) {
 						return item.hashCode() * hashMul >>> shift;
 //						return item.hashCode() * hashMul + hashAdd >>> shift;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
@@ -119,7 +121,7 @@ public class ExhaustiveWordHashTest {
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -133,14 +135,14 @@ public class ExhaustiveWordHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C5L;
-						hashMul =  hashMul * 0x9E377 & 0xFFFFF;
+						hashMultiplier *= ((long) size << 3) ^ 0xF1357AEA2E62A9C5L;
+						hashMul = hashMul * 0x9E377 & 0xFFFFF;
 //						hashMul *= 0x2E62A9C5 ^ size + size;
 						hashAdd += 0xF1357AEA;
 //                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
@@ -155,23 +157,25 @@ public class ExhaustiveWordHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
-						if(longestPileup > 13) throw new RuntimeException();
+						if (longestPileup > 13) throw new RuntimeException();
 //                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
 //                        System.out.println("total collisions: " + collisionTotal);
 //                        System.out.println("longest pileup: " + longestPileup);
 					}
 
 					@Override
-					public void clear () {
-						if(longestPileup <= 10) {
+					public void clear() {
+						if (longestPileup <= 10) {
 							System.out.println(
 //								"hash * 0x" + Base.BASE16.unsigned(originalMultiplier) +
 								"hash * 0x" + Base.BASE16.unsigned(originalMul) +
 //								" + 0x" + Base.BASE16.unsigned(originalAdd) +
-								" on iteration " + hashShiftA);
+									" on iteration " + hashShiftA);
 //                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
 							System.out.println("gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						}
@@ -188,7 +192,7 @@ public class ExhaustiveWordHashTest {
 					for (int i = 0, n = words.size(); i < n; i++) {
 						set.add(words.get(i));
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					continue;
 				}
 //        System.out.println(System.nanoTime() - start);

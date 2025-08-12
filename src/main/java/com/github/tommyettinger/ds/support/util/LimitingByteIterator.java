@@ -25,39 +25,39 @@ package com.github.tommyettinger.ds.support.util;
  * change the Iterator with {@link #set(ByteIterator)}.
  */
 public class LimitingByteIterator implements ByteIterator {
-    public ByteIterator iterator;
-    protected int limit = 1;
-    protected int remaining = 1;
+	public ByteIterator iterator;
+	protected int limit = 1;
+	protected int remaining = 1;
 
-    public LimitingByteIterator() {
-    }
+	public LimitingByteIterator() {
+	}
 
-    public LimitingByteIterator(final ByteIterator iterator, int limit) {
-        set(iterator, limit);
-    }
+	public LimitingByteIterator(final ByteIterator iterator, int limit) {
+		set(iterator, limit);
+	}
 
-    public void set (final ByteIterator iterator, int limit) {
-        this.iterator = iterator;
-        this.remaining = this.limit = Math.max(0, limit);
-    }
+	public void set(final ByteIterator iterator, int limit) {
+		this.iterator = iterator;
+		this.remaining = this.limit = Math.max(0, limit);
+	}
 
-    public void set (final ByteIterator iterator) {
-        set(iterator, limit);
-    }
+	public void set(final ByteIterator iterator) {
+		set(iterator, limit);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return (iterator.hasNext() && remaining > 0);
-    }
+	@Override
+	public boolean hasNext() {
+		return (iterator.hasNext() && remaining > 0);
+	}
 
-    @Override
-    public byte nextByte () {
-        remaining--;
-        return iterator.next();
-    }
+	@Override
+	public byte nextByte() {
+		remaining--;
+		return iterator.next();
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

@@ -19,10 +19,12 @@ package com.github.tommyettinger.ds.old;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import com.github.tommyettinger.ds.*;
+
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
 /**
@@ -84,13 +86,15 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 */
 	protected int mask;
 
-	@Nullable protected transient LongSetIterator iterator1;
-	@Nullable protected transient LongSetIterator iterator2;
+	@Nullable
+	protected transient LongSetIterator iterator1;
+	@Nullable
+	protected transient LongSetIterator iterator2;
 
 	/**
 	 * Creates a new set with an initial capacity of 51 and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public LongSet () {
+	public LongSet() {
 		this(51, Utilities.getDefaultLoadFactor());
 	}
 
@@ -99,7 +103,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public LongSet (int initialCapacity) {
+	public LongSet(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -110,12 +114,14 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public LongSet (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public LongSet(int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
+		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -127,7 +133,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public LongSet (LongIterator coll) {
+	public LongSet(LongIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -135,8 +141,8 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	/**
 	 * Creates a new set identical to the specified set.
 	 */
-	public LongSet (LongSet set) {
-		this((int)(set.keyTable.length * set.loadFactor), set.loadFactor);
+	public LongSet(LongSet set) {
+		this((int) (set.keyTable.length * set.loadFactor), set.loadFactor);
 		System.arraycopy(set.keyTable, 0, keyTable, 0, set.keyTable.length);
 		size = set.size;
 		hasZeroValue = set.hasZeroValue;
@@ -149,7 +155,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 *
 	 * @param coll a PrimitiveCollection that will be used in full, except for duplicate items
 	 */
-	public LongSet (PrimitiveCollection.OfLong coll) {
+	public LongSet(PrimitiveCollection.OfLong coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -161,7 +167,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public LongSet (long[] array, int offset, int length) {
+	public LongSet(long[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
@@ -171,7 +177,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public LongSet (long[] array) {
+	public LongSet(long[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -182,8 +188,8 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * @param item any long; it is usually mixed or masked here
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (long item) {
-		return BitConversion.imul((int)(item ^ item >>> 32), hashMultiplier) >>> shift;
+	protected int place(long item) {
+		return BitConversion.imul((int) (item ^ item >>> 32), hashMultiplier) >>> shift;
 	}
 
 	/**
@@ -193,7 +199,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * If you want to treat equality between longs differently for some reason, you would also need to override
 	 * {@link #contains(long)} and {@link #add(long)}, at the very least.
 	 */
-	protected int locateKey (long key) {
+	protected int locateKey(long key) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
@@ -210,9 +216,11 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * Returns true if the key was not already in the set.
 	 */
 	@Override
-	public boolean add (long key) {
+	public boolean add(long key) {
 		if (key == 0) {
-			if (hasZeroValue) {return false;}
+			if (hasZeroValue) {
+				return false;
+			}
 			hasZeroValue = true;
 			size++;
 			return true;
@@ -224,40 +232,50 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 				return false; // Existing key was found.
 			if (other == 0) {
 				keyTable[i] = key;
-				if (++size >= threshold) {resize(keyTable.length << 1);}
+				if (++size >= threshold) {
+					resize(keyTable.length << 1);
+				}
 				return true;
 			}
 		}
 	}
 
-	public boolean addAll (LongList array) {
+	public boolean addAll(LongList array) {
 		return addAll(array.items, 0, array.size());
 	}
 
-	public boolean addAll (LongList array, int offset, int length) {
-		if (offset + length > array.size()) {throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size());}
+	public boolean addAll(LongList array, int offset, int length) {
+		if (offset + length > array.size()) {
+			throw new IllegalArgumentException("offset + length must be <= size: " + offset + " + " + length + " <= " + array.size());
+		}
 		return addAll(array.items, offset, length);
 	}
 
-	public boolean addAll (long... array) {
+	public boolean addAll(long... array) {
 		return addAll(array, 0, array.length);
 	}
 
-	public boolean addAll (long[] array, int offset, int length) {
+	public boolean addAll(long[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size;
-		for (int i = offset, n = i + length; i < n; i++) {add(array[i]);}
+		for (int i = offset, n = i + length; i < n; i++) {
+			add(array[i]);
+		}
 		return size != oldSize;
 	}
 
-	public boolean addAll (LongSet set) {
+	public boolean addAll(LongSet set) {
 		ensureCapacity(set.size);
 		int oldSize = size;
-		if (set.hasZeroValue) {add(0);}
+		if (set.hasZeroValue) {
+			add(0);
+		}
 		long[] keyTable = set.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
-			if (key != 0) {add(key);}
+			if (key != 0) {
+				add(key);
+			}
 		}
 		return size != oldSize;
 	}
@@ -265,7 +283,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	/**
 	 * Skips checks for existing keys, doesn't increment size, doesn't need to handle key 0.
 	 */
-	protected void addResize (long key) {
+	protected void addResize(long key) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
@@ -279,16 +297,20 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * Returns true if the key was removed.
 	 */
 	@Override
-	public boolean remove (long key) {
+	public boolean remove(long key) {
 		if (key == 0) {
-			if (!hasZeroValue) {return false;}
+			if (!hasZeroValue) {
+				return false;
+			}
 			hasZeroValue = false;
 			size--;
 			return true;
 		}
 
 		int i = locateKey(key);
-		if (i < 0) {return false;}
+		if (i < 0) {
+			return false;
+		}
 		long[] keyTable = this.keyTable;
 		int mask = this.mask;
 		int next = i + 1 & mask;
@@ -308,7 +330,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	/**
 	 * Returns true if the set has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -316,7 +338,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * Returns true if the set is empty.
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -325,16 +347,20 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * nothing is done. If the set contains more items than the specified capacity, the next highest power of two capacity is used
 	 * instead.
 	 */
-	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
+	public void shrink(int maximumCapacity) {
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) {resize(tableSize);}
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
 	 * Clears the set and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
 			clear();
@@ -346,16 +372,20 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	}
 
 	@Override
-	public void clear () {
-		if (size == 0) {return;}
+	public void clear() {
+		if (size == 0) {
+			return;
+		}
 		size = 0;
 		Arrays.fill(keyTable, 0);
 		hasZeroValue = false;
 	}
 
 	@Override
-	public boolean contains (long key) {
-		if (key == 0) {return hasZeroValue;}
+	public boolean contains(long key) {
+		if (key == 0) {
+			return hasZeroValue;
+		}
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
@@ -366,10 +396,16 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		}
 	}
 
-	public long first () {
-		if (hasZeroValue) {return 0;}
+	public long first() {
+		if (hasZeroValue) {
+			return 0;
+		}
 		long[] keyTable = this.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {if (keyTable[i] != 0) {return keyTable[i];}}
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			if (keyTable[i] != 0) {
+				return keyTable[i];
+			}
+		}
 		throw new IllegalStateException("IntSet is empty.");
 	}
 
@@ -377,19 +413,21 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
+		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -401,7 +439,9 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				long key = oldKeyTable[i];
-				if (key != 0) {addResize(key);}
+				if (key != 0) {
+					addResize(key);
+				}
 			}
 		}
 	}
@@ -410,9 +450,10 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * Gets the current hash multiplier as used by {@link #place(long)}; for specific advanced usage only.
 	 * The hash multiplier changes whenever {@link #resize(int)} is called, though its value before the resize
 	 * affects its value after.
+	 *
 	 * @return the current hash multiplier, which should always be a negative, odd int
 	 */
-	public int getHashMultiplier () {
+	public int getHashMultiplier() {
 		return hashMultiplier;
 	}
 
@@ -432,19 +473,22 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * in the data structure. If you in a situation where you are worried about hash flooding, you also shouldn't permit
 	 * adversaries to cause this method to be called frequently. Also be advised that because of how resize() works, the
 	 * result of {@link #getHashMultiplier()} after calling this will only very rarely be the same as the parameter here.
+	 *
 	 * @param hashMultiplier any int; will not be used as-is
 	 */
-	public void setHashMultiplier (int hashMultiplier) {
+	public void setHashMultiplier(int hashMultiplier) {
 		this.hashMultiplier = hashMultiplier | 0x80000001;
 		resize(keyTable.length);
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return loadFactor;
 	}
 
-	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public void setLoadFactor(float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -453,37 +497,47 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		long h = size;
 		long[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			long key = keyTable[i];
-			if (key != 0) {h += key;}
+			if (key != 0) {
+				h += key;
+			}
 		}
-		return (int)(h ^ h >>> 32);
+		return (int) (h ^ h >>> 32);
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		return SetOfLong.super.equalContents(o);
 	}
 
-	public StringBuilder appendTo (StringBuilder builder) {
-		if (size == 0) {return builder.append("[]");}
+	public StringBuilder appendTo(StringBuilder builder) {
+		if (size == 0) {
+			return builder.append("[]");
+		}
 		builder.append('[');
 		long[] keyTable = this.keyTable;
 		int i = keyTable.length;
-		if (hasZeroValue) {builder.append('0');} else {
+		if (hasZeroValue) {
+			builder.append('0');
+		} else {
 			while (i-- > 0) {
 				long key = keyTable[i];
-				if (key == 0) {continue;}
+				if (key == 0) {
+					continue;
+				}
 				builder.append(key);
 				break;
 			}
 		}
 		while (i-- > 0) {
 			long key = keyTable[i];
-			if (key == 0) {continue;}
+			if (key == 0) {
+				continue;
+			}
 			builder.append(", ");
 			builder.append(key);
 		}
@@ -492,7 +546,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -507,7 +561,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		long[] keyTable = this.keyTable;
 		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
@@ -528,7 +582,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 * Use the {@link LongSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public LongSetIterator iterator () {
+	public LongSetIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new LongSetIterator(this);
 			iterator2 = new LongSetIterator(this);
@@ -572,18 +626,22 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		 */
 		protected final LongSet set;
 
-		public LongSetIterator (LongSet set) {
+		public LongSetIterator(LongSet set) {
 			this.set = set;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (set.hasZeroValue) {hasNext = true;} else {findNextIndex();}
+			if (set.hasZeroValue) {
+				hasNext = true;
+			} else {
+				findNextIndex();
+			}
 		}
 
-		protected void findNextIndex () {
+		protected void findNextIndex() {
 			long[] keyTable = set.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != 0) {
@@ -602,13 +660,15 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 
 		@Override
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
 			if (i == INDEX_ZERO && set.hasZeroValue) {
 				set.hasZeroValue = false;
@@ -628,16 +688,22 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
-				if (i != currentIndex) {--nextIndex;}
+				if (i != currentIndex) {
+					--nextIndex;
+				}
 			}
 			currentIndex = INDEX_ILLEGAL;
 			set.size--;
 		}
 
 		@Override
-		public long nextLong () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public long nextLong() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			long key = nextIndex == INDEX_ZERO ? 0 : set.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -648,26 +714,32 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		 * Returns a new {@link LongList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public LongList toList () {
+		public LongList toList() {
 			LongList list = new LongList(set.size);
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {list.add(nextLong());}
+			while (hasNext) {
+				list.add(nextLong());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
 			return list;
 		}
+
 		/**
 		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfLong.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable PrimitiveCollection.OfLong; may have items appended into it
 		 * @return the given primitive collection
 		 */
 		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {coll.add(nextLong());}
+			while (hasNext) {
+				coll.add(nextLong());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -675,13 +747,13 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		}
 	}
 
-	public static LongSet with (long item) {
+	public static LongSet with(long item) {
 		LongSet set = new LongSet(1);
 		set.add(item);
 		return set;
 	}
 
-	public static LongSet with (long... array) {
+	public static LongSet with(long... array) {
 		return new LongSet(array);
 	}
 }

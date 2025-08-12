@@ -39,7 +39,7 @@ public interface BooleanIterator extends Iterator<Boolean> {
 	 * @return the next {@code boolean} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	boolean nextBoolean ();
+	boolean nextBoolean();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -55,8 +55,10 @@ public interface BooleanIterator extends Iterator<Boolean> {
 	 *         action.accept(nextBoolean());
 	 * }</pre>
 	 */
-	default void forEachRemaining (BooleanConsumer action) {
-		while (hasNext()) {action.accept(nextBoolean());}
+	default void forEachRemaining(BooleanConsumer action) {
+		while (hasNext()) {
+			action.accept(nextBoolean());
+		}
 	}
 
 	/**
@@ -66,7 +68,7 @@ public interface BooleanIterator extends Iterator<Boolean> {
 	 * {@link #nextBoolean()}, and returns that boxed result.
 	 */
 	@Override
-	default Boolean next () {
+	default Boolean next() {
 		return nextBoolean();
 	}
 }

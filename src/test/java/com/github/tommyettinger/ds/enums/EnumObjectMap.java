@@ -34,7 +34,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public EnumObjectMap () {
+	public EnumObjectMap() {
 		super();
 	}
 
@@ -44,7 +44,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public EnumObjectMap (int initialCapacity) {
+	public EnumObjectMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -55,7 +55,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public EnumObjectMap (int initialCapacity, float loadFactor) {
+	public EnumObjectMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -64,7 +64,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	 *
 	 * @param map an ObjectObjectMap to copy, or a subclass such as this one
 	 */
-	public EnumObjectMap (ObjectObjectMap<? extends K, ? extends V> map) {
+	public EnumObjectMap(ObjectObjectMap<? extends K, ? extends V> map) {
 		super(map);
 	}
 
@@ -73,7 +73,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	 *
 	 * @param map a Map to copy; ObjectObjectMap and subclasses of it will be faster
 	 */
-	public EnumObjectMap (Map<? extends K, ? extends V> map) {
+	public EnumObjectMap(Map<? extends K, ? extends V> map) {
 		super(map);
 	}
 
@@ -84,7 +84,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public EnumObjectMap (K[] keys, V[] values) {
+	public EnumObjectMap(K[] keys, V[] values) {
 		super(keys, values);
 	}
 
@@ -95,26 +95,26 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public EnumObjectMap (Collection<? extends K> keys, Collection<? extends V> values) {
+	public EnumObjectMap(Collection<? extends K> keys, Collection<? extends V> values) {
 		super(keys, values);
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
-			return ((Enum<?>)item).ordinal() & mask;
+			return ((Enum<?>) item).ordinal() & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
@@ -123,7 +123,9 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 			if (key != null) {
 				h += key.ordinal() * 421;
 				V value = valueTable[i];
-				if (value != null) {h += value.hashCode();}
+				if (value != null) {
+					h += value.hashCode();
+				}
 			}
 		}
 		return h;
@@ -131,11 +133,17 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof EnumObjectMap)) {return false;}
-		EnumObjectMap other = (EnumObjectMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof EnumObjectMap)) {
+			return false;
+		}
+		EnumObjectMap other = (EnumObjectMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		Enum[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -143,9 +151,13 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.getOrDefault(key, neverIdentical) != null) {return false;}
+					if (other.getOrDefault(key, neverIdentical) != null) {
+						return false;
+					}
 				} else {
-					if (!value.equals(other.get(key))) {return false;}
+					if (!value.equals(other.get(key))) {
+						return false;
+					}
 				}
 			}
 		}
@@ -162,7 +174,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K extends Enum<K>, V> EnumObjectMap<K, V> with (K key0, V value0) {
+	public static <K extends Enum<K>, V> EnumObjectMap<K, V> with(K key0, V value0) {
 		EnumObjectMap<K, V> map = new EnumObjectMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -184,12 +196,12 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K extends Enum<K>, V> EnumObjectMap<K, V> with (K key0, V value0, Object... rest) {
+	public static <K extends Enum<K>, V> EnumObjectMap<K, V> with(K key0, V value0, Object... rest) {
 		EnumObjectMap<K, V> map = new EnumObjectMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((K)rest[i - 1], (V)rest[i]);
+				map.put((K) rest[i - 1], (V) rest[i]);
 			} catch (ClassCastException ignored) {
 			}
 		}

@@ -36,13 +36,15 @@ public class ObjectQuadSetTest {
 			objArray[i] = new Integer(i);
 	}
 
-	@Test public void test_Constructor () {
+	@Test
+	public void test_Constructor() {
 		// Test for method com.github.tommyettinger.ds.ObjectQuadSet()
 		ObjectQuadSet hs2 = new ObjectQuadSet();
 		Assert.assertEquals("Created incorrect ObjectQuadSet", 0, hs2.size());
 	}
 
-	@Test public void test_ConstructorI () {
+	@Test
+	public void test_ConstructorI() {
 		// Test for method com.github.tommyettinger.ds.ObjectQuadSet(int)
 		ObjectQuadSet hs2 = new ObjectQuadSet(5);
 		Assert.assertEquals("Created incorrect ObjectQuadSet", 0, hs2.size());
@@ -54,9 +56,10 @@ public class ObjectQuadSetTest {
 		Assert.fail("Failed to throw IllegalArgumentException for capacity < 0");
 	}
 
-	@Test public void test_ConstructorIF () {
+	@Test
+	public void test_ConstructorIF() {
 		// Test for method com.github.tommyettinger.ds.ObjectQuadSet(int, float)
-		ObjectQuadSet hs2 = new ObjectQuadSet(5, (float)0.5);
+		ObjectQuadSet hs2 = new ObjectQuadSet(5, (float) 0.5);
 		Assert.assertEquals("Created incorrect ObjectQuadSet", 0, hs2.size());
 		try {
 			new ObjectQuadSet(0, 0);
@@ -66,7 +69,8 @@ public class ObjectQuadSetTest {
 		Assert.fail("Failed to throw IllegalArgumentException for initial load factor <= 0");
 	}
 
-	@Test public void test_ConstructorLjava_util_Collection () {
+	@Test
+	public void test_ConstructorLjava_util_Collection() {
 		// Test for method com.github.tommyettinger.ds.ObjectQuadSet(java.util.Collection)
 		ObjectQuadSet hs2 = ObjectQuadSet.with(objArray);
 		for (int counter = 0; counter < objArray.length; counter++)
@@ -74,7 +78,8 @@ public class ObjectQuadSetTest {
 		Assert.assertTrue("ObjectQuadSet created from collection incorrect size", hs2.size() == objArray.length);
 	}
 
-	@Test public void test_addLjava_lang_Object () {
+	@Test
+	public void test_addLjava_lang_Object() {
 		// Test for method boolean com.github.tommyettinger.ds.ObjectQuadSet.add(java.lang.Object)
 		int size = hs.size();
 		hs.add(new Integer(8));
@@ -84,7 +89,8 @@ public class ObjectQuadSetTest {
 		Assert.assertTrue("Failed to add element to set", hs.contains(new Integer(-9)));
 	}
 
-	@Test public void test_clear () {
+	@Test
+	public void test_clear() {
 		// Test for method void com.github.tommyettinger.ds.ObjectQuadSet.clear()
 		ObjectQuadSet orgSet = new ObjectQuadSet(hs);
 		hs.clear();
@@ -94,7 +100,8 @@ public class ObjectQuadSetTest {
 			Assert.assertTrue("Failed to clear set", !hs.contains(i.next()));
 	}
 
-	@Test public void test_containsLjava_lang_Object () {
+	@Test
+	public void test_containsLjava_lang_Object() {
 		// Test for method boolean com.github.tommyettinger.ds.ObjectQuadSet.contains(java.lang.Object)
 		Assert.assertTrue("Returned false for valid object", hs.contains(objArray[90]));
 		Assert.assertTrue("Returned true for invalid Object", !hs.contains(new Object()));
@@ -104,13 +111,15 @@ public class ObjectQuadSetTest {
 //		assertTrue("Cannot handle null", s.contains(null));
 	}
 
-	@Test public void test_isEmpty () {
+	@Test
+	public void test_isEmpty() {
 		// Test for method boolean com.github.tommyettinger.ds.ObjectQuadSet.isEmpty()
 		Assert.assertTrue("Empty set returned false", new ObjectQuadSet().isEmpty());
 		Assert.assertTrue("Non-empty set returned true", !hs.isEmpty());
 	}
 
-	@Test public void test_iterator () {
+	@Test
+	public void test_iterator() {
 		// Test for method java.util.Iterator com.github.tommyettinger.ds.ObjectQuadSet.iterator()
 		Iterator i = hs.iterator();
 		int x = 0;
@@ -125,7 +134,8 @@ public class ObjectQuadSetTest {
 //		assertNull("Cannot handle null", s.iterator().next());
 	}
 
-	@Test public void test_removeLjava_lang_Object () {
+	@Test
+	public void test_removeLjava_lang_Object() {
 		// Test for method boolean com.github.tommyettinger.ds.test.ObjectQuadSet.remove(java.lang.Object)
 		int size = hs.size();
 		hs.remove(new Integer(98));
@@ -136,7 +146,7 @@ public class ObjectQuadSetTest {
 //		int[] numbers = ArrayTools.shuffle(ArrayTools.range(objArray.length), rnd);
 		int[] numbers = ArrayTools.range(objArray.length);
 		for (int i = 0; i < numbers.length; i++) {
-			if(!hs.remove(new Integer(numbers[i])))
+			if (!hs.remove(new Integer(numbers[i])))
 				System.out.println(numbers[i]);
 		}
 		// This should print an empty set... but it doesn't.
@@ -144,14 +154,16 @@ public class ObjectQuadSetTest {
 //		Assert.assertEquals(0, hs.size);
 	}
 
-	@Test public void test_size () {
+	@Test
+	public void test_size() {
 		// Test for method int com.github.tommyettinger.ds.ObjectQuadSet.size
 		Assert.assertTrue("Returned incorrect size", hs.size() == objArray.length);
 		hs.clear();
 		Assert.assertEquals("Cleared set returned non-zero size", 0, hs.size());
 	}
 
-	@Test public void test_toString () {
+	@Test
+	public void test_toString() {
 		ObjectQuadSet s = new ObjectQuadSet();
 		s.add(s);
 		String result = s.toString();
@@ -162,7 +174,8 @@ public class ObjectQuadSetTest {
 	 * Sets up the fixture, for example, open a network connection. This method
 	 * is called before a test is executed.
 	 */
-	@Before public void setUp () {
+	@Before
+	public void setUp() {
 		hs = new ObjectQuadSet();
 		for (int i = 0; i < objArray.length; i++) {
 			hs.add(objArray[i]);
@@ -173,6 +186,7 @@ public class ObjectQuadSetTest {
 	 * Tears down the fixture, for example, close a network connection. This
 	 * method is called after a test is executed.
 	 */
-	@After public void tearDown () {
+	@After
+	public void tearDown() {
 	}
 }

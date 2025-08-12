@@ -111,7 +111,7 @@ public class AllProductIntVectorHashTest {
 //			GOLDEN_INTS[i] = (int)(MathTools.GOLDEN_LONGS[i] >>> 32) | 1;
 //		}
 		final Vector2[] spiral = generateVectorSpiral(LEN);
-		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
+		final long THRESHOLD = (long) (Math.pow(LEN, 11.0 / 10.0));// (long)(Math.pow(LEN, 7.0/6.0));
 //		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		final int[] problems = {0};
 		IntIntOrderedMap good = new IntIntOrderedMap(513 * 512);
@@ -135,7 +135,7 @@ public class AllProductIntVectorHashTest {
 					int hm = 0xB7AD9447;//0xF1042721;// 0x9E3779B7;
 
 					@Override
-					protected int place (@NonNull Object item) {
+					protected int place(@NonNull Object item) {
 //						final int h = BitConversion.imul(item.hashCode(), hm);
 //						return (h ^ h << 16) >>> shift;
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
@@ -145,7 +145,7 @@ public class AllProductIntVectorHashTest {
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -160,9 +160,9 @@ public class AllProductIntVectorHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -179,7 +179,9 @@ public class AllProductIntVectorHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
 						if (collisionTotal > THRESHOLD || longestPileup > 25) {
@@ -191,7 +193,7 @@ public class AllProductIntVectorHashTest {
 					}
 
 					@Override
-					public void clear () {
+					public void clear() {
 						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						minMax[0] = Math.min(minMax[0], collisionTotal);
@@ -202,7 +204,7 @@ public class AllProductIntVectorHashTest {
 					}
 
 					@Override
-					public void setHashMultiplier (int hashMultiplier) {
+					public void setHashMultiplier(int hashMultiplier) {
 						this.hashMultiplier = hashMultiplier | 1;
 						hm = this.hashMultiplier;
 						resize(keyTable.length);
@@ -213,7 +215,7 @@ public class AllProductIntVectorHashTest {
 					for (int i = 0, n = spiral.length; i < n; i++) {
 						set.add(spiral[i]);
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					System.out.println(g + " FAILURE");
 					continue;
 				}
@@ -232,8 +234,8 @@ public class AllProductIntVectorHashTest {
 		good.truncate(1024);
 		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x"+Base.BASE16.unsigned(good.keyAt(i))+"=0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
-			if((i & 7) == 7)
+			System.out.print("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "=0x" + Base.BASE16.unsigned(good.getAt(i)) + ", ");
+			if ((i & 7) == 7)
 				System.out.println();
 		}
 		System.out.println("};\n");

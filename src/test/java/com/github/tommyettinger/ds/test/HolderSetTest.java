@@ -28,61 +28,62 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @SuppressWarnings("SuspiciousMethodCalls")
 public class HolderSetTest {
 	public static class Person {
-		@NonNull private String name;
+		@NonNull
+		private String name;
 		private int x, y;
 
 		@NonNull
-		public String getName () {
+		public String getName() {
 			return name;
 		}
 
-		public void setName (@NonNull String name) {
+		public void setName(@NonNull String name) {
 			this.name = name;
 		}
 
-		public int getX () {
+		public int getX() {
 			return x;
 		}
 
-		public void setX (int x) {
+		public void setX(int x) {
 			this.x = x;
 		}
 
-		public int getY () {
+		public int getY() {
 			return y;
 		}
 
-		public void setY (int y) {
+		public void setY(int y) {
 			this.y = y;
 		}
 
-		public Person () {
+		public Person() {
 			this("Nihilus", 0, 0);
 		}
 
-		public Person (@NonNull String name) {
+		public Person(@NonNull String name) {
 			this(name, 0, 0);
 		}
 
-		public Person (@NonNull String name, int x, int y) {
+		public Person(@NonNull String name, int x, int y) {
 			this.name = name;
 			this.x = x;
 			this.y = y;
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return name;
 		}
 
 		@Override
-		public boolean equals (Object o) {
+		public boolean equals(Object o) {
 			if (this == o)
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
 
-			Person person = (Person)o;
+			Person person = (Person) o;
 
 			if (x != person.x)
 				return false;
@@ -92,13 +93,14 @@ public class HolderSetTest {
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int result = name.hashCode();
 			result = 421 * result + x;
 			result = 421 * result + y;
 			return result;
 		}
 	}
+
 	@Test
 	public void testMultipleOperations() {
 		HolderSet<Person, String> people = new HolderSet<>(Person::getName, 8);
@@ -116,7 +118,7 @@ public class HolderSetTest {
 		Assert.assertFalse(people.contains("Carol"));
 		Assert.assertEquals(people.get("Bob").x, 1);
 		Assert.assertEquals(people.get("Bob").y, 0);
-		people.add(new Person("Carol", -1 , -1));
+		people.add(new Person("Carol", -1, -1));
 		Assert.assertEquals(people.size(), 3);
 		Assert.assertTrue(people.contains("Alice"));
 		Assert.assertTrue(people.contains("Bob"));

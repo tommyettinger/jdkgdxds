@@ -25,39 +25,39 @@ package com.github.tommyettinger.ds.support.util;
  * change the Iterator with {@link #set(DoubleIterator)}.
  */
 public class LimitingDoubleIterator implements DoubleIterator {
-    public DoubleIterator iterator;
-    protected int limit = 1;
-    protected int remaining = 1;
+	public DoubleIterator iterator;
+	protected int limit = 1;
+	protected int remaining = 1;
 
-    public LimitingDoubleIterator() {
-    }
+	public LimitingDoubleIterator() {
+	}
 
-    public LimitingDoubleIterator(final DoubleIterator iterator, int limit) {
-        set(iterator, limit);
-    }
+	public LimitingDoubleIterator(final DoubleIterator iterator, int limit) {
+		set(iterator, limit);
+	}
 
-    public void set (final DoubleIterator iterator, int limit) {
-        this.iterator = iterator;
-        this.remaining = this.limit = Math.max(0, limit);
-    }
+	public void set(final DoubleIterator iterator, int limit) {
+		this.iterator = iterator;
+		this.remaining = this.limit = Math.max(0, limit);
+	}
 
-    public void set (final DoubleIterator iterator) {
-        set(iterator, limit);
-    }
+	public void set(final DoubleIterator iterator) {
+		set(iterator, limit);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return (iterator.hasNext() && remaining > 0);
-    }
+	@Override
+	public boolean hasNext() {
+		return (iterator.hasNext() && remaining > 0);
+	}
 
-    @Override
-    public double nextDouble () {
-        remaining--;
-        return iterator.next();
-    }
+	@Override
+	public double nextDouble() {
+		remaining--;
+		return iterator.next();
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

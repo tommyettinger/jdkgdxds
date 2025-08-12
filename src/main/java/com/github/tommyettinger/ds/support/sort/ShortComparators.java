@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -25,7 +26,7 @@ import java.util.Comparator;
  * comparators.
  */
 public final class ShortComparators {
-	private ShortComparators () {
+	private ShortComparators() {
 	}
 
 	/**
@@ -34,12 +35,12 @@ public final class ShortComparators {
 	protected static class NaturalImplicitComparator implements ShortComparator {
 
 		@Override
-		public final int compare (final short a, final short b) {
+		public final int compare(final short a, final short b) {
 			return Short.compare(a, b);
 		}
 
 		@Override
-		public ShortComparator reversed () {
+		public ShortComparator reversed() {
 			return OPPOSITE_COMPARATOR;
 		}
 	}
@@ -52,12 +53,12 @@ public final class ShortComparators {
 	protected static class OppositeImplicitComparator implements ShortComparator {
 
 		@Override
-		public final int compare (final short a, final short b) {
+		public final int compare(final short a, final short b) {
 			return Short.compare(b, a);
 		}
 
 		@Override
-		public ShortComparator reversed () {
+		public ShortComparator reversed() {
 			return NATURAL_COMPARATOR;
 		}
 	}
@@ -68,17 +69,17 @@ public final class ShortComparators {
 
 		final ShortComparator comparator;
 
-		protected OppositeComparator (final ShortComparator c) {
+		protected OppositeComparator(final ShortComparator c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final short a, final short b) {
+		public final int compare(final short a, final short b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final ShortComparator reversed () {
+		public final ShortComparator reversed() {
 			return comparator;
 		}
 	}
@@ -89,8 +90,10 @@ public final class ShortComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static ShortComparator oppositeComparator (final ShortComparator c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
+	public static ShortComparator oppositeComparator(final ShortComparator c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator) c).comparator;
+		}
 		return new OppositeComparator(c);
 	}
 
@@ -101,17 +104,19 @@ public final class ShortComparators {
 	 * @param c a Comparator of Short values.
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
-	public static ShortComparator asShortComparator (final Comparator<? super Short> c) {
-		if (c instanceof ShortComparator) {return (ShortComparator)c;}
+	public static ShortComparator asShortComparator(final Comparator<? super Short> c) {
+		if (c instanceof ShortComparator) {
+			return (ShortComparator) c;
+		}
 		return new ShortComparator() {
 			@Override
-			public int compare (short x, short y) {
+			public int compare(short x, short y) {
 				return c.compare(Short.valueOf(x), Short.valueOf(y));
 			}
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public int compare (Short x, Short y) {
+			public int compare(Short x, Short y) {
 				return c.compare(x, y);
 			}
 		};
@@ -124,12 +129,12 @@ public final class ShortComparators {
 	protected static class UnsignedComparator implements ShortComparator {
 
 		@Override
-		public final int compare (final short a, final short b) {
+		public final int compare(final short a, final short b) {
 			return Integer.compare(a & 0xFFFF, b & 0xFFFF);
 		}
 
 		@Override
-		public ShortComparator reversed () {
+		public ShortComparator reversed() {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
 
@@ -144,12 +149,12 @@ public final class ShortComparators {
 	protected static class UnsignedOppositeComparator implements ShortComparator {
 
 		@Override
-		public final int compare (final short a, final short b) {
+		public final int compare(final short a, final short b) {
 			return Integer.compare(b & 0xFFFF, a & 0xFFFF);
 		}
 
 		@Override
-		public ShortComparator reversed () {
+		public ShortComparator reversed() {
 			return UNSIGNED_COMPARATOR;
 		}
 
@@ -159,7 +164,7 @@ public final class ShortComparators {
 
 	/// The remainder of the code is based on FastUtil.
 
-	private static void swap (short[] items, int first, int second) {
+	private static void swap(short[] items, int first, int second) {
 		short firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -171,10 +176,14 @@ public final class ShortComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static void inPlaceMerge (short[] items, final int from, int mid, final int to, final ShortComparator comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static void inPlaceMerge(short[] items, final int from, int mid, final int to, final ShortComparator comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -195,13 +204,19 @@ public final class ShortComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -222,7 +237,7 @@ public final class ShortComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static int lowerBound (short[] items, int from, final int to, final int pos, final ShortComparator comp) {
+	private static int lowerBound(short[] items, int from, final int to, final int pos, final ShortComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -250,7 +265,7 @@ public final class ShortComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static int upperBound (short[] items, int from, final int to, final int pos, final ShortComparator comp) {
+	private static int upperBound(short[] items, int from, final int to, final int pos, final ShortComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -272,7 +287,7 @@ public final class ShortComparators {
 	 * @param items the short array to be sorted
 	 * @param c     a ShortComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (short[] items, final @Nullable ShortComparator c) {
+	public static void sort(short[] items, final @Nullable ShortComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -294,7 +309,7 @@ public final class ShortComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a ShortComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (short[] items, final int from, final int to, final @Nullable ShortComparator c) {
+	public static void sort(short[] items, final int from, final int to, final @Nullable ShortComparator c) {
 		if (to <= 0) {
 			return;
 		}
@@ -331,7 +346,9 @@ public final class ShortComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

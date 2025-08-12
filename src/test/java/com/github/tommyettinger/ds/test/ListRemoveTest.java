@@ -25,14 +25,14 @@ import java.util.ArrayList;
 
 public class ListRemoveTest {
 	@Test
-	public void testArrayListRemoveAll (){
+	public void testArrayListRemoveAll() {
 		ArrayList<String> list = new ArrayList<>(ObjectList.with(
 			"foo", "bar", "baz", "quux",
 			"foo", "bar", "baz", "quux",
 			"foo", "bar", "baz", "quux"));
 		ArrayList<String> remover = new ArrayList<>(ObjectList.with("foo", "bar", "baz", "quux"));
 		Assert.assertEquals(list.size(), 12);
-		for(String s : remover) list.remove(s);
+		for (String s : remover) list.remove(s);
 		Assert.assertEquals(list.size(), 8);
 		System.out.println(list);
 		list.removeAll(ObjectList.with("foo", "foo"));
@@ -42,8 +42,9 @@ public class ListRemoveTest {
 		Assert.assertTrue(list.contains("baz"));
 		Assert.assertTrue(list.contains("quux"));
 	}
+
 	@Test
-	public void testObjectListRemoveEach(){
+	public void testObjectListRemoveEach() {
 		ObjectList<String> list = ObjectList.with(
 			"foo", "bar", "baz", "quux",
 			"foo", "bar", "baz", "quux",
@@ -60,8 +61,9 @@ public class ListRemoveTest {
 		Assert.assertTrue(list.contains("baz"));
 		Assert.assertTrue(list.contains("quux"));
 	}
+
 	@Test
-	public void testIntListRemoveAll (){
+	public void testIntListRemoveAll() {
 		IntList list = IntList.with(
 			1, 2, 3, 4,
 			1, 2, 3, 4,
@@ -78,8 +80,9 @@ public class ListRemoveTest {
 		Assert.assertFalse(list.contains(3));
 		Assert.assertTrue(list.contains(4));
 	}
+
 	@Test()
-	public void testIntListRemoveEach (){
+	public void testIntListRemoveEach() {
 		IntList list = IntList.with(
 			1, 2, 3, 4,
 			1, 2, 3, 4,

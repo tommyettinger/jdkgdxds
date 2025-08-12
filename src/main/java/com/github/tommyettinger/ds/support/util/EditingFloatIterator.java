@@ -30,38 +30,38 @@ import java.util.NoSuchElementException;
  * and can also just change the Iterator with {@link #set(FloatIterator)}.
  */
 public class EditingFloatIterator implements FloatIterator {
-    public FloatIterator iterator;
-    public FloatToFloatFunction editor;
+	public FloatIterator iterator;
+	public FloatToFloatFunction editor;
 
-    public EditingFloatIterator() {
-    }
+	public EditingFloatIterator() {
+	}
 
-    public EditingFloatIterator(final FloatIterator iterator, final FloatToFloatFunction editor) {
-        set(iterator, editor);
-    }
+	public EditingFloatIterator(final FloatIterator iterator, final FloatToFloatFunction editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final FloatIterator iterator, final FloatToFloatFunction editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final FloatIterator iterator, final FloatToFloatFunction editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final FloatIterator iterator) {
-        set(iterator, editor);
-    }
+	public void set(final FloatIterator iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public float nextFloat () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.applyAsFloat(iterator.nextFloat());
-    }
+	@Override
+	public float nextFloat() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.applyAsFloat(iterator.nextFloat());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

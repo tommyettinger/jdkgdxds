@@ -42,7 +42,7 @@ public interface DoubleIterator extends Iterator<Double> {
 	 * @return the next {@code double} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	double nextDouble ();
+	double nextDouble();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -58,8 +58,10 @@ public interface DoubleIterator extends Iterator<Double> {
 	 *         action.accept(nextDouble());
 	 * }</pre>
 	 */
-	default void forEachRemaining (DoubleConsumer action) {
-		while (hasNext()) {action.accept(nextDouble());}
+	default void forEachRemaining(DoubleConsumer action) {
+		while (hasNext()) {
+			action.accept(nextDouble());
+		}
 	}
 
 	/**
@@ -69,7 +71,7 @@ public interface DoubleIterator extends Iterator<Double> {
 	 * {@link #nextDouble()}, and returns that boxed result.
 	 */
 	@Override
-	default Double next () {
+	default Double next() {
 		return nextDouble();
 	}
 }

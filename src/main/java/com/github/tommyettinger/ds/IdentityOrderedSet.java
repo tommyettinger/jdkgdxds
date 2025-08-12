@@ -37,15 +37,15 @@ import java.util.Iterator;
  * You might prefer this to {@link IdentitySet} if you need to ensure fast iteration or want access by index.
  */
 public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
-	public IdentityOrderedSet (OrderType type) {
+	public IdentityOrderedSet(OrderType type) {
 		super(type);
 	}
 
-	public IdentityOrderedSet (int initialCapacity, OrderType type) {
+	public IdentityOrderedSet(int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
 	}
 
-	public IdentityOrderedSet (int initialCapacity, float loadFactor, OrderType type) {
+	public IdentityOrderedSet(int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
 	}
 
@@ -54,41 +54,41 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public IdentityOrderedSet (Iterator<? extends T> coll, OrderType type) {
+	public IdentityOrderedSet(Iterator<? extends T> coll, OrderType type) {
 		super(coll, type);
 	}
 
-	public IdentityOrderedSet (ObjectOrderedSet<? extends T> set, OrderType type) {
+	public IdentityOrderedSet(ObjectOrderedSet<? extends T> set, OrderType type) {
 		super(set, type);
 	}
 
-	public IdentityOrderedSet (Collection<? extends T> coll, OrderType type) {
+	public IdentityOrderedSet(Collection<? extends T> coll, OrderType type) {
 		super(coll, type);
 	}
 
-	public IdentityOrderedSet (T[] array, int offset, int length, OrderType type) {
+	public IdentityOrderedSet(T[] array, int offset, int length, OrderType type) {
 		super(array, offset, length, type);
 	}
 
-	public IdentityOrderedSet (T[] array, OrderType type) {
+	public IdentityOrderedSet(T[] array, OrderType type) {
 		super(array, type);
 	}
 
-	public IdentityOrderedSet (Ordered<T> other, int offset, int count, OrderType type) {
+	public IdentityOrderedSet(Ordered<T> other, int offset, int count, OrderType type) {
 		super(other, offset, count, type);
 	}
 
 	// default order type
 
-	public IdentityOrderedSet () {
+	public IdentityOrderedSet() {
 		super();
 	}
 
-	public IdentityOrderedSet (int initialCapacity) {
+	public IdentityOrderedSet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
-	public IdentityOrderedSet (int initialCapacity, float loadFactor) {
+	public IdentityOrderedSet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -97,42 +97,42 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public IdentityOrderedSet (Iterator<? extends T> coll) {
+	public IdentityOrderedSet(Iterator<? extends T> coll) {
 		super(coll);
 	}
 
-	public IdentityOrderedSet (ObjectOrderedSet<? extends T> set) {
+	public IdentityOrderedSet(ObjectOrderedSet<? extends T> set) {
 		super(set);
 	}
 
-	public IdentityOrderedSet (Collection<? extends T> coll) {
+	public IdentityOrderedSet(Collection<? extends T> coll) {
 		super(coll);
 	}
 
-	public IdentityOrderedSet (T[] array, int offset, int length) {
+	public IdentityOrderedSet(T[] array, int offset, int length) {
 		super(array, offset, length);
 	}
 
-	public IdentityOrderedSet (T[] array) {
+	public IdentityOrderedSet(T[] array) {
 		super(array);
 	}
 
-	public IdentityOrderedSet (Ordered<T> other, int offset, int count) {
+	public IdentityOrderedSet(Ordered<T> other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		return System.identityHashCode(item) & mask;
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		ObjectList<@Nullable T> order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
@@ -166,20 +166,21 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <T>    the type of items; must be given explicitly
+	 * @param <T> the type of items; must be given explicitly
 	 * @return a new set containing nothing
 	 */
-	public static <T> IdentityOrderedSet<T> with () {
+	public static <T> IdentityOrderedSet<T> with() {
 		return new IdentityOrderedSet<>(0);
 	}
 
 	/**
 	 * Creates a new IdentityOrderedSet that holds only the given item, but can be resized.
+	 *
 	 * @param item one T item
+	 * @param <T>  the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given item
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentityOrderedSet<T> with (T item) {
+	public static <T> IdentityOrderedSet<T> with(T item) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(1);
 		set.add(item);
 		return set;
@@ -187,12 +188,13 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 
 	/**
 	 * Creates a new IdentityOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentityOrderedSet<T> with (T item0, T item1) {
+	public static <T> IdentityOrderedSet<T> with(T item0, T item1) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(2);
 		set.add(item0, item1);
 		return set;
@@ -200,13 +202,14 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 
 	/**
 	 * Creates a new IdentityOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentityOrderedSet<T> with (T item0, T item1, T item2) {
+	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(3);
 		set.add(item0, item1, item2);
 		return set;
@@ -214,14 +217,15 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 
 	/**
 	 * Creates a new IdentityOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentityOrderedSet<T> with (T item0, T item1, T item2, T item3) {
+	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -229,15 +233,16 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 
 	/**
 	 * Creates a new IdentityOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentityOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4) {
+	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -246,16 +251,17 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 
 	/**
 	 * Creates a new IdentityOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
 	 * @param item5 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentityOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -264,6 +270,7 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 
 	/**
 	 * Creates a new IdentityOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -271,10 +278,10 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentityOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -283,6 +290,7 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 
 	/**
 	 * Creates a new IdentityOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -290,10 +298,10 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentityOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -305,12 +313,13 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @param <T>     the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
 	@SafeVarargs
-	public static <T> IdentityOrderedSet<T> with (T... varargs) {
+	public static <T> IdentityOrderedSet<T> with(T... varargs) {
 		return new IdentityOrderedSet<>(varargs);
 	}
 }

@@ -42,13 +42,15 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	private Node[] nodes;
 	private final boolean isMaxHeap;
 
-	@Nullable protected transient HeapIterator<T> iterator1 = null;
-	@Nullable protected transient HeapIterator<T> iterator2 = null;
+	@Nullable
+	protected transient HeapIterator<T> iterator1 = null;
+	@Nullable
+	protected transient HeapIterator<T> iterator2 = null;
 
 	/**
 	 * Constructs a BinaryHeap with 16 starting capacity, sorting lowest-first (a min-heap).
 	 */
-	public BinaryHeap () {
+	public BinaryHeap() {
 		this(16, false);
 	}
 
@@ -58,7 +60,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param capacity  the initial capacity
 	 * @param isMaxHeap if true, this will sort highest-first; if false, it will sort lowest-first
 	 */
-	public BinaryHeap (int capacity, boolean isMaxHeap) {
+	public BinaryHeap(int capacity, boolean isMaxHeap) {
 		this.isMaxHeap = isMaxHeap;
 		nodes = new Node[capacity];
 	}
@@ -69,7 +71,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 *
 	 * @param coll a Collection of T (which must extend {@link Node}) or objects that subclass T
 	 */
-	public BinaryHeap (Collection<? extends T> coll) {
+	public BinaryHeap(Collection<? extends T> coll) {
 		this(false, coll);
 	}
 
@@ -80,7 +82,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param isMaxHeap if true, this will sort highest-first; if false, it will sort lowest-first
 	 * @param coll      a Collection of T (which must extend {@link Node}) or objects that subclass T
 	 */
-	public BinaryHeap (boolean isMaxHeap, Collection<? extends T> coll) {
+	public BinaryHeap(boolean isMaxHeap, Collection<? extends T> coll) {
 		this.isMaxHeap = isMaxHeap;
 		nodes = new Node[coll.size()];
 		addAll(coll);
@@ -92,7 +94,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 *
 	 * @param arr an array of T (which must extend {@link Node}) or objects that subclass T
 	 */
-	public BinaryHeap (T[] arr) {
+	public BinaryHeap(T[] arr) {
 		this(false, arr);
 	}
 
@@ -103,7 +105,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param isMaxHeap if true, this will sort highest-first; if false, it will sort lowest-first
 	 * @param arr       an array of T (which must extend {@link Node}) or objects that subclass T
 	 */
-	public BinaryHeap (boolean isMaxHeap, T[] arr) {
+	public BinaryHeap(boolean isMaxHeap, T[] arr) {
 		this.isMaxHeap = isMaxHeap;
 		nodes = new Node[arr.length];
 		addAll(arr);
@@ -116,12 +118,12 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 *
 	 * @return true if this sorts highest-first; false if it sorts lowest-first
 	 */
-	public boolean isMaxHeap () {
+	public boolean isMaxHeap() {
 		return isMaxHeap;
 	}
 
 	@Override
-	public boolean addAll (Collection<? extends T> c) {
+	public boolean addAll(Collection<? extends T> c) {
 		if (c == this) {
 			throw new IllegalArgumentException("A BinaryHeap cannot be added to itself.");
 		}
@@ -132,11 +134,11 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 		return modified;
 	}
 
-	public boolean addAll (T[] c) {
+	public boolean addAll(T[] c) {
 		return addAll(c, 0, c.length);
 	}
 
-	public boolean addAll (T[] c, int offset, int length) {
+	public boolean addAll(T[] c, int offset, int length) {
 		boolean modified = false;
 		for (int i = offset, n = offset + length; i < n; i++) {
 			modified |= offer(c[i]);
@@ -148,7 +150,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * Adds the node to the heap using its current value. The node should not already be in the heap.
 	 */
 	@Override
-	public boolean add (T node) {
+	public boolean add(T node) {
 		// Expand if necessary.
 		if (size == nodes.length) {
 			Node[] newNodes = new Node[size << 1];
@@ -177,7 +179,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @throws NullPointerException if the specified element is null
 	 */
 	@Override
-	public boolean offer (T node) {
+	public boolean offer(T node) {
 		if (size == nodes.length) {
 			Node[] newNodes = new Node[size << 1];
 			System.arraycopy(nodes, 0, newNodes, 0, size);
@@ -204,7 +206,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 */
 	@Nullable
 	@Override
-	public T poll () {
+	public T poll() {
 		if (size == 0)
 			return null;
 		Node removed = nodes[0];
@@ -212,8 +214,10 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 			nodes[0] = nodes[size];
 			nodes[size] = null;
 			down(0);
-		} else {nodes[0] = null;}
-		return (T)removed;
+		} else {
+			nodes[0] = null;
+		}
+		return (T) removed;
 	}
 
 	/**
@@ -227,7 +231,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 *                                prevents it from being added to this queue
 	 */
 	@Override
-	public T remove () {
+	public T remove() {
 		if (size == 0)
 			throw new NoSuchElementException("A BinaryHeap cannot be empty when remove() is called.");
 		Node removed = nodes[0];
@@ -235,14 +239,16 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 			nodes[0] = nodes[size];
 			nodes[size] = null;
 			down(0);
-		} else {nodes[0] = null;}
-		return (T)removed;
+		} else {
+			nodes[0] = null;
+		}
+		return (T) removed;
 	}
 
 	/**
 	 * Sets the node's value and adds it to the heap. The node should not already be in the heap.
 	 */
-	public boolean add (T node, float value) {
+	public boolean add(T node, float value) {
 		node.value = value;
 		return add(node);
 	}
@@ -256,8 +262,12 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * checking each element in turn for equality with the specified element via {@link Object#equals(Object)}.
 	 */
 	@Override
-	public boolean contains (Object node) {
-		for (Node other : nodes) {if (other.equals(node)) {return true;}}
+	public boolean contains(Object node) {
+		for (Node other : nodes) {
+			if (other.equals(node)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -267,11 +277,19 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param node     should be a {@code T}, which must extend {@link Node}; can be some other type, which gives false
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 */
-	public boolean contains (Object node, boolean identity) {
+	public boolean contains(Object node, boolean identity) {
 		if (identity) {
-			for (Node n : nodes) {if (n == node) {return true;}}
+			for (Node n : nodes) {
+				if (n == node) {
+					return true;
+				}
+			}
 		} else {
-			for (Node other : nodes) {if (other.equals(node)) {return true;}}
+			for (Node other : nodes) {
+				if (other.equals(node)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -286,9 +304,11 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 *                                prevents it from being added to this queue
 	 */
 	@Override
-	public T element () {
-		if (size == 0) {throw new NoSuchElementException("The heap is empty.");}
-		return (T)nodes[0];
+	public T element() {
+		if (size == 0) {
+			throw new NoSuchElementException("The heap is empty.");
+		}
+		return (T) nodes[0];
 	}
 
 	/**
@@ -301,9 +321,11 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 */
 	@Nullable
 	@Override
-	public T peek () {
-		if (size == 0) {return null;}
-		return (T)nodes[0];
+	public T peek() {
+		if (size == 0) {
+			return null;
+		}
+		return (T) nodes[0];
 	}
 
 	/**
@@ -316,7 +338,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return the head of this BinaryHeap, or {@code null} if this queue is empty
 	 */
 	@Nullable
-	public T pop () {
+	public T pop() {
 		if (size == 0)
 			return null;
 		Node removed = nodes[0];
@@ -324,8 +346,10 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 			nodes[0] = nodes[size];
 			nodes[size] = null;
 			down(0);
-		} else {nodes[0] = null;}
-		return (T)removed;
+		} else {
+			nodes[0] = null;
+		}
+		return (T) removed;
 	}
 
 	/**
@@ -335,25 +359,31 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param node a {@link Node} that should be present in this already
 	 * @return {@code node} after its removal
 	 */
-	public T remove (T node) {
+	public T remove(T node) {
 		if (--size > 0) {
 			Node moved = nodes[size];
 			nodes[size] = null;
 			nodes[node.index] = moved;
-			if (moved.value < node.value ^ isMaxHeap) {up(node.index);} else {down(node.index);}
-		} else {nodes[0] = null;}
+			if (moved.value < node.value ^ isMaxHeap) {
+				up(node.index);
+			} else {
+				down(node.index);
+			}
+		} else {
+			nodes[0] = null;
+		}
 		return node;
 	}
 
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	/**
 	 * Returns true if the heap has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -361,7 +391,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * Returns true if the heap is empty.
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -369,7 +399,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * Removes all nodes from this BinaryHeap.
 	 */
 	@Override
-	public void clear () {
+	public void clear() {
 		Utilities.clear(nodes, 0, size);
 		size = 0;
 	}
@@ -377,13 +407,17 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	/**
 	 * Changes the value of the node, which should already be in the heap.
 	 */
-	public void setValue (T node, float value) {
+	public void setValue(T node, float value) {
 		float oldValue = node.value;
 		node.value = value;
-		if (value < oldValue ^ isMaxHeap) {up(node.index);} else {down(node.index);}
+		if (value < oldValue ^ isMaxHeap) {
+			up(node.index);
+		} else {
+			down(node.index);
+		}
 	}
 
-	private void up (int index) {
+	private void up(int index) {
 		Node[] nodes = this.nodes;
 		Node node = nodes[index];
 		float value = node.value;
@@ -396,13 +430,15 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 				nodes[index] = parent;
 				parent.index = index;
 				index = parentIndex;
-			} else {break;}
+			} else {
+				break;
+			}
 		}
 		nodes[index] = node;
 		node.index = index;
 	}
 
-	private void down (int index) {
+	private void down(int index) {
 		Node[] nodes = this.nodes;
 		int size = this.size;
 
@@ -411,7 +447,9 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 
 		while (true) {
 			int leftIndex = 1 + (index << 1);
-			if (leftIndex >= size) {break;}
+			if (leftIndex >= size) {
+				break;
+			}
 			int rightIndex = leftIndex + 1;
 
 			// Always has a left child.
@@ -431,14 +469,20 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 
 			// The smallest of the three values is the parent.
 			if (leftValue < rightValue ^ isMaxHeap) {
-				if (leftValue == value || (leftValue > value ^ isMaxHeap)) {break;}
+				if (leftValue == value || (leftValue > value ^ isMaxHeap)) {
+					break;
+				}
 				nodes[index] = leftNode;
 				leftNode.index = index;
 				index = leftIndex;
 			} else {
-				if (rightValue == value || (rightValue > value ^ isMaxHeap)) {break;}
+				if (rightValue == value || (rightValue > value ^ isMaxHeap)) {
+					break;
+				}
 				nodes[index] = rightNode;
-				if (rightNode != null) {rightNode.index = index;}
+				if (rightNode != null) {
+					rightNode.index = index;
+				}
 				index = rightIndex;
 			}
 		}
@@ -450,7 +494,9 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 				nodes[index] = parent;
 				parent.index = index;
 				index = parentIndex;
-			} else {break;}
+			} else {
+				break;
+			}
 		}
 
 		nodes[index] = node;
@@ -458,36 +504,45 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	}
 
 	@Override
-	public boolean remove (Object o) {
-		if(o instanceof Node) {
+	public boolean remove(Object o) {
+		if (o instanceof Node) {
 			if (--size > 0) {
 				Node moved = nodes[size];
 				nodes[size] = null;
-				Node node = (Node)o;
+				Node node = (Node) o;
 				nodes[node.index] = moved;
-				if (moved.value < node.value ^ isMaxHeap) {up(node.index);} else {down(node.index);}
-			} else {nodes[0] = null;}
+				if (moved.value < node.value ^ isMaxHeap) {
+					up(node.index);
+				} else {
+					down(node.index);
+				}
+			} else {
+				nodes[0] = null;
+			}
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean containsAll (Collection<@NonNull ?> c) {
+	public boolean containsAll(Collection<@NonNull ?> c) {
 		for (Object o : c) {
-			if (!contains(o)) {return false;}
+			if (!contains(o)) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	/**
 	 * Exactly like {@link #containsAll(Collection)}, but takes an array instead of a Collection.
-	 * @see #containsAll(Collection)
+	 *
 	 * @param array array to be checked for containment in this set
 	 * @return {@code true} if this set contains all the elements
 	 * in the specified array
+	 * @see #containsAll(Collection)
 	 */
-	public boolean containsAll (@NonNull Object[] array) {
+	public boolean containsAll(@NonNull Object[] array) {
 		for (Object o : array) {
 			if (!contains(o))
 				return false;
@@ -497,16 +552,17 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 
 	/**
 	 * Like {@link #containsAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #containsAll(Object[])
-	 * @param array array to be checked for containment in this set
+	 *
+	 * @param array  array to be checked for containment in this set
 	 * @param offset the index of the first item in array to check
 	 * @param length how many items, at most, to check from array
 	 * @return {@code true} if this set contains all the elements
 	 * in the specified range of array
+	 * @see #containsAll(Object[])
 	 */
-	public boolean containsAll (@NonNull Object[] array, int offset, int length) {
+	public boolean containsAll(@NonNull Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
-			if(!contains(array[i])) return false;
+			if (!contains(array[i])) return false;
 		}
 		return true;
 	}
@@ -519,7 +575,9 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 */
 	public boolean containsAnyIterable(Iterable<@NonNull ?> values) {
 		for (Object v : values) {
-			if (contains(v)) {return true;}
+			if (contains(v)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -530,9 +588,11 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny (@NonNull Object[] values) {
+	public boolean containsAny(@NonNull Object[] values) {
 		for (Object v : values) {
-			if (contains(v)) {return true;}
+			if (contains(v)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -545,9 +605,11 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param length how many items to check from values
 	 * @return true if this set contains any of the items in the given range of {@code values}, false otherwise
 	 */
-	public boolean containsAny (@NonNull Object[] values, int offset, int length) {
+	public boolean containsAny(@NonNull Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
-			if (contains(values[i])) {return true;}
+			if (contains(values[i])) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -555,12 +617,13 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	/**
 	 * Removes each object in {@code other} from this heap, removing an item once if it appears once, twice if it appears twice,
 	 * and so on. In this respect, this acts like {@link #removeEachIterable(Iterable)} rather than Collection's removeAll().
-	 * @see #removeEachIterable(Iterable)
+	 *
 	 * @param other collection containing elements to be removed from this collection
 	 * @return true if any elements were removed, or false otherwise
+	 * @see #removeEachIterable(Iterable)
 	 */
 	@Override
-	public boolean removeAll (@NonNull Collection<@NonNull ?> other) {
+	public boolean removeAll(@NonNull Collection<@NonNull ?> other) {
 		return removeEachIterable(other);
 	}
 
@@ -568,25 +631,28 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * Exactly like {@link #removeAll(Collection)}, but takes an array instead of a Collection.
 	 * This delegates entirely to {@link #removeEach(Object[])}, and does not act like removeAll() does in other
 	 * collections if there are duplicate nodes present in the heap.
-	 * @see #removeAll(Collection)
+	 *
 	 * @param other array containing elements to be removed from this list
 	 * @return {@code true} if this list changed as a result of the call
+	 * @see #removeAll(Collection)
 	 */
-	public boolean removeAll (@NonNull Object[] other) {
+	public boolean removeAll(@NonNull Object[] other) {
 		return removeEach(other);
 	}
+
 	/**
 	 * Like {@link #removeAll(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
 	 * This delegates entirely to {@link #removeEach(Object[], int, int)}, and does not act like removeAll() does in other
 	 * collections if there are duplicate nodes present in the heap.
-	 * @see #removeAll(Object[])
-	 * @see #removeEach(Object[], int, int)
-	 * @param array the elements to be removed from this list
+	 *
+	 * @param array  the elements to be removed from this list
 	 * @param offset the index of the first item in array to remove
 	 * @param length how many items, at most, to get from array and remove from this
 	 * @return {@code true} if this list changed as a result of the call
+	 * @see #removeAll(Object[])
+	 * @see #removeEach(Object[], int, int)
 	 */
-	public boolean removeAll (@NonNull Object[] array, int offset, int length) {
+	public boolean removeAll(@NonNull Object[] array, int offset, int length) {
 		return removeEach(array, offset, length);
 	}
 
@@ -601,7 +667,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 */
 	public boolean removeEachIterable(@NonNull Iterable<@NonNull ?> other) {
 		boolean changed = false;
-		for(Object item : other) {
+		for (Object item : other) {
 			changed |= remove(item);
 		}
 		return changed;
@@ -609,23 +675,25 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 
 	/**
 	 * Exactly like {@link #removeEachIterable(Iterable)}, but takes an array instead of a Collection.
-	 * @see #removeEachIterable(Iterable)
+	 *
 	 * @param array array containing elements to be removed from this list
 	 * @return {@code true} if this list changed as a result of the call
+	 * @see #removeEachIterable(Iterable)
 	 */
-	public boolean removeEach (@NonNull Object @NonNull [] array) {
+	public boolean removeEach(@NonNull Object @NonNull [] array) {
 		return removeEach(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #removeEach(Object[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #removeEach(Object[])
-	 * @param array the elements to be removed from this list
+	 *
+	 * @param array  the elements to be removed from this list
 	 * @param offset the index of the first item in array to remove
 	 * @param length how many items, at most, to get from array and remove from this
 	 * @return {@code true} if this list changed as a result of the call
+	 * @see #removeEach(Object[])
 	 */
-	public boolean removeEach (@NonNull Object @NonNull [] array, int offset, int length) {
+	public boolean removeEach(@NonNull Object @NonNull [] array, int offset, int length) {
 		boolean changed = false;
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			changed |= remove(array[i]);
@@ -634,17 +702,25 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (!(obj instanceof BinaryHeap)) {return false;}
-		BinaryHeap other = (BinaryHeap)obj;
-		if (other.size != size) {return false;}
+	public boolean equals(Object obj) {
+		if (!(obj instanceof BinaryHeap)) {
+			return false;
+		}
+		BinaryHeap other = (BinaryHeap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		Node[] nodes1 = this.nodes, nodes2 = other.nodes;
-		for (int i = 0, n = size; i < n; i++) {if (nodes1[i].value != nodes2[i].value) {return false;}}
+		for (int i = 0, n = size; i < n; i++) {
+			if (nodes1[i].value != nodes2[i].value) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		Node[] nodes = this.nodes;
 		for (int i = 0, n = size; i < n; i++) {
@@ -655,7 +731,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -665,7 +741,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return an iterator over the elements contained in this collection
 	 */
 	@Override
-	public @NonNull HeapIterator<T> iterator () {
+	public @NonNull HeapIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HeapIterator<>(this);
 			iterator2 = new HeapIterator<>(this);
@@ -688,7 +764,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 		private int index;
 		private boolean valid = true;
 
-		public HeapIterator (BinaryHeap<T> binaryHeap) {
+		public HeapIterator(BinaryHeap<T> binaryHeap) {
 			heap = binaryHeap;
 			index = 0;
 		}
@@ -701,8 +777,10 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index < heap.size;
 		}
 
@@ -712,13 +790,17 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 		 * @return the next element in the iteration
 		 */
 		@Override
-		public T next () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= heap.size) {throw new NoSuchElementException();}
-			return (T)heap.nodes[index++];
+		public T next() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index >= heap.size) {
+				throw new NoSuchElementException();
+			}
+			return (T) heap.nodes[index++];
 		}
 
-		public void reset () {
+		public void reset() {
 			index = 0;
 		}
 	}
@@ -744,16 +826,16 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 		 * @param value The initial value for the node. To change the value, use {@link BinaryHeap#add(Node, float)} if the node is
 		 *              not in the heap, or {@link BinaryHeap#setValue(Node, float)} if the node is in the heap.
 		 */
-		public Node (float value) {
+		public Node(float value) {
 			this.value = value;
 		}
 
-		public float getValue () {
+		public float getValue() {
 			return value;
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return Float.toString(value);
 		}
 	}
@@ -767,7 +849,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return a new BinaryHeap of T with the min-heap property.
 	 */
 	@SafeVarargs
-	public static <T extends BinaryHeap.Node> BinaryHeap<T> with (T... array) {
+	public static <T extends BinaryHeap.Node> BinaryHeap<T> with(T... array) {
 		return new BinaryHeap<>(false, array);
 	}
 
@@ -780,7 +862,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return a new BinaryHeap of T with the min-heap property.
 	 */
 	@SafeVarargs
-	public static <T extends BinaryHeap.Node> BinaryHeap<T> minHeapWith (T... array) {
+	public static <T extends BinaryHeap.Node> BinaryHeap<T> minHeapWith(T... array) {
 		return new BinaryHeap<>(false, array);
 	}
 
@@ -792,7 +874,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return a new BinaryHeap of T with the max-heap property.
 	 */
 	@SafeVarargs
-	public static <T extends BinaryHeap.Node> BinaryHeap<T> maxHeapWith (T... array) {
+	public static <T extends BinaryHeap.Node> BinaryHeap<T> maxHeapWith(T... array) {
 		return new BinaryHeap<>(true, array);
 	}
 }

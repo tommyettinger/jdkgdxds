@@ -30,38 +30,38 @@ import java.util.NoSuchElementException;
  * and can also just change the Iterator with {@link #set(LongIterator)}.
  */
 public class EditingLongIterator implements LongIterator {
-    public LongIterator iterator;
-    public LongToLongFunction editor;
+	public LongIterator iterator;
+	public LongToLongFunction editor;
 
-    public EditingLongIterator() {
-    }
+	public EditingLongIterator() {
+	}
 
-    public EditingLongIterator(final LongIterator iterator, final LongToLongFunction editor) {
-        set(iterator, editor);
-    }
+	public EditingLongIterator(final LongIterator iterator, final LongToLongFunction editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final LongIterator iterator, final LongToLongFunction editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final LongIterator iterator, final LongToLongFunction editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final LongIterator iterator) {
-        set(iterator, editor);
-    }
+	public void set(final LongIterator iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public long nextLong () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.applyAsLong(iterator.nextLong());
-    }
+	@Override
+	public long nextLong() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.applyAsLong(iterator.nextLong());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

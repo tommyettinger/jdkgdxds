@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -25,7 +26,7 @@ import java.util.Comparator;
  * comparators.
  */
 public final class CharComparators {
-	private CharComparators () {
+	private CharComparators() {
 	}
 
 	/**
@@ -34,12 +35,12 @@ public final class CharComparators {
 	protected static class NaturalImplicitComparator implements CharComparator {
 
 		@Override
-		public final int compare (final char a, final char b) {
+		public final int compare(final char a, final char b) {
 			return Integer.compare(a, b);
 		}
 
 		@Override
-		public CharComparator reversed () {
+		public CharComparator reversed() {
 			return OPPOSITE_COMPARATOR;
 		}
 	}
@@ -52,12 +53,12 @@ public final class CharComparators {
 	protected static class OppositeImplicitComparator implements CharComparator {
 
 		@Override
-		public final int compare (final char a, final char b) {
+		public final int compare(final char a, final char b) {
 			return Integer.compare(b, a);
 		}
 
 		@Override
-		public CharComparator reversed () {
+		public CharComparator reversed() {
 			return NATURAL_COMPARATOR;
 		}
 	}
@@ -68,17 +69,17 @@ public final class CharComparators {
 
 		final CharComparator comparator;
 
-		protected OppositeComparator (final CharComparator c) {
+		protected OppositeComparator(final CharComparator c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final char a, final char b) {
+		public final int compare(final char a, final char b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final CharComparator reversed () {
+		public final CharComparator reversed() {
 			return comparator;
 		}
 	}
@@ -89,8 +90,10 @@ public final class CharComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static CharComparator oppositeComparator (final CharComparator c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
+	public static CharComparator oppositeComparator(final CharComparator c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator) c).comparator;
+		}
 		return new OppositeComparator(c);
 	}
 
@@ -101,17 +104,19 @@ public final class CharComparators {
 	 * @param c a Comparator of Char values.
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
-	public static CharComparator asCharComparator (final Comparator<? super Character> c) {
-		if (c instanceof CharComparator) {return (CharComparator)c;}
+	public static CharComparator asCharComparator(final Comparator<? super Character> c) {
+		if (c instanceof CharComparator) {
+			return (CharComparator) c;
+		}
 		return new CharComparator() {
 			@Override
-			public int compare (char x, char y) {
+			public int compare(char x, char y) {
 				return c.compare(Character.valueOf(x), Character.valueOf(y));
 			}
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public int compare (Character x, Character y) {
+			public int compare(Character x, Character y) {
 				return c.compare(x, y);
 			}
 		};
@@ -119,7 +124,7 @@ public final class CharComparators {
 
 	/// The remainder of the code is based on FastUtil.
 
-	private static void swap (char[] items, int first, int second) {
+	private static void swap(char[] items, int first, int second) {
 		char firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -131,10 +136,14 @@ public final class CharComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static void inPlaceMerge (char[] items, final int from, int mid, final int to, final CharComparator comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static void inPlaceMerge(char[] items, final int from, int mid, final int to, final CharComparator comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -155,13 +164,19 @@ public final class CharComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -182,7 +197,7 @@ public final class CharComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static int lowerBound (char[] items, int from, final int to, final int pos, final CharComparator comp) {
+	private static int lowerBound(char[] items, int from, final int to, final int pos, final CharComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -210,7 +225,7 @@ public final class CharComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static int upperBound (char[] items, int from, final int to, final int pos, final CharComparator comp) {
+	private static int upperBound(char[] items, int from, final int to, final int pos, final CharComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -232,7 +247,7 @@ public final class CharComparators {
 	 * @param items the char array to be sorted
 	 * @param c     a CharComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (char[] items, final @Nullable CharComparator c) {
+	public static void sort(char[] items, final @Nullable CharComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -254,7 +269,7 @@ public final class CharComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a CharComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (char[] items, final int from, final int to, final @Nullable CharComparator c) {
+	public static void sort(char[] items, final int from, final int to, final @Nullable CharComparator c) {
 		if (to <= 0) {
 			return;
 		}
@@ -291,7 +306,9 @@ public final class CharComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

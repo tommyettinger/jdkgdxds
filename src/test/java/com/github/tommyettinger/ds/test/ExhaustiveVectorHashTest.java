@@ -74,15 +74,17 @@ public class ExhaustiveVectorHashTest {
 					int longestPileup = 0;
 					int originalMultiplier;
 					int hashAddend = 0x9E3779B9;
+
 					{
 						long hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
-							hashAddend = hashAddend * hashAddend + (int)(ctr += 0x9E3779B97F4A7C16L);
+							hashAddend = hashAddend * hashAddend + (int) (ctr += 0x9E3779B97F4A7C16L);
 						}
 						originalMultiplier = hashAddend;
 					}
-//					int hashAddend = 0xD1B54A32;
+
+					//					int hashAddend = 0xD1B54A32;
 //					{
 //						hashMultiplier = 0xD1B54A32D192ED03L;
 //						long ctr = hashAddend;
@@ -92,7 +94,7 @@ public class ExhaustiveVectorHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place (@NonNull Object item) {
+					protected int place(@NonNull Object item) {
 						return item.hashCode() * hashAddend >>> shift;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
 //                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
@@ -101,7 +103,7 @@ public class ExhaustiveVectorHashTest {
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -115,13 +117,13 @@ public class ExhaustiveVectorHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 //                        hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C1L;
-						hashMultiplier *= (long)size << 3 ^ 0xF1357AEA2E62A9C5L;
+						hashMultiplier *= (long) size << 3 ^ 0xF1357AEA2E62A9C5L;
 						hashAddend = hashAddend * 0x2E62A9C5;
 //                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
 
@@ -135,19 +137,20 @@ public class ExhaustiveVectorHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
-						if(collisionTotal > 1810000L) throw new RuntimeException();
+						if (collisionTotal > 1810000L) throw new RuntimeException();
 //                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
 //                        System.out.println("total collisions: " + collisionTotal);
 //                        System.out.println("longest pileup: " + longestPileup);
 					}
 
 					@Override
-					public void clear () {
-						if(longestPileup <= 23)
-						{
+					public void clear() {
+						if (longestPileup <= 23) {
 							System.out.println("hash multiplier: 0x" + Base.BASE16.unsigned(originalMultiplier) + " on iteration " + hashShiftA);
 //                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
 							System.out.println("gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
@@ -165,7 +168,7 @@ public class ExhaustiveVectorHashTest {
 					for (int i = 0; i < LEN; i++) {
 						set.add(spiral[i]);
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					continue;
 				}
 //        System.out.println(System.nanoTime() - start);

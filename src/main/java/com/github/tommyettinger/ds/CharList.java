@@ -40,50 +40,55 @@ import java.util.Random;
 public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, CharSequence, Appendable {
 	/**
 	 * Returns true if this implementation retains order, which it does.
+	 *
 	 * @return true
 	 */
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return true;
 	}
 
 	public char[] items;
 	protected int size;
-	@Nullable protected transient CharListIterator iterator1;
-	@Nullable protected transient CharListIterator iterator2;
+	@Nullable
+	protected transient CharListIterator iterator1;
+	@Nullable
+	protected transient CharListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.
 	 */
-	public CharList () {
+	public CharList() {
 		this(10);
 	}
 
 	/**
 	 * Creates an ordered list with the specified capacity.
+	 *
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public CharList (int capacity) {
+	public CharList(int capacity) {
 		items = new char[capacity];
 	}
 
 	/**
 	 * Creates an ordered list with the specified capacity.
 	 *
-	 * @param ordered ignored; for an unordered list use {@link CharBag}
+	 * @param ordered  ignored; for an unordered list use {@link CharBag}
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 * @deprecated CharList is always ordered; for an unordered list use {@link CharBag}
 	 */
 	@Deprecated
-	public CharList (boolean ordered, int capacity) {
+	public CharList(boolean ordered, int capacity) {
 		this(capacity);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
 	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param list another CharList (or CharBag) to copy from
 	 */
-	public CharList (CharList list) {
+	public CharList(CharList list) {
 		size = list.size;
 		items = new char[size];
 		System.arraycopy(list.items, 0, items, 0, size);
@@ -92,9 +97,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param array a char array to copy from
 	 */
-	public CharList (char[] array) {
+	public CharList(char[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -102,11 +108,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null char array to add to this list
+	 * @param array      a non-null char array to add to this list
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public CharList (char[] array, int startIndex, int count) {
+	public CharList(char[] array, int startIndex, int count) {
 		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
@@ -116,14 +122,14 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered ignored; for an unordered list use {@link CharBag}
-	 * @param array a non-null char array to add to this list
+	 * @param ordered    ignored; for an unordered list use {@link CharBag}
+	 * @param array      a non-null char array to add to this list
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 * @deprecated CharList is always ordered; for an unordered list use {@link CharBag}
 	 */
 	@Deprecated
-	public CharList (boolean ordered, char[] array, int startIndex, int count) {
+	public CharList(boolean ordered, char[] array, int startIndex, int count) {
 		this(array, startIndex, count);
 	}
 
@@ -132,7 +138,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public CharList (OfChar coll) {
+	public CharList(OfChar coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -142,7 +148,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public CharList (CharIterator coll) {
+	public CharList(CharIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -152,7 +158,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @param other another Ordered.OfChar that will have its contents copied into this
 	 */
-	public CharList (Ordered.OfChar other) {
+	public CharList(Ordered.OfChar other) {
 		this(other.order());
 	}
 
@@ -164,47 +170,53 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public CharList (Ordered.OfChar other, int offset, int count) {
+	public CharList(Ordered.OfChar other, int offset, int count) {
 		this(count);
 		addAll(0, other, offset, count);
 	}
 
 	// Newly-added
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	// Modified from libGDX
 	@Override
-	public boolean add (char value) {
+	public boolean add(char value) {
 		char[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size++] = value;
 		return true;
 	}
 
-	public void add (char value1, char value2) {
+	public void add(char value1, char value2) {
 		char[] items = this.items;
-		if (size + 1 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size + 1 >= items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		size += 2;
 	}
 
-	public void add (char value1, char value2, char value3) {
+	public void add(char value1, char value2, char value3) {
 		char[] items = this.items;
-		if (size + 2 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size + 2 >= items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		items[size + 2] = value3;
 		size += 3;
 	}
 
-	public void add (char value1, char value2, char value3, char value4) {
+	public void add(char value1, char value2, char value3, char value4) {
 		char[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(9, (int)(size * 1.75f)));
+			items = resize(Math.max(9, (int) (size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -214,13 +226,15 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	// Modified from libGDX
-	public boolean addAll (CharList list) {
+	public boolean addAll(CharList list) {
 		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (CharList list, int offset, int count) {
-		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+	public boolean addAll(CharList list, int offset, int count) {
+		if (offset + count > list.size) {
+			throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);
+		}
 		return addAll(list.items, offset, count);
 	}
 
@@ -233,7 +247,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(CharList)} does
 	 */
-	public boolean addAll (Ordered.OfChar other, int offset, int count) {
+	public boolean addAll(Ordered.OfChar other, int offset, int count) {
 		return addAll(size(), other, offset, count);
 	}
 
@@ -247,7 +261,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(CharList)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered.OfChar other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered.OfChar other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -259,36 +273,46 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	// Modified from libGDX
-	public boolean addAll (char... array) {
+	public boolean addAll(char... array) {
 		return addAll(array, 0, array.length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (char[] array, int offset, int length) {
+	public boolean addAll(char[] array, int offset, int length) {
 		char[] items = this.items;
 		int sizeNeeded = size + length;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
 		return true;
 	}
 
 	//Kotlin-friendly operator
-	public char get (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public char get(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		return items[index];
 	}
 
 	//Kotlin-friendly operator
-	public void set (int index, char value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void set(int index, char value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] = value;
 	}
 
-	public void insert (int index, char value) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, char value) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		char[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
@@ -297,13 +321,18 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 *
 	 * @param index the first index to duplicate
 	 * @param count how many items to duplicate
 	 */
-	public boolean duplicateRange (int index, int count) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public boolean duplicateRange(int index, int count) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		int sizeNeeded = size + count;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
 		return count > 0;
@@ -316,14 +345,18 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return this CharList
 	 */
 	@Override
-	public CharList order () {
+	public CharList order() {
 		return this;
 	}
 
 	@Override
-	public void swap (int first, int second) {
-		if (first >= size) {throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);}
-		if (second >= size) {throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);}
+	public void swap(int first, int second) {
+		if (first >= size) {
+			throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);
+		}
+		if (second >= size) {
+			throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);
+		}
 		char[] items = this.items;
 		char firstValue = items[first];
 		items[first] = items[second];
@@ -331,10 +364,14 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	@Override
-	public boolean contains (char value) {
+	public boolean contains(char value) {
 		int i = size - 1;
 		char[] items = this.items;
-		while (i >= 0) {if (items[i--] == value) {return true;}}
+		while (i >= 0) {
+			if (items[i--] == value) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -345,11 +382,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
-	public boolean containsAll (CharList other) {
+	public boolean containsAll(CharList other) {
 		char[] others = other.items;
 		int otherSize = other.size;
 		for (int i = 0; i < otherSize; i++) {
-			if (!contains(others[i])) {return false;}
+			if (!contains(others[i])) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -360,9 +399,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param value a char value to search for
 	 * @return the first index of the given value, or -1 if it is not present
 	 */
-	public int indexOf (char value) {
+	public int indexOf(char value) {
 		char[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {if (items[i] == value) {return i;}}
+		for (int i = 0, n = size; i < n; i++) {
+			if (items[i] == value) {
+				return i;
+			}
+		}
 		return -1;
 	}
 
@@ -372,9 +415,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param value a char value to search for
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
-	public int lastIndexOf (char value) {
+	public int lastIndexOf(char value) {
 		char[] items = this.items;
-		for (int i = size - 1; i >= 0; i--) {if (items[i] == value) {return i;}}
+		for (int i = size - 1; i >= 0; i--) {
+			if (items[i] == value) {
+				return i;
+			}
+		}
 		return -1;
 	}
 
@@ -387,7 +434,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 */
 	// Modified from libGDX
 	@Override
-	public boolean remove (char value) {
+	public boolean remove(char value) {
 		char[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
 			if (items[i] == value) {
@@ -406,8 +453,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param index the index of the item to remove and return
 	 * @return the removed item
 	 */
-	public char removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public char removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		char[] items = this.items;
 		char value = items[index];
 		size--;
@@ -424,10 +473,14 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param start the first index to remove, inclusive
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start;
 		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
@@ -439,7 +492,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param c a primitive collection of int items to remove fully, such as another CharList or a CharDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (OfChar c) {
+	public boolean removeAll(OfChar c) {
 		int size = this.size;
 		int startSize = size;
 		char[] items = this.items;
@@ -465,7 +518,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param c a primitive collection of int items to remove one-by-one, such as another CharList or a CharDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (OfChar c) {
+	public boolean removeEach(OfChar c) {
 		int size = this.size;
 		int startSize = size;
 		char[] items = this.items;
@@ -490,7 +543,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return true if this CharList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (OfChar other) {
+	public boolean retainAll(OfChar other) {
 		final int size = this.size;
 		final char[] items = this.items;
 		int r = 0, w = 0;
@@ -509,7 +562,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @param operator a CharToCharFunction (a functional interface defined in funderby)
 	 */
-	public void replaceAll (CharToCharFunction operator) {
+	public void replaceAll(CharToCharFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsChar(items[i]);
 		}
@@ -520,8 +573,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return the last item, removed from this
 	 */
-	public char pop () {
-		if (size == 0) {throw new IndexOutOfBoundsException("CharList is empty.");}
+	public char pop() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("CharList is empty.");
+		}
 		return items[--size];
 	}
 
@@ -530,8 +585,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return the last item, without modifying this
 	 */
-	public char peek () {
-		if (size == 0) {throw new IndexOutOfBoundsException("CharList is empty.");}
+	public char peek() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("CharList is empty.");
+		}
 		return items[size - 1];
 	}
 
@@ -541,8 +598,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return the first item, without modifying this
 	 */
 	// Modified from libGDX
-	public char first () {
-		if (size == 0) {throw new IndexOutOfBoundsException("CharList is empty.");}
+	public char first() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("CharList is empty.");
+		}
 		return items[0];
 	}
 
@@ -551,7 +610,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return true if the list has one or more items, or false otherwise
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -571,16 +630,15 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return true if the list is empty, or false if it has any items
 	 */
 	@SuppressWarnings("Since15")
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
 	/**
 	 * Creates a new CharList by copying the given subrange of this CharList.
 	 *
-	 * @param start   the start index, inclusive
-	 * @param end     the end index, exclusive
-	 *
+	 * @param start the start index, inclusive
+	 * @param end   the end index, exclusive
 	 * @return a new CharList copying the given subrange of this CharList
 	 */
 	@Override
@@ -593,7 +651,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * This is done simply by setting size to 0; because a {@code char} item isn't a reference, it doesn't need to be set to null.
 	 */
 	@Override
-	public void clear () {
+	public void clear() {
 		size = 0;
 	}
 
@@ -603,8 +661,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
-	public char[] shrink () {
-		if (items.length != size) {resize(size);}
+	public char[] shrink() {
+		if (items.length != size) {
+			resize(size);
+		}
 		return items;
 	}
 
@@ -618,10 +678,14 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
-	public char[] ensureCapacity (int additionalCapacity) {
-		if (additionalCapacity < 0) {throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);}
+	public char[] ensureCapacity(int additionalCapacity) {
+		if (additionalCapacity < 0) {
+			throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);
+		}
 		int sizeNeeded = size + additionalCapacity;
-		if (sizeNeeded > items.length) {resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		return items;
 	}
 
@@ -630,14 +694,18 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
-	public char[] setSize (int newSize) {
-		if (newSize < 0) {throw new IllegalArgumentException("newSize must be >= 0: " + newSize);}
-		if (newSize > items.length) {resize(Math.max(8, newSize));}
+	public char[] setSize(int newSize) {
+		if (newSize < 0) {
+			throw new IllegalArgumentException("newSize must be >= 0: " + newSize);
+		}
+		if (newSize > items.length) {
+			resize(Math.max(8, newSize));
+		}
 		size = newSize;
 		return items;
 	}
 
-	protected char[] resize (int newSize) {
+	protected char[] resize(int newSize) {
 		char[] newItems = new char[newSize];
 		char[] items = this.items;
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));
@@ -645,7 +713,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		return newItems;
 	}
 
-	public void sort () {
+	public void sort() {
 		Arrays.sort(items, 0, size);
 	}
 
@@ -662,7 +730,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @param c the comparator to determine the order of the CharList
 	 */
-	public void sort (@Nullable final CharComparator c) {
+	public void sort(@Nullable final CharComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -680,12 +748,12 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param to   the index of the last element (exclusive) to be sorted.
 	 * @param c    the comparator to determine the order of the CharList
 	 */
-	public void sort (final int from, final int to, final CharComparator c) {
+	public void sort(final int from, final int to, final CharComparator c) {
 		CharComparators.sort(items, from, to, c);
 	}
 
 	@Override
-	public void reverse () {
+	public void reverse() {
 		char[] items = this.items;
 		for (int i = 0, lastIndex = size - 1, n = size / 2; i < n; i++) {
 			int ii = lastIndex - i;
@@ -697,7 +765,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (Random random) {
+	public void shuffle(Random random) {
 		char[] items = this.items;
 		for (int i = size - 1; i > 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -711,9 +779,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		newSize = Math.max(0, newSize);
-		if (size > newSize) {size = newSize;}
+		if (size > newSize) {
+			size = newSize;
+		}
 	}
 
 	/**
@@ -722,8 +792,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
-	public char random (Random random) {
-		if (size == 0) {return 0;}
+	public char random(Random random) {
+		if (size == 0) {
+			return 0;
+		}
 		return items[random.nextInt(size)];
 	}
 
@@ -732,7 +804,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return a new char array with the same contents as this
 	 */
-	public char[] toArray () {
+	public char[] toArray() {
 		char[] array = new char[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -746,7 +818,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param array a char array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
-	public char[] toArray (char[] array) {
+	public char[] toArray(char[] array) {
 		if (array.length < size)
 			array = new char[size];
 		System.arraycopy(items, 0, array, 0, size);
@@ -754,7 +826,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		char[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -764,19 +836,29 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	@Override
-	public boolean equals (Object object) {
-		if (object == this) {return true;}
-		if (!(object instanceof CharList)) {return false;}
-		CharList list = (CharList)object;
+	public boolean equals(Object object) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof CharList)) {
+			return false;
+		}
+		CharList list = (CharList) object;
 		int n = size;
-		if (n != list.size()) {return false;}
+		if (n != list.size()) {
+			return false;
+		}
 		char[] items1 = this.items, items2 = list.items;
-		for (int i = 0; i < n; i++) {if (items1[i] != items2[i]) {return false;}}
+		for (int i = 0; i < n; i++) {
+			if (items1[i] != items2[i]) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -786,7 +868,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return a String containing only the char items in this CharList
 	 */
-	public String toDenseString () {
+	public String toDenseString() {
 		return String.valueOf(items, 0, size);
 	}
 
@@ -800,7 +882,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return a {@link CharIterator}; use its nextChar() method instead of next()
 	 */
 	@Override
-	public CharListIterator iterator () {
+	public CharListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new CharListIterator(this);
 			iterator2 = new CharListIterator(this);
@@ -856,11 +938,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 */
 		public boolean valid = true;
 
-		public CharListIterator (CharList list) {
+		public CharListIterator(CharList list) {
 			this.list = list;
 		}
 
-		public CharListIterator (CharList list, int index) {
+		public CharListIterator(CharList list, int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("CharListIterator does not satisfy index >= 0 && index < list.size()");
 			this.list = list;
@@ -874,9 +956,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public char nextChar () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= list.size()) {throw new NoSuchElementException();}
+		public char nextChar() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			return list.get(latest = index++);
 		}
 
@@ -888,8 +974,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index < list.size();
 		}
 
@@ -902,8 +990,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 * @return {@code true} if the list iterator has more elements when
 		 * traversing the list in the reverse direction
 		 */
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -919,9 +1009,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public char previousChar () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index <= 0 || list.isEmpty()) {throw new NoSuchElementException();}
+		public char previousChar() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index <= 0 || list.isEmpty()) {
+				throw new NoSuchElementException();
+			}
 			return list.get(latest = --index);
 		}
 
@@ -934,7 +1028,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 * subsequent call to {@code next}, or list size if the list
 		 * iterator is at the end of the list
 		 */
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -947,7 +1041,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 * subsequent call to {@code previous}, or -1 if the list
 		 * iterator is at the beginning of the list
 		 */
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -966,9 +1060,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -994,9 +1092,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (char t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void set(char t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.set(latest, t);
 		}
 
@@ -1020,20 +1122,24 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (char t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > list.size()) {throw new NoSuchElementException();}
+		public void add(char t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.insert(index, t);
-			if(list.keepsOrder()) ++index;
+			if (list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = 0;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("CharListIterator does not satisfy index >= 0 && index < list.size()");
 			this.index = index;
@@ -1045,7 +1151,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 *
 		 * @return this same CharListIterator.
 		 */
-		public CharList.CharListIterator iterator () {
+		public CharList.CharListIterator iterator() {
 			return this;
 		}
 	}
@@ -1057,17 +1163,18 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @return a new list containing nothing
 	 */
-	public static CharList with () {
+	public static CharList with() {
 		return new CharList(0);
 	}
 
 	/**
 	 * Creates a new CharList that holds only the given item, but can be resized.
+	 *
 	 * @param item a char item
 	 * @return a new CharList that holds the given item
 	 */
 
-	public static CharList with (char item) {
+	public static CharList with(char item) {
 		CharList list = new CharList(1);
 		list.add(item);
 		return list;
@@ -1075,11 +1182,12 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Creates a new CharList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char item0, char item1) {
+	public static CharList with(char item0, char item1) {
 		CharList list = new CharList(2);
 		list.add(item0);
 		list.add(item1);
@@ -1088,12 +1196,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Creates a new CharList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
 	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char item0, char item1, char item2) {
+	public static CharList with(char item0, char item1, char item2) {
 		CharList list = new CharList(3);
 		list.add(item0);
 		list.add(item1);
@@ -1103,13 +1212,14 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Creates a new CharList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
 	 * @param item3 a char item
 	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char item0, char item1, char item2, char item3) {
+	public static CharList with(char item0, char item1, char item2, char item3) {
 		CharList list = new CharList(4);
 		list.add(item0);
 		list.add(item1);
@@ -1120,6 +1230,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Creates a new CharList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
@@ -1127,7 +1238,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param item4 a char item
 	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char item0, char item1, char item2, char item3, char item4) {
+	public static CharList with(char item0, char item1, char item2, char item3, char item4) {
 		CharList list = new CharList(5);
 		list.add(item0);
 		list.add(item1);
@@ -1139,6 +1250,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Creates a new CharList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
@@ -1147,7 +1259,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param item5 a char item
 	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char item0, char item1, char item2, char item3, char item4, char item5) {
+	public static CharList with(char item0, char item1, char item2, char item3, char item4, char item5) {
 		CharList list = new CharList(6);
 		list.add(item0);
 		list.add(item1);
@@ -1160,6 +1272,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Creates a new CharList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
@@ -1169,7 +1282,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param item6 a char item
 	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
+	public static CharList with(char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
 		CharList list = new CharList(7);
 		list.add(item0);
 		list.add(item1);
@@ -1183,6 +1296,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Creates a new CharList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
@@ -1192,7 +1306,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param item6 a char item
 	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
+	public static CharList with(char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
 		CharList list = new CharList(8);
 		list.add(item0);
 		list.add(item1);
@@ -1210,10 +1324,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a char varargs or char array; remember that varargs allocate
 	 * @return a new CharList that holds the given items
 	 */
-	public static CharList with (char... varargs) {
+	public static CharList with(char... varargs) {
 		return new CharList(varargs);
 	}
 }

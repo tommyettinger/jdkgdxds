@@ -29,64 +29,64 @@ import java.util.NoSuchElementException;
  * change the iterator with {@link #set(LongIterator)}.
  */
 public class StridingLongIterator implements LongIterator {
-    public LongIterator iterator;
-    protected int offset = 0;
-    protected int stride = 2;
-    protected int index = -1;
-    protected boolean end = false;
-    protected boolean available = false;
-    protected long next;
+	public LongIterator iterator;
+	protected int offset = 0;
+	protected int stride = 2;
+	protected int index = -1;
+	protected boolean end = false;
+	protected boolean available = false;
+	protected long next;
 
-    public StridingLongIterator() {
-    }
+	public StridingLongIterator() {
+	}
 
-    public StridingLongIterator(final LongIterator iterator, int offset, int stride) {
-        set(iterator, offset, stride);
-    }
+	public StridingLongIterator(final LongIterator iterator, int offset, int stride) {
+		set(iterator, offset, stride);
+	}
 
-    public void set (final LongIterator iterator, int offset, int stride) {
-        this.iterator = iterator;
-        this.offset = Math.max(0, offset);
-        this.stride = Math.max(1, stride);
-        index = -1;
-        end = available = false;
-    }
+	public void set(final LongIterator iterator, int offset, int stride) {
+		this.iterator = iterator;
+		this.offset = Math.max(0, offset);
+		this.stride = Math.max(1, stride);
+		index = -1;
+		end = available = false;
+	}
 
-    public void set (final LongIterator iterator) {
-        set(iterator, offset, stride);
-    }
+	public void set(final LongIterator iterator) {
+		set(iterator, offset, stride);
+	}
 
-    @Override
-    public boolean hasNext () {
-        if (end) return false;
-        if (available) return true;
-        while (iterator.hasNext()) {
-            final long n = iterator.next();
-            if (++index >= offset && (index - offset) % stride == 0) {
-                next = n;
-                available = true;
-                return true;
-            }
-        }
-        end = true;
-        return false;
-    }
+	@Override
+	public boolean hasNext() {
+		if (end) return false;
+		if (available) return true;
+		while (iterator.hasNext()) {
+			final long n = iterator.next();
+			if (++index >= offset && (index - offset) % stride == 0) {
+				next = n;
+				available = true;
+				return true;
+			}
+		}
+		end = true;
+		return false;
+	}
 
-    @Override
-    public long nextLong () {
-        if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
-        final long result = next;
-        available = false;
-        return result;
-    }
+	@Override
+	public long nextLong() {
+		if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
+		final long result = next;
+		available = false;
+		return result;
+	}
 
-    /**
-     * NOTE: this does not change the stride or offset, so the same sequence of values will be returned regardless of if
-     * some elements are removed with this method.
-     */
-    @Override
-    public void remove () {
-        if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
-        iterator.remove();
-    }
+	/**
+	 * NOTE: this does not change the stride or offset, so the same sequence of values will be returned regardless of if
+	 * some elements are removed with this method.
+	 */
+	@Override
+	public void remove() {
+		if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
+		iterator.remove();
+	}
 }

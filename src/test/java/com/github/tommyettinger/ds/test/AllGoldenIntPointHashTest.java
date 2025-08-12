@@ -131,12 +131,12 @@ public class AllGoldenIntPointHashTest {
 //			0x8144356D, 0xFB6D5599, 0xF6EF948D, 0xEE3151B7, 0xE5C24EC9, 0xDD9FBD6F, 0xD9AA45DB, 0xD5C6E8C7,
 //			0xD1F55367, 0xCE35346F, 0xCA863C03, 0xC6E81BB7, 0xBFDD30C1, 0xBC6FD021, 0xB9121BAF, 0xB5C3CBBD,
 //		};
-				// this is what 1.6.0 used.
-				//97 problem multipliers in total, 415 likely good multipliers in total.
-				//Lowest collisions : 5267486
-				//Highest collisions: 5749688
-				//Lowest pileup     : 16
-				//Highest pileup    : 78
+			// this is what 1.6.0 used.
+			//97 problem multipliers in total, 415 likely good multipliers in total.
+			//Lowest collisions : 5267486
+			//Highest collisions: 5749688
+			//Lowest pileup     : 16
+			//Highest pileup    : 78
 //			new int[]{
 //				0x30997D75, 0x419F6AE3, 0x7FC6F5F3, 0xD33C4C3D, 0xEEDAD501, 0x158D36F9, 0x4912D2B7, 0xA27A0E77,
 //				0x5A8AB569, 0xF7914C3D, 0x9B56CC3D, 0x0A4348A3, 0x47C2F571, 0xB4A9C255, 0xE0EDF571, 0x260DFD75,
@@ -204,15 +204,15 @@ public class AllGoldenIntPointHashTest {
 //				0xE0A88A73, 0xC5D4AC31, 0x54231F61, 0x4DF0653B, 0x836E5D93, 0x335514D1, 0x759A66F1, 0x925A3D49,
 //			};
 
-				// being evaluated for 1.6.2
-				//6 problem multipliers in total, 506 likely good multipliers in total.
-				//Lowest collisions : 5212354
-				//Highest collisions: 5784763
-				//Lowest pileup     : 16
-				//Highest pileup    : 23
-				//
-				// the 6 problems are:
-				//0xFCAE655D, 0xB5575A83, 0xFEF342EF, 0x816DD903, 0xFE09F15F, 0xFCEF1725
+			// being evaluated for 1.6.2
+			//6 problem multipliers in total, 506 likely good multipliers in total.
+			//Lowest collisions : 5212354
+			//Highest collisions: 5784763
+			//Lowest pileup     : 16
+			//Highest pileup    : 23
+			//
+			// the 6 problems are:
+			//0xFCAE655D, 0xB5575A83, 0xFEF342EF, 0x816DD903, 0xFE09F15F, 0xFCEF1725
 //		new int[]{
 //				0xE6AC8B4F, 0xC21736F9, 0xFD890F79, 0xC514D823, 0xF151575F, 0x8BDCE3EF, 0xA7F27B2F, 0x8C1EAA4F,
 //				0xCCE4C43F, 0x82E28415, 0xC6A39455, 0xE6245E51, 0xC33AFB2F, 0xBFA927CB, 0xAC11C8A3, 0xC00E6AF1,
@@ -280,13 +280,13 @@ public class AllGoldenIntPointHashTest {
 //				0xC859FD25, 0xFDA6D769, 0xA4AF7F5D, 0xD0C56693, 0xB40740CF, 0xE8A09349, 0x9FB48479, 0xF80A9919,
 //		};
 
-				// The best candidate so far for 1.6.2 . This uses the same switching as the two before.
-				//0 problem multipliers in total, 512 likely good multipliers in total.
-				//Lowest collisions : 5212430
-				//Highest collisions: 5226076
-				//Lowest pileup     : 16
-				//Highest pileup    : 16
-		new int[]{ //0xEFAA28F1 should be the initial multiplier
+			// The best candidate so far for 1.6.2 . This uses the same switching as the two before.
+			//0 problem multipliers in total, 512 likely good multipliers in total.
+			//Lowest collisions : 5212430
+			//Highest collisions: 5226076
+			//Lowest pileup     : 16
+			//Highest pileup    : 16
+			new int[]{ //0xEFAA28F1 should be the initial multiplier
 				0xEC6794E3,
 				0x9B89CD59, 0xDCA1C8D7, 0xC5F768E7, 0x92317571, 0x937CD501, 0xE993C987, 0xD5567571, 0x85C8ADB5,
 				0xE6AC8B4F, 0xC21736F9, 0xFD890F79, 0xC514D823, 0xF151575F, 0x8BDCE3EF, 0xA7F27B2F, 0x8C1EAA4F,
@@ -352,7 +352,7 @@ public class AllGoldenIntPointHashTest {
 				0xA8FFC28D, 0x83887061, 0xCD0A47AD, 0xB672ADC5, 0xFAFF47A5, 0xA85E7F21, 0xCAA1ED55, 0xE9E5B3B7,
 				0x888A3D55, 0xCCFED55F, 0xA3F9555B, 0x93A04925, 0xC905253F, 0xAF7525FB, 0xC427E9A9, 0xA69E3A45,
 				0x84C86EE7, 0xAB058D3B, 0xB87E35EB, 0xA03786ED, 0x9AC482DB, 0xB6815DDB, 0xC2E0B9F1,
-		};
+			};
 
 		// old problems, sorta:
 		//0x8DCBB01B=0x00000011, 0x9A5DA973=0x00000016, 0x8605B14F=0x00000016,
@@ -406,7 +406,7 @@ public class AllGoldenIntPointHashTest {
 		}
 		System.out.println(collisions.size() + "/" + LEN + " hashes are unique.");
 //		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));
-		final long THRESHOLD = (long)((double)LEN * (double) LEN / (0.125 * collisions.size()));
+		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.125 * collisions.size()));
 
 //		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		final int[] problems = {0};
@@ -416,7 +416,7 @@ public class AllGoldenIntPointHashTest {
 			good.put(GOOD[x], 0);
 		}
 //		int[] GOLDEN_INTS = good.keySet().toArray();
-        long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
+		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		short[] chosen = new short[512];
 		for (int a = 0; a < COUNT; a++) {
 			final int g = GOOD[a];
@@ -428,7 +428,7 @@ public class AllGoldenIntPointHashTest {
 					int hm = 0xB7AD9447;//0xF1042721;// 0x9E3779B7;
 
 					@Override
-					protected int place (@NonNull Object item) {
+					protected int place(@NonNull Object item) {
 //						final int h = BitConversion.imul(item.hashCode(), hm);
 //						return (h ^ h << 16) >>> shift;
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
@@ -438,7 +438,7 @@ public class AllGoldenIntPointHashTest {
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -453,9 +453,9 @@ public class AllGoldenIntPointHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -473,7 +473,9 @@ public class AllGoldenIntPointHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
@@ -485,7 +487,7 @@ public class AllGoldenIntPointHashTest {
 					}
 
 					@Override
-					public void clear () {
+					public void clear() {
 						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + good.get(g));
 						minMax[0] = Math.min(minMax[0], collisionTotal);
@@ -496,7 +498,7 @@ public class AllGoldenIntPointHashTest {
 					}
 
 					@Override
-					public void setHashMultiplier (int hashMultiplier) {
+					public void setHashMultiplier(int hashMultiplier) {
 						this.hashMultiplier = hashMultiplier | 1;
 						hm = this.hashMultiplier;
 						resize(keyTable.length);
@@ -507,7 +509,7 @@ public class AllGoldenIntPointHashTest {
 					for (int i = 0, n = spiral.length; i < n; i++) {
 						set.add(spiral[i]);
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					System.out.println(g + " FAILURE");
 					continue;
 				}
@@ -526,8 +528,8 @@ public class AllGoldenIntPointHashTest {
 
 		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x"+Base.BASE16.unsigned(good.keyAt(i))+"=0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
-			if((i & 7) == 7)
+			System.out.print("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "=0x" + Base.BASE16.unsigned(good.getAt(i)) + ", ");
+			if ((i & 7) == 7)
 				System.out.println();
 		}
 		System.out.println("};\n");

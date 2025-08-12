@@ -260,7 +260,7 @@ public class AllGoldenSmallWordHashTest {
 					int hm = 0x17AD97;//0xF1042721;// 0x9E3779B7;
 
 					@Override
-					protected int place (@NonNull Object item) {
+					protected int place(@NonNull Object item) {
 //						final int h = BitConversion.imul(item.hashCode(), hm);
 //						return (h ^ h << 16) >>> shift;
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
@@ -271,7 +271,7 @@ public class AllGoldenSmallWordHashTest {
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -286,9 +286,9 @@ public class AllGoldenSmallWordHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -305,7 +305,9 @@ public class AllGoldenSmallWordHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
@@ -317,7 +319,7 @@ public class AllGoldenSmallWordHashTest {
 					}
 
 					@Override
-					public void clear () {
+					public void clear() {
 						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						minMax[0] = Math.min(minMax[0], collisionTotal);
@@ -328,7 +330,7 @@ public class AllGoldenSmallWordHashTest {
 					}
 
 					@Override
-					public void setHashMultiplier (int hashMultiplier) {
+					public void setHashMultiplier(int hashMultiplier) {
 						this.hashMultiplier = hashMultiplier | 1;
 						hm = this.hashMultiplier;
 						resize(keyTable.length);
@@ -339,7 +341,7 @@ public class AllGoldenSmallWordHashTest {
 					for (int i = 0, n = words.size(); i < n; i++) {
 						set.add(words.get(i));
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					System.out.println(g + " FAILURE");
 					continue;
 				}
@@ -358,8 +360,8 @@ public class AllGoldenSmallWordHashTest {
 
 		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x"+Base.BASE16.unsigned(good.keyAt(i))+"=0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
-			if((i & 7) == 7)
+			System.out.print("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "=0x" + Base.BASE16.unsigned(good.getAt(i)) + ", ");
+			if ((i & 7) == 7)
 				System.out.println();
 		}
 		System.out.println("};\n");

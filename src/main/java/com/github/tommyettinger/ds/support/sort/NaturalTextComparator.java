@@ -35,16 +35,16 @@ public class NaturalTextComparator implements Comparator<CharSequence> {
 
 	private final boolean caseSensitive;
 
-	private NaturalTextComparator () {
+	private NaturalTextComparator() {
 		this(true);
 	}
 
-	private NaturalTextComparator (boolean caseSensitive) {
+	private NaturalTextComparator(boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
 	}
 
 	@Override
-	public int compare (CharSequence sequence1, CharSequence sequence2) {
+	public int compare(CharSequence sequence1, CharSequence sequence2) {
 		int len1 = sequence1.length(), len2 = sequence2.length();
 		int idx1 = 0, idx2 = 0;
 
@@ -102,7 +102,7 @@ public class NaturalTextComparator implements Comparator<CharSequence> {
 		}
 	}
 
-	private int compareChars (char c1, char c2) {
+	private int compareChars(char c1, char c2) {
 		char u1 = Character.toUpperCase(c1);
 		char u2 = Character.toUpperCase(c2);
 		if (caseSensitive) {
@@ -112,19 +112,19 @@ public class NaturalTextComparator implements Comparator<CharSequence> {
 			if ((u1 != c1) && (u2 == c2)) {
 				return Integer.MAX_VALUE;
 			}
-        }
-        return u1 - u2;
-    }
+		}
+		return u1 - u2;
+	}
 
-	private static int compareUnsigned (long num1, long num2) {
+	private static int compareUnsigned(long num1, long num2) {
 		return Long.compare(num1 + Long.MIN_VALUE, num2 + Long.MIN_VALUE);
 	}
 
-	private static long parse (char c1) {
+	private static long parse(char c1) {
 		return c1 - '0';
 	}
 
-	private static boolean isDigit (char c) {
+	private static boolean isDigit(char c) {
 		return '0' <= c & c <= '9';
 	}
 }

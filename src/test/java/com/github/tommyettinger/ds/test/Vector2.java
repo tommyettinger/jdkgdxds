@@ -18,19 +18,28 @@ package com.github.tommyettinger.ds.test;
 
 public class Vector2 {
 
-	/** the x-component of this vector **/
+	/**
+	 * the x-component of this vector
+	 **/
 	public float x;
-	/** the y-component of this vector **/
+	/**
+	 * the y-component of this vector
+	 **/
 	public float y;
 
-	/** Constructs a new vector at (0,0) */
-	public Vector2 () {
+	/**
+	 * Constructs a new vector at (0,0)
+	 */
+	public Vector2() {
 	}
 
-	/** Constructs a vector with the given components
+	/**
+	 * Constructs a vector with the given components
+	 *
 	 * @param x The x-component
-	 * @param y The y-component */
-	public Vector2 (float x, float y) {
+	 * @param y The y-component
+	 */
+	public Vector2(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -45,7 +54,7 @@ public class Vector2 {
 //	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Float.floatToIntBits(x);
@@ -54,11 +63,11 @@ public class Vector2 {
 	}
 
 	@Override
-	public boolean equals (Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		Vector2 other = (Vector2)obj;
+		Vector2 other = (Vector2) obj;
 		if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x)) return false;
 		if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y)) return false;
 		return true;

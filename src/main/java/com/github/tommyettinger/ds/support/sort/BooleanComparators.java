@@ -25,7 +25,7 @@ import java.util.Comparator;
  * comparators.
  */
 public final class BooleanComparators {
-	private BooleanComparators () {
+	private BooleanComparators() {
 	}
 
 	/**
@@ -34,12 +34,12 @@ public final class BooleanComparators {
 	protected static class NaturalImplicitComparator implements BooleanComparator {
 
 		@Override
-		public final int compare (final boolean a, final boolean b) {
+		public final int compare(final boolean a, final boolean b) {
 			return Boolean.compare(a, b);
 		}
 
 		@Override
-		public BooleanComparator reversed () {
+		public BooleanComparator reversed() {
 			return OPPOSITE_COMPARATOR;
 		}
 	}
@@ -52,12 +52,12 @@ public final class BooleanComparators {
 	protected static class OppositeImplicitComparator implements BooleanComparator {
 
 		@Override
-		public final int compare (final boolean a, final boolean b) {
+		public final int compare(final boolean a, final boolean b) {
 			return Boolean.compare(b, a);
 		}
 
 		@Override
-		public BooleanComparator reversed () {
+		public BooleanComparator reversed() {
 			return NATURAL_COMPARATOR;
 		}
 	}
@@ -68,17 +68,17 @@ public final class BooleanComparators {
 
 		final BooleanComparator comparator;
 
-		protected OppositeComparator (final BooleanComparator c) {
+		protected OppositeComparator(final BooleanComparator c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final boolean a, final boolean b) {
+		public final int compare(final boolean a, final boolean b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final BooleanComparator reversed () {
+		public final BooleanComparator reversed() {
 			return comparator;
 		}
 	}
@@ -89,8 +89,10 @@ public final class BooleanComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static BooleanComparator oppositeComparator (final BooleanComparator c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
+	public static BooleanComparator oppositeComparator(final BooleanComparator c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator) c).comparator;
+		}
 		return new OppositeComparator(c);
 	}
 
@@ -101,17 +103,19 @@ public final class BooleanComparators {
 	 * @param c a Comparator of Boolean values.
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
-	public static BooleanComparator asBooleanComparator (final Comparator<? super Boolean> c) {
-		if (c instanceof BooleanComparator) {return (BooleanComparator)c;}
+	public static BooleanComparator asBooleanComparator(final Comparator<? super Boolean> c) {
+		if (c instanceof BooleanComparator) {
+			return (BooleanComparator) c;
+		}
 		return new BooleanComparator() {
 			@Override
-			public int compare (boolean x, boolean y) {
+			public int compare(boolean x, boolean y) {
 				return c.compare(Boolean.valueOf(x), Boolean.valueOf(y));
 			}
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public int compare (Boolean x, Boolean y) {
+			public int compare(Boolean x, Boolean y) {
 				return c.compare(x, y);
 			}
 		};
@@ -120,7 +124,7 @@ public final class BooleanComparators {
 
 	/// The remainder of the code is based on FastUtil.
 
-	private static void swap (boolean[] items, int first, int second) {
+	private static void swap(boolean[] items, int first, int second) {
 		boolean firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -132,10 +136,14 @@ public final class BooleanComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static void inPlaceMerge (boolean[] items, final int from, int mid, final int to, final BooleanComparator comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static void inPlaceMerge(boolean[] items, final int from, int mid, final int to, final BooleanComparator comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -156,13 +164,19 @@ public final class BooleanComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -183,7 +197,7 @@ public final class BooleanComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static int lowerBound (boolean[] items, int from, final int to, final int pos, final BooleanComparator comp) {
+	private static int lowerBound(boolean[] items, int from, final int to, final int pos, final BooleanComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -211,7 +225,7 @@ public final class BooleanComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static int upperBound (boolean[] items, int from, final int to, final int pos, final BooleanComparator comp) {
+	private static int upperBound(boolean[] items, int from, final int to, final int pos, final BooleanComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -233,7 +247,7 @@ public final class BooleanComparators {
 	 * @param items the boolean array to be sorted
 	 * @param c     a BooleanComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (boolean[] items, final @Nullable BooleanComparator c) {
+	public static void sort(boolean[] items, final @Nullable BooleanComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -254,7 +268,7 @@ public final class BooleanComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a BooleanComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (boolean[] items, final int from, final int to, final @Nullable BooleanComparator c) {
+	public static void sort(boolean[] items, final int from, final int to, final @Nullable BooleanComparator c) {
 		if (to <= 0) {
 			return;
 		}
@@ -291,7 +305,9 @@ public final class BooleanComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

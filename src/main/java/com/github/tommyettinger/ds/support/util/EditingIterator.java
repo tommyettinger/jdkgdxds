@@ -33,38 +33,38 @@ import java.util.NoSuchElementException;
  * @param <T> the type of items this can return, and the type the wrapped Iterator returns
  */
 public class EditingIterator<T> implements Iterator<T> {
-    public Iterator<T> iterator;
-    public ObjToSameFunction<T> editor;
+	public Iterator<T> iterator;
+	public ObjToSameFunction<T> editor;
 
-    public EditingIterator() {
-    }
+	public EditingIterator() {
+	}
 
-    public EditingIterator(final Iterator<T> iterator, final ObjToSameFunction<T> editor) {
-        set(iterator, editor);
-    }
+	public EditingIterator(final Iterator<T> iterator, final ObjToSameFunction<T> editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final Iterator<T> iterator, final ObjToSameFunction<T> editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final Iterator<T> iterator, final ObjToSameFunction<T> editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final Iterator<T> iterator) {
-        set(iterator, editor);
-    }
+	public void set(final Iterator<T> iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public T next () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.apply(iterator.next());
-    }
+	@Override
+	public T next() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.apply(iterator.next());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

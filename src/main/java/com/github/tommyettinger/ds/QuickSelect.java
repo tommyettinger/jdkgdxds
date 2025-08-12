@@ -44,14 +44,14 @@ public final class QuickSelect {
 	/**
 	 * Not instantiable.
 	 */
-	private QuickSelect () {
+	private QuickSelect() {
 	}
 
-	public static <T> int select (T[] items, Comparator<? super T> comp, int n, int size) {
+	public static <T> int select(T[] items, Comparator<? super T> comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static <T> int partition (T[] items, Comparator<? super T> comp, int left, int right, int pivot) {
+	public static <T> int partition(T[] items, Comparator<? super T> comp, int left, int right, int pivot) {
 		T pivotValue = items[pivot];
 		swap(items, right, pivot);
 		int storage = left;
@@ -65,7 +65,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static <T> int recursiveSelect (T[] items, Comparator<? super T> comp, int left, int right, int k) {
+	public static <T> int recursiveSelect(T[] items, Comparator<? super T> comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -85,7 +85,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static <T> int medianOfThreePivot (T[] items, Comparator<? super T> comp, int leftIdx, int rightIdx) {
+	public static <T> int medianOfThreePivot(T[] items, Comparator<? super T> comp, int leftIdx, int rightIdx) {
 		T left = items[leftIdx];
 		int midIdx = (leftIdx + rightIdx) / 2;
 		T mid = items[midIdx];
@@ -112,7 +112,7 @@ public final class QuickSelect {
 		}
 	}
 
-	public static <T> void swap (T[] items, int left, int right) {
+	public static <T> void swap(T[] items, int left, int right) {
 		T tmp = items[left];
 		items[left] = items[right];
 		items[right] = tmp;
@@ -128,7 +128,7 @@ public final class QuickSelect {
 	 * @param n     the size of the partially-sorted sections to produce
 	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect (T[] items, Comparator<T> comp, int n) {
+	public static <T> void multiSelect(T[] items, Comparator<T> comp, int n) {
 		multiSelect(items, comp, 0, items.length - 1, n);
 	}
 
@@ -144,7 +144,7 @@ public final class QuickSelect {
 	 * @param n     the size of the partially-sorted sections to produce
 	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect (T[] items, Comparator<T> comp, int left, int right, int n) {
+	public static <T> void multiSelect(T[] items, Comparator<T> comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.length];
 		stack[0] = left;
@@ -159,7 +159,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -172,11 +172,11 @@ public final class QuickSelect {
 		}
 	}
 
-	public static <T> int select (Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int n, int size) {
+	public static <T> int select(Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static <T> int partition (Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int left, int right, int pivot) {
+	public static <T> int partition(Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int left, int right, int pivot) {
 		T pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -190,7 +190,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static <T> int recursiveSelect (Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int left, int right, int k) {
+	public static <T> int recursiveSelect(Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -210,7 +210,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static <T> int medianOfThreePivot (Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int leftIdx, int rightIdx) {
+	public static <T> int medianOfThreePivot(Arrangeable.ArrangeableList<T> items, Comparator<? super T> comp, int leftIdx, int rightIdx) {
 		T left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		T mid = items.get(midIdx);
@@ -247,7 +247,7 @@ public final class QuickSelect {
 	 * @param n     the size of the partially-sorted sections to produce
 	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect (Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int n) {
+	public static <T> void multiSelect(Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -263,7 +263,7 @@ public final class QuickSelect {
 	 * @param n     the size of the partially-sorted sections to produce
 	 * @param <T>   the type of elements of items
 	 */
-	public static <T> void multiSelect (Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int left, int right, int n) {
+	public static <T> void multiSelect(Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -278,7 +278,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -291,14 +291,14 @@ public final class QuickSelect {
 		}
 	}
 
-	//// primitive lists
+	/// / primitive lists
 
 	// ints
-	public static int select (IntList items, IntComparator comp, int n, int size) {
+	public static int select(IntList items, IntComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static int partition (IntList items, IntComparator comp, int left, int right, int pivot) {
+	public static int partition(IntList items, IntComparator comp, int left, int right, int pivot) {
 		int pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -312,7 +312,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static int recursiveSelect (IntList items, IntComparator comp, int left, int right, int k) {
+	public static int recursiveSelect(IntList items, IntComparator comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -332,7 +332,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static int medianOfThreePivot (IntList items, IntComparator comp, int leftIdx, int rightIdx) {
+	public static int medianOfThreePivot(IntList items, IntComparator comp, int leftIdx, int rightIdx) {
 		int left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		int mid = items.get(midIdx);
@@ -368,7 +368,7 @@ public final class QuickSelect {
 	 * @param comp  an IntComparator for the int elements
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (IntList items, IntComparator comp, int n) {
+	public static void multiSelect(IntList items, IntComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -383,7 +383,7 @@ public final class QuickSelect {
 	 * @param right the upper index (inclusive)
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (IntList items, IntComparator comp, int left, int right, int n) {
+	public static void multiSelect(IntList items, IntComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -398,7 +398,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -412,11 +412,11 @@ public final class QuickSelect {
 	}
 
 	// longs
-	public static int select (LongList items, LongComparator comp, int n, int size) {
+	public static int select(LongList items, LongComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static int partition (LongList items, LongComparator comp, int left, int right, int pivot) {
+	public static int partition(LongList items, LongComparator comp, int left, int right, int pivot) {
 		long pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -430,7 +430,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static int recursiveSelect (LongList items, LongComparator comp, int left, int right, int k) {
+	public static int recursiveSelect(LongList items, LongComparator comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -450,7 +450,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static int medianOfThreePivot (LongList items, LongComparator comp, int leftIdx, int rightIdx) {
+	public static int medianOfThreePivot(LongList items, LongComparator comp, int leftIdx, int rightIdx) {
 		long left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		long mid = items.get(midIdx);
@@ -486,7 +486,7 @@ public final class QuickSelect {
 	 * @param comp  a LongComparator for the long elements
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (LongList items, LongComparator comp, int n) {
+	public static void multiSelect(LongList items, LongComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -501,7 +501,7 @@ public final class QuickSelect {
 	 * @param right the upper index (inclusive)
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (LongList items, LongComparator comp, int left, int right, int n) {
+	public static void multiSelect(LongList items, LongComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -516,7 +516,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -529,12 +529,12 @@ public final class QuickSelect {
 		}
 	}
 
-	//// floats
-	public static int select (FloatList items, FloatComparator comp, int n, int size) {
+	/// / floats
+	public static int select(FloatList items, FloatComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static int partition (FloatList items, FloatComparator comp, int left, int right, int pivot) {
+	public static int partition(FloatList items, FloatComparator comp, int left, int right, int pivot) {
 		float pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -548,7 +548,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static int recursiveSelect (FloatList items, FloatComparator comp, int left, int right, int k) {
+	public static int recursiveSelect(FloatList items, FloatComparator comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -568,7 +568,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static int medianOfThreePivot (FloatList items, FloatComparator comp, int leftIdx, int rightIdx) {
+	public static int medianOfThreePivot(FloatList items, FloatComparator comp, int leftIdx, int rightIdx) {
 		float left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		float mid = items.get(midIdx);
@@ -604,7 +604,7 @@ public final class QuickSelect {
 	 * @param comp  a FloatComparator for the long elements
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (FloatList items, FloatComparator comp, int n) {
+	public static void multiSelect(FloatList items, FloatComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -619,7 +619,7 @@ public final class QuickSelect {
 	 * @param right the upper index (inclusive)
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (FloatList items, FloatComparator comp, int left, int right, int n) {
+	public static void multiSelect(FloatList items, FloatComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -634,7 +634,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -647,12 +647,12 @@ public final class QuickSelect {
 		}
 	}
 
-	//// doubles
-	public static int select (DoubleList items, DoubleComparator comp, int n, int size) {
+	/// / doubles
+	public static int select(DoubleList items, DoubleComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static int partition (DoubleList items, DoubleComparator comp, int left, int right, int pivot) {
+	public static int partition(DoubleList items, DoubleComparator comp, int left, int right, int pivot) {
 		double pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -666,7 +666,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static int recursiveSelect (DoubleList items, DoubleComparator comp, int left, int right, int k) {
+	public static int recursiveSelect(DoubleList items, DoubleComparator comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -686,7 +686,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static int medianOfThreePivot (DoubleList items, DoubleComparator comp, int leftIdx, int rightIdx) {
+	public static int medianOfThreePivot(DoubleList items, DoubleComparator comp, int leftIdx, int rightIdx) {
 		double left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		double mid = items.get(midIdx);
@@ -722,7 +722,7 @@ public final class QuickSelect {
 	 * @param comp  a DoubleComparator for the double elements
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (DoubleList items, DoubleComparator comp, int n) {
+	public static void multiSelect(DoubleList items, DoubleComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -737,7 +737,7 @@ public final class QuickSelect {
 	 * @param right the upper index (inclusive)
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (DoubleList items, DoubleComparator comp, int left, int right, int n) {
+	public static void multiSelect(DoubleList items, DoubleComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -752,7 +752,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -766,11 +766,11 @@ public final class QuickSelect {
 	}
 
 	// shorts
-	public static int select (ShortList items, ShortComparator comp, int n, int size) {
+	public static int select(ShortList items, ShortComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static int partition (ShortList items, ShortComparator comp, int left, int right, int pivot) {
+	public static int partition(ShortList items, ShortComparator comp, int left, int right, int pivot) {
 		short pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -784,7 +784,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static int recursiveSelect (ShortList items, ShortComparator comp, int left, int right, int k) {
+	public static int recursiveSelect(ShortList items, ShortComparator comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -804,7 +804,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static int medianOfThreePivot (ShortList items, ShortComparator comp, int leftIdx, int rightIdx) {
+	public static int medianOfThreePivot(ShortList items, ShortComparator comp, int leftIdx, int rightIdx) {
 		short left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		short mid = items.get(midIdx);
@@ -840,7 +840,7 @@ public final class QuickSelect {
 	 * @param comp  a ShortComparator for the short elements
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (ShortList items, ShortComparator comp, int n) {
+	public static void multiSelect(ShortList items, ShortComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -855,7 +855,7 @@ public final class QuickSelect {
 	 * @param right the upper index (inclusive)
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (ShortList items, ShortComparator comp, int left, int right, int n) {
+	public static void multiSelect(ShortList items, ShortComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -870,7 +870,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -884,11 +884,11 @@ public final class QuickSelect {
 	}
 
 	// bytes
-	public static int select (ByteList items, ByteComparator comp, int n, int size) {
+	public static int select(ByteList items, ByteComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static int partition (ByteList items, ByteComparator comp, int left, int right, int pivot) {
+	public static int partition(ByteList items, ByteComparator comp, int left, int right, int pivot) {
 		byte pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -902,7 +902,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static int recursiveSelect (ByteList items, ByteComparator comp, int left, int right, int k) {
+	public static int recursiveSelect(ByteList items, ByteComparator comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -922,7 +922,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static int medianOfThreePivot (ByteList items, ByteComparator comp, int leftIdx, int rightIdx) {
+	public static int medianOfThreePivot(ByteList items, ByteComparator comp, int leftIdx, int rightIdx) {
 		byte left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		byte mid = items.get(midIdx);
@@ -958,7 +958,7 @@ public final class QuickSelect {
 	 * @param comp  a ByteComparator for the byte elements
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (ByteList items, ByteComparator comp, int n) {
+	public static void multiSelect(ByteList items, ByteComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -973,7 +973,7 @@ public final class QuickSelect {
 	 * @param right the upper index (inclusive)
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (ByteList items, ByteComparator comp, int left, int right, int n) {
+	public static void multiSelect(ByteList items, ByteComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -988,7 +988,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -1002,11 +1002,11 @@ public final class QuickSelect {
 	}
 
 	// chars
-	public static int select (CharList items, CharComparator comp, int n, int size) {
+	public static int select(CharList items, CharComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static int partition (CharList items, CharComparator comp, int left, int right, int pivot) {
+	public static int partition(CharList items, CharComparator comp, int left, int right, int pivot) {
 		char pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -1020,7 +1020,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static int recursiveSelect (CharList items, CharComparator comp, int left, int right, int k) {
+	public static int recursiveSelect(CharList items, CharComparator comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -1040,7 +1040,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static int medianOfThreePivot (CharList items, CharComparator comp, int leftIdx, int rightIdx) {
+	public static int medianOfThreePivot(CharList items, CharComparator comp, int leftIdx, int rightIdx) {
 		char left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		char mid = items.get(midIdx);
@@ -1076,7 +1076,7 @@ public final class QuickSelect {
 	 * @param comp  a CharComparator for the char elements
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (CharList items, CharComparator comp, int n) {
+	public static void multiSelect(CharList items, CharComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -1091,7 +1091,7 @@ public final class QuickSelect {
 	 * @param right the upper index (inclusive)
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (CharList items, CharComparator comp, int left, int right, int n) {
+	public static void multiSelect(CharList items, CharComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -1106,7 +1106,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {
@@ -1120,11 +1120,11 @@ public final class QuickSelect {
 	}
 
 	// booleans
-	public static int select (BooleanList items, BooleanComparator comp, int n, int size) {
+	public static int select(BooleanList items, BooleanComparator comp, int n, int size) {
 		return recursiveSelect(items, comp, 0, size - 1, n);
 	}
 
-	public static int partition (BooleanList items, BooleanComparator comp, int left, int right, int pivot) {
+	public static int partition(BooleanList items, BooleanComparator comp, int left, int right, int pivot) {
 		boolean pivotValue = items.get(pivot);
 		items.swap(right, pivot);
 		int storage = left;
@@ -1138,7 +1138,7 @@ public final class QuickSelect {
 		return storage;
 	}
 
-	public static int recursiveSelect (BooleanList items, BooleanComparator comp, int left, int right, int k) {
+	public static int recursiveSelect(BooleanList items, BooleanComparator comp, int left, int right, int k) {
 		if (left == right)
 			return left;
 		int pivotIndex = medianOfThreePivot(items, comp, left, right);
@@ -1158,7 +1158,7 @@ public final class QuickSelect {
 	/**
 	 * Median of Three has the potential to outperform a random pivot, especially for partially sorted arrays
 	 */
-	public static int medianOfThreePivot (BooleanList items, BooleanComparator comp, int leftIdx, int rightIdx) {
+	public static int medianOfThreePivot(BooleanList items, BooleanComparator comp, int leftIdx, int rightIdx) {
 		boolean left = items.get(leftIdx);
 		int midIdx = (leftIdx + rightIdx) / 2;
 		boolean mid = items.get(midIdx);
@@ -1194,7 +1194,7 @@ public final class QuickSelect {
 	 * @param comp  a BooleanComparator for the boolean elements
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (BooleanList items, BooleanComparator comp, int n) {
+	public static void multiSelect(BooleanList items, BooleanComparator comp, int n) {
 		multiSelect(items, comp, 0, items.size() - 1, n);
 	}
 
@@ -1209,7 +1209,7 @@ public final class QuickSelect {
 	 * @param right the upper index (inclusive)
 	 * @param n     the size of the partially-sorted sections to produce
 	 */
-	public static void multiSelect (BooleanList items, BooleanComparator comp, int left, int right, int n) {
+	public static void multiSelect(BooleanList items, BooleanComparator comp, int left, int right, int n) {
 		// Based on https://github.com/mahdilamb/rtree/blob/e79cb8a3f6023a449fb05b5d76caa5d980ef060a/src/main/java/net/mahdilamb/rtree/QuickSelect.java#L98-L123
 		int[] stack = new int[items.size()];
 		stack[0] = left;
@@ -1224,7 +1224,7 @@ public final class QuickSelect {
 				continue;
 			}
 
-			int mid = (int)(left + Math.ceil((right - left) * 0.5 / n) * n);
+			int mid = (int) (left + Math.ceil((right - left) * 0.5 / n) * n);
 			recursiveSelect(items, comp, left, right, mid);
 
 			if (stackSize + 4 >= stack.length) {

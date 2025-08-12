@@ -25,10 +25,10 @@ import java.util.HashSet;
 
 public class SetRemoveTest {
 	@Test
-	public void testHashSetRemoveAll (){
+	public void testHashSetRemoveAll() {
 		HashSet<String> set = new HashSet<>(ObjectSet.with(
-				"alpha", "beta", "gamma", "delta", "epsilon", "zeta",
-				"eta", "theta", "iota", "kappa", "lambda", "mu"));
+			"alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+			"eta", "theta", "iota", "kappa", "lambda", "mu"));
 		HashSet<String> remover = new HashSet<>(ObjectSet.with("gamma", "delta", "epsilon", "zeta"));
 		Assert.assertEquals(set.size(), 12);
 		set.removeAll(remover);
@@ -41,11 +41,12 @@ public class SetRemoveTest {
 		Assert.assertTrue(set.contains("alpha"));
 		Assert.assertTrue(set.contains("mu"));
 	}
+
 	@Test
-	public void testObjectSetRemoveAll (){
+	public void testObjectSetRemoveAll() {
 		ObjectSet<String> set = new ObjectSet<>(ObjectSet.with(
-				"alpha", "beta", "gamma", "delta", "epsilon", "zeta",
-				"eta", "theta", "iota", "kappa", "lambda", "mu"));
+			"alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+			"eta", "theta", "iota", "kappa", "lambda", "mu"));
 		ObjectSet<String> remover = new ObjectSet<>(ObjectSet.with("gamma", "delta", "epsilon", "zeta"));
 		Assert.assertEquals(set.size(), 12);
 		set.removeAll(remover);
@@ -58,8 +59,9 @@ public class SetRemoveTest {
 		Assert.assertTrue(set.contains("alpha"));
 		Assert.assertTrue(set.contains("mu"));
 	}
+
 	@Test
-	public void testIntSetRemoveAll (){
+	public void testIntSetRemoveAll() {
 		IntSet set = IntSet.with(
 			1, 2, 3, 4,
 			5, 6, 7, 8,

@@ -83,7 +83,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	/**
 	 * Constructs an empty <tt>IdentityCuckooMap</tt> with the default initial capacity (16).
 	 */
-	public IdentityCuckooMap () {
+	public IdentityCuckooMap() {
 		this(DEFAULT_START_SIZE, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -93,7 +93,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	 *
 	 * @param initialCapacity the initial capacity.
 	 */
-	public IdentityCuckooMap (int initialCapacity) {
+	public IdentityCuckooMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -106,12 +106,12 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	 *
 	 * @param loadFactor the load factor.
 	 */
-	public IdentityCuckooMap (float loadFactor) {
+	public IdentityCuckooMap(float loadFactor) {
 		this(DEFAULT_START_SIZE, loadFactor);
 	}
 
 	@SuppressWarnings("unchecked")
-	public IdentityCuckooMap (int initialCapacity, float loadFactor) {
+	public IdentityCuckooMap(int initialCapacity, float loadFactor) {
 		if (initialCapacity <= 0) {
 			throw new IllegalArgumentException("initial capacity must be strictly positive");
 		}
@@ -123,8 +123,8 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		int tableSize = Utilities.tableSize(initialCapacity, loadFactor);
 		shift = BitConversion.countLeadingZeros(tableSize - 1L);
 		thresholdLoop = BitConversion.countTrailingZeros(tableSize) + 4;
-		keyTable = (K[])new Object[tableSize];
-		valueTable = (V[])new Object[tableSize];
+		keyTable = (K[]) new Object[tableSize];
+		valueTable = (V[]) new Object[tableSize];
 		this.loadFactor = loadFactor;
 
 		regenHashMultipliers(tableSize);
@@ -142,28 +142,28 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public boolean containsKey (Object key) {
+	public boolean containsKey(Object key) {
 		final int hc = System.identityHashCode(key);
 
-		return key != null && (key == keyTable[(int)(hashMultiplier1 * hc >>> shift) | 1] ||
-			key == keyTable[(int)(hashMultiplier2 * hc >>> shift) & -2]);
+		return key != null && (key == keyTable[(int) (hashMultiplier1 * hc >>> shift) | 1] ||
+			key == keyTable[(int) (hashMultiplier2 * hc >>> shift) & -2]);
 	}
 
 	@Override
-	public V get (Object key) {
+	public V get(Object key) {
 		return getOrDefault(key, null);
 	}
 
-	public V getOrDefault (Object key, V defaultValue) {
-		if(key == null) return defaultValue;
+	public V getOrDefault(Object key, V defaultValue) {
+		if (key == null) return defaultValue;
 
 		int hc = System.identityHashCode(key);
-		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+		int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 		if (key == keyTable[hr1]) {
 			return valueTable[hr1];
 		}
 
-		int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+		int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 		if (key == keyTable[hr2]) {
 			return valueTable[hr2];
 		}
@@ -172,18 +172,18 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public V put (K key, V value) {
-		if(key == null) throw new NullPointerException("IdentityCuckooMap does not permit null keys.");
+	public V put(K key, V value) {
+		if (key == null) throw new NullPointerException("IdentityCuckooMap does not permit null keys.");
 
 		boolean absent = true;
 		V old = null;
 		int hc = System.identityHashCode(key);
-		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+		int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 		if (key == keyTable[hr1]) {
 			old = valueTable[hr1];
 			absent = false;
 		} else {
-			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+			int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 			if (key == keyTable[hr2]) {
 				old = valueTable[hr2];
 				absent = false;
@@ -216,17 +216,17 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	 * @return the key we failed to move because of collisions or <tt>null</tt> if
 	 * successful.
 	 */
-	private K putSafe (K key, V value) {
+	private K putSafe(K key, V value) {
 		int loop = 0;
 		while (loop++ < thresholdLoop) {
 			int hc = System.identityHashCode(key);
-			int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+			int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 			K k1 = keyTable[hr1];
 			if (k1 == null || key == k1) {
 				valueTable[hr1] = value;
 				return null;
 			}
-			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+			int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 			K k2 = keyTable[hr2];
 			if (k2 == null || key == k2) {
 				valueTable[hr2] = value;
@@ -246,11 +246,11 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public V remove (Object key) {
+	public V remove(Object key) {
 		if (key == null)
 			return null;
 		int hc = System.identityHashCode(key);
-		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+		int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 		V oldValue = null;
 
 		if (key == keyTable[hr1]) {
@@ -259,7 +259,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 			valueTable[hr1] = null;
 			size--;
 		} else {
-			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+			int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 			if (key == keyTable[hr2]) {
 				oldValue = valueTable[hr2];
 				keyTable[hr2] = null;
@@ -272,15 +272,15 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		size = 0;
 		Arrays.fill(keyTable, null);
 		Arrays.fill(valueTable, null);
 	}
 
-	private void regenHashMultipliers (int newSize) {
-		int idx1 = (int)(-(hashMultiplier2 ^ ((newSize + hashMultiplier2) * hashMultiplier2 | 5L)) >>> 56);
-		int idx2 = (int)(-(hashMultiplier1 ^ ((newSize + hashMultiplier1) * hashMultiplier1 | 7L)) >>> 56) | 256;
+	private void regenHashMultipliers(int newSize) {
+		int idx1 = (int) (-(hashMultiplier2 ^ ((newSize + hashMultiplier2) * hashMultiplier2 | 5L)) >>> 56);
+		int idx2 = (int) (-(hashMultiplier1 ^ ((newSize + hashMultiplier1) * hashMultiplier1 | 7L)) >>> 56) | 256;
 		hashMultiplier1 = Utilities.GOOD_MULTIPLIERS[idx1];
 		hashMultiplier2 = Utilities.GOOD_MULTIPLIERS[idx2];
 	}
@@ -289,7 +289,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	 * Double the size of the map until we can successfully manage to re-add all the items
 	 * we currently contain.
 	 */
-	private void grow () {
+	private void grow() {
 		int newSize = keyTable.length;
 		do {
 			newSize <<= 1;
@@ -297,7 +297,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@SuppressWarnings("unchecked")
-	private boolean grow (final int newSize) {
+	private boolean grow(final int newSize) {
 		// Save old state as we may need to restore it if the grow() operation fails.
 		K[] oldK = keyTable;
 		V[] oldV = valueTable;
@@ -306,8 +306,8 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 		shift = BitConversion.countLeadingZeros(newSize - 1L);
 		thresholdLoop = BitConversion.countTrailingZeros(newSize) + 4;
 		// Already point keyTable and valueTable to the new tables since putSafe operates on them.
-		keyTable = (K[])new Object[newSize];
-		valueTable = (V[])new Object[newSize];
+		keyTable = (K[]) new Object[newSize];
+		valueTable = (V[]) new Object[newSize];
 
 		regenHashMultipliers(newSize);
 
@@ -328,15 +328,15 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@SuppressWarnings("unchecked")
-	private boolean rehash () {
+	private boolean rehash() {
 		// Save old state as we may need to restore it if the grow() operation fails.
 		K[] oldK = keyTable;
 		V[] oldV = valueTable;
 		long oldH1 = hashMultiplier1;
 		long oldH2 = hashMultiplier2;
 
-		keyTable = (K[])new Object[oldK.length];
-		valueTable = (V[])new Object[oldV.length];
+		keyTable = (K[]) new Object[oldK.length];
+		valueTable = (V[]) new Object[oldV.length];
 
 		RETRIAL:
 		for (int threshold = 0; threshold < thresholdLoop; threshold++) {
@@ -360,24 +360,24 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
 	@Override
-	public void putAll (Map<? extends K, ? extends V> m) {
+	public void putAll(Map<? extends K, ? extends V> m) {
 		for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
 			put(entry.getKey(), entry.getValue());
 		}
 	}
 
 	@Override
-	public @NonNull Set<K> keySet () {
+	public @NonNull Set<K> keySet() {
 		Set<K> set = new IdentitySet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -388,7 +388,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public @NonNull Collection<V> values () {
+	public @NonNull Collection<V> values() {
 		List<V> values = new ObjectList<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -399,7 +399,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public @NonNull Set<Entry<K, V>> entrySet () {
+	public @NonNull Set<Entry<K, V>> entrySet() {
 		Set<Entry<K, V>> set = new IdentitySet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -410,7 +410,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public boolean containsValue (Object value) {
+	public boolean containsValue(Object value) {
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null && Objects.equals(valueTable[i], value)) {
 				return true;

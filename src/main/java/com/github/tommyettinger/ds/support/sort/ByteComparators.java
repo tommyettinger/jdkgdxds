@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -25,7 +26,7 @@ import java.util.Comparator;
  * comparators.
  */
 public final class ByteComparators {
-	private ByteComparators () {
+	private ByteComparators() {
 	}
 
 	/**
@@ -34,12 +35,12 @@ public final class ByteComparators {
 	protected static class NaturalImplicitComparator implements ByteComparator {
 
 		@Override
-		public final int compare (final byte a, final byte b) {
+		public final int compare(final byte a, final byte b) {
 			return Byte.compare(a, b);
 		}
 
 		@Override
-		public ByteComparator reversed () {
+		public ByteComparator reversed() {
 			return OPPOSITE_COMPARATOR;
 		}
 	}
@@ -52,12 +53,12 @@ public final class ByteComparators {
 	protected static class OppositeImplicitComparator implements ByteComparator {
 
 		@Override
-		public final int compare (final byte a, final byte b) {
+		public final int compare(final byte a, final byte b) {
 			return Byte.compare(b, a);
 		}
 
 		@Override
-		public ByteComparator reversed () {
+		public ByteComparator reversed() {
 			return NATURAL_COMPARATOR;
 		}
 	}
@@ -68,17 +69,17 @@ public final class ByteComparators {
 
 		final ByteComparator comparator;
 
-		protected OppositeComparator (final ByteComparator c) {
+		protected OppositeComparator(final ByteComparator c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final byte a, final byte b) {
+		public final int compare(final byte a, final byte b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final ByteComparator reversed () {
+		public final ByteComparator reversed() {
 			return comparator;
 		}
 	}
@@ -89,8 +90,10 @@ public final class ByteComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static ByteComparator oppositeComparator (final ByteComparator c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
+	public static ByteComparator oppositeComparator(final ByteComparator c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator) c).comparator;
+		}
 		return new OppositeComparator(c);
 	}
 
@@ -101,17 +104,19 @@ public final class ByteComparators {
 	 * @param c a Comparator of Byte values.
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
-	public static ByteComparator asByteComparator (final Comparator<? super Byte> c) {
-		if (c instanceof ByteComparator) {return (ByteComparator)c;}
+	public static ByteComparator asByteComparator(final Comparator<? super Byte> c) {
+		if (c instanceof ByteComparator) {
+			return (ByteComparator) c;
+		}
 		return new ByteComparator() {
 			@Override
-			public int compare (byte x, byte y) {
+			public int compare(byte x, byte y) {
 				return c.compare(Byte.valueOf(x), Byte.valueOf(y));
 			}
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public int compare (Byte x, Byte y) {
+			public int compare(Byte x, Byte y) {
 				return c.compare(x, y);
 			}
 		};
@@ -124,12 +129,12 @@ public final class ByteComparators {
 	protected static class UnsignedComparator implements ByteComparator {
 
 		@Override
-		public final int compare (final byte a, final byte b) {
+		public final int compare(final byte a, final byte b) {
 			return Integer.compare(a & 0xFF, b & 0xFF);
 		}
 
 		@Override
-		public ByteComparator reversed () {
+		public ByteComparator reversed() {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
 
@@ -144,21 +149,22 @@ public final class ByteComparators {
 	protected static class UnsignedOppositeComparator implements ByteComparator {
 
 		@Override
-		public final int compare (final byte a, final byte b) {
+		public final int compare(final byte a, final byte b) {
 			return Integer.compare(b & 0xFF, a & 0xFF);
 		}
 
 		@Override
-		public ByteComparator reversed () {
+		public ByteComparator reversed() {
 			return UNSIGNED_COMPARATOR;
 		}
 
 	}
 
 	public static final ByteComparator UNSIGNED_OPPOSITE_COMPARATOR = new ByteComparators.UnsignedComparator();
+
 	/// The remainder of the code is based on FastUtil.
 
-	private static void swap (byte[] items, int first, int second) {
+	private static void swap(byte[] items, int first, int second) {
 		byte firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -170,10 +176,14 @@ public final class ByteComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static void inPlaceMerge (byte[] items, final int from, int mid, final int to, final ByteComparator comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static void inPlaceMerge(byte[] items, final int from, int mid, final int to, final ByteComparator comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -194,13 +204,19 @@ public final class ByteComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -221,7 +237,7 @@ public final class ByteComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static int lowerBound (byte[] items, int from, final int to, final int pos, final ByteComparator comp) {
+	private static int lowerBound(byte[] items, int from, final int to, final int pos, final ByteComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -249,7 +265,7 @@ public final class ByteComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static int upperBound (byte[] items, int from, final int to, final int pos, final ByteComparator comp) {
+	private static int upperBound(byte[] items, int from, final int to, final int pos, final ByteComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -271,7 +287,7 @@ public final class ByteComparators {
 	 * @param items the byte array to be sorted
 	 * @param c     a ByteComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (byte[] items, final @Nullable ByteComparator c) {
+	public static void sort(byte[] items, final @Nullable ByteComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -293,7 +309,7 @@ public final class ByteComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a ByteComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (byte[] items, final int from, final int to, final @Nullable ByteComparator c) {
+	public static void sort(byte[] items, final int from, final int to, final @Nullable ByteComparator c) {
 		if (to <= 0) {
 			return;
 		}
@@ -330,7 +346,9 @@ public final class ByteComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

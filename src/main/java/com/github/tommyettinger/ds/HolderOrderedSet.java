@@ -18,10 +18,12 @@ package com.github.tommyettinger.ds;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
 import com.github.tommyettinger.function.ObjToObjFunction;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
@@ -67,7 +69,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (OrderType type) {
+	public HolderOrderedSet(OrderType type) {
 		super();
 		items = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
 	}
@@ -76,10 +78,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type      either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *                  use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, OrderType type) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, OrderType type) {
 		super(extractor);
 		items = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
 	}
@@ -89,10 +91,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type            either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *                        use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, int initialCapacity, OrderType type) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, int initialCapacity, OrderType type) {
 		super(extractor, initialCapacity);
 		items = type == OrderType.BAG ? new ObjectBag<>(initialCapacity) : new ObjectList<>(initialCapacity);
 
@@ -105,10 +107,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type            either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *                        use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor, OrderType type) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor, OrderType type) {
 		super(extractor, initialCapacity, loadFactor);
 		items = type == OrderType.BAG ? new ObjectBag<>(initialCapacity) : new ObjectList<>(initialCapacity);
 	}
@@ -120,7 +122,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll, OrderType type) {
+	public HolderOrderedSet(@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll, OrderType type) {
 		this(extractor, type);
 		addAll(coll);
 	}
@@ -130,11 +132,11 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * This doesn't copy the extractor; instead it references the same ObjToObjFunction from the argument.
 	 * This can have issues if the extractor causes side effects or is stateful.
 	 *
-	 * @param set another HolderOrderedSet which will have its contents copied
+	 * @param set  another HolderOrderedSet which will have its contents copied
 	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (HolderOrderedSet<T, K> set, OrderType type) {
+	public HolderOrderedSet(HolderOrderedSet<T, K> set, OrderType type) {
 		super(set);
 		items = type == OrderType.BAG ? new ObjectBag<>(set.items) : new ObjectList<>(set.items);
 	}
@@ -144,10 +146,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
 	 * @param coll      a Collection of T items; depending on extractor, some different T items may not be added because their K key is equal
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type      either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *                  use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, Collection<? extends T> coll, OrderType type) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, Collection<? extends T> coll, OrderType type) {
 		this(extractor, coll.size(), type);
 		addAll(coll);
 	}
@@ -157,10 +159,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
 	 * @param items     an array of T items; depending on extractor, some different T items may not be added because their K key is equal
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type      either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *                  use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, T[] items, OrderType type) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, T[] items, OrderType type) {
 		this(extractor, items.length, type);
 		addAll(items);
 	}
@@ -173,10 +175,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param other     another Ordered of the same type
 	 * @param offset    the first index in other's ordering to draw an item from
 	 * @param count     how many items to copy from other
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type      either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *                  use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, Ordered<T> other, int offset, int count, OrderType type) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, Ordered<T> other, int offset, int count, OrderType type) {
 		this(extractor, count, type);
 		addAll(0, other, offset, count);
 	}
@@ -188,7 +190,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * extractor, so the HolderSet will not be usable until {@link #setExtractor(ObjToObjFunction)} is called with
 	 * a valid ObjToObjFunction that gets K keys from T items.
 	 */
-	public HolderOrderedSet () {
+	public HolderOrderedSet() {
 		super();
 		items = new ObjectList<>();
 	}
@@ -198,7 +200,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param extractor a function that will be used to extract K keys from the T items put into this
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor) {
 		super(extractor);
 		items = new ObjectList<>();
 	}
@@ -209,7 +211,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor       a function that will be used to extract K keys from the T items put into this
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, int initialCapacity) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, int initialCapacity) {
 		super(extractor, initialCapacity);
 		items = new ObjectList<>(initialCapacity);
 	}
@@ -222,7 +224,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor) {
 		super(extractor, initialCapacity, loadFactor);
 		items = new ObjectList<>(initialCapacity);
 	}
@@ -232,7 +234,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public HolderOrderedSet (@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll) {
+	public HolderOrderedSet(@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll) {
 		this(extractor);
 		addAll(coll);
 	}
@@ -242,7 +244,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * This doesn't copy the extractor; instead it references the same ObjToObjFunction from the argument.
 	 * This can have issues if the extractor causes side effects or is stateful.
 	 */
-	public HolderOrderedSet (HolderOrderedSet<T, K> set) {
+	public HolderOrderedSet(HolderOrderedSet<T, K> set) {
 		super(set);
 		items = set.getOrderType() == OrderType.BAG ? new ObjectBag<>(set.items) : new ObjectList<>(set.items);
 	}
@@ -253,7 +255,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
 	 * @param coll      a Collection of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, Collection<? extends T> coll) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, Collection<? extends T> coll) {
 		this(extractor, coll.size());
 		addAll(coll);
 	}
@@ -264,7 +266,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor a function that will be used to extract K keys from the T items in coll
 	 * @param items     an array of T items; depending on extractor, some different T items may not be added because their K key is equal
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, T[] items) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, T[] items) {
 		this(extractor, items.length);
 		addAll(items);
 	}
@@ -278,13 +280,13 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param offset    the first index in other's ordering to draw an item from
 	 * @param count     how many items to copy from other
 	 */
-	public HolderOrderedSet (ObjToObjFunction<T, K> extractor, Ordered<T> other, int offset, int count) {
+	public HolderOrderedSet(ObjToObjFunction<T, K> extractor, Ordered<T> other, int offset, int count) {
 		this(extractor, count);
 		addAll(0, other, offset, count);
 	}
 
 	@Override
-	public boolean add (T key) {
+	public boolean add(T key) {
 		return super.add(key) && items.add(key);
 	}
 
@@ -297,22 +299,26 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param key   what T item to try to add, if not already present
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
-	public boolean add (int index, T key) {
-		if(key == null) return false;
+	public boolean add(int index, T key) {
+		if (key == null) return false;
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index) {items.add(index, items.remove(oldIndex));}
+			if (oldIndex != index) {
+				items.add(index, items.remove(oldIndex));
+			}
 			return false;
 		}
 		items.add(index, key);
 		return true;
 	}
 
-	public boolean addAll (HolderOrderedSet<T, ?> set) {
+	public boolean addAll(HolderOrderedSet<T, ?> set) {
 		ensureCapacity(set.size);
 		ObjectList<T> si = set.items;
 		int oldSize = size;
-		for (int i = 0, n = si.size(); i < n; i++) {add(si.get(i));}
+		for (int i = 0, n = si.size(); i < n; i++) {
+			add(si.get(i));
+		}
 		return size != oldSize;
 	}
 
@@ -325,7 +331,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (Ordered<T> other, int offset, int count) {
+	public boolean addAll(Ordered<T> other, int offset, int count) {
 		return addAll(size, other, offset, count);
 	}
 
@@ -339,7 +345,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered<T> other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered<T> other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -357,7 +363,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return true if this was modified
 	 */
 	@Override
-	public boolean remove (Object key) {
+	public boolean remove(Object key) {
 		return key != null && items.remove(super.get(key)) && super.remove(key);
 	}
 
@@ -367,7 +373,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param index the index of the item to remove
 	 * @return the removed item
 	 */
-	public T removeAt (int index) {
+	public T removeAt(int index) {
 		T item = items.removeAt(index);
 		assert extractor != null;
 		super.remove(extractor.apply(item));
@@ -380,7 +386,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return the first item in this set's order
 	 */
 	@Override
-	public T first () {
+	public T first() {
 		if (size == 0) return null;
 		return items.get(0);
 	}
@@ -392,9 +398,11 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 		items.ensureCapacity(additionalCapacity);
 	}
 
@@ -408,9 +416,13 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param after  an item that must not be in this set for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (T before, T after) {
-		if (before == null || after == null || contains(extractor.apply(after))) {return false;}
-		if (!super.remove(extractor.apply(before))) {return false;}
+	public boolean alter(T before, T after) {
+		if (before == null || after == null || contains(extractor.apply(after))) {
+			return false;
+		}
+		if (!super.remove(extractor.apply(before))) {
+			return false;
+		}
 		super.add(after);
 		items.set(items.indexOf(before), after);
 		return true;
@@ -425,8 +437,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, T after) {
-		if (after == null || index < 0 || index >= size || contains(extractor.apply(after))) {return false;}
+	public boolean alterAt(int index, T after) {
+		if (after == null || index < 0 || index >= size || contains(extractor.apply(after))) {
+			return false;
+		}
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
@@ -440,18 +454,18 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public T getAt (int index) {
+	public T getAt(int index) {
 		return items.get(index);
 	}
 
 	@Override
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		items.clear();
 		super.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		items.clear();
 		super.clear();
 	}
@@ -464,14 +478,14 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return the ObjectList of T items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public ObjectList<T> order () {
+	public ObjectList<T> order() {
 		return items;
 	}
 
 	/**
 	 * Sorts this ObjectOrderedSet in-place by the T items' natural ordering; {@code T} must implement {@link Comparable}.
 	 */
-	public void sort () {
+	public void sort() {
 		items.sort(null);
 	}
 
@@ -481,7 +495,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param comp a Comparator that can compare two {@code T} items, or null to use the items' natural ordering
 	 */
-	public void sort (@Nullable Comparator<? super T> comp) {
+	public void sort(@Nullable Comparator<? super T> comp) {
 		items.sort(comp);
 	}
 
@@ -495,7 +509,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(items.size(), end);
 		for (int i = start; i < end; i++) {
@@ -511,8 +525,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	/**
@@ -523,7 +539,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public @NonNull HolderSetIterator<T, K> iterator () {
+	public @NonNull HolderSetIterator<T, K> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HolderOrderedSetIterator<>(this);
 			iterator2 = new HolderOrderedSetIterator<>(this);
@@ -543,7 +559,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	@Override
 	public int hashCode() {
 		int h = size;
-		if(extractor != null) {
+		if (extractor != null) {
 			ObjectList<@Nullable T> order = items;
 			for (int i = 0, n = order.size(); i < n; i++) {
 				T key = order.get(i);
@@ -556,8 +572,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	@Override
-	public String toString (String itemSeparator) {
-		if (size == 0) {return "{}";}
+	public String toString(String itemSeparator) {
+		if (size == 0) {
+			return "{}";
+		}
 		ObjectList<T> items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
@@ -571,28 +589,32 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ");
 	}
 
 	public static class HolderOrderedSetIterator<T, K> extends HolderSetIterator<T, K> {
 		protected final ObjectList<T> items;
 
-		public HolderOrderedSetIterator (HolderOrderedSet<T, K> set) {
+		public HolderOrderedSetIterator(HolderOrderedSet<T, K> set) {
 			super(set);
 			items = set.items;
 		}
 
 		@Override
-		public void reset () {
+		public void reset() {
 			nextIndex = 0;
 			hasNext = set.size > 0;
 		}
 
 		@Override
-		public T next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public T next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			T key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
@@ -600,8 +622,10 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		}
 
 		@Override
-		public void remove () {
-			if (nextIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+		public void remove() {
+			if (nextIndex < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			nextIndex--;
 			assert set.extractor != null;
 			set.remove(set.extractor.apply(items.get(nextIndex)));
@@ -614,8 +638,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param <T>    the type of items; must be given explicitly
-	 * @param <K> the type of keys that extractor pulls from T items
+	 * @param <T>       the type of items; must be given explicitly
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new set containing nothing
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor) {
@@ -624,11 +648,12 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new HolderOrderedSet that holds only the given item, but can be resized.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param item one T item
+	 * @param item      one T item
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given item
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 1);
@@ -638,12 +663,13 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param item0 a T item
-	 * @param item1 a T item
+	 * @param item0     a T item
+	 * @param item1     a T item
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 2);
@@ -653,13 +679,14 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
+	 * @param item0     a T item
+	 * @param item1     a T item
+	 * @param item2     a T item
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 3);
@@ -669,14 +696,15 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
+	 * @param item0     a T item
+	 * @param item1     a T item
+	 * @param item2     a T item
+	 * @param item3     a T item
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 4);
@@ -686,15 +714,16 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @param item4 a T item
+	 * @param item0     a T item
+	 * @param item1     a T item
+	 * @param item2     a T item
+	 * @param item3     a T item
+	 * @param item4     a T item
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 5);
@@ -705,16 +734,17 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @param item4 a T item
-	 * @param item5 a T item
+	 * @param item0     a T item
+	 * @param item1     a T item
+	 * @param item2     a T item
+	 * @param item3     a T item
+	 * @param item4     a T item
+	 * @param item5     a T item
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 6);
@@ -725,17 +755,18 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @param item4 a T item
-	 * @param item5 a T item
-	 * @param item6 a T item
+	 * @param item0     a T item
+	 * @param item1     a T item
+	 * @param item2     a T item
+	 * @param item3     a T item
+	 * @param item4     a T item
+	 * @param item5     a T item
+	 * @param item6     a T item
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 7);
@@ -746,17 +777,18 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Creates a new HolderOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param item0 a T item
-	 * @param item1 a T item
-	 * @param item2 a T item
-	 * @param item3 a T item
-	 * @param item4 a T item
-	 * @param item5 a T item
-	 * @param item6 a T item
+	 * @param item0     a T item
+	 * @param item1     a T item
+	 * @param item2     a T item
+	 * @param item3     a T item
+	 * @param item4     a T item
+	 * @param item5     a T item
+	 * @param item6     a T item
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 8);
@@ -770,11 +802,12 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
-	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @param varargs   a T varargs or T array; remember that varargs allocate
+	 * @param <T>       the type of item, typically inferred
+	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
-	 * @param <K> the type of keys that extractor pulls from T items
 	 */
 	@SafeVarargs
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T... varargs) {

@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
 import java.util.List;
+
 /**
  * An unordered List of short items. This allows efficient iteration via a reused iterator or via index.
  * This class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
@@ -33,14 +34,14 @@ public class ShortBag extends ShortList {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public ShortBag () {
+	public ShortBag() {
 		super();
 	}
 
@@ -49,7 +50,7 @@ public class ShortBag extends ShortList {
 	 *
 	 * @param capacity
 	 */
-	public ShortBag (int capacity) {
+	public ShortBag(int capacity) {
 		super(capacity);
 	}
 
@@ -59,7 +60,7 @@ public class ShortBag extends ShortList {
 	 *
 	 * @param list another ShortList or ShortBag
 	 */
-	public ShortBag (ShortList list) {
+	public ShortBag(ShortList list) {
 		super(list);
 	}
 
@@ -69,7 +70,7 @@ public class ShortBag extends ShortList {
 	 *
 	 * @param array a non-null short array to add to this bag
 	 */
-	public ShortBag (short[] array) {
+	public ShortBag(short[] array) {
 		super(array);
 	}
 
@@ -77,11 +78,11 @@ public class ShortBag extends ShortList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null short array to add to this bag
+	 * @param array      a non-null short array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public ShortBag (short[] array, int startIndex, int count) {
+	public ShortBag(short[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
@@ -90,7 +91,7 @@ public class ShortBag extends ShortList {
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public ShortBag (OfShort coll) {
+	public ShortBag(OfShort coll) {
 		super(coll);
 	}
 
@@ -99,7 +100,7 @@ public class ShortBag extends ShortList {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public ShortBag (ShortIterator coll) {
+	public ShortBag(ShortIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -109,7 +110,7 @@ public class ShortBag extends ShortList {
 	 *
 	 * @param other another Ordered.OfShort
 	 */
-	public ShortBag (Ordered.OfShort other) {
+	public ShortBag(Ordered.OfShort other) {
 		super(other);
 	}
 
@@ -121,20 +122,25 @@ public class ShortBag extends ShortList {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public ShortBag (Ordered.OfShort other, int offset, int count) {
+	public ShortBag(Ordered.OfShort other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
-	 * @param index ignored
+	 *
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, short element) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, short element) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		short[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = element;
 		++size;
 	}
@@ -148,8 +154,10 @@ public class ShortBag extends ShortList {
 	 * @return the removed item
 	 */
 	@Override
-	public short removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public short removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		short[] items = this.items;
 		short value = items[index];
 		size--;
@@ -167,10 +175,14 @@ public class ShortBag extends ShortList {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
@@ -178,7 +190,7 @@ public class ShortBag extends ShortList {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		short[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -194,17 +206,18 @@ public class ShortBag extends ShortList {
 	 *
 	 * @return a new bag containing nothing
 	 */
-	public static ShortBag with () {
+	public static ShortBag with() {
 		return new ShortBag(0);
 	}
 
 	/**
 	 * Creates a new ShortBag that holds only the given item, but can be resized.
+	 *
 	 * @param item a short item
 	 * @return a new ShortBag that holds the given item
 	 */
 
-	public static ShortBag with (short item) {
+	public static ShortBag with(short item) {
 		ShortBag bag = new ShortBag(1);
 		bag.add(item);
 		return bag;
@@ -212,11 +225,12 @@ public class ShortBag extends ShortList {
 
 	/**
 	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @return a new ShortBag that holds the given items
 	 */
-	public static ShortBag with (short item0, short item1) {
+	public static ShortBag with(short item0, short item1) {
 		ShortBag bag = new ShortBag(2);
 		bag.add(item0);
 		bag.add(item1);
@@ -225,12 +239,13 @@ public class ShortBag extends ShortList {
 
 	/**
 	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
 	 * @return a new ShortBag that holds the given items
 	 */
-	public static ShortBag with (short item0, short item1, short item2) {
+	public static ShortBag with(short item0, short item1, short item2) {
 		ShortBag bag = new ShortBag(3);
 		bag.add(item0);
 		bag.add(item1);
@@ -240,13 +255,14 @@ public class ShortBag extends ShortList {
 
 	/**
 	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
 	 * @param item3 a short item
 	 * @return a new ShortBag that holds the given items
 	 */
-	public static ShortBag with (short item0, short item1, short item2, short item3) {
+	public static ShortBag with(short item0, short item1, short item2, short item3) {
 		ShortBag bag = new ShortBag(4);
 		bag.add(item0);
 		bag.add(item1);
@@ -257,6 +273,7 @@ public class ShortBag extends ShortList {
 
 	/**
 	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
@@ -264,7 +281,7 @@ public class ShortBag extends ShortList {
 	 * @param item4 a short item
 	 * @return a new ShortBag that holds the given items
 	 */
-	public static ShortBag with (short item0, short item1, short item2, short item3, short item4) {
+	public static ShortBag with(short item0, short item1, short item2, short item3, short item4) {
 		ShortBag bag = new ShortBag(5);
 		bag.add(item0);
 		bag.add(item1);
@@ -276,6 +293,7 @@ public class ShortBag extends ShortList {
 
 	/**
 	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
@@ -284,7 +302,7 @@ public class ShortBag extends ShortList {
 	 * @param item5 a short item
 	 * @return a new ShortBag that holds the given items
 	 */
-	public static ShortBag with (short item0, short item1, short item2, short item3, short item4, short item5) {
+	public static ShortBag with(short item0, short item1, short item2, short item3, short item4, short item5) {
 		ShortBag bag = new ShortBag(6);
 		bag.add(item0);
 		bag.add(item1);
@@ -297,6 +315,7 @@ public class ShortBag extends ShortList {
 
 	/**
 	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
@@ -306,7 +325,7 @@ public class ShortBag extends ShortList {
 	 * @param item6 a short item
 	 * @return a new ShortBag that holds the given items
 	 */
-	public static ShortBag with (short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
+	public static ShortBag with(short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
 		ShortBag bag = new ShortBag(7);
 		bag.add(item0);
 		bag.add(item1);
@@ -320,6 +339,7 @@ public class ShortBag extends ShortList {
 
 	/**
 	 * Creates a new ShortBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a short item
 	 * @param item1 a short item
 	 * @param item2 a short item
@@ -329,7 +349,7 @@ public class ShortBag extends ShortList {
 	 * @param item6 a short item
 	 * @return a new ShortBag that holds the given items
 	 */
-	public static ShortBag with (short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
+	public static ShortBag with(short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
 		ShortBag bag = new ShortBag(8);
 		bag.add(item0);
 		bag.add(item1);
@@ -347,10 +367,11 @@ public class ShortBag extends ShortList {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a short varargs or short array; remember that varargs allocate
 	 * @return a new ShortBag that holds the given items
 	 */
-	public static ShortBag with (short... varargs) {
+	public static ShortBag with(short... varargs) {
 		return new ShortBag(varargs);
 	}
 }

@@ -34,14 +34,14 @@ public class BooleanBag extends BooleanList {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public BooleanBag () {
+	public BooleanBag() {
 		super();
 	}
 
@@ -50,7 +50,7 @@ public class BooleanBag extends BooleanList {
 	 *
 	 * @param capacity
 	 */
-	public BooleanBag (int capacity) {
+	public BooleanBag(int capacity) {
 		super(capacity);
 	}
 
@@ -60,7 +60,7 @@ public class BooleanBag extends BooleanList {
 	 *
 	 * @param list another BooleanList or BooleanBag
 	 */
-	public BooleanBag (BooleanList list) {
+	public BooleanBag(BooleanList list) {
 		super(list);
 	}
 
@@ -70,7 +70,7 @@ public class BooleanBag extends BooleanList {
 	 *
 	 * @param array a non-null boolean array to add to this bag
 	 */
-	public BooleanBag (boolean[] array) {
+	public BooleanBag(boolean[] array) {
 		super(array);
 	}
 
@@ -78,11 +78,11 @@ public class BooleanBag extends BooleanList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null boolean array to add to this bag
+	 * @param array      a non-null boolean array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public BooleanBag (boolean[] array, int startIndex, int count) {
+	public BooleanBag(boolean[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
@@ -91,7 +91,7 @@ public class BooleanBag extends BooleanList {
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public BooleanBag (OfBoolean coll) {
+	public BooleanBag(OfBoolean coll) {
 		super(coll);
 	}
 
@@ -100,7 +100,7 @@ public class BooleanBag extends BooleanList {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public BooleanBag (BooleanIterator coll) {
+	public BooleanBag(BooleanIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -110,7 +110,7 @@ public class BooleanBag extends BooleanList {
 	 *
 	 * @param other another Ordered.OfBoolean
 	 */
-	public BooleanBag (Ordered.OfBoolean other) {
+	public BooleanBag(Ordered.OfBoolean other) {
 		super(other);
 	}
 
@@ -122,20 +122,25 @@ public class BooleanBag extends BooleanList {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public BooleanBag (Ordered.OfBoolean other, int offset, int count) {
+	public BooleanBag(Ordered.OfBoolean other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
-	 * @param index ignored
+	 *
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, boolean element) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, boolean element) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		boolean[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = element;
 		++size;
 	}
@@ -149,8 +154,10 @@ public class BooleanBag extends BooleanList {
 	 * @return the removed item
 	 */
 	@Override
-	public boolean removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public boolean removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		boolean[] items = this.items;
 		boolean value = items[index];
 		size--;
@@ -168,10 +175,14 @@ public class BooleanBag extends BooleanList {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
@@ -179,7 +190,7 @@ public class BooleanBag extends BooleanList {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		boolean[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -195,17 +206,18 @@ public class BooleanBag extends BooleanList {
 	 *
 	 * @return a new bag containing nothing
 	 */
-	public static BooleanBag with () {
+	public static BooleanBag with() {
 		return new BooleanBag(0);
 	}
 
 	/**
 	 * Creates a new BooleanBag that holds only the given item, but can be resized.
+	 *
 	 * @param item a boolean item
 	 * @return a new BooleanBag that holds the given item
 	 */
 
-	public static BooleanBag with (boolean item) {
+	public static BooleanBag with(boolean item) {
 		BooleanBag bag = new BooleanBag(1);
 		bag.add(item);
 		return bag;
@@ -213,11 +225,12 @@ public class BooleanBag extends BooleanList {
 
 	/**
 	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @return a new BooleanBag that holds the given items
 	 */
-	public static BooleanBag with (boolean item0, boolean item1) {
+	public static BooleanBag with(boolean item0, boolean item1) {
 		BooleanBag bag = new BooleanBag(2);
 		bag.add(item0);
 		bag.add(item1);
@@ -226,12 +239,13 @@ public class BooleanBag extends BooleanList {
 
 	/**
 	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
 	 * @return a new BooleanBag that holds the given items
 	 */
-	public static BooleanBag with (boolean item0, boolean item1, boolean item2) {
+	public static BooleanBag with(boolean item0, boolean item1, boolean item2) {
 		BooleanBag bag = new BooleanBag(3);
 		bag.add(item0);
 		bag.add(item1);
@@ -241,13 +255,14 @@ public class BooleanBag extends BooleanList {
 
 	/**
 	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
 	 * @param item3 a boolean item
 	 * @return a new BooleanBag that holds the given items
 	 */
-	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3) {
+	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3) {
 		BooleanBag bag = new BooleanBag(4);
 		bag.add(item0);
 		bag.add(item1);
@@ -258,6 +273,7 @@ public class BooleanBag extends BooleanList {
 
 	/**
 	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
@@ -265,7 +281,7 @@ public class BooleanBag extends BooleanList {
 	 * @param item4 a boolean item
 	 * @return a new BooleanBag that holds the given items
 	 */
-	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
+	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
 		BooleanBag bag = new BooleanBag(5);
 		bag.add(item0);
 		bag.add(item1);
@@ -277,6 +293,7 @@ public class BooleanBag extends BooleanList {
 
 	/**
 	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
@@ -285,7 +302,7 @@ public class BooleanBag extends BooleanList {
 	 * @param item5 a boolean item
 	 * @return a new BooleanBag that holds the given items
 	 */
-	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
+	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
 		BooleanBag bag = new BooleanBag(6);
 		bag.add(item0);
 		bag.add(item1);
@@ -298,6 +315,7 @@ public class BooleanBag extends BooleanList {
 
 	/**
 	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
@@ -307,7 +325,7 @@ public class BooleanBag extends BooleanList {
 	 * @param item6 a boolean item
 	 * @return a new BooleanBag that holds the given items
 	 */
-	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
+	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
 		BooleanBag bag = new BooleanBag(7);
 		bag.add(item0);
 		bag.add(item1);
@@ -321,6 +339,7 @@ public class BooleanBag extends BooleanList {
 
 	/**
 	 * Creates a new BooleanBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a boolean item
 	 * @param item1 a boolean item
 	 * @param item2 a boolean item
@@ -330,7 +349,7 @@ public class BooleanBag extends BooleanList {
 	 * @param item6 a boolean item
 	 * @return a new BooleanBag that holds the given items
 	 */
-	public static BooleanBag with (boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
+	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
 		BooleanBag bag = new BooleanBag(8);
 		bag.add(item0);
 		bag.add(item1);
@@ -348,10 +367,11 @@ public class BooleanBag extends BooleanList {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a boolean varargs or boolean array; remember that varargs allocate
 	 * @return a new BooleanBag that holds the given items
 	 */
-	public static BooleanBag with (boolean... varargs) {
+	public static BooleanBag with(boolean... varargs) {
 		return new BooleanBag(varargs);
 	}
 }

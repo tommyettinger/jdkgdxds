@@ -24,19 +24,19 @@ import com.github.tommyettinger.function.ObjShortToObjBiFunction;
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, short)}.
  */
 public interface ShortAppender extends ObjShortToObjBiFunction<StringBuilder, StringBuilder> {
-    /**
-     * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
-     * {@code StringBuilder::append} is present at a call-site. This should be used in place of
-     * {@link StringBuilder#append(int)} when you want to use that as a ShortAppender.
-     */
-    ShortAppender DEFAULT = StringBuilder::append;
+	/**
+	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
+	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
+	 * {@link StringBuilder#append(int)} when you want to use that as a ShortAppender.
+	 */
+	ShortAppender DEFAULT = StringBuilder::append;
 
-    /**
-     * An alternative ShortAppender constant that appends three {@link Base#BASE90} digits for every short input.
-     * The three ASCII chars are not expected to be human-readable.
-     * <br>
-     * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
-     * this lambda would be present at a call-site.
-     */
-    ShortAppender DENSE = Base.BASE90::appendUnsigned;
+	/**
+	 * An alternative ShortAppender constant that appends three {@link Base#BASE90} digits for every short input.
+	 * The three ASCII chars are not expected to be human-readable.
+	 * <br>
+	 * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
+	 * this lambda would be present at a call-site.
+	 */
+	ShortAppender DENSE = Base.BASE90::appendUnsigned;
 }

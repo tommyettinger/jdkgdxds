@@ -69,7 +69,7 @@ public class CharFilter {
 		this("Identity", c -> true, c -> c);
 	}
 
-	protected CharFilter (@NonNull String name, @NonNull CharPredicate filter, @NonNull CharToCharFunction editor) {
+	protected CharFilter(@NonNull String name, @NonNull CharPredicate filter, @NonNull CharToCharFunction editor) {
 		this.name = name;
 		this.filter = filter;
 		this.editor = editor;
@@ -80,55 +80,57 @@ public class CharFilter {
 	 * Tries to get an existing CharFilter known by {@code name}, and if one exists, this returns that CharFilter.
 	 * Otherwise, this will construct and return a new CharFilter with the given name, filter, and editor, registering it
 	 * in the process.
-	 * @param name the String name to look up, or to register by if none was found
+	 *
+	 * @param name   the String name to look up, or to register by if none was found
 	 * @param filter a CharPredicate that should return true iff a character should be considered for equality/hashing
 	 * @param editor a CharToCharFunction that will take a char from a key String and return a potentially different char
 	 * @return a CharFilter, either one that already exists by the given name, or a newly-registered one that was just created
 	 */
 	public static CharFilter getOrCreate(@NonNull String name, @NonNull CharPredicate filter, @NonNull CharToCharFunction editor) {
 		CharFilter existing = REGISTRY.get(name);
-		if(existing == null) {
+		if (existing == null) {
 			return new CharFilter(name, filter, editor);
 		}
 		return existing;
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		CharFilter that = (CharFilter)o;
+		CharFilter that = (CharFilter) o;
 
 		return name.equals(that.name);
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		return name.hashCode();
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return "CharFilter{'" + name + "'}";
 	}
 
-	public @NonNull String getName () {
+	public @NonNull String getName() {
 		return name;
 	}
 
-	public @NonNull CharPredicate getFilter () {
+	public @NonNull CharPredicate getFilter() {
 		return filter;
 	}
 
-	public @NonNull CharToCharFunction getEditor () {
+	public @NonNull CharToCharFunction getEditor() {
 		return editor;
 	}
 
 	/**
 	 * Checks if a CharFilter is registered to {@code name}, returning true if one is, or false otherwise.
+	 *
 	 * @param name the name to look up
 	 * @return true if a CharFilter is registered by {@code name}, or false otherwise
 	 */
@@ -139,6 +141,7 @@ public class CharFilter {
 
 	/**
 	 * Gets the CharFilter registered to {@code name}, or null if none exists.
+	 *
 	 * @param name the name to look up
 	 * @return a registered CharFilter or null
 	 */
@@ -148,7 +151,8 @@ public class CharFilter {
 
 	/**
 	 * Gets the CharFilter registered to {@code name}, or {@code defaultValue} if none exists.
-	 * @param name the name to look up
+	 *
+	 * @param name         the name to look up
 	 * @param defaultValue a CharFilter to return if none was found; may be null
 	 * @return a registered CharFilter or {@code defaultValue}
 	 */
@@ -163,17 +167,18 @@ public class CharFilter {
 	 *
 	 * @return a new set containing nothing
 	 */
-	public FilteredStringSet makeSet () {
+	public FilteredStringSet makeSet() {
 		return new FilteredStringSet(this, 0);
 	}
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given item, but can be resized.
 	 * Uses this CharFilter in the new set.
+	 *
 	 * @param item one String item
 	 * @return a new FilteredStringSet that holds the given item
 	 */
-	public FilteredStringSet makeSet (String item) {
+	public FilteredStringSet makeSet(String item) {
 		FilteredStringSet set = new FilteredStringSet(this, 1);
 		set.add(item);
 		return set;
@@ -182,11 +187,12 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
-	public FilteredStringSet makeSet (String item0, String item1) {
+	public FilteredStringSet makeSet(String item0, String item1) {
 		FilteredStringSet set = new FilteredStringSet(this, 2);
 		set.add(item0, item1);
 		return set;
@@ -195,12 +201,13 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
-	public FilteredStringSet makeSet (String item0, String item1, String item2) {
+	public FilteredStringSet makeSet(String item0, String item1, String item2) {
 		FilteredStringSet set = new FilteredStringSet(this, 3);
 		set.add(item0, item1, item2);
 		return set;
@@ -209,13 +216,14 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
 	 * @param item3 a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
-	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3) {
+	public FilteredStringSet makeSet(String item0, String item1, String item2, String item3) {
 		FilteredStringSet set = new FilteredStringSet(this, 4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -224,6 +232,7 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
@@ -231,7 +240,7 @@ public class CharFilter {
 	 * @param item4 a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
-	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3, String item4) {
+	public FilteredStringSet makeSet(String item0, String item1, String item2, String item3, String item4) {
 		FilteredStringSet set = new FilteredStringSet(this, 5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -241,6 +250,7 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
@@ -249,7 +259,7 @@ public class CharFilter {
 	 * @param item5 a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
-	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3, String item4, String item5) {
+	public FilteredStringSet makeSet(String item0, String item1, String item2, String item3, String item4, String item5) {
 		FilteredStringSet set = new FilteredStringSet(this, 6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -259,6 +269,7 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
@@ -268,7 +279,7 @@ public class CharFilter {
 	 * @param item6 a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
-	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
+	public FilteredStringSet makeSet(String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
 		FilteredStringSet set = new FilteredStringSet(this, 7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -278,6 +289,7 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
@@ -287,7 +299,7 @@ public class CharFilter {
 	 * @param item6 a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
-	public FilteredStringSet makeSet (String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
+	public FilteredStringSet makeSet(String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
 		FilteredStringSet set = new FilteredStringSet(this, 8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -299,10 +311,11 @@ public class CharFilter {
 	 * Uses this CharFilter in the new set.
 	 * This overload will only be used when an array is supplied or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a String varargs or String array; remember that varargs allocate
 	 * @return a new FilteredStringSet that holds the given items
 	 */
-	public FilteredStringSet makeSet (String... varargs) {
+	public FilteredStringSet makeSet(String... varargs) {
 		return new FilteredStringSet(this, varargs);
 	}
 
@@ -313,17 +326,18 @@ public class CharFilter {
 	 *
 	 * @return a new ordered set containing nothing
 	 */
-	public FilteredStringOrderedSet makeOrderedSet () {
+	public FilteredStringOrderedSet makeOrderedSet() {
 		return new FilteredStringOrderedSet(this, 0);
 	}
 
 	/**
 	 * Creates a new FilteredStringOrderedSet that holds only the given item, but can be resized.
 	 * Uses this CharFilter in the new ordered set.
+	 *
 	 * @param item one String item
 	 * @return a new FilteredStringOrderedSet that holds the given item
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String item) {
+	public FilteredStringOrderedSet makeOrderedSet(String item) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 1);
 		set.add(item);
 		return set;
@@ -332,11 +346,12 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new ordered set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @return a new FilteredStringOrderedSet that holds the given items
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1) {
+	public FilteredStringOrderedSet makeOrderedSet(String item0, String item1) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 2);
 		set.add(item0, item1);
 		return set;
@@ -345,12 +360,13 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new ordered set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
 	 * @return a new FilteredStringOrderedSet that holds the given items
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2) {
+	public FilteredStringOrderedSet makeOrderedSet(String item0, String item1, String item2) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 3);
 		set.add(item0, item1, item2);
 		return set;
@@ -359,13 +375,14 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new ordered set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
 	 * @param item3 a String item
 	 * @return a new FilteredStringOrderedSet that holds the given items
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3) {
+	public FilteredStringOrderedSet makeOrderedSet(String item0, String item1, String item2, String item3) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -374,6 +391,7 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new ordered set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
@@ -381,7 +399,7 @@ public class CharFilter {
 	 * @param item4 a String item
 	 * @return a new FilteredStringOrderedSet that holds the given items
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3, String item4) {
+	public FilteredStringOrderedSet makeOrderedSet(String item0, String item1, String item2, String item3, String item4) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -391,6 +409,7 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new ordered set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
@@ -399,7 +418,7 @@ public class CharFilter {
 	 * @param item5 a String item
 	 * @return a new FilteredStringOrderedSet that holds the given items
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3, String item4, String item5) {
+	public FilteredStringOrderedSet makeOrderedSet(String item0, String item1, String item2, String item3, String item4, String item5) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -409,6 +428,7 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new ordered set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
@@ -418,7 +438,7 @@ public class CharFilter {
 	 * @param item6 a String item
 	 * @return a new FilteredStringOrderedSet that holds the given items
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
+	public FilteredStringOrderedSet makeOrderedSet(String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -428,6 +448,7 @@ public class CharFilter {
 	/**
 	 * Creates a new FilteredStringOrderedSet that holds only the given items, but can be resized.
 	 * Uses this CharFilter in the new ordered set.
+	 *
 	 * @param item0 a String item
 	 * @param item1 a String item
 	 * @param item2 a String item
@@ -437,7 +458,7 @@ public class CharFilter {
 	 * @param item6 a String item
 	 * @return a new FilteredStringOrderedSet that holds the given items
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
+	public FilteredStringOrderedSet makeOrderedSet(String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
 		FilteredStringOrderedSet set = new FilteredStringOrderedSet(this, 8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -449,22 +470,23 @@ public class CharFilter {
 	 * Uses this CharFilter in the new ordered set.
 	 * This overload will only be used when an array is supplied or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a String varargs or String array; remember that varargs allocate
 	 * @return a new FilteredStringOrderedSet that holds the given items
 	 */
-	public FilteredStringOrderedSet makeOrderedSet (String... varargs) {
+	public FilteredStringOrderedSet makeOrderedSet(String... varargs) {
 		return new FilteredStringOrderedSet(this, varargs);
 	}
-	
+
 	/**
 	 * Constructs an empty map given just a CharFilter.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public <V> FilteredStringMap<V> makeMap () {
+	public <V> FilteredStringMap<V> makeMap() {
 		return new FilteredStringMap<>(this);
 	}
 
@@ -478,7 +500,7 @@ public class CharFilter {
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public <V> FilteredStringMap<V> makeMap (String key0, V value0) {
+	public <V> FilteredStringMap<V> makeMap(String key0, V value0) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(this, 1);
 		map.put(key0, value0);
 		return map;
@@ -496,7 +518,7 @@ public class CharFilter {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public <V> FilteredStringMap<V> makeMap (String key0, V value0, String key1, V value1) {
+	public <V> FilteredStringMap<V> makeMap(String key0, V value0, String key1, V value1) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(this, 2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -517,7 +539,7 @@ public class CharFilter {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public <V> FilteredStringMap<V> makeMap (String key0, V value0, String key1, V value1, String key2, V value2) {
+	public <V> FilteredStringMap<V> makeMap(String key0, V value0, String key1, V value1, String key2, V value2) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(this, 3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -541,7 +563,7 @@ public class CharFilter {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public <V> FilteredStringMap<V> makeMap (String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
+	public <V> FilteredStringMap<V> makeMap(String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(this, 4);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -566,12 +588,12 @@ public class CharFilter {
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public <V> FilteredStringMap<V> makeMap (String key0, V value0, Object... rest) {
+	public <V> FilteredStringMap<V> makeMap(String key0, V value0, Object... rest) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(this, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((String)rest[i - 1], (V)rest[i]);
+				map.put((String) rest[i - 1], (V) rest[i]);
 			} catch (ClassCastException ignored) {
 			}
 		}
@@ -583,10 +605,10 @@ public class CharFilter {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new ordered map containing nothing
 	 */
-	public <V> FilteredStringOrderedMap<V> makeOrderedMap () {
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap() {
 		return new FilteredStringOrderedMap<>(this);
 	}
 
@@ -600,7 +622,7 @@ public class CharFilter {
 	 * @param <V>    the type of value0
 	 * @return a new ordered map containing just the entry mapping key0 to value0
 	 */
-	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0) {
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap(String key0, V value0) {
 		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 1);
 		map.put(key0, value0);
 		return map;
@@ -618,7 +640,7 @@ public class CharFilter {
 	 * @param <V>    the type of value0
 	 * @return a new ordered map containing entries mapping each key to the following value
 	 */
-	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0, String key1, V value1) {
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap(String key0, V value0, String key1, V value1) {
 		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -639,7 +661,7 @@ public class CharFilter {
 	 * @param <V>    the type of value0
 	 * @return a new ordered map containing entries mapping each key to the following value
 	 */
-	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0, String key1, V value1, String key2, V value2) {
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap(String key0, V value0, String key1, V value1, String key2, V value2) {
 		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -663,7 +685,7 @@ public class CharFilter {
 	 * @param <V>    the type of value0
 	 * @return a new ordered map containing entries mapping each key to the following value
 	 */
-	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap(String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
 		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 4);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -688,12 +710,12 @@ public class CharFilter {
 	 * @return a new ordered map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public <V> FilteredStringOrderedMap<V> makeOrderedMap (String key0, V value0, Object... rest) {
+	public <V> FilteredStringOrderedMap<V> makeOrderedMap(String key0, V value0, Object... rest) {
 		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(this, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((String)rest[i - 1], (V)rest[i]);
+				map.put((String) rest[i - 1], (V) rest[i]);
 			} catch (ClassCastException ignored) {
 			}
 		}

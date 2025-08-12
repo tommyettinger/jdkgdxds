@@ -34,14 +34,14 @@ public class IntBag extends IntList {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public IntBag () {
+	public IntBag() {
 		super();
 	}
 
@@ -50,7 +50,7 @@ public class IntBag extends IntList {
 	 *
 	 * @param capacity
 	 */
-	public IntBag (int capacity) {
+	public IntBag(int capacity) {
 		super(capacity);
 	}
 
@@ -60,7 +60,7 @@ public class IntBag extends IntList {
 	 *
 	 * @param list another IntList or IntBag
 	 */
-	public IntBag (IntList list) {
+	public IntBag(IntList list) {
 		super(list);
 	}
 
@@ -70,7 +70,7 @@ public class IntBag extends IntList {
 	 *
 	 * @param array a non-null int array to add to this bag
 	 */
-	public IntBag (int[] array) {
+	public IntBag(int[] array) {
 		super(array);
 	}
 
@@ -78,11 +78,11 @@ public class IntBag extends IntList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null int array to add to this bag
+	 * @param array      a non-null int array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public IntBag (int[] array, int startIndex, int count) {
+	public IntBag(int[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
@@ -91,7 +91,7 @@ public class IntBag extends IntList {
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public IntBag (OfInt coll) {
+	public IntBag(OfInt coll) {
 		super(coll);
 	}
 
@@ -100,7 +100,7 @@ public class IntBag extends IntList {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public IntBag (IntIterator coll) {
+	public IntBag(IntIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -110,7 +110,7 @@ public class IntBag extends IntList {
 	 *
 	 * @param other another Ordered.OfInt
 	 */
-	public IntBag (Ordered.OfInt other) {
+	public IntBag(Ordered.OfInt other) {
 		super(other);
 	}
 
@@ -122,20 +122,25 @@ public class IntBag extends IntList {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public IntBag (Ordered.OfInt other, int offset, int count) {
+	public IntBag(Ordered.OfInt other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
-	 * @param index ignored
+	 *
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, int element) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, int element) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		int[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = element;
 		++size;
 	}
@@ -149,8 +154,10 @@ public class IntBag extends IntList {
 	 * @return the removed item
 	 */
 	@Override
-	public int removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public int removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		int[] items = this.items;
 		int value = items[index];
 		size--;
@@ -168,10 +175,14 @@ public class IntBag extends IntList {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
@@ -179,7 +190,7 @@ public class IntBag extends IntList {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -195,16 +206,17 @@ public class IntBag extends IntList {
 	 *
 	 * @return a new bag containing nothing
 	 */
-	public static IntBag with () {
+	public static IntBag with() {
 		return new IntBag(0);
 	}
 
 	/**
 	 * Creates a new IntBag that holds only the given item, but can be resized.
+	 *
 	 * @param item an int item
 	 * @return a new IntBag that holds the given item
 	 */
-	public static IntBag with (int item) {
+	public static IntBag with(int item) {
 		IntBag bag = new IntBag(1);
 		bag.add(item);
 		return bag;
@@ -212,11 +224,12 @@ public class IntBag extends IntList {
 
 	/**
 	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int item0, int item1) {
+	public static IntBag with(int item0, int item1) {
 		IntBag bag = new IntBag(2);
 		bag.add(item0);
 		bag.add(item1);
@@ -225,12 +238,13 @@ public class IntBag extends IntList {
 
 	/**
 	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
 	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int item0, int item1, int item2) {
+	public static IntBag with(int item0, int item1, int item2) {
 		IntBag bag = new IntBag(3);
 		bag.add(item0);
 		bag.add(item1);
@@ -240,13 +254,14 @@ public class IntBag extends IntList {
 
 	/**
 	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
 	 * @param item3 an int item
 	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int item0, int item1, int item2, int item3) {
+	public static IntBag with(int item0, int item1, int item2, int item3) {
 		IntBag bag = new IntBag(4);
 		bag.add(item0);
 		bag.add(item1);
@@ -257,6 +272,7 @@ public class IntBag extends IntList {
 
 	/**
 	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -264,7 +280,7 @@ public class IntBag extends IntList {
 	 * @param item4 an int item
 	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int item0, int item1, int item2, int item3, int item4) {
+	public static IntBag with(int item0, int item1, int item2, int item3, int item4) {
 		IntBag bag = new IntBag(5);
 		bag.add(item0);
 		bag.add(item1);
@@ -276,6 +292,7 @@ public class IntBag extends IntList {
 
 	/**
 	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -284,7 +301,7 @@ public class IntBag extends IntList {
 	 * @param item5 an int item
 	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int item0, int item1, int item2, int item3, int item4, int item5) {
+	public static IntBag with(int item0, int item1, int item2, int item3, int item4, int item5) {
 		IntBag bag = new IntBag(6);
 		bag.add(item0);
 		bag.add(item1);
@@ -297,6 +314,7 @@ public class IntBag extends IntList {
 
 	/**
 	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -306,7 +324,7 @@ public class IntBag extends IntList {
 	 * @param item6 an int item
 	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
+	public static IntBag with(int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
 		IntBag bag = new IntBag(7);
 		bag.add(item0);
 		bag.add(item1);
@@ -320,6 +338,7 @@ public class IntBag extends IntList {
 
 	/**
 	 * Creates a new IntBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -329,7 +348,7 @@ public class IntBag extends IntList {
 	 * @param item6 an int item
 	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
+	public static IntBag with(int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
 		IntBag bag = new IntBag(8);
 		bag.add(item0);
 		bag.add(item1);
@@ -347,10 +366,11 @@ public class IntBag extends IntList {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs an int varargs or int array; remember that varargs allocate
 	 * @return a new IntBag that holds the given items
 	 */
-	public static IntBag with (int... varargs) {
+	public static IntBag with(int... varargs) {
 		return new IntBag(varargs);
 	}
 }

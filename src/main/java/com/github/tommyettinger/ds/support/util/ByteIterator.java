@@ -39,7 +39,7 @@ public interface ByteIterator extends Iterator<Byte> {
 	 * @return the next {@code byte} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	byte nextByte ();
+	byte nextByte();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -55,8 +55,10 @@ public interface ByteIterator extends Iterator<Byte> {
 	 *         action.accept(nextByte());
 	 * }</pre>
 	 */
-	default void forEachRemaining (ByteConsumer action) {
-		while (hasNext()) {action.accept(nextByte());}
+	default void forEachRemaining(ByteConsumer action) {
+		while (hasNext()) {
+			action.accept(nextByte());
+		}
 	}
 
 	/**
@@ -66,7 +68,7 @@ public interface ByteIterator extends Iterator<Byte> {
 	 * {@link #nextByte()}, and returns that boxed result.
 	 */
 	@Override
-	default Byte next () {
+	default Byte next() {
 		return nextByte();
 	}
 }

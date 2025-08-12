@@ -35,14 +35,14 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public CharBag () {
+	public CharBag() {
 		super();
 	}
 
@@ -51,7 +51,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 *
 	 * @param capacity
 	 */
-	public CharBag (int capacity) {
+	public CharBag(int capacity) {
 		super(capacity);
 	}
 
@@ -61,7 +61,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 *
 	 * @param list another CharList or CharBag
 	 */
-	public CharBag (CharList list) {
+	public CharBag(CharList list) {
 		super(list);
 	}
 
@@ -71,7 +71,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 *
 	 * @param array a non-null char array to add to this bag
 	 */
-	public CharBag (char[] array) {
+	public CharBag(char[] array) {
 		super(array);
 	}
 
@@ -79,11 +79,11 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null char array to add to this bag
+	 * @param array      a non-null char array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public CharBag (char[] array, int startIndex, int count) {
+	public CharBag(char[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
@@ -92,7 +92,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public CharBag (OfChar coll) {
+	public CharBag(OfChar coll) {
 		super(coll);
 	}
 
@@ -101,7 +101,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public CharBag (CharIterator coll) {
+	public CharBag(CharIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -111,7 +111,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 *
 	 * @param other another Ordered.OfChar
 	 */
-	public CharBag (Ordered.OfChar other) {
+	public CharBag(Ordered.OfChar other) {
 		super(other);
 	}
 
@@ -123,20 +123,25 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public CharBag (Ordered.OfChar other, int offset, int count) {
+	public CharBag(Ordered.OfChar other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
-	 * @param index ignored
+	 *
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, char element) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, char element) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		char[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = element;
 		++size;
 	}
@@ -150,8 +155,10 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @return the removed item
 	 */
 	@Override
-	public char removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public char removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		char[] items = this.items;
 		char value = items[index];
 		size--;
@@ -169,10 +176,14 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
@@ -212,7 +223,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		char[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -228,17 +239,18 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 *
 	 * @return a new bag containing nothing
 	 */
-	public static CharBag with () {
+	public static CharBag with() {
 		return new CharBag(0);
 	}
 
 	/**
 	 * Creates a new CharBag that holds only the given item, but can be resized.
+	 *
 	 * @param item a char item
 	 * @return a new CharBag that holds the given item
 	 */
 
-	public static CharBag with (char item) {
+	public static CharBag with(char item) {
 		CharBag bag = new CharBag(1);
 		bag.add(item);
 		return bag;
@@ -246,11 +258,12 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @return a new CharBag that holds the given items
 	 */
-	public static CharBag with (char item0, char item1) {
+	public static CharBag with(char item0, char item1) {
 		CharBag bag = new CharBag(2);
 		bag.add(item0);
 		bag.add(item1);
@@ -259,12 +272,13 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
 	 * @return a new CharBag that holds the given items
 	 */
-	public static CharBag with (char item0, char item1, char item2) {
+	public static CharBag with(char item0, char item1, char item2) {
 		CharBag bag = new CharBag(3);
 		bag.add(item0);
 		bag.add(item1);
@@ -274,13 +288,14 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
 	 * @param item3 a char item
 	 * @return a new CharBag that holds the given items
 	 */
-	public static CharBag with (char item0, char item1, char item2, char item3) {
+	public static CharBag with(char item0, char item1, char item2, char item3) {
 		CharBag bag = new CharBag(4);
 		bag.add(item0);
 		bag.add(item1);
@@ -291,6 +306,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
@@ -298,7 +314,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param item4 a char item
 	 * @return a new CharBag that holds the given items
 	 */
-	public static CharBag with (char item0, char item1, char item2, char item3, char item4) {
+	public static CharBag with(char item0, char item1, char item2, char item3, char item4) {
 		CharBag bag = new CharBag(5);
 		bag.add(item0);
 		bag.add(item1);
@@ -310,6 +326,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
@@ -318,7 +335,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param item5 a char item
 	 * @return a new CharBag that holds the given items
 	 */
-	public static CharBag with (char item0, char item1, char item2, char item3, char item4, char item5) {
+	public static CharBag with(char item0, char item1, char item2, char item3, char item4, char item5) {
 		CharBag bag = new CharBag(6);
 		bag.add(item0);
 		bag.add(item1);
@@ -331,6 +348,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
@@ -340,7 +358,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param item6 a char item
 	 * @return a new CharBag that holds the given items
 	 */
-	public static CharBag with (char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
+	public static CharBag with(char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
 		CharBag bag = new CharBag(7);
 		bag.add(item0);
 		bag.add(item1);
@@ -354,6 +372,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Creates a new CharBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a char item
 	 * @param item1 a char item
 	 * @param item2 a char item
@@ -363,7 +382,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param item6 a char item
 	 * @return a new CharBag that holds the given items
 	 */
-	public static CharBag with (char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
+	public static CharBag with(char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
 		CharBag bag = new CharBag(8);
 		bag.add(item0);
 		bag.add(item1);
@@ -381,10 +400,11 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a char varargs or char array; remember that varargs allocate
 	 * @return a new CharBag that holds the given items
 	 */
-	public static CharBag with (char... varargs) {
+	public static CharBag with(char... varargs) {
 		return new CharBag(varargs);
 	}
 }

@@ -18,19 +18,28 @@ package com.github.tommyettinger.ds.test;
 
 public class Point2 {
 
-	/** the x-component of this vector **/
+	/**
+	 * the x-component of this vector
+	 **/
 	public int x;
-	/** the y-component of this vector **/
+	/**
+	 * the y-component of this vector
+	 **/
 	public int y;
 
-	/** Constructs a new vector at (0,0) */
-	public Point2 () {
+	/**
+	 * Constructs a new vector at (0,0)
+	 */
+	public Point2() {
 	}
 
-	/** Constructs a vector with the given components
+	/**
+	 * Constructs a vector with the given components
+	 *
 	 * @param x The x-component
-	 * @param y The y-component */
-	public Point2 (int x, int y) {
+	 * @param y The y-component
+	 */
+	public Point2(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -45,13 +54,13 @@ public class Point2 {
 //	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		Point2 point2 = (Point2)o;
+		Point2 point2 = (Point2) o;
 
 		if (x != point2.x)
 			return false;
@@ -59,7 +68,7 @@ public class Point2 {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		final int prime = 53;
 		int result = 1;
 		result = prime * result + this.x;

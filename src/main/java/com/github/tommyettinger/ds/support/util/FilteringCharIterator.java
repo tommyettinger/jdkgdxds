@@ -32,56 +32,56 @@ import java.util.NoSuchElementException;
  * to handle primitive items.
  */
 public class FilteringCharIterator implements CharIterator {
-    public CharIterator iterator;
-    public CharPredicate filter;
-    protected boolean end = false;
-    protected boolean available = false;
-    protected char next;
+	public CharIterator iterator;
+	public CharPredicate filter;
+	protected boolean end = false;
+	protected boolean available = false;
+	protected char next;
 
-    public FilteringCharIterator() {
-    }
+	public FilteringCharIterator() {
+	}
 
-    public FilteringCharIterator(final CharIterator iterator, final CharPredicate filter) {
-        set(iterator, filter);
-    }
+	public FilteringCharIterator(final CharIterator iterator, final CharPredicate filter) {
+		set(iterator, filter);
+	}
 
-    public void set(final CharIterator iterator, final CharPredicate predicate) {
-        this.iterator = iterator;
-        this.filter = predicate;
-        end = available = false;
-    }
+	public void set(final CharIterator iterator, final CharPredicate predicate) {
+		this.iterator = iterator;
+		this.filter = predicate;
+		end = available = false;
+	}
 
-    public void set(final CharIterator iterator) {
-        set(iterator, filter);
-    }
+	public void set(final CharIterator iterator) {
+		set(iterator, filter);
+	}
 
-    @Override
-    public boolean hasNext() {
-        if (end) return false;
-        if (available) return true;
-        while (iterator.hasNext()) {
-            final char n = iterator.nextChar();
-            if (filter.test(n)) {
-                next = n;
-                available = true;
-                return true;
-            }
-        }
-        end = true;
-        return false;
-    }
+	@Override
+	public boolean hasNext() {
+		if (end) return false;
+		if (available) return true;
+		while (iterator.hasNext()) {
+			final char n = iterator.nextChar();
+			if (filter.test(n)) {
+				next = n;
+				available = true;
+				return true;
+			}
+		}
+		end = true;
+		return false;
+	}
 
-    @Override
-    public char nextChar() {
-        if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
-        final char result = next;
-        available = false;
-        return result;
-    }
+	@Override
+	public char nextChar() {
+		if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
+		final char result = next;
+		available = false;
+		return result;
+	}
 
-    @Override
-    public void remove() {
-        if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
+		iterator.remove();
+	}
 }

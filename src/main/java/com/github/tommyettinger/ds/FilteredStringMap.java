@@ -52,7 +52,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public FilteredStringMap () {
+	public FilteredStringMap() {
 		super();
 	}
 
@@ -62,7 +62,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredStringMap (int initialCapacity) {
+	public FilteredStringMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -73,7 +73,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredStringMap (int initialCapacity, float loadFactor) {
+	public FilteredStringMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -83,7 +83,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 */
-	public FilteredStringMap (CharFilter filter) {
+	public FilteredStringMap(CharFilter filter) {
 		super();
 		this.filter = filter;
 	}
@@ -93,10 +93,10 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * before growing the backing table.
 	 * This uses the specified CharFilter.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param filter          a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredStringMap (CharFilter filter, int initialCapacity) {
+	public FilteredStringMap(CharFilter filter, int initialCapacity) {
 		super(initialCapacity);
 		this.filter = filter;
 	}
@@ -106,11 +106,11 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * growing the backing table.
 	 * This uses the specified CharFilter.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param filter          a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredStringMap (CharFilter filter, int initialCapacity, float loadFactor) {
+	public FilteredStringMap(CharFilter filter, int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
 	}
@@ -120,7 +120,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 *
 	 * @param map an FilteredStringMap to copy
 	 */
-	public FilteredStringMap (FilteredStringMap<? extends V> map) {
+	public FilteredStringMap(FilteredStringMap<? extends V> map) {
 		super(map.size(), map.loadFactor);
 		filter = map.filter;
 		this.hashMultiplier = map.hashMultiplier;
@@ -134,7 +134,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param map    a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster to load from
 	 */
-	public FilteredStringMap (CharFilter filter, Map<String, ? extends V> map) {
+	public FilteredStringMap(CharFilter filter, Map<String, ? extends V> map) {
 		this(filter, map.size());
 		for (String k : map.keySet()) {
 			put(k, map.get(k));
@@ -150,7 +150,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public FilteredStringMap (CharFilter filter, String[] keys, V[] values) {
+	public FilteredStringMap(CharFilter filter, String[] keys, V[] values) {
 		this(filter, Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -164,7 +164,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public FilteredStringMap (CharFilter filter, Collection<String> keys, Collection<? extends V> values) {
+	public FilteredStringMap(CharFilter filter, Collection<String> keys, Collection<? extends V> values) {
 		this(filter, Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -178,6 +178,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * as any changes made to characters before hashing or equating, then
 	 * returns this object, for chaining. If the filter changes, that invalidates anything previously entered into
 	 * this, so before changing the filter <em>this clears the entire data structure</em>, removing all existing items.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @return this, for chaining
 	 */
@@ -193,10 +194,11 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * multiplies it by the {@link #getHashMultiplier() hash multiplier}, and XORs with the current char after editing.
 	 * This finalizes the hash by multiplying it again by the hash multiplier, then using the reversible
 	 * XOR-rotate-XOR-rotate sequence of operations to adequately jumble the bits.
+	 *
 	 * @param s a String to hash
 	 * @return a 32-bit hash of {@code s}
 	 */
-	protected int hashHelper (final String s) {
+	protected int hashHelper(final String s) {
 		final int hm = hashMultiplier;
 		int hash = hm;
 		for (int i = 0, len = s.length(); i < len; i++) {
@@ -210,7 +212,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		if (item instanceof String) {
 			return hashHelper((String) item) & mask;
 		}
@@ -228,29 +230,29 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @return true if left and right are equivalent according to the rules this filtered type uses
 	 */
 	@Override
-	public boolean equate (Object left, @Nullable Object right) {
+	public boolean equate(Object left, @Nullable Object right) {
 		if (left == right)
 			return true;
-		if(right == null) return false;
+		if (right == null) return false;
 		if ((left instanceof String) && (right instanceof String)) {
-			String l = (String)left, r = (String)right;
+			String l = (String) left, r = (String) right;
 			int llen = l.length(), rlen = r.length();
 			int cl = -1, cr = -1;
 			int i = 0, j = 0;
 			while (i < llen || j < rlen) {
-				if(i == llen) cl = -1;
+				if (i == llen) cl = -1;
 				else {
 					while (i < llen && !filter.filter.test((char) (cl = l.charAt(i++)))) {
 						cl = -1;
 					}
 				}
-				if(j == rlen) cr = -1;
+				if (j == rlen) cr = -1;
 				else {
 					while (j < rlen && !filter.filter.test((char) (cr = r.charAt(j++)))) {
 						cr = -1;
 					}
 				}
-				if(cl != cr && filter.editor.applyAsChar((char)cl) != filter.editor.applyAsChar((char)cr))
+				if (cl != cr && filter.editor.applyAsChar((char) cl) != filter.editor.applyAsChar((char) cr))
 					return false;
 			}
 			return true;
@@ -259,7 +261,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		@Nullable String[] keyTable = this.keyTable;
 		@Nullable V[] valueTable = this.valueTable;
@@ -268,7 +270,9 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 			if (key != null) {
 				h ^= hashHelper(key);
 				V value = valueTable[i];
-				if (value != null) {h ^= value.hashCode();}
+				if (value != null) {
+					h ^= value.hashCode();
+				}
 			}
 		}
 		return h;
@@ -276,11 +280,17 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof Map)) {return false;}
-		Map other = (Map)obj;
-		if (other.size() != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Map)) {
+			return false;
+		}
+		Map other = (Map) obj;
+		if (other.size() != size) {
+			return false;
+		}
 		@Nullable Object[] keyTable = this.keyTable;
 		@Nullable V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -288,9 +298,13 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.getOrDefault(key, neverIdentical) != null) {return false;}
+					if (other.getOrDefault(key, neverIdentical) != null) {
+						return false;
+					}
 				} else {
-					if (!value.equals(other.get(key))) {return false;}
+					if (!value.equals(other.get(key))) {
+						return false;
+					}
 				}
 			}
 		}
@@ -306,7 +320,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param <V>    the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> FilteredStringMap<V> with (CharFilter filter) {
+	public static <V> FilteredStringMap<V> with(CharFilter filter) {
 		return new FilteredStringMap<>(filter);
 	}
 
@@ -321,7 +335,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0) {
+	public static <V> FilteredStringMap<V> with(CharFilter filter, String key0, V value0) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1);
 		map.put(key0, value0);
 		return map;
@@ -340,7 +354,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, String key1, V value1) {
+	public static <V> FilteredStringMap<V> with(CharFilter filter, String key0, V value0, String key1, V value1) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -362,7 +376,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, String key1, V value1, String key2, V value2) {
+	public static <V> FilteredStringMap<V> with(CharFilter filter, String key0, V value0, String key1, V value1, String key2, V value2) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -387,7 +401,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
+	public static <V> FilteredStringMap<V> with(CharFilter filter, String key0, V value0, String key1, V value1, String key2, V value2, String key3, V value3) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 4);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -413,7 +427,7 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <V> FilteredStringMap<V> with (CharFilter filter, String key0, V value0, Object... rest) {
+	public static <V> FilteredStringMap<V> with(CharFilter filter, String key0, V value0, Object... rest) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		map.putPairs(rest);

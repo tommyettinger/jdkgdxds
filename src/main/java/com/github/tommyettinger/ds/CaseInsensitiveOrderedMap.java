@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
@@ -146,7 +147,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public CaseInsensitiveOrderedMap () {
+	public CaseInsensitiveOrderedMap() {
 		super();
 	}
 
@@ -156,7 +157,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public CaseInsensitiveOrderedMap (int initialCapacity) {
+	public CaseInsensitiveOrderedMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -167,7 +168,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public CaseInsensitiveOrderedMap (int initialCapacity, float loadFactor) {
+	public CaseInsensitiveOrderedMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -176,7 +177,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 *
 	 * @param map a Map to copy; ObjectObjectOrderedMap and subclasses of it will be faster
 	 */
-	public CaseInsensitiveOrderedMap (Map<? extends CharSequence, ? extends V> map) {
+	public CaseInsensitiveOrderedMap(Map<? extends CharSequence, ? extends V> map) {
 		super(map.size());
 		putAll(map);
 	}
@@ -188,10 +189,11 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public CaseInsensitiveOrderedMap (CharSequence[] keys, V[] values) {
+	public CaseInsensitiveOrderedMap(CharSequence[] keys, V[] values) {
 		super(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
+
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
@@ -211,7 +213,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public CaseInsensitiveOrderedMap (Collection<? extends CharSequence> keys, Collection<? extends V> values) {
+	public CaseInsensitiveOrderedMap(Collection<? extends CharSequence> keys, Collection<? extends V> values) {
 		super(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -224,29 +226,29 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public CaseInsensitiveOrderedMap (ObjectObjectOrderedMap<? extends CharSequence, ? extends V> other, int offset, int count) {
+	public CaseInsensitiveOrderedMap(ObjectObjectOrderedMap<? extends CharSequence, ? extends V> other, int offset, int count) {
 		this(count, other.loadFactor);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		if (item instanceof CharSequence)
-			return Utilities.hashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
+			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
-			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
+			return Utilities.equalsIgnoreCase((CharSequence) left, (CharSequence) right);
 		}
 		return false;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		@Nullable CharSequence[] keyTable = this.keyTable;
 		@Nullable V[] valueTable = this.valueTable;
@@ -255,7 +257,9 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 			if (key != null) {
 				h ^= Utilities.hashCodeIgnoreCase(key);
 				V value = valueTable[i];
-				if (value != null) {h ^= value.hashCode();}
+				if (value != null) {
+					h ^= value.hashCode();
+				}
 			}
 		}
 		return h;
@@ -263,11 +267,17 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof Map)) {return false;}
-		Map other = (Map)obj;
-		if (other.size() != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Map)) {
+			return false;
+		}
+		Map other = (Map) obj;
+		if (other.size() != size) {
+			return false;
+		}
 		Object[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -275,9 +285,13 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.getOrDefault(key, neverIdentical) != null) {return false;}
+					if (other.getOrDefault(key, neverIdentical) != null) {
+						return false;
+					}
 				} else {
-					if (!value.equals(other.get(key))) {return false;}
+					if (!value.equals(other.get(key))) {
+						return false;
+					}
 				}
 			}
 		}
@@ -285,7 +299,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	@Override
-	public @NonNull Keys<CharSequence, V> keySet () {
+	public @NonNull Keys<CharSequence, V> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new CaseInsensitiveKeys<>(this);
 			keys2 = new CaseInsensitiveKeys<>(this);
@@ -303,12 +317,12 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	public static class CaseInsensitiveKeys<V> extends OrderedMapKeys<CharSequence, V> {
-		public CaseInsensitiveKeys (ObjectObjectOrderedMap<CharSequence, V> map) {
+		public CaseInsensitiveKeys(ObjectObjectOrderedMap<CharSequence, V> map) {
 			super(map);
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int h = 0;
 			iter.reset();
 			while (iter.hasNext()) {
@@ -330,7 +344,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> CaseInsensitiveOrderedMap<V> with (CharSequence key0, V value0) {
+	public static <V> CaseInsensitiveOrderedMap<V> with(CharSequence key0, V value0) {
 		CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -348,7 +362,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> CaseInsensitiveOrderedMap<V> with (CharSequence key0, V value0, CharSequence key1, V value1) {
+	public static <V> CaseInsensitiveOrderedMap<V> with(CharSequence key0, V value0, CharSequence key1, V value1) {
 		CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -369,7 +383,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> CaseInsensitiveOrderedMap<V> with (CharSequence key0, V value0, CharSequence key1, V value1, CharSequence key2, V value2) {
+	public static <V> CaseInsensitiveOrderedMap<V> with(CharSequence key0, V value0, CharSequence key1, V value1, CharSequence key2, V value2) {
 		CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -393,7 +407,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> CaseInsensitiveOrderedMap<V> with (CharSequence key0, V value0, CharSequence key1, V value1, CharSequence key2, V value2, CharSequence key3, V value3) {
+	public static <V> CaseInsensitiveOrderedMap<V> with(CharSequence key0, V value0, CharSequence key1, V value1, CharSequence key2, V value2, CharSequence key3, V value3) {
 		CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(4);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -418,7 +432,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <V> CaseInsensitiveOrderedMap<V> with (CharSequence key0, V value0, Object... rest) {
+	public static <V> CaseInsensitiveOrderedMap<V> with(CharSequence key0, V value0, Object... rest) {
 		CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		map.putPairs(rest);

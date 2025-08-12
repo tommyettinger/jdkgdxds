@@ -25,42 +25,43 @@ import java.util.Iterator;
  * <br>
  * You can change the Iterator and limit at once using {@link #set(Iterator, int)}, and can also just
  * change the Iterator with {@link #set(Iterator)}.
+ *
  * @param <T> the type of items this can return, and the type the wrapped Iterator returns
  */
 public class LimitingIterator<T> implements Iterator<T> {
-    public Iterator<T> iterator;
-    protected int limit = 1;
-    protected int remaining = 1;
+	public Iterator<T> iterator;
+	protected int limit = 1;
+	protected int remaining = 1;
 
-    public LimitingIterator() {
-    }
+	public LimitingIterator() {
+	}
 
-    public LimitingIterator(final Iterator<T> iterator, int limit) {
-        set(iterator, limit);
-    }
+	public LimitingIterator(final Iterator<T> iterator, int limit) {
+		set(iterator, limit);
+	}
 
-    public void set (final Iterator<T> iterator, int limit) {
-        this.iterator = iterator;
-        this.remaining = this.limit = Math.max(0, limit);
-    }
+	public void set(final Iterator<T> iterator, int limit) {
+		this.iterator = iterator;
+		this.remaining = this.limit = Math.max(0, limit);
+	}
 
-    public void set (final Iterator<T> iterator) {
-        set(iterator, limit);
-    }
+	public void set(final Iterator<T> iterator) {
+		set(iterator, limit);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return (iterator.hasNext() && remaining > 0);
-    }
+	@Override
+	public boolean hasNext() {
+		return (iterator.hasNext() && remaining > 0);
+	}
 
-    @Override
-    public T next () {
-        remaining--;
-        return iterator.next();
-    }
+	@Override
+	public T next() {
+		remaining--;
+		return iterator.next();
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

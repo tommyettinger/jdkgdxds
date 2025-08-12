@@ -50,7 +50,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all characters in a String key and does not edit them.
 	 */
-	public FilteredStringSet () {
+	public FilteredStringSet() {
 		super();
 	}
 
@@ -61,7 +61,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredStringSet (int initialCapacity) {
+	public FilteredStringSet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -73,7 +73,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredStringSet (int initialCapacity, float loadFactor) {
+	public FilteredStringSet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -83,7 +83,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 */
-	public FilteredStringSet (CharFilter filter) {
+	public FilteredStringSet(CharFilter filter) {
 		super();
 		this.filter = filter;
 	}
@@ -93,10 +93,10 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * before growing the backing table.
 	 * This uses the specified CharFilter.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param filter          a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredStringSet (CharFilter filter, int initialCapacity) {
+	public FilteredStringSet(CharFilter filter, int initialCapacity) {
 		super(initialCapacity);
 		this.filter = filter;
 	}
@@ -106,11 +106,11 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * growing the backing table.
 	 * This uses the specified CharFilter.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param filter          a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredStringSet (CharFilter filter, int initialCapacity, float loadFactor) {
+	public FilteredStringSet(CharFilter filter, int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
 	}
@@ -120,7 +120,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 *
 	 * @param set another FilteredStringSet to copy
 	 */
-	public FilteredStringSet (FilteredStringSet set) {
+	public FilteredStringSet(FilteredStringSet set) {
 		super(set.size(), set.loadFactor);
 		filter = set.filter;
 		this.hashMultiplier = set.hashMultiplier;
@@ -132,9 +132,9 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * This uses the specified CharFilter, including while it enters the items in coll.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredStringSet
+	 * @param coll   a Collection implementation to copy, such as an ObjectList or a Set that isn't a FilteredStringSet
 	 */
-	public FilteredStringSet (CharFilter filter, Collection<? extends String> coll) {
+	public FilteredStringSet(CharFilter filter, Collection<? extends String> coll) {
 		this(filter, coll.size());
 		addAll(coll);
 	}
@@ -148,7 +148,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public FilteredStringSet (CharFilter filter, String[] array, int offset, int length) {
+	public FilteredStringSet(CharFilter filter, String[] array, int offset, int length) {
 		this(filter, length);
 		addAll(array, offset, length);
 	}
@@ -158,9 +158,9 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * This uses the specified CharFilter, including while it enters the items in array.
 	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param array an array that will be used in full, except for duplicate items
+	 * @param array  an array that will be used in full, except for duplicate items
 	 */
-	public FilteredStringSet (CharFilter filter, String[] array) {
+	public FilteredStringSet(CharFilter filter, String[] array) {
 		this(filter, array, 0, array.length);
 	}
 
@@ -173,6 +173,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * as any changes made to characters before hashing or equating, then
 	 * returns this object, for chaining. If the filter changes, that invalidates anything previously entered into
 	 * this, so before changing the filter <em>this clears the entire data structure</em>, removing all existing items.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @return this, for chaining
 	 */
@@ -188,10 +189,11 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * multiplies it by the {@link #getHashMultiplier() hash multiplier}, and XORs with the current char after editing.
 	 * This finalizes the hash by multiplying it again by the hash multiplier, then using the reversible
 	 * XOR-rotate-XOR-rotate sequence of operations to adequately jumble the bits.
+	 *
 	 * @param s a String to hash
 	 * @return a 32-bit hash of {@code s}
 	 */
-	protected int hashHelper (final String s) {
+	protected int hashHelper(final String s) {
 		final int hm = hashMultiplier;
 		int hash = hm;
 		for (int i = 0, len = s.length(); i < len; i++) {
@@ -205,7 +207,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		if (item instanceof String) {
 			return hashHelper((String) item) & mask;
 		}
@@ -223,30 +225,30 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @return true if left and right are equivalent according to the rules this filtered type uses
 	 */
 	@Override
-	public boolean equate (Object left, @Nullable Object right) {
+	public boolean equate(Object left, @Nullable Object right) {
 
 		if (left == right)
 			return true;
-		if(right == null) return false;
+		if (right == null) return false;
 		if ((left instanceof String) && (right instanceof String)) {
-			String l = (String)left, r = (String)right;
+			String l = (String) left, r = (String) right;
 			int llen = l.length(), rlen = r.length();
 			int cl = -1, cr = -1;
 			int i = 0, j = 0;
 			while (i < llen || j < rlen) {
-				if(i == llen) cl = -1;
+				if (i == llen) cl = -1;
 				else {
 					while (i < llen && !filter.filter.test((char) (cl = l.charAt(i++)))) {
 						cl = -1;
 					}
 				}
-				if(j == rlen) cr = -1;
+				if (j == rlen) cr = -1;
 				else {
 					while (j < rlen && !filter.filter.test((char) (cr = r.charAt(j++)))) {
 						cr = -1;
 					}
 				}
-				if(cl != cr && filter.editor.applyAsChar((char)cl) != filter.editor.applyAsChar((char)cr))
+				if (cl != cr && filter.editor.applyAsChar((char) cl) != filter.editor.applyAsChar((char) cr))
 					return false;
 			}
 			return true;
@@ -255,12 +257,14 @@ public class FilteredStringSet extends ObjectSet<String> {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		@Nullable String[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			@Nullable String key = keyTable[i];
-			if (key != null) {h += hashHelper(key);}
+			if (key != null) {
+				h += hashHelper(key);
+			}
 		}
 		return h ^ h >>> 16;
 	}
@@ -279,8 +283,9 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given item, but can be resized.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param item one String item
+	 * @param item   one String item
 	 * @return a new FilteredStringSet that holds the given item
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item) {
@@ -291,9 +296,10 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param item0 a String item
-	 * @param item1 a String item
+	 * @param item0  a String item
+	 * @param item1  a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1) {
@@ -304,10 +310,11 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param item0 a String item
-	 * @param item1 a String item
-	 * @param item2 a String item
+	 * @param item0  a String item
+	 * @param item1  a String item
+	 * @param item2  a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2) {
@@ -318,11 +325,12 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param item0 a String item
-	 * @param item1 a String item
-	 * @param item2 a String item
-	 * @param item3 a String item
+	 * @param item0  a String item
+	 * @param item1  a String item
+	 * @param item2  a String item
+	 * @param item3  a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3) {
@@ -333,12 +341,13 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param item0 a String item
-	 * @param item1 a String item
-	 * @param item2 a String item
-	 * @param item3 a String item
-	 * @param item4 a String item
+	 * @param item0  a String item
+	 * @param item1  a String item
+	 * @param item2  a String item
+	 * @param item3  a String item
+	 * @param item4  a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4) {
@@ -350,13 +359,14 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param item0 a String item
-	 * @param item1 a String item
-	 * @param item2 a String item
-	 * @param item3 a String item
-	 * @param item4 a String item
-	 * @param item5 a String item
+	 * @param item0  a String item
+	 * @param item1  a String item
+	 * @param item2  a String item
+	 * @param item3  a String item
+	 * @param item4  a String item
+	 * @param item5  a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5) {
@@ -368,14 +378,15 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param item0 a String item
-	 * @param item1 a String item
-	 * @param item2 a String item
-	 * @param item3 a String item
-	 * @param item4 a String item
-	 * @param item5 a String item
-	 * @param item6 a String item
+	 * @param item0  a String item
+	 * @param item1  a String item
+	 * @param item2  a String item
+	 * @param item3  a String item
+	 * @param item4  a String item
+	 * @param item5  a String item
+	 * @param item6  a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
@@ -387,14 +398,15 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
+	 *
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param item0 a String item
-	 * @param item1 a String item
-	 * @param item2 a String item
-	 * @param item3 a String item
-	 * @param item4 a String item
-	 * @param item5 a String item
-	 * @param item6 a String item
+	 * @param item0  a String item
+	 * @param item1  a String item
+	 * @param item2  a String item
+	 * @param item3  a String item
+	 * @param item4  a String item
+	 * @param item5  a String item
+	 * @param item6  a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
@@ -408,7 +420,8 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * Creates a new FilteredStringSet that holds only the given items, but can be resized.
 	 * This overload will only be used when an array is supplied or if varargs are used and
 	 * there are 9 or more arguments.
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 *
+	 * @param filter  a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param varargs a String varargs or String array; remember that varargs allocate
 	 * @return a new FilteredStringSet that holds the given items
 	 */

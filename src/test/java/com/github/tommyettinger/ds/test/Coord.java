@@ -23,38 +23,47 @@ import com.github.tommyettinger.ds.IntSet;
 
 public class Coord {
 
-	/** the x-component of this vector **/
+	/**
+	 * the x-component of this vector
+	 **/
 	public final short x;
-	/** the y-component of this vector **/
+	/**
+	 * the y-component of this vector
+	 **/
 	public final short y;
 
 	public final int hash;
 
-	/** Constructs a new vector at (0,0) */
-	public Coord () {
+	/**
+	 * Constructs a new vector at (0,0)
+	 */
+	public Coord() {
 		x = 0;
 		y = 0;
 		hash = 0;
 	}
 
-	/** Constructs a vector with the given components
+	/**
+	 * Constructs a vector with the given components
+	 *
 	 * @param x The x-component
-	 * @param y The y-component */
-	public Coord (int x, int y) {
-		this.x = (short)x;
-		this.y = (short)y;
+	 * @param y The y-component
+	 */
+	public Coord(int x, int y) {
+		this.x = (short) x;
+		this.y = (short) y;
 		hash = this.x * 0x17587 + this.y * 0x16A89;
 //		hash = hash(this.x, this.y, -1);
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		Coord point2 = (Coord)o;
+		Coord point2 = (Coord) o;
 
 		if (x != point2.x)
 			return false;
@@ -62,11 +71,12 @@ public class Coord {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		return hash;
 	}
 
 	public static int collisions = 0;
+
 	private static int hash(int x, int y) {
 //		return x * 0x17587 + y * 0x16A89 & mask;
 //		return (y + ((x + y) * (x + y + 1) >>> 1)) * 0x9E3779B9 & mask;
@@ -85,11 +95,12 @@ public class Coord {
 //		return (y ^ (y << 16 | y >>> 16) ^ (y << 8 | y >>> 24)) & mask;
 //		return (y + ((x + y) * (x + y + 1) >>> 1)) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555) & mask;
 	}
+
 	public static void main(String[] args) {
 		System.out.println("Sample hash results:");
 		for (int x = -10; x <= 10; x++) {
 			for (int y = -10; y <= 10; y++) {
-				System.out.println("x="+x+",y="+y+",hash="+ Base.BASE16.unsigned(hash(x, y)));
+				System.out.println("x=" + x + ",y=" + y + ",hash=" + Base.BASE16.unsigned(hash(x, y)));
 			}
 		}
 		System.out.println();
@@ -140,15 +151,16 @@ public class Coord {
 	}
 
 	private static class LoggingIntSet extends IntSet {
-		public LoggingIntSet () {
+		public LoggingIntSet() {
 			super(57, 0.99f);
 		}
-		public LoggingIntSet (int capacity, float loadFactor) {
+
+		public LoggingIntSet(int capacity, float loadFactor) {
 			super(capacity, loadFactor);
 		}
 
 		@Override
-		protected int place (int item) {
+		protected int place(int item) {
 			return item & this.mask;
 		}
 	}

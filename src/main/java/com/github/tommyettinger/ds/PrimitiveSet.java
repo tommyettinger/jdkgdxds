@@ -27,10 +27,10 @@ import com.github.tommyettinger.ds.support.util.LongIterator;
  */
 public interface PrimitiveSet<T> extends PrimitiveCollection<T> {
 	@Override
-	int hashCode ();
+	int hashCode();
 
 	@Override
-	boolean equals (Object other);
+	boolean equals(Object other);
 
 	interface SetOfInt extends PrimitiveCollection.OfInt, PrimitiveSet<Integer> {
 		/**
@@ -40,17 +40,18 @@ public interface PrimitiveSet<T> extends PrimitiveCollection<T> {
 		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
 		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
 		 * PrimitiveSet.SetOfInt, but that isn't necessary for {@code other}.
+		 *
 		 * @param other another Object that should be a PrimitiveSet.SetOfInt
 		 * @return true if other is another PrimitiveSet.SetOfInt with exactly the same items, false otherwise
 		 */
-		default boolean equalContents (Object other) {
-			if(this == other) return true;
-			if(!(other instanceof PrimitiveSet.SetOfInt)) return false;
+		default boolean equalContents(Object other) {
+			if (this == other) return true;
+			if (!(other instanceof PrimitiveSet.SetOfInt)) return false;
 			OfInt o = (OfInt) other;
-			if(size() != o.size()) return false;
+			if (size() != o.size()) return false;
 			IntIterator it = iterator();
 			while (it.hasNext()) {
-				if(!o.contains(it.nextInt())) return false;
+				if (!o.contains(it.nextInt())) return false;
 			}
 			return true;
 		}
@@ -64,17 +65,18 @@ public interface PrimitiveSet<T> extends PrimitiveCollection<T> {
 		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
 		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
 		 * PrimitiveSet.SetOfLong, but that isn't necessary for {@code other}.
+		 *
 		 * @param other another Object that should be a PrimitiveSet.SetOfLong
 		 * @return true if other is another PrimitiveSet.SetOfLong with exactly the same items, false otherwise
 		 */
-		default boolean equalContents (Object other) {
-			if(this == other) return true;
-			if(!(other instanceof PrimitiveSet.SetOfLong)) return false;
+		default boolean equalContents(Object other) {
+			if (this == other) return true;
+			if (!(other instanceof PrimitiveSet.SetOfLong)) return false;
 			OfLong o = (OfLong) other;
-			if(size() != o.size()) return false;
+			if (size() != o.size()) return false;
 			LongIterator it = iterator();
 			while (it.hasNext()) {
-				if(!o.contains(it.nextLong())) return false;
+				if (!o.contains(it.nextLong())) return false;
 			}
 			return true;
 		}

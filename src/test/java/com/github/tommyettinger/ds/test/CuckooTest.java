@@ -28,7 +28,7 @@ import java.util.IdentityHashMap;
 public class CuckooTest {
 	// Expected to fail with an OutOfMemoryError.
 	@Test(expected = OutOfMemoryError.class)
-	public void failingCuckooTest(){
+	public void failingCuckooTest() {
 		CuckooObjectMap<String, Object> map = new CuckooObjectMap<>();
 		String[] problems = ("21oo 0oq1 0opP 0ooo 0pPo 21pP 21q1 1Poo 1Pq1 1PpP 0q31 0pR1 0q2P 0q1o 232P 231o 2331 0pQP 22QP 22Po 22R1 1QQP 1R1o 1QR1 1R2P 1R31 1QPo 1Qup 1S7p 0r8Q 0r7p 0r92 23X2 2492 248Q 247p 22vQ 22up 1S92 1S8Q 23WQ 23Vp 22w2 1QvQ 1Qw2 1RVp 1RWQ 1RX2 0qX2".split(" "));
 		System.out.println("Trying to enter " + problems.length + " String keys into a CuckooObjectMap.");
@@ -38,9 +38,10 @@ public class CuckooTest {
 		}
 		System.out.println("Unexpectedly succeeded; finished CuckooObjectMap has size: " + map.size);
 	}
+
 	// Expected to fail with an OutOfMemoryError.
 	@Test(expected = OutOfMemoryError.class)
-	public void failingStringentCuckooTest(){
+	public void failingStringentCuckooTest() {
 		CuckooObjectMap<String, Object> map = new CuckooObjectMap<>();
 		// all have a hashCode() of -2140395045
 		String[] problems = {
@@ -54,7 +55,7 @@ public class CuckooTest {
 			"IByXQ4", "IByY0r", "IByY1S", "IByY24", "IBz8nr", "IBz8oS", "IBz8p4", "IBz9Or",
 			"IBz9PS", "IBz9Q4", "ICYvnr", "ICYvoS", "ICYvp4", "ICYwOr", "ICYwPS", "ICYwQ4",
 			"ICYx0r", "ICYx1S", "ICYx24", "ICZWnr", "ICZWoS", "ICZWp4", "ICZXOr", "ICZXPS",
-			"ICZXQ4", "ICZY0r", "ICZY1S", "ICZY24",		};
+			"ICZXQ4", "ICZY0r", "ICZY1S", "ICZY24",};
 		System.out.println("Trying to enter " + problems.length + " String keys into a CuckooObjectMap.");
 		for (int i = 0; i < problems.length; i++) {
 			System.out.println("Entered " + i + " keys successfully.");
@@ -64,7 +65,7 @@ public class CuckooTest {
 	}
 
 	@Test
-	public void workingCuckooTest (){
+	public void workingCuckooTest() {
 		ObjectObjectCuckooMap<String, Object> map = new ObjectObjectCuckooMap<>();
 		String[] problems = ("21oo 0oq1 0opP 0ooo 0pPo 21pP 21q1 1Poo 1Pq1 1PpP 0q31 0pR1 0q2P 0q1o 232P 231o 2331 0pQP 22QP 22Po 22R1 1QQP 1R1o 1QR1 1R2P 1R31 1QPo 1Qup 1S7p 0r8Q 0r7p 0r92 23X2 2492 248Q 247p 22vQ 22up 1S92 1S8Q 23WQ 23Vp 22w2 1QvQ 1Qw2 1RVp 1RWQ 1RX2 0qX2".split(" "));
 		System.out.println("Trying to enter " + problems.length + " String keys into an ObjectObjectCuckooMap.");
@@ -74,8 +75,9 @@ public class CuckooTest {
 		}
 		System.out.println("Succeeded; finished ObjectObjectCuckooMap has size: " + map.size);
 	}
+
 	@Test
-	public void workingStringentCuckooTest (){
+	public void workingStringentCuckooTest() {
 		ObjectObjectCuckooMap<String, Object> map = new ObjectObjectCuckooMap<>();
 		// all have a hashCode() of -2140395045
 		String[] problems = {
@@ -101,34 +103,36 @@ public class CuckooTest {
 
 	private static class Killer {
 		int state;
-		public Killer(){
+
+		public Killer() {
 			state = 0;
 		}
-		public Killer(int s){
+
+		public Killer(int s) {
 			state = s;
 		}
 
 		@Override
-		public boolean equals (Object o) {
+		public boolean equals(Object o) {
 			if (this == o)
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
 
-			Killer killer = (Killer)o;
+			Killer killer = (Killer) o;
 
 			return state == killer.state;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			return 0; // UH OH HERE WE GO
 		}
 	}
 
 	@Ignore
 	@Test
-	public void workingLethalCuckooTest (){
+	public void workingLethalCuckooTest() {
 		ObjectObjectCuckooMap<Killer, Object> map = new ObjectObjectCuckooMap<>();
 		int size = 0x8000;
 		System.out.println("Trying to enter " + size + " Killer keys into an ObjectObjectCuckooMap.");
@@ -140,12 +144,12 @@ public class CuckooTest {
 	}
 
 	@Test
-	public void workingLethalLinearTest (){
+	public void workingLethalLinearTest() {
 		com.github.tommyettinger.ds.ObjectObjectMap<Killer, Object> map = new com.github.tommyettinger.ds.ObjectObjectMap<>();
 		int size = 0x8000;
 		System.out.println("Trying to enter " + size + " Killer keys into an ObjectObjectMap.");
 		for (int i = 0; i < size; i++) {
-			if((i & i - 1) == 0)
+			if ((i & i - 1) == 0)
 				System.out.println("Entered " + i + " keys successfully.");
 			map.put(new Killer(i), null);
 		}
@@ -153,12 +157,12 @@ public class CuckooTest {
 	}
 
 	@Test
-	public void workingLethalFlipTest (){
+	public void workingLethalFlipTest() {
 		ObjectObjectMap<Killer, Object> map = new ObjectObjectMap<>();
 		int size = 0x8000;
 		System.out.println("Trying to enter " + size + " Killer keys into a ObjectObjectMap.");
 		for (int i = 0; i < size; i++) {
-			if((i & i - 1) == 0)
+			if ((i & i - 1) == 0)
 				System.out.println("Entered " + i + " keys successfully.");
 			map.put(new Killer(i), null);
 		}
@@ -167,7 +171,7 @@ public class CuckooTest {
 
 	// Expected to fail with an OutOfMemoryError.
 	@Test(expected = OutOfMemoryError.class)
-	public void vectorCuckooTest(){
+	public void vectorCuckooTest() {
 		CuckooObjectMap<Vector2, Object> map = new CuckooObjectMap<>();
 		final int LIMIT = 16, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
 		Vector2[] problems = new Vector2[TOTAL];
@@ -193,7 +197,7 @@ public class CuckooTest {
 	//1504 ms at LIMIT=16
 	//At LIMIT=20, OutOfMemoryError trying to enter 1048576 Vector2 keys into an ObjectObjectCuckooMap.
 	@Test
-	public void vectorGoodCuckooTest(){
+	public void vectorGoodCuckooTest() {
 		final long startTime = System.nanoTime();
 		ObjectObjectCuckooMap<Vector2, Object> map = new ObjectObjectCuckooMap<>();
 		final int LIMIT = 16, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
@@ -215,7 +219,7 @@ public class CuckooTest {
 	//19 ms at LIMIT=16
 	//335 ms at LIMIT=20
 	@Test
-	public void vectorLinearTest(){
+	public void vectorLinearTest() {
 		final long startTime = System.nanoTime();
 		com.github.tommyettinger.ds.ObjectObjectMap<Vector2, Object> map = new com.github.tommyettinger.ds.ObjectObjectMap<>();
 		final int LIMIT = 16, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
@@ -235,7 +239,7 @@ public class CuckooTest {
 	}
 
 	@Test
-	public void vectorHashMapTest(){
+	public void vectorHashMapTest() {
 		final long startTime = System.nanoTime();
 		HashMap<Vector2, Object> map = new HashMap<>();
 		final int LIMIT = 20, TOTAL = 1 << LIMIT, BOUND = 1 << (LIMIT - 2 >>> 1);
@@ -257,7 +261,7 @@ public class CuckooTest {
 	//681 ms at LIMIT=22
 	//1555 ms at LIMIT=23
 	@Test
-	public void blankLinearTest (){
+	public void blankLinearTest() {
 		final long startTime = System.nanoTime();
 		final int LIMIT = 22, TOTAL = 1 << LIMIT;
 		com.github.tommyettinger.ds.ObjectObjectMap<Object, Object> map = new com.github.tommyettinger.ds.ObjectObjectMap<>(TOTAL);
@@ -277,7 +281,7 @@ public class CuckooTest {
 	//1435 ms at LIMIT=22
 	//3002 ms at LIMIT=23
 	@Test
-	public void blankHashMapTest (){
+	public void blankHashMapTest() {
 		final long startTime = System.nanoTime();
 		final int LIMIT = 22, TOTAL = 1 << LIMIT;
 		HashMap<Object, Object> map = new HashMap<>(TOTAL);
@@ -297,7 +301,7 @@ public class CuckooTest {
 	//630 ms at LIMIT=22
 	//1314 ms at LIMIT=23
 	@Test
-	public void blankIdentityTest (){
+	public void blankIdentityTest() {
 		final long startTime = System.nanoTime();
 		final int LIMIT = 23, TOTAL = 1 << LIMIT;
 		IdentityObjectMap<Object, Object> map = new IdentityObjectMap<>(TOTAL);
@@ -317,7 +321,7 @@ public class CuckooTest {
 	//681 ms at LIMIT=22
 	//1401 ms at LIMIT=23
 	@Test
-	public void blankIdentityHashMapTest (){
+	public void blankIdentityHashMapTest() {
 		final long startTime = System.nanoTime();
 		final int LIMIT = 23, TOTAL = 1 << LIMIT;
 		IdentityHashMap<Object, Object> map = new IdentityHashMap<>(TOTAL);
@@ -336,7 +340,7 @@ public class CuckooTest {
 
 	@Test(timeout = 4000L)
 	@Ignore("This will not terminate on its own, so it is ignored.")
-	public void failingCHMTest(){
+	public void failingCHMTest() {
 		CuckooHashMap<String, Object> map = new CuckooHashMap<>();
 		String[] problems = ("0q1o 0oq1 0ooo 21oo 0qX2 0opP 0pPo 21pP 21q1 1Poo 1Pq1 1PpP 0q31 0pR1 0q2P 232P 231o 2331 0pQP 22QP 22Po 22R1 1QQP 1R1o 1QR1 1R2P 1R31 1QPo 1Qup 1S7p 0r8Q 0r7p 0r92 23X2 2492 248Q 247p 22vQ 22up 1S92 1S8Q 23WQ 23Vp 22w2 1QvQ 1Qw2 1RVp 1RWQ 1RX2".split(" "));
 		System.out.println("Trying to enter " + problems.length + " String keys into a CuckooHashMap.");
@@ -348,11 +352,11 @@ public class CuckooTest {
 	}
 
 	@Test
-	public void workingICMTest (){
+	public void workingICMTest() {
 		IdentityCuckooMap<String, Object> map = new IdentityCuckooMap<>();
 		String[] problems = ("21oo 0oq1 0opP 0ooo 0pPo 21pP 21q1 1Poo 1Pq1 1PpP 0q31 0pR1 0q2P 0q1o 232P 231o 2331 0pQP 22QP 22Po 22R1 1QQP 1R1o 1QR1 1R2P 1R31 1QPo 1Qup 1S7p 0r8Q 0r7p 0r92 23X2 2492 248Q 247p 22vQ 22up 1S92 1S8Q 23WQ 23Vp 22w2 1QvQ 1Qw2 1RVp 1RWQ 1RX2 0qX2".split(" "));
 		System.out.println("Trying to enter " + problems.length + " String keys into a IdentityCuckooMap.");
-		for (int i = 0; i < problems.length;) {
+		for (int i = 0; i < problems.length; ) {
 			map.put(problems[i], null);
 			System.out.println("Entered " + ++i + " keys successfully.");
 		}
@@ -361,11 +365,11 @@ public class CuckooTest {
 
 
 	@Test
-	public void basicFlipTest (){
+	public void basicFlipTest() {
 		ObjectObjectMap<String, Object> map = new ObjectObjectMap<>();
 		String[] problems = ("21oo 0oq1 0opP 0ooo 0pPo 21pP 21q1 1Poo 1Pq1 1PpP 0q31 0pR1 0q2P 0q1o 232P 231o 2331 0pQP 22QP 22Po 22R1 1QQP 1R1o 1QR1 1R2P 1R31 1QPo 1Qup 1S7p 0r8Q 0r7p 0r92 23X2 2492 248Q 247p 22vQ 22up 1S92 1S8Q 23WQ 23Vp 22w2 1QvQ 1Qw2 1RVp 1RWQ 1RX2 0qX2".split(" "));
 		System.out.println("Trying to enter " + problems.length + " String keys into a ObjectObjectMap.");
-		for (int i = 0; i < problems.length;) {
+		for (int i = 0; i < problems.length; ) {
 			map.put(problems[i], null);
 			System.out.println("Entered " + ++i + " keys successfully.");
 		}
@@ -375,6 +379,7 @@ public class CuckooTest {
 
 	/**
 	 * Generates 6-char Strings that all have the same hashCode().
+	 *
 	 * @param args ignored
 	 */
 	public static void main(String[] args) {

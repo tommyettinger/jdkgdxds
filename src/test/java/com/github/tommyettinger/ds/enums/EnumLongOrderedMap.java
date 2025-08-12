@@ -32,7 +32,7 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public EnumLongOrderedMap () {
+	public EnumLongOrderedMap() {
 		super();
 	}
 
@@ -42,7 +42,7 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public EnumLongOrderedMap (int initialCapacity) {
+	public EnumLongOrderedMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -53,7 +53,7 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public EnumLongOrderedMap (int initialCapacity, float loadFactor) {
+	public EnumLongOrderedMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -62,7 +62,7 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	 *
 	 * @param map an ObjectLongOrderedMap to copy, or a subclass such as this one
 	 */
-	public EnumLongOrderedMap (ObjectLongOrderedMap<? extends K> map) {
+	public EnumLongOrderedMap(ObjectLongOrderedMap<? extends K> map) {
 		super(map);
 	}
 
@@ -71,7 +71,7 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	 *
 	 * @param map an ObjectLongMap to copy, or a subclass
 	 */
-	public EnumLongOrderedMap (ObjectLongMap<? extends K> map) {
+	public EnumLongOrderedMap(ObjectLongMap<? extends K> map) {
 		super(map);
 	}
 
@@ -82,7 +82,7 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public EnumLongOrderedMap (K[] keys, long[] values) {
+	public EnumLongOrderedMap(K[] keys, long[] values) {
 		super(keys, values);
 	}
 
@@ -93,26 +93,26 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public EnumLongOrderedMap (Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
+	public EnumLongOrderedMap(Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
 		super(keys, values);
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place(Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
-			return ((Enum<?>)item).ordinal() & mask;
+			return ((Enum<?>) item).ordinal() & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
@@ -129,18 +129,26 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 
 	@SuppressWarnings({"rawtypes"})
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof EnumLongOrderedMap)) {return false;}
-		EnumLongOrderedMap other = (EnumLongOrderedMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof EnumLongOrderedMap)) {
+			return false;
+		}
+		EnumLongOrderedMap other = (EnumLongOrderedMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		Enum[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			Enum key = keyTable[i];
 			if (key != null) {
 				long value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				if (value != other.get(key)) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -155,7 +163,7 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K extends Enum<K>> EnumLongOrderedMap<K> with (K key0, Number value0) {
+	public static <K extends Enum<K>> EnumLongOrderedMap<K> with(K key0, Number value0) {
 		EnumLongOrderedMap<K> map = new EnumLongOrderedMap<>(1);
 		map.put(key0, value0.longValue());
 		return map;
@@ -176,12 +184,12 @@ public class EnumLongOrderedMap<K extends Enum<K>> extends ObjectLongOrderedMap<
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K extends Enum<K>, V> EnumLongOrderedMap<K> with (K key0, Number value0, Object... rest) {
+	public static <K extends Enum<K>, V> EnumLongOrderedMap<K> with(K key0, Number value0, Object... rest) {
 		EnumLongOrderedMap<K> map = new EnumLongOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.longValue());
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((K)rest[i - 1], ((Number)rest[i]).longValue());
+				map.put((K) rest[i - 1], ((Number) rest[i]).longValue());
 			} catch (ClassCastException ignored) {
 			}
 		}

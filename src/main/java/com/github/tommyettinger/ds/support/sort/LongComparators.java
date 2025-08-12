@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -27,7 +28,7 @@ import static java.lang.Long.MIN_VALUE;
  * comparators.
  */
 public final class LongComparators {
-	private LongComparators () {
+	private LongComparators() {
 	}
 
 	/**
@@ -36,12 +37,12 @@ public final class LongComparators {
 	protected static class NaturalImplicitComparator implements LongComparator {
 
 		@Override
-		public final int compare (final long a, final long b) {
+		public final int compare(final long a, final long b) {
 			return Long.compare(a, b);
 		}
 
 		@Override
-		public LongComparator reversed () {
+		public LongComparator reversed() {
 			return OPPOSITE_COMPARATOR;
 		}
 
@@ -55,12 +56,12 @@ public final class LongComparators {
 	protected static class OppositeImplicitComparator implements LongComparator {
 
 		@Override
-		public final int compare (final long a, final long b) {
+		public final int compare(final long a, final long b) {
 			return Long.compare(b, a);
 		}
 
 		@Override
-		public LongComparator reversed () {
+		public LongComparator reversed() {
 			return NATURAL_COMPARATOR;
 		}
 
@@ -72,17 +73,17 @@ public final class LongComparators {
 
 		final LongComparator comparator;
 
-		protected OppositeComparator (final LongComparator c) {
+		protected OppositeComparator(final LongComparator c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final long a, final long b) {
+		public final int compare(final long a, final long b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final LongComparator reversed () {
+		public final LongComparator reversed() {
 			return comparator;
 		}
 	}
@@ -93,8 +94,10 @@ public final class LongComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static LongComparator oppositeComparator (final LongComparator c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
+	public static LongComparator oppositeComparator(final LongComparator c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator) c).comparator;
+		}
 		return new OppositeComparator(c);
 	}
 
@@ -105,17 +108,19 @@ public final class LongComparators {
 	 * @param c a comparator, or {@code null}.
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
-	public static LongComparator asLongComparator (final Comparator<? super Long> c) {
-		if (c instanceof LongComparator) {return (LongComparator)c;}
+	public static LongComparator asLongComparator(final Comparator<? super Long> c) {
+		if (c instanceof LongComparator) {
+			return (LongComparator) c;
+		}
 		return new LongComparator() {
 			@Override
-			public int compare (long x, long y) {
+			public int compare(long x, long y) {
 				return c.compare(Long.valueOf(x), Long.valueOf(y));
 			}
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public int compare (Long x, Long y) {
+			public int compare(Long x, Long y) {
 				return c.compare(x, y);
 			}
 		};
@@ -128,12 +133,12 @@ public final class LongComparators {
 	protected static class UnsignedComparator implements LongComparator {
 
 		@Override
-		public final int compare (final long a, final long b) {
+		public final int compare(final long a, final long b) {
 			return Long.compare(a + MIN_VALUE, b + MIN_VALUE);
 		}
 
 		@Override
-		public LongComparator reversed () {
+		public LongComparator reversed() {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
 
@@ -148,12 +153,12 @@ public final class LongComparators {
 	protected static class UnsignedOppositeComparator implements LongComparator {
 
 		@Override
-		public final int compare (final long a, final long b) {
+		public final int compare(final long a, final long b) {
 			return Long.compare(b + MIN_VALUE, a + MIN_VALUE);
 		}
 
 		@Override
-		public LongComparator reversed () {
+		public LongComparator reversed() {
 			return UNSIGNED_COMPARATOR;
 		}
 	}
@@ -162,7 +167,7 @@ public final class LongComparators {
 
 	/// The remainder of the code is based on FastUtil.
 
-	private static void swap (long[] items, int first, int second) {
+	private static void swap(long[] items, int first, int second) {
 		long firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -174,10 +179,14 @@ public final class LongComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static void inPlaceMerge (long[] items, final int from, int mid, final int to, final LongComparator comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static void inPlaceMerge(long[] items, final int from, int mid, final int to, final LongComparator comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -198,13 +207,19 @@ public final class LongComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -225,7 +240,7 @@ public final class LongComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static int lowerBound (long[] items, int from, final int to, final int pos, final LongComparator comp) {
+	private static int lowerBound(long[] items, int from, final int to, final int pos, final LongComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -253,7 +268,7 @@ public final class LongComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static int upperBound (long[] items, int from, final int to, final int pos, final LongComparator comp) {
+	private static int upperBound(long[] items, int from, final int to, final int pos, final LongComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -275,7 +290,7 @@ public final class LongComparators {
 	 * @param items the long array to be sorted
 	 * @param c     a LongComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (long[] items, final @Nullable LongComparator c) {
+	public static void sort(long[] items, final @Nullable LongComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -297,7 +312,7 @@ public final class LongComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a LongComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (long[] items, final int from, final int to, final @Nullable LongComparator c) {
+	public static void sort(long[] items, final int from, final int to, final @Nullable LongComparator c) {
 		if (to <= 0) {
 			return;
 		}
@@ -334,7 +349,9 @@ public final class LongComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

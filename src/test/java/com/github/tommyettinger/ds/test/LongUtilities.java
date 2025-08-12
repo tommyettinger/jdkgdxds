@@ -188,6 +188,6 @@ public final class LongUtilities {
 	/**
 	 * Not instantiable.
 	 */
-	private LongUtilities () {
+	private LongUtilities() {
 	}
 }

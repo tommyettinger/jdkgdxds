@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ public class ObjectObjectQuadMapTest {
 			objArray2[i] = objArray[i].toString();
 		}
 	}
+
 	public void runBattery(Map<String, String> map) {
 		try {
 			map.put("one", "1");
@@ -58,11 +60,11 @@ public class ObjectObjectQuadMapTest {
 			map.clear();
 			assertEquals("size should be zero", 0, map.size());
 			assertTrue("Should not have entries", !map.entrySet().iterator()
-					.hasNext());
+				.hasNext());
 			assertTrue("Should not have keys", !map.keySet().iterator()
-					.hasNext());
+				.hasNext());
 			assertTrue("Should not have values", !map.values().iterator()
-					.hasNext());
+				.hasNext());
 		} catch (UnsupportedOperationException e) {
 		}
 
@@ -72,17 +74,17 @@ public class ObjectObjectQuadMapTest {
 			map.remove("one");
 			assertEquals("size should be zero", 0, map.size());
 			assertTrue("Should not have entries", !map.entrySet().iterator()
-					.hasNext());
+				.hasNext());
 			assertTrue("Should not have keys", !map.keySet().iterator()
-					.hasNext());
+				.hasNext());
 			assertTrue("Should not have values", !map.values().iterator()
-					.hasNext());
+				.hasNext());
 		} catch (UnsupportedOperationException e) {
 		}
 	}
 
 	@Test
-	public void test_Constructor () {
+	public void test_Constructor() {
 		// Test for method com.github.tommyettinger.ds.ObjectObjectQuadMap()
 		runBattery(new ObjectObjectQuadMap<String, String>());
 
@@ -90,18 +92,19 @@ public class ObjectObjectQuadMapTest {
 		assertEquals("Created incorrect ObjectObjectQuadMap", 0, hm2.size());
 	}
 
-	@Test public void test_ConstructorI () {
+	@Test
+	public void test_ConstructorI() {
 		// Test for method com.github.tommyettinger.ds.ObjectObjectQuadMap(int)
 		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap(5);
 		assertEquals("Created incorrect ObjectObjectQuadMap", 0, hm2.size());
-		do{
+		do {
 			try {
 				new ObjectObjectQuadMap(-1);
 			} catch (IllegalArgumentException e) {
 				break;
 			}
 			Assert.fail("Failed to throw IllegalArgumentException for initial capacity < 0");
-		}while (false);
+		} while (false);
 
 		ObjectObjectQuadMap empty = new ObjectObjectQuadMap(0);
 		Assert.assertNull("Empty hashmap access", empty.get("nothing"));
@@ -109,18 +112,19 @@ public class ObjectObjectQuadMapTest {
 		assertTrue("cannot get element", empty.get("something") == "here");
 	}
 
-	@Test public void test_ConstructorIF () {
+	@Test
+	public void test_ConstructorIF() {
 		// Test for method com.github.tommyettinger.ds.ObjectObjectQuadMap(int, float)
-		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap(5, (float)0.5);
+		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap(5, (float) 0.5);
 		assertEquals("Created incorrect ObjectObjectQuadMap", 0, hm2.size());
-		do{
+		do {
 			try {
 				new ObjectObjectQuadMap(0, 0);
 			} catch (IllegalArgumentException e) {
 				break;
 			}
 			Assert.fail("Failed to throw IllegalArgumentException for initial load factor <= 0");
-		}while (false);
+		} while (false);
 
 		ObjectObjectQuadMap empty = new ObjectObjectQuadMap(0, 0.75f);
 		Assert.assertNull("Empty hashtable access", empty.get("nothing"));
@@ -128,14 +132,15 @@ public class ObjectObjectQuadMapTest {
 		assertTrue("cannot get element", empty.get("something") == "here");
 	}
 
-	@Test public void test_ConstructorLjava_util_Map () {
+	@Test
+	public void test_ConstructorLjava_util_Map() {
 		HashMap myMap = new HashMap();
 		for (int counter = 0; counter < hmSize; counter++)
 			myMap.put(objArray2[counter], objArray[counter]);
 		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap(myMap);
 		for (int counter = 0; counter < hmSize; counter++)
 			assertTrue("Failed to construct correct ObjectObjectQuadMap",
-					hm.get(objArray2[counter]) == hm2.get(objArray2[counter]));
+				hm.get(objArray2[counter]) == hm2.get(objArray2[counter]));
 
 //        try {
 //            ObjectObjectQuadMap mockMap = new MockMapNull();
@@ -152,7 +157,8 @@ public class ObjectObjectQuadMapTest {
 		assertTrue(map2.containsValue("a", false));
 	}
 
-	@Test public void test_clear () {
+	@Test
+	public void test_clear() {
 		hm.clear();
 		assertEquals("Clear failed to reset size", 0, hm.size());
 		for (int i = 0; i < hmSize; i++)
@@ -170,7 +176,8 @@ public class ObjectObjectQuadMapTest {
 		}
 	}
 
-	@Test public void test_containsKeyLjava_lang_Object () {
+	@Test
+	public void test_containsKeyLjava_lang_Object() {
 		// Test for method boolean
 		// com.github.tommyettinger.ds.ObjectObjectQuadMap.containsKey(java.lang.Object)
 		assertTrue("Returned false for valid key", hm.containsKey(new Integer(876).toString()));
@@ -183,20 +190,22 @@ public class ObjectObjectQuadMapTest {
 //				.containsKey(new Integer(0)));
 	}
 
-	@Test public void test_containsValueLjava_lang_Object () {
+	@Test
+	public void test_containsValueLjava_lang_Object() {
 		// Test for method boolean
 		// com.github.tommyettinger.ds.ObjectObjectQuadMap.containsValue(java.lang.Object)
 		assertTrue("Returned false for valid value", hm.containsValue(new Integer(875), false));
 		assertTrue("Returned true for invalid value", !hm.containsValue(new Integer(-9), false));
 	}
 
-	@Test public void test_entrySet () {
+	@Test
+	public void test_entrySet() {
 		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectQuadMap.entrySet(
 		Set<Map.Entry> s = hm.entrySet();
 		Iterator i = s.iterator();
 		assertTrue("Returned set of incorrect size", hm.size() == s.size());
 		while (i.hasNext()) {
-			ObjectObjectQuadMap.Entry m = (ObjectObjectQuadMap.Entry)i.next();
+			ObjectObjectQuadMap.Entry m = (ObjectObjectQuadMap.Entry) i.next();
 			assertTrue("Returned incorrect entry set", hm.containsKey(m.key) && hm.containsValue(m.value, false));
 		}
 
@@ -205,7 +214,8 @@ public class ObjectObjectQuadMapTest {
 		assertEquals(1001, s.size());
 	}
 
-	@Test public void test_getLjava_lang_Object () {
+	@Test
+	public void test_getLjava_lang_Object() {
 		// Test for method java.lang.Object
 		// com.github.tommyettinger.ds.ObjectObjectQuadMap.get(java.lang.Object)
 		Assert.assertNull("Get returned non-null for non existent key", hm.get("T"));
@@ -255,13 +265,13 @@ public class ObjectObjectQuadMapTest {
 //        assertEquals("Failed to remove proxy object key", val,
 //                hm.remove(proxyKey));
 //        assertFalse("Should not have found proxy key", hm.containsKey(proxyKey));
-//        
+//
 //        // Proxy value
 //        Object k = new Object();
 //        hm.put(k, proxyValue);
-//        
+//
 //        assertTrue("Failed to find proxy object as value", hm.containsValue(proxyValue));
-//        
+//
 //        // Proxy key and value
 //        ObjectObjectQuadMap map = new ObjectObjectQuadMap();
 //        map.put(proxyKey, proxyValue);
@@ -272,13 +282,15 @@ public class ObjectObjectQuadMapTest {
 //        assertTrue("Failed to find proxy association", map.entrySet().contains(entry));
 //	}
 
-	@Test public void test_isEmpty () {
+	@Test
+	public void test_isEmpty() {
 		// Test for method boolean com.github.tommyettinger.ds.ObjectObjectQuadMap.isEmpty()
 		assertTrue("Returned false for new map", new ObjectObjectQuadMap().isEmpty());
 		assertTrue("Returned true for non-empty", !hm.isEmpty());
 	}
 
-	@Test public void test_keySet () {
+	@Test
+	public void test_keySet() {
 		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectQuadMap.keySet()
 		Set s = hm.keySet();
 		assertTrue("Returned set of incorrect size()", s.size() == hm.size());
@@ -296,10 +308,10 @@ public class ObjectObjectQuadMapTest {
 		map.put(new Integer(102), "102");
 		map.put(new Integer(203), "203");
 		Iterator it = map.keySet().iterator();
-		Integer remove1 = (Integer)it.next();
+		Integer remove1 = (Integer) it.next();
 		it.hasNext();
 		it.remove();
-		Integer remove2 = (Integer)it.next();
+		Integer remove2 = (Integer) it.next();
 		it.remove();
 		ObjectList list = new ObjectList(Arrays.asList(new Integer(1), new Integer(102), new Integer(203)));
 		list.remove(remove1);
@@ -312,7 +324,7 @@ public class ObjectObjectQuadMapTest {
 		map2.put(new Integer(1), "1");
 		map2.put(new Integer(4), "4");
 		Iterator it2 = map2.keySet().iterator();
-		Integer remove3 = (Integer)it2.next();
+		Integer remove3 = (Integer) it2.next();
 		Integer next;
 		if (remove3.intValue() == 1)
 			next = new Integer(4);
@@ -325,7 +337,8 @@ public class ObjectObjectQuadMapTest {
 		assertTrue("Wrong contents 2", map2.keySet().iterator().next().equals(next));
 	}
 
-	@Test public void test_putLjava_lang_ObjectLjava_lang_Object () {
+	@Test
+	public void test_putLjava_lang_ObjectLjava_lang_Object() {
 		hm.put("KEY", "VALUE");
 		assertEquals("Failed to install key/value pair", "VALUE", hm.get("KEY"));
 
@@ -384,17 +397,18 @@ public class ObjectObjectQuadMapTest {
 	}
 
 	static class MyKey {
-		public MyKey () {
+		public MyKey() {
 			super();
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			return 0;
 		}
 	}
 
-	@Test public void test_putAllLjava_util_Map () {
+	@Test
+	public void test_putAllLjava_util_Map() {
 		// Test for method void com.github.tommyettinger.ds.ObjectObjectQuadMap.putAll(java.util.Map)
 		ObjectObjectQuadMap hm2 = new ObjectObjectQuadMap();
 		hm2.putAll(hm);
@@ -417,18 +431,19 @@ public class ObjectObjectQuadMapTest {
 //            // expected.
 //        }
 //
-////        try {
-////            hashMap = new ObjectObjectQuadMap(new MockMapNull());
-////            fail("Should throw NullPointerException");
-////        } catch (NullPointerException e) {
-////            // expected.
-////        }
-//    } 
 
-	@Test public void test_removeLjava_lang_Object () {
+	/// /        try {
+	/// /            hashMap = new ObjectObjectQuadMap(new MockMapNull());
+	/// /            fail("Should throw NullPointerException");
+	/// /        } catch (NullPointerException e) {
+	/// /            // expected.
+	/// /        }
+//    }
+	@Test
+	public void test_removeLjava_lang_Object() {
 		int size = hm.size();
 		Integer y = new Integer(9);
-		Integer x = (Integer)hm.remove(y.toString());
+		Integer x = (Integer) hm.remove(y.toString());
 		assertTrue("Remove returned incorrect value", x.equals(new Integer(9)));
 		Assert.assertNull("Failed to remove given key", hm.get(new Integer(9)));
 		assertTrue("Failed to decrement size", hm.size() == size - 1);
@@ -472,7 +487,7 @@ public class ObjectObjectQuadMapTest {
 	 */
 	@Test
 	@Ignore
-	public void test_rehash () {
+	public void test_rehash() {
 		// This map should rehash on adding the ninth element.
 		ObjectObjectQuadMap<MyKey, Integer> hm = new ObjectObjectQuadMap<MyKey, Integer>(10, 0.5f);
 
@@ -501,12 +516,14 @@ public class ObjectObjectQuadMapTest {
 		}
 	}
 
-	@Test public void test_size () {
+	@Test
+	public void test_size() {
 		// Test for method int com.github.tommyettinger.ds.ObjectObjectQuadMap.size()
 		assertTrue("Returned incorrect size", hm.size() == objArray.length + 1);
 	}
 
-	@Test public void test_values () {
+	@Test
+	public void test_values() {
 		// Test for method java.util.Collection com.github.tommyettinger.ds.ObjectObjectQuadMap.values()
 		Collection c = hm.values();
 		assertTrue("Returned collection of incorrect size()", c.size() == hm.size());
@@ -525,11 +542,12 @@ public class ObjectObjectQuadMapTest {
 		Object removed = values.next();
 		values.remove();
 		assertTrue("Removing from the values collection should remove from the original map",
-				!myObjectObjectQuadMap.containsValue(removed, false));
+			!myObjectObjectQuadMap.containsValue(removed, false));
 
 	}
 
-	@Test public void test_toString () {
+	@Test
+	public void test_toString() {
 
 		ObjectObjectQuadMap m = new ObjectObjectQuadMap();
 		m.put(m, m);
@@ -540,27 +558,27 @@ public class ObjectObjectQuadMapTest {
 	static class ReusableKey {
 		private int key = 0;
 
-		public void setKey (int key) {
+		public void setKey(int key) {
 			this.key = key;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			return key;
 		}
 
 		@Override
-		public boolean equals (Object o) {
+		public boolean equals(Object o) {
 			if (o == this) {
 				return true;
 			}
 			if (!(o instanceof ReusableKey)) {
 				return false;
 			}
-			return key == ((ReusableKey)o).key;
+			return key == ((ReusableKey) o).key;
 		}
 	}
-//    
+//
 //	public void test_Map_Entry_hashCode() {
 //        //Related to HARMONY-403
 //	    ObjectObjectQuadMap<Integer, Integer> map = new ObjectObjectQuadMap<Integer, Integer>(10);
@@ -579,7 +597,8 @@ public class ObjectObjectQuadMapTest {
 	/*
 	 * Regression test for HY-4750
 	 */
-	@Test public void test_EntrySet () {
+	@Test
+	public void test_EntrySet() {
 //        ObjectObjectQuadMap map = new ObjectObjectQuadMap();
 //        map.put(new Integer(1), "ONE");
 
@@ -599,7 +618,7 @@ public class ObjectObjectQuadMapTest {
 	 * is called before a test is executed.
 	 */
 	@Before
-	public void setUp () {
+	public void setUp() {
 		hm = new ObjectObjectQuadMap();
 		for (int i = 0; i < objArray.length; i++)
 			hm.put(objArray2[i], objArray[i]);
@@ -608,13 +627,13 @@ public class ObjectObjectQuadMapTest {
 	}
 
 	class SubMap<K, V> extends ObjectObjectQuadMap<K, V> {
-		public SubMap (ObjectObjectQuadMap<? extends K, ? extends V> m) {
+		public SubMap(ObjectObjectQuadMap<? extends K, ? extends V> m) {
 			super(m);
 		}
 
 		@Override
 		@Nullable
-		public V put (@NonNull K key, @Nullable V value) {
+		public V put(@NonNull K key, @Nullable V value) {
 			throw new UnsupportedOperationException();
 		}
 	}

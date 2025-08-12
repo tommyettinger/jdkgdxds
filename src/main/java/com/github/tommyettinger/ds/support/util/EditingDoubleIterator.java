@@ -30,38 +30,38 @@ import java.util.NoSuchElementException;
  * and can also just change the Iterator with {@link #set(DoubleIterator)}.
  */
 public class EditingDoubleIterator implements DoubleIterator {
-    public DoubleIterator iterator;
-    public DoubleToDoubleFunction editor;
+	public DoubleIterator iterator;
+	public DoubleToDoubleFunction editor;
 
-    public EditingDoubleIterator() {
-    }
+	public EditingDoubleIterator() {
+	}
 
-    public EditingDoubleIterator(final DoubleIterator iterator, final DoubleToDoubleFunction editor) {
-        set(iterator, editor);
-    }
+	public EditingDoubleIterator(final DoubleIterator iterator, final DoubleToDoubleFunction editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final DoubleIterator iterator, final DoubleToDoubleFunction editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final DoubleIterator iterator, final DoubleToDoubleFunction editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final DoubleIterator iterator) {
-        set(iterator, editor);
-    }
+	public void set(final DoubleIterator iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public double nextDouble () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.applyAsDouble(iterator.nextDouble());
-    }
+	@Override
+	public double nextDouble() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.applyAsDouble(iterator.nextDouble());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

@@ -25,19 +25,19 @@ import com.github.tommyettinger.function.ObjDoubleToObjBiFunction;
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, double)}.
  */
 public interface DoubleAppender extends ObjDoubleToObjBiFunction<StringBuilder, StringBuilder> {
-    /**
-     * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
-     * {@code StringBuilder::append} is present at a call-site. This should be used in place of
-     * {@link StringBuilder#append(double)} when you want to use that as a DoubleAppender.
-     */
-    DoubleAppender DEFAULT = StringBuilder::append;
+	/**
+	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
+	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
+	 * {@link StringBuilder#append(double)} when you want to use that as a DoubleAppender.
+	 */
+	DoubleAppender DEFAULT = StringBuilder::append;
 
-    /**
-     * An alternative DoubleAppender constant that appends ten {@link Base#BASE90} digits for every double input.
-     * The ten ASCII chars are not expected to be human-readable.
-     * <br>
-     * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
-     * this lambda would be present at a call-site.
-     */
-    DoubleAppender DENSE = (StringBuilder sb, double d) -> Base.BASE90.appendUnsigned(sb, BitConversion.doubleToRawLongBits(d));
+	/**
+	 * An alternative DoubleAppender constant that appends ten {@link Base#BASE90} digits for every double input.
+	 * The ten ASCII chars are not expected to be human-readable.
+	 * <br>
+	 * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
+	 * this lambda would be present at a call-site.
+	 */
+	DoubleAppender DENSE = (StringBuilder sb, double d) -> Base.BASE90.appendUnsigned(sb, BitConversion.doubleToRawLongBits(d));
 }

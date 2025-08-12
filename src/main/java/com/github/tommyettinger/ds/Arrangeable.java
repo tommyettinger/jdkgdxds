@@ -35,21 +35,21 @@ public interface Arrangeable {
 	 * @param first  the first position, must not be negative and must be less than {@link #size()}
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
-	void swap (int first, int second);
+	void swap(int first, int second);
 
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
 	 *
 	 * @param random any {@link Random}, such as {@link com.github.tommyettinger.digital.AlternateRandom} or one from juniper
 	 */
-	default void shuffle (Random random) {
+	default void shuffle(Random random) {
 		for (int i = size() - 1; i > 0; i--) swap(i, random.nextInt(i + 1));
 	}
 
 	/**
 	 * Reverses this Arrangeable in-place.
 	 */
-	void reverse ();
+	void reverse();
 
 	/**
 	 * Returns the number of elements in this Arrangeable.
@@ -57,7 +57,7 @@ public interface Arrangeable {
 	 *
 	 * @return the number of elements in this Arrangeable
 	 */
-	int size ();
+	int size();
 
 	/**
 	 * Rearranges this Arrangeable using the given seed to shuffle it. The rearrangement is done in-place.
@@ -78,7 +78,7 @@ public interface Arrangeable {
 	 *
 	 * @param seed a (typically random) long seed to determine the shuffled order
 	 */
-	default void rearrange (long seed) {
+	default void rearrange(long seed) {
 		for (int i = size() - 1; i > 0; i--) swap(i, Hasher.randomize2Bounded(++seed, i + 1));
 	}
 
@@ -86,9 +86,10 @@ public interface Arrangeable {
 	 * An empty interface that merges Arrangeable and java.util.List APIs.
 	 * This is only really meant to make {@link Select} and {@link QuickSelect} able to take more List types
 	 * that also support the necessary {@link #swap(int, int)} method.
+	 *
 	 * @param <T> the type of items this ArrangeableList contains
 	 */
-	interface ArrangeableList<T> extends Arrangeable, List<T>{
+	interface ArrangeableList<T> extends Arrangeable, List<T> {
 
 	}
 }

@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -62,9 +63,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
+	 *
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (OrderType ordering) {
+	public IntIntOrderedMap(OrderType ordering) {
 		this(Utilities.getDefaultTableCapacity(), ordering);
 	}
 
@@ -72,9 +74,9 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * Creates a new map with the given starting capacity and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
-	 * @param ordering determines what implementation {@link #order()} will use
+	 * @param ordering        determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (int initialCapacity, OrderType ordering) {
+	public IntIntOrderedMap(int initialCapacity, OrderType ordering) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
@@ -84,16 +86,19 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
-	 * @param ordering determines what implementation {@link #order()} will use
+	 * @param ordering        determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (int initialCapacity, float loadFactor, OrderType ordering) {
+	public IntIntOrderedMap(int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		switch (ordering){
-			case DEQUE: keys = new IntDeque(initialCapacity);
+		switch (ordering) {
+			case DEQUE:
+				keys = new IntDeque(initialCapacity);
 				break;
-			case BAG: keys = new IntBag(initialCapacity);
+			case BAG:
+				keys = new IntBag(initialCapacity);
 				break;
-			default: keys = new IntList(initialCapacity);
+			default:
+				keys = new IntList(initialCapacity);
 		}
 	}
 
@@ -102,20 +107,20 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param map the map to copy
 	 */
-	public IntIntOrderedMap (IntIntOrderedMap map) {
+	public IntIntOrderedMap(IntIntOrderedMap map) {
 		super(map);
-		if(map.keys instanceof IntDeque) keys = new IntDeque((IntDeque) map.keys);
-		else if(map.keys instanceof IntBag) keys = new IntBag(map.keys);
+		if (map.keys instanceof IntDeque) keys = new IntDeque((IntDeque) map.keys);
+		else if (map.keys instanceof IntBag) keys = new IntBag(map.keys);
 		else keys = new IntList(map.keys);
 	}
 
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map the map to copy
+	 * @param map      the map to copy
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (IntIntMap map, OrderType ordering) {
+	public IntIntOrderedMap(IntIntMap map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
 		hashMultiplier = map.hashMultiplier;
 		IntIterator it = map.keySet().iterator();
@@ -129,11 +134,11 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * Given two side-by-side arrays, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller array.
 	 *
-	 * @param keys   an array of keys
-	 * @param values an array of values
+	 * @param keys     an array of keys
+	 * @param values   an array of values
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (int[] keys, int[] values, OrderType ordering) {
+	public IntIntOrderedMap(int[] keys, int[] values, OrderType ordering) {
 		this(Math.min(keys.length, values.length), ordering);
 		putAll(keys, values);
 	}
@@ -142,11 +147,11 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * Given two side-by-side collections, one of keys, one of values, this constructs a map and inserts each pair of key and value into it.
 	 * If keys and values have different lengths, this only uses the length of the smaller collection.
 	 *
-	 * @param keys   a PrimitiveCollection of keys
-	 * @param values a PrimitiveCollection of values
+	 * @param keys     a PrimitiveCollection of keys
+	 * @param values   a PrimitiveCollection of values
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values, OrderType ordering) {
+	public IntIntOrderedMap(PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values, OrderType ordering) {
 		this(Math.min(keys.size(), values.size()), ordering);
 		putAll(keys, values);
 	}
@@ -155,12 +160,12 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * Creates a new set by copying {@code count} items from the given IntIntOrderedMap, starting at {@code offset} in that Map,
 	 * into this.
 	 *
-	 * @param other  another IntIntOrderedMap of the same type
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
+	 * @param other    another IntIntOrderedMap of the same type
+	 * @param offset   the first index in other's ordering to draw an item from
+	 * @param count    how many items to copy from other
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntIntOrderedMap (IntIntOrderedMap other, int offset, int count, OrderType ordering) {
+	public IntIntOrderedMap(IntIntOrderedMap other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
 		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
@@ -169,7 +174,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public IntIntOrderedMap () {
+	public IntIntOrderedMap() {
 		this(OrderType.LIST);
 	}
 
@@ -178,7 +183,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public IntIntOrderedMap (int initialCapacity) {
+	public IntIntOrderedMap(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
 
@@ -189,7 +194,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public IntIntOrderedMap (int initialCapacity, float loadFactor) {
+	public IntIntOrderedMap(int initialCapacity, float loadFactor) {
 		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
@@ -198,7 +203,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param map the map to copy
 	 */
-	public IntIntOrderedMap (IntIntMap map) {
+	public IntIntOrderedMap(IntIntMap map) {
 		this(map, OrderType.LIST);
 	}
 
@@ -209,7 +214,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public IntIntOrderedMap (int[] keys, int[] values) {
+	public IntIntOrderedMap(int[] keys, int[] values) {
 		this(keys, values, OrderType.LIST);
 	}
 
@@ -220,7 +225,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public IntIntOrderedMap (PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values) {
+	public IntIntOrderedMap(PrimitiveCollection.OfInt keys, PrimitiveCollection.OfInt values) {
 		this(keys, values, OrderType.LIST);
 	}
 
@@ -232,14 +237,14 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public IntIntOrderedMap (IntIntOrderedMap other, int offset, int count) {
+	public IntIntOrderedMap(IntIntOrderedMap other, int offset, int count) {
 		this(other, offset, count, other.keys instanceof IntBag ? OrderType.BAG
-				: other.keys instanceof IntDeque ? OrderType.DEQUE
-				: OrderType.LIST);
+			: other.keys instanceof IntDeque ? OrderType.DEQUE
+			: OrderType.LIST);
 	}
 
 	@Override
-	public int put (int key, int value) {
+	public int put(int key, int value) {
 		if (key == 0) {
 			int oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -262,7 +267,9 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -276,13 +283,15 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
-	public int put (int key, int value, int index) {
+	public int put(int key, int value, int index) {
 		if (key == 0) {
 			int oldValue = defaultValue;
 			if (hasZeroValue) {
 				oldValue = zeroValue;
 				int oldIndex = keys.indexOf(key);
-				if (oldIndex != index) {keys.insert(index, keys.removeAt(oldIndex));}
+				if (oldIndex != index) {
+					keys.insert(index, keys.removeAt(oldIndex));
+				}
 			} else {
 				keys.insert(index, 0);
 				size++;
@@ -296,22 +305,28 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 			int oldValue = valueTable[i];
 			valueTable[i] = value;
 			int oldIndex = keys.indexOf(key);
-			if (oldIndex != index) {keys.insert(index, keys.removeAt(oldIndex));}
+			if (oldIndex != index) {
+				keys.insert(index, keys.removeAt(oldIndex));
+			}
 			return oldValue;
 		}
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.insert(index, key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
 	@Override
-	public int putOrDefault (int key, int value, int defaultValue) {
+	public int putOrDefault(int key, int value, int defaultValue) {
 		if (key == 0) {
 			int oldValue = defaultValue;
-			if (hasZeroValue) {oldValue = zeroValue;} else {
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+			} else {
 				size++;
 				keys.add(key);
 			}
@@ -329,7 +344,9 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 		keyTable[i] = key;
 		valueTable[i] = value;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -339,7 +356,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (IntIntOrderedMap map) {
+	public void putAll(IntIntOrderedMap map) {
 		ensureCapacity(map.size);
 		IntList ks = map.keys;
 		int kl = ks.size();
@@ -358,7 +375,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 */
-	public void putAll (IntIntOrderedMap other, int offset, int count) {
+	public void putAll(IntIntOrderedMap other, int offset, int count) {
 		putAll(size, other, offset, count);
 	}
 
@@ -371,7 +388,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll (int insertionIndex, IntIntOrderedMap other, int offset, int count) {
+	public void putAll(int insertionIndex, IntIntOrderedMap other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
 		for (int i = offset; i < end; i++) {
@@ -380,9 +397,11 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	}
 
 	@Override
-	public int remove (int key) {
+	public int remove(int key) {
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
-		if (!super.containsKey(key)) {return defaultValue;}
+		if (!super.containsKey(key)) {
+			return defaultValue;
+		}
 		keys.remove(key);
 		return super.remove(key);
 	}
@@ -393,7 +412,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
 	 * @return the value of the removed entry
 	 */
-	public int removeAt (int index) {
+	public int removeAt(int index) {
 		return super.remove(keys.removeAt(index));
 	}
 
@@ -407,7 +426,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(keys.size(), end);
 		for (int i = start; i < end; i++) {
@@ -423,8 +442,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	/**
@@ -434,14 +455,16 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 		keys.ensureCapacity(additionalCapacity);
 	}
 
 	@Override
-	public int getAndIncrement (int key, int defaultValue, int increment) {
+	public int getAndIncrement(int key, int defaultValue, int increment) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				int old = zeroValue;
@@ -464,7 +487,9 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 		keyTable[i] = key;
 		valueTable[i] = defaultValue + increment;
 		keys.add(key);
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 
 	}
@@ -479,10 +504,14 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (int before, int after) {
-		if (containsKey(after)) {return false;}
+	public boolean alter(int before, int after) {
+		if (containsKey(after)) {
+			return false;
+		}
 		int index = keys.indexOf(before);
-		if (index == -1) {return false;}
+		if (index == -1) {
+			return false;
+		}
 		super.put(after, super.remove(before));
 		keys.set(index, after);
 		return true;
@@ -497,8 +526,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, int after) {
-		if (index < 0 || index >= size || containsKey(after)) {return false;}
+	public boolean alterAt(int index, int after) {
+		if (index < 0 || index >= size || containsKey(after)) {
+			return false;
+		}
 		super.put(after, super.remove(keys.get(index)));
 		keys.set(index, after);
 		return true;
@@ -513,8 +544,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	public int setAt (int index, int v) {
-		if (index < 0 || index >= size) {return defaultValue;}
+	public int setAt(int index, int v) {
+		if (index < 0 || index >= size) {
+			return defaultValue;
+		}
 		final int pos = locateKey(keys.get(index));
 		final int oldValue = valueTable[pos];
 		valueTable[pos] = v;
@@ -528,7 +561,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	public int getAt (int index) {
+	public int getAt(int index) {
 		return get(keys.get(index));
 	}
 
@@ -539,18 +572,18 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public int keyAt (int index) {
+	public int keyAt(int index) {
 		return keys.get(index);
 	}
 
 	@Override
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		keys.clear();
 		super.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		keys.clear();
 		super.clear();
 	}
@@ -563,14 +596,14 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return the IntList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public IntList order () {
+	public IntList order() {
 		return keys;
 	}
 
 	/**
 	 * Sorts this IntIntOrderedMap in-place by the keys' natural ordering.
 	 */
-	public void sort () {
+	public void sort() {
 		keys.sort();
 	}
 
@@ -580,7 +613,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param comp a IntComparator, such as one from {@link IntComparators}, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable IntComparator comp) {
+	public void sort(@Nullable IntComparator comp) {
 		keys.sort(comp);
 	}
 
@@ -591,7 +624,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param comp a non-null IntComparator, such as one from {@link IntComparators}
 	 */
-	public void sortByValue (IntComparator comp) {
+	public void sortByValue(IntComparator comp) {
 		keys.sort((a, b) -> comp.compare(get(a), get(b)));
 	}
 
@@ -615,7 +648,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys keySet () {
+	public Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys(this);
 			keys2 = new OrderedMapKeys(this);
@@ -640,7 +673,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return a {@link PrimitiveCollection.OfInt} backed by this map
 	 */
 	@Override
-	public Values values () {
+	public Values values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues(this);
 			values2 = new OrderedMapValues(this);
@@ -667,7 +700,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return a {@link PrimitiveCollection.OfInt} of {@link Entry} key-value pairs
 	 */
 	@Override
-	public Entries entrySet () {
+	public Entries entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries(this);
 			entries2 = new OrderedMapEntries(this);
@@ -694,7 +727,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator iterator () {
+	public @NonNull EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -719,10 +752,14 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		IntAppender keyAppender, IntAppender valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+								  IntAppender keyAppender, IntAppender valueAppender) {
+		if (size == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
 		IntList keys = this.keys;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			int key = keys.get(i);
@@ -731,29 +768,35 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 			keyAppender.apply(sb, key).append(keyValueSeparator);
 			valueAppender.apply(sb, get(key));
 		}
-		if (braces) {sb.append('}');}
+		if (braces) {
+			sb.append('}');
+		}
 		return sb;
 	}
 
 	public static class OrderedMapEntries extends Entries {
 		protected IntList keys;
 
-		public OrderedMapEntries (IntIntOrderedMap map) {
+		public OrderedMapEntries(IntIntOrderedMap map) {
 			super(map);
 			keys = map.keys;
 			iter = new EntryIterator(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public Entry next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Entry next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
 					entry.value = map.get(entry.key);
@@ -763,8 +806,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(entry.key);
 					nextIndex--;
 					currentIndex = -1;
@@ -777,22 +822,26 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	public static class OrderedMapKeys extends Keys {
 		private final IntList keys;
 
-		public OrderedMapKeys (IntIntOrderedMap map) {
+		public OrderedMapKeys(IntIntOrderedMap map) {
 			super(map);
 			keys = map.keys;
 			iter = new KeyIterator(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public int nextInt () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public int nextInt() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					int key = keys.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -801,8 +850,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -815,22 +866,26 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	public static class OrderedMapValues extends Values {
 		private final IntList keys;
 
-		public OrderedMapValues (IntIntOrderedMap map) {
+		public OrderedMapValues(IntIntOrderedMap map) {
 			super(map);
 			keys = map.keys;
 			iter = new ValueIterator(map) {
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public int nextInt () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public int nextInt() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					int value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -839,8 +894,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -857,7 +914,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static IntIntOrderedMap with () {
+	public static IntIntOrderedMap with() {
 		return new IntIntOrderedMap(0);
 	}
 
@@ -872,7 +929,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param value0 the first and only value; will be converted to primitive int
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static IntIntOrderedMap with (Number key0, Number value0) {
+	public static IntIntOrderedMap with(Number key0, Number value0) {
 		IntIntOrderedMap map = new IntIntOrderedMap(1);
 		map.put(key0.intValue(), value0.intValue());
 		return map;
@@ -891,7 +948,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param value1 a Number for a value; will be converted to primitive int
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static IntIntOrderedMap with (Number key0, Number value0, Number key1, Number value1) {
+	public static IntIntOrderedMap with(Number key0, Number value0, Number key1, Number value1) {
 		IntIntOrderedMap map = new IntIntOrderedMap(2);
 		map.put(key0.intValue(), value0.intValue());
 		map.put(key1.intValue(), value1.intValue());
@@ -913,7 +970,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param value2 a Number for a value; will be converted to primitive int
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static IntIntOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+	public static IntIntOrderedMap with(Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
 		IntIntOrderedMap map = new IntIntOrderedMap(3);
 		map.put(key0.intValue(), value0.intValue());
 		map.put(key1.intValue(), value1.intValue());
@@ -938,7 +995,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param value3 a Number for a value; will be converted to primitive int
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static IntIntOrderedMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+	public static IntIntOrderedMap with(Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
 		IntIntOrderedMap map = new IntIntOrderedMap(4);
 		map.put(key0.intValue(), value0.intValue());
 		map.put(key1.intValue(), value1.intValue());
@@ -962,7 +1019,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param rest   an array or varargs of Number elements
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static IntIntOrderedMap with (Number key0, Number value0, Number... rest) {
+	public static IntIntOrderedMap with(Number key0, Number value0, Number... rest) {
 		IntIntOrderedMap map = new IntIntOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0.intValue());
 		map.putPairs(rest);
@@ -976,7 +1033,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static IntIntOrderedMap withPrimitive () {
+	public static IntIntOrderedMap withPrimitive() {
 		return new IntIntOrderedMap(0);
 	}
 
@@ -990,7 +1047,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static IntIntOrderedMap withPrimitive (int key0, int value0) {
+	public static IntIntOrderedMap withPrimitive(int key0, int value0) {
 		IntIntOrderedMap map = new IntIntOrderedMap(1);
 		map.put(key0, value0);
 		return map;
@@ -1008,7 +1065,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param value1 a int value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static IntIntOrderedMap withPrimitive (int key0, int value0, int key1, int value1) {
+	public static IntIntOrderedMap withPrimitive(int key0, int value0, int key1, int value1) {
 		IntIntOrderedMap map = new IntIntOrderedMap(2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1029,7 +1086,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param value2 a int value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static IntIntOrderedMap withPrimitive (int key0, int value0, int key1, int value1, int key2, int value2) {
+	public static IntIntOrderedMap withPrimitive(int key0, int value0, int key1, int value1, int key2, int value2) {
 		IntIntOrderedMap map = new IntIntOrderedMap(3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1053,7 +1110,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param value3 a int value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static IntIntOrderedMap withPrimitive (int key0, int value0, int key1, int value1, int key2, int value2, int key3, int value3) {
+	public static IntIntOrderedMap withPrimitive(int key0, int value0, int key1, int value1, int key2, int value2, int key3, int value3) {
 		IntIntOrderedMap map = new IntIntOrderedMap(4);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1079,7 +1136,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param rest   an array or varargs of primitive int elements
 	 * @return a new map containing the given keys and values
 	 */
-	public static IntIntOrderedMap withPrimitive (int key0, int value0, int... rest) {
+	public static IntIntOrderedMap withPrimitive(int key0, int value0, int... rest) {
 		IntIntOrderedMap map = new IntIntOrderedMap(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		map.putPairsPrimitive(rest);

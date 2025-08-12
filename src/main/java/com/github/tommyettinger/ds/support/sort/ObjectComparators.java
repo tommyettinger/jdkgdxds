@@ -20,27 +20,29 @@ import com.github.tommyettinger.function.ObjToFloatFunction;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public final class ObjectComparators {
-	private ObjectComparators () {
+	private ObjectComparators() {
 	}
+
 	/**
 	 * A type-specific comparator mimicking the natural order.
 	 */
 	protected static class NaturalImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
 
 		@Override
-		public final int compare (final @NonNull T a, final T b) {
+		public final int compare(final @NonNull T a, final T b) {
 			return a == b ? 0 : a.compareTo(b);
 		}
 
 		@Override
-		public Comparator<T> reversed () {
-			return (Comparator<T>)OPPOSITE_COMPARATOR;
+		public Comparator<T> reversed() {
+			return (Comparator<T>) OPPOSITE_COMPARATOR;
 		}
 
 	}
@@ -50,16 +52,16 @@ public final class ObjectComparators {
 	/**
 	 * A type-specific comparator mimicking the opposite of the natural order.
 	 */
-    protected static class OppositeImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
+	protected static class OppositeImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
 
 		@Override
-		public final int compare (final T a, final @NonNull T b) {
+		public final int compare(final T a, final @NonNull T b) {
 			return a == b ? 0 : b.compareTo(a);
 		}
 
 		@Override
-		public Comparator<T> reversed () {
-			return (Comparator<T>)NATURAL_COMPARATOR;
+		public Comparator<T> reversed() {
+			return (Comparator<T>) NATURAL_COMPARATOR;
 		}
 
 	}
@@ -70,17 +72,17 @@ public final class ObjectComparators {
 
 		final Comparator<T> comparator;
 
-		protected OppositeComparator (final Comparator<T> c) {
+		protected OppositeComparator(final Comparator<T> c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final T a, final T b) {
+		public final int compare(final T a, final T b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final Comparator<T> reversed () {
+		public final Comparator<T> reversed() {
 			return comparator;
 		}
 	}
@@ -91,8 +93,10 @@ public final class ObjectComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static <T> Comparator<T> oppositeComparator (final Comparator<T> c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator<T>)c).comparator;}
+	public static <T> Comparator<T> oppositeComparator(final Comparator<T> c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator<T>) c).comparator;
+		}
 		return new OppositeComparator<>(c);
 	}
 
@@ -114,14 +118,14 @@ public final class ObjectComparators {
 	 * @return a comparator that compares by an extracted key
 	 * @throws NullPointerException if the argument is null
 	 */
-	public static <T> Comparator<T> comparingFloat (ObjToFloatFunction<? super T> keyExtractor) {
+	public static <T> Comparator<T> comparingFloat(ObjToFloatFunction<? super T> keyExtractor) {
 		Objects.requireNonNull(keyExtractor);
 		return (c1, c2) -> Float.compare(keyExtractor.applyAsFloat(c1), keyExtractor.applyAsFloat(c2));
 	}
 
 	/// The remainder of the code is based on FastUtil.
 
-	private static <K> void swap (List<K> items, int first, int second) {
+	private static <K> void swap(List<K> items, int first, int second) {
 		K firstValue = items.get(first);
 		items.set(first, items.get(second));
 		items.set(second, firstValue);
@@ -133,10 +137,14 @@ public final class ObjectComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static <K> void inPlaceMerge (List<K> items, final int from, int mid, final int to, final Comparator<? super K> comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static <K> void inPlaceMerge(List<K> items, final int from, int mid, final int to, final Comparator<? super K> comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items.get(mid), items.get(from)) < 0) {swap(items, from, mid);}
+			if (comp.compare(items.get(mid), items.get(from)) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -157,13 +165,19 @@ public final class ObjectComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -184,7 +198,7 @@ public final class ObjectComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static <K> int lowerBound (List<K> items, int from, final int to, final int pos, final Comparator<? super K> comp) {
+	private static <K> int lowerBound(List<K> items, int from, final int to, final int pos, final Comparator<? super K> comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -212,7 +226,7 @@ public final class ObjectComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static <K> int upperBound (List<K> items, int from, final int to, final int pos, final Comparator<? super K> comp) {
+	private static <K> int upperBound(List<K> items, int from, final int to, final int pos, final Comparator<? super K> comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -234,7 +248,7 @@ public final class ObjectComparators {
 	 * @param items the List to be sorted
 	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort (List<K> items, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort(List<K> items, final @Nullable Comparator<? super K> c) {
 		sort(items, 0, items.size(), c);
 	}
 
@@ -253,7 +267,7 @@ public final class ObjectComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort (List<K> items, final int from, final int to, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort(List<K> items, final int from, final int to, final @Nullable Comparator<? super K> c) {
 		if (to <= 0) {
 			return;
 		}
@@ -261,7 +275,7 @@ public final class ObjectComparators {
 			throw new UnsupportedOperationException("The given from/to range in Comparators.sort() is invalid.");
 		}
 		if (c == null) {
-			sort(items, from, to, (Comparator<K>)NATURAL_COMPARATOR);
+			sort(items, from, to, (Comparator<K>) NATURAL_COMPARATOR);
 			return;
 		}
 		/*
@@ -290,13 +304,15 @@ public final class ObjectComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items.get(mid - 1), items.get(mid)) <= 0) {return;}
+		if (c.compare(items.get(mid - 1), items.get(mid)) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);
 	}
 
-	private static <K> void swap (K[] items, int first, int second) {
+	private static <K> void swap(K[] items, int first, int second) {
 		K firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -308,10 +324,14 @@ public final class ObjectComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static <K> void inPlaceMerge (K[] items, final int from, int mid, final int to, final Comparator<? super K> comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static <K> void inPlaceMerge(K[] items, final int from, int mid, final int to, final Comparator<? super K> comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -332,13 +352,19 @@ public final class ObjectComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -359,7 +385,7 @@ public final class ObjectComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static <K> int lowerBound (K[] items, int from, final int to, final int pos, final Comparator<? super K> comp) {
+	private static <K> int lowerBound(K[] items, int from, final int to, final int pos, final Comparator<? super K> comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -387,7 +413,7 @@ public final class ObjectComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static <K> int upperBound (K[] items, int from, final int to, final int pos, final Comparator<? super K> comp) {
+	private static <K> int upperBound(K[] items, int from, final int to, final int pos, final Comparator<? super K> comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -409,7 +435,7 @@ public final class ObjectComparators {
 	 * @param items the List to be sorted
 	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort (K[] items, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort(K[] items, final @Nullable Comparator<? super K> c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -428,7 +454,7 @@ public final class ObjectComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort (K[] items, final int from, final int to, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort(K[] items, final int from, final int to, final @Nullable Comparator<? super K> c) {
 		if (to <= 0) {
 			return;
 		}
@@ -436,7 +462,7 @@ public final class ObjectComparators {
 			throw new UnsupportedOperationException("The given from/to range in Comparators.sort() is invalid.");
 		}
 		if (c == null) {
-			sort(items, from, to, (Comparator<K>)NATURAL_COMPARATOR);
+			sort(items, from, to, (Comparator<K>) NATURAL_COMPARATOR);
 			return;
 		}
 		/*
@@ -465,7 +491,9 @@ public final class ObjectComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

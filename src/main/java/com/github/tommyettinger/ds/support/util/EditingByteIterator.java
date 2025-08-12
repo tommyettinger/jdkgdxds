@@ -30,38 +30,38 @@ import java.util.NoSuchElementException;
  * and can also just change the Iterator with {@link #set(ByteIterator)}.
  */
 public class EditingByteIterator implements ByteIterator {
-    public ByteIterator iterator;
-    public ByteToByteFunction editor;
+	public ByteIterator iterator;
+	public ByteToByteFunction editor;
 
-    public EditingByteIterator() {
-    }
+	public EditingByteIterator() {
+	}
 
-    public EditingByteIterator(final ByteIterator iterator, final ByteToByteFunction editor) {
-        set(iterator, editor);
-    }
+	public EditingByteIterator(final ByteIterator iterator, final ByteToByteFunction editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final ByteIterator iterator, final ByteToByteFunction editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final ByteIterator iterator, final ByteToByteFunction editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final ByteIterator iterator) {
-        set(iterator, editor);
-    }
+	public void set(final ByteIterator iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public byte nextByte () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.applyAsByte(iterator.nextByte());
-    }
+	@Override
+	public byte nextByte() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.applyAsByte(iterator.nextByte());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

@@ -35,10 +35,10 @@ public interface DoubleComparator extends Comparator<Double> {
 	 * is less than, equal to, or greater than the second.
 	 * @see Comparator
 	 */
-	int compare (double k1, double k2);
+	int compare(double k1, double k2);
 
 	@Override
-	default DoubleComparator reversed () {
+	default DoubleComparator reversed() {
 		return DoubleComparators.oppositeComparator(this);
 	}
 
@@ -51,7 +51,7 @@ public interface DoubleComparator extends Comparator<Double> {
 	 */
 	@Deprecated
 	@Override
-	default int compare (Double ok1, Double ok2) {
+	default int compare(Double ok1, Double ok2) {
 		return compare(ok1.doubleValue(), ok2.doubleValue());
 	}
 
@@ -61,7 +61,7 @@ public interface DoubleComparator extends Comparator<Double> {
 	 *
 	 * @see Comparator#thenComparing(Comparator)
 	 */
-	default DoubleComparator thenComparing (DoubleComparator second) {
+	default DoubleComparator thenComparing(DoubleComparator second) {
 		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
@@ -69,8 +69,10 @@ public interface DoubleComparator extends Comparator<Double> {
 	}
 
 	@Override
-	default Comparator<Double> thenComparing (Comparator<? super Double> second) {
-		if (second instanceof DoubleComparator) {return thenComparing((DoubleComparator)second);}
+	default Comparator<Double> thenComparing(Comparator<? super Double> second) {
+		if (second instanceof DoubleComparator) {
+			return thenComparing((DoubleComparator) second);
+		}
 		return Comparator.super.thenComparing(second);
 	}
 }

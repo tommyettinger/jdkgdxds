@@ -35,10 +35,10 @@ public interface CharComparator extends Comparator<Character> {
 	 * is less than, equal to, or greater than the second.
 	 * @see Comparator
 	 */
-	int compare (char k1, char k2);
+	int compare(char k1, char k2);
 
 	@Override
-	default CharComparator reversed () {
+	default CharComparator reversed() {
 		return CharComparators.oppositeComparator(this);
 	}
 
@@ -51,7 +51,7 @@ public interface CharComparator extends Comparator<Character> {
 	 */
 	@Deprecated
 	@Override
-	default int compare (Character ok1, Character ok2) {
+	default int compare(Character ok1, Character ok2) {
 		return compare(ok1.charValue(), ok2.charValue());
 	}
 
@@ -61,7 +61,7 @@ public interface CharComparator extends Comparator<Character> {
 	 *
 	 * @see Comparator#thenComparing(Comparator)
 	 */
-	default CharComparator thenComparing (CharComparator second) {
+	default CharComparator thenComparing(CharComparator second) {
 		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
@@ -69,8 +69,10 @@ public interface CharComparator extends Comparator<Character> {
 	}
 
 	@Override
-	default Comparator<Character> thenComparing (Comparator<? super Character> second) {
-		if (second instanceof CharComparator) {return thenComparing((CharComparator)second);}
+	default Comparator<Character> thenComparing(Comparator<? super Character> second) {
+		if (second instanceof CharComparator) {
+			return thenComparing((CharComparator) second);
+		}
 		return Comparator.super.thenComparing(second);
 	}
 }

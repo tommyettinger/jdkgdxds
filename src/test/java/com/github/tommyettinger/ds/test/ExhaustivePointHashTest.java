@@ -40,15 +40,17 @@ public class ExhaustivePointHashTest {
 					int longestPileup = 0;
 					long originalMultiplier;
 					int hashX = 0x12345, hashY = 0x54321;
+
 					{
 						originalMultiplier = 0xD1B54A32D192ED03L;
 						for (int i = 0; i < hashShiftA; i++) {
 							originalMultiplier = originalMultiplier * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L;
 						}
-						hashX = ((int)(originalMultiplier >>> 24) & 0xFFFFF) | 1;
-						hashY = ((int)(originalMultiplier >>> 44) & 0xFFFFF) | 1;
+						hashX = ((int) (originalMultiplier >>> 24) & 0xFFFFF) | 1;
+						hashY = ((int) (originalMultiplier >>> 44) & 0xFFFFF) | 1;
 					}
-//					int hashAddend = 0xD1B54A32;
+
+					//					int hashAddend = 0xD1B54A32;
 //					{
 //						hashMultiplier = 0xD1B54A32D192ED03L;
 //						long ctr = hashAddend;
@@ -58,8 +60,8 @@ public class ExhaustivePointHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place (@NonNull Object item) {
-						final Point2 p = (Point2)item;
+					protected int place(@NonNull Object item) {
+						final Point2 p = (Point2) item;
 						return p.x * hashX + p.y * hashY & mask;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
 //                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
@@ -68,7 +70,7 @@ public class ExhaustivePointHashTest {
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -82,9 +84,9 @@ public class ExhaustivePointHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 //                        hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C1L;
@@ -100,19 +102,20 @@ public class ExhaustivePointHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
-						if(collisionTotal > 1810000L) throw new RuntimeException();
+						if (collisionTotal > 1810000L) throw new RuntimeException();
 //                        System.out.println("hash multiplier: " + Base.BASE16.unsigned(hashMultiplier) + " with new size " + newSize);
 //                        System.out.println("total collisions: " + collisionTotal);
 //                        System.out.println("longest pileup: " + longestPileup);
 					}
 
 					@Override
-					public void clear () {
-						if(longestPileup == 0)
-						{
+					public void clear() {
+						if (longestPileup == 0) {
 							System.out.println("hash multiplier: 0x" + Base.BASE16.signed(hashX) + " by 0x" + Base.BASE16.signed(hashY) + " on iteration " + hashShiftA);
 							System.out.println("gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						}
@@ -129,7 +132,7 @@ public class ExhaustivePointHashTest {
 					for (int i = 0; i < LEN; i++) {
 						set.add(spiral[i]);
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					continue;
 				}
 //        System.out.println(System.nanoTime() - start);

@@ -32,56 +32,56 @@ import java.util.NoSuchElementException;
  * to handle primitive items.
  */
 public class FilteringShortIterator implements ShortIterator {
-    public ShortIterator iterator;
-    public ShortPredicate filter;
-    protected boolean end = false;
-    protected boolean available = false;
-    protected short next;
+	public ShortIterator iterator;
+	public ShortPredicate filter;
+	protected boolean end = false;
+	protected boolean available = false;
+	protected short next;
 
-    public FilteringShortIterator() {
-    }
+	public FilteringShortIterator() {
+	}
 
-    public FilteringShortIterator(final ShortIterator iterator, final ShortPredicate filter) {
-        set(iterator, filter);
-    }
+	public FilteringShortIterator(final ShortIterator iterator, final ShortPredicate filter) {
+		set(iterator, filter);
+	}
 
-    public void set(final ShortIterator iterator, final ShortPredicate predicate) {
-        this.iterator = iterator;
-        this.filter = predicate;
-        end = available = false;
-    }
+	public void set(final ShortIterator iterator, final ShortPredicate predicate) {
+		this.iterator = iterator;
+		this.filter = predicate;
+		end = available = false;
+	}
 
-    public void set(final ShortIterator iterator) {
-        set(iterator, filter);
-    }
+	public void set(final ShortIterator iterator) {
+		set(iterator, filter);
+	}
 
-    @Override
-    public boolean hasNext() {
-        if (end) return false;
-        if (available) return true;
-        while (iterator.hasNext()) {
-            final short n = iterator.nextShort();
-            if (filter.test(n)) {
-                next = n;
-                available = true;
-                return true;
-            }
-        }
-        end = true;
-        return false;
-    }
+	@Override
+	public boolean hasNext() {
+		if (end) return false;
+		if (available) return true;
+		while (iterator.hasNext()) {
+			final short n = iterator.nextShort();
+			if (filter.test(n)) {
+				next = n;
+				available = true;
+				return true;
+			}
+		}
+		end = true;
+		return false;
+	}
 
-    @Override
-    public short nextShort() {
-        if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
-        final short result = next;
-        available = false;
-        return result;
-    }
+	@Override
+	public short nextShort() {
+		if (!available && !hasNext()) throw new NoSuchElementException("No elements remaining.");
+		final short result = next;
+		available = false;
+		return result;
+	}
 
-    @Override
-    public void remove() {
-        if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		if (available) throw new IllegalStateException("Cannot remove between a call to hasNext() and next().");
+		iterator.remove();
+	}
 }

@@ -33,7 +33,7 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public EnumFloatOrderedMap () {
+	public EnumFloatOrderedMap() {
 		super();
 	}
 
@@ -43,7 +43,7 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public EnumFloatOrderedMap (int initialCapacity) {
+	public EnumFloatOrderedMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -54,7 +54,7 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public EnumFloatOrderedMap (int initialCapacity, float loadFactor) {
+	public EnumFloatOrderedMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -63,7 +63,7 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	 *
 	 * @param map an ObjectFloatOrderedMap to copy, or a subclass such as this one
 	 */
-	public EnumFloatOrderedMap (ObjectFloatOrderedMap<? extends K> map) {
+	public EnumFloatOrderedMap(ObjectFloatOrderedMap<? extends K> map) {
 		super(map);
 	}
 
@@ -72,7 +72,7 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	 *
 	 * @param map an ObjectFloatMap to copy, or a subclass
 	 */
-	public EnumFloatOrderedMap (ObjectFloatMap<? extends K> map) {
+	public EnumFloatOrderedMap(ObjectFloatMap<? extends K> map) {
 		super(map);
 	}
 
@@ -83,7 +83,7 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public EnumFloatOrderedMap (K[] keys, float[] values) {
+	public EnumFloatOrderedMap(K[] keys, float[] values) {
 		super(keys, values);
 	}
 
@@ -94,26 +94,26 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public EnumFloatOrderedMap (Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
+	public EnumFloatOrderedMap(Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
 		super(keys, values);
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place(Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
-			return ((Enum<?>)item).ordinal() & mask;
+			return ((Enum<?>) item).ordinal() & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		K[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
@@ -129,18 +129,26 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 
 	@SuppressWarnings({"rawtypes"})
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof EnumFloatOrderedMap)) {return false;}
-		EnumFloatOrderedMap other = (EnumFloatOrderedMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof EnumFloatOrderedMap)) {
+			return false;
+		}
+		EnumFloatOrderedMap other = (EnumFloatOrderedMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		Enum[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			Enum key = keyTable[i];
 			if (key != null) {
 				float value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				if (value != other.get(key)) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -155,7 +163,7 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K extends Enum<K>> EnumFloatOrderedMap<K> with (K key0, Number value0) {
+	public static <K extends Enum<K>> EnumFloatOrderedMap<K> with(K key0, Number value0) {
 		EnumFloatOrderedMap<K> map = new EnumFloatOrderedMap<>(1);
 		map.put(key0, value0.floatValue());
 		return map;
@@ -176,12 +184,12 @@ public class EnumFloatOrderedMap<K extends Enum<K>> extends ObjectFloatOrderedMa
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K extends Enum<K>, V> EnumFloatOrderedMap<K> with (K key0, Number value0, Object... rest) {
+	public static <K extends Enum<K>, V> EnumFloatOrderedMap<K> with(K key0, Number value0, Object... rest) {
 		EnumFloatOrderedMap<K> map = new EnumFloatOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.floatValue());
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((K)rest[i - 1], ((Number)rest[i]).floatValue());
+				map.put((K) rest[i - 1], ((Number) rest[i]).floatValue());
 			} catch (ClassCastException ignored) {
 			}
 		}

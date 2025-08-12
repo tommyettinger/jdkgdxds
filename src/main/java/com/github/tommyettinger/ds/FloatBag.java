@@ -35,14 +35,14 @@ public class FloatBag extends FloatList {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public FloatBag () {
+	public FloatBag() {
 		super();
 	}
 
@@ -51,7 +51,7 @@ public class FloatBag extends FloatList {
 	 *
 	 * @param capacity
 	 */
-	public FloatBag (int capacity) {
+	public FloatBag(int capacity) {
 		super(capacity);
 	}
 
@@ -61,7 +61,7 @@ public class FloatBag extends FloatList {
 	 *
 	 * @param list another FloatList or FloatBag
 	 */
-	public FloatBag (FloatList list) {
+	public FloatBag(FloatList list) {
 		super(list);
 	}
 
@@ -71,7 +71,7 @@ public class FloatBag extends FloatList {
 	 *
 	 * @param array a non-null float array to add to this bag
 	 */
-	public FloatBag (float[] array) {
+	public FloatBag(float[] array) {
 		super(array);
 	}
 
@@ -79,11 +79,11 @@ public class FloatBag extends FloatList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null float array to add to this bag
+	 * @param array      a non-null float array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public FloatBag (float[] array, int startIndex, int count) {
+	public FloatBag(float[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
@@ -92,7 +92,7 @@ public class FloatBag extends FloatList {
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public FloatBag (OfFloat coll) {
+	public FloatBag(OfFloat coll) {
 		super(coll);
 	}
 
@@ -101,7 +101,7 @@ public class FloatBag extends FloatList {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public FloatBag (FloatIterator coll) {
+	public FloatBag(FloatIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -111,7 +111,7 @@ public class FloatBag extends FloatList {
 	 *
 	 * @param other another Ordered.OfFloat
 	 */
-	public FloatBag (Ordered.OfFloat other) {
+	public FloatBag(Ordered.OfFloat other) {
 		super(other);
 	}
 
@@ -123,20 +123,25 @@ public class FloatBag extends FloatList {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public FloatBag (Ordered.OfFloat other, int offset, int count) {
+	public FloatBag(Ordered.OfFloat other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
-	 * @param index ignored
+	 *
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, float element) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, float element) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		float[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = element;
 		++size;
 	}
@@ -150,8 +155,10 @@ public class FloatBag extends FloatList {
 	 * @return the removed item
 	 */
 	@Override
-	public float removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public float removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		float[] items = this.items;
 		float value = items[index];
 		size--;
@@ -169,10 +176,14 @@ public class FloatBag extends FloatList {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
@@ -180,7 +191,7 @@ public class FloatBag extends FloatList {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		float[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -196,17 +207,18 @@ public class FloatBag extends FloatList {
 	 *
 	 * @return a new bag containing nothing
 	 */
-	public static FloatBag with () {
+	public static FloatBag with() {
 		return new FloatBag(0);
 	}
 
 	/**
 	 * Creates a new FloatBag that holds only the given item, but can be resized.
+	 *
 	 * @param item a float item
 	 * @return a new FloatBag that holds the given item
 	 */
 
-	public static FloatBag with (float item) {
+	public static FloatBag with(float item) {
 		FloatBag bag = new FloatBag(1);
 		bag.add(item);
 		return bag;
@@ -214,11 +226,12 @@ public class FloatBag extends FloatList {
 
 	/**
 	 * Creates a new FloatBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @return a new FloatBag that holds the given items
 	 */
-	public static FloatBag with (float item0, float item1) {
+	public static FloatBag with(float item0, float item1) {
 		FloatBag bag = new FloatBag(2);
 		bag.add(item0);
 		bag.add(item1);
@@ -227,12 +240,13 @@ public class FloatBag extends FloatList {
 
 	/**
 	 * Creates a new FloatBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
 	 * @return a new FloatBag that holds the given items
 	 */
-	public static FloatBag with (float item0, float item1, float item2) {
+	public static FloatBag with(float item0, float item1, float item2) {
 		FloatBag bag = new FloatBag(3);
 		bag.add(item0);
 		bag.add(item1);
@@ -242,13 +256,14 @@ public class FloatBag extends FloatList {
 
 	/**
 	 * Creates a new FloatBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
 	 * @param item3 a float item
 	 * @return a new FloatBag that holds the given items
 	 */
-	public static FloatBag with (float item0, float item1, float item2, float item3) {
+	public static FloatBag with(float item0, float item1, float item2, float item3) {
 		FloatBag bag = new FloatBag(4);
 		bag.add(item0);
 		bag.add(item1);
@@ -259,6 +274,7 @@ public class FloatBag extends FloatList {
 
 	/**
 	 * Creates a new FloatBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -266,7 +282,7 @@ public class FloatBag extends FloatList {
 	 * @param item4 a float item
 	 * @return a new FloatBag that holds the given items
 	 */
-	public static FloatBag with (float item0, float item1, float item2, float item3, float item4) {
+	public static FloatBag with(float item0, float item1, float item2, float item3, float item4) {
 		FloatBag bag = new FloatBag(5);
 		bag.add(item0);
 		bag.add(item1);
@@ -278,6 +294,7 @@ public class FloatBag extends FloatList {
 
 	/**
 	 * Creates a new FloatBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -286,7 +303,7 @@ public class FloatBag extends FloatList {
 	 * @param item5 a float item
 	 * @return a new FloatBag that holds the given items
 	 */
-	public static FloatBag with (float item0, float item1, float item2, float item3, float item4, float item5) {
+	public static FloatBag with(float item0, float item1, float item2, float item3, float item4, float item5) {
 		FloatBag bag = new FloatBag(6);
 		bag.add(item0);
 		bag.add(item1);
@@ -299,6 +316,7 @@ public class FloatBag extends FloatList {
 
 	/**
 	 * Creates a new FloatBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -308,7 +326,7 @@ public class FloatBag extends FloatList {
 	 * @param item6 a float item
 	 * @return a new FloatBag that holds the given items
 	 */
-	public static FloatBag with (float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
+	public static FloatBag with(float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
 		FloatBag bag = new FloatBag(7);
 		bag.add(item0);
 		bag.add(item1);
@@ -322,6 +340,7 @@ public class FloatBag extends FloatList {
 
 	/**
 	 * Creates a new FloatBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -331,7 +350,7 @@ public class FloatBag extends FloatList {
 	 * @param item6 a float item
 	 * @return a new FloatBag that holds the given items
 	 */
-	public static FloatBag with (float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
+	public static FloatBag with(float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
 		FloatBag bag = new FloatBag(8);
 		bag.add(item0);
 		bag.add(item1);
@@ -349,10 +368,11 @@ public class FloatBag extends FloatList {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a float varargs or float array; remember that varargs allocate
 	 * @return a new FloatBag that holds the given items
 	 */
-	public static FloatBag with (float... varargs) {
+	public static FloatBag with(float... varargs) {
 		return new FloatBag(varargs);
 	}
 }

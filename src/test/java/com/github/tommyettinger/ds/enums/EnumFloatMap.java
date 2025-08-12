@@ -32,7 +32,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public EnumFloatMap () {
+	public EnumFloatMap() {
 		super();
 	}
 
@@ -42,7 +42,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public EnumFloatMap (int initialCapacity) {
+	public EnumFloatMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -53,7 +53,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public EnumFloatMap (int initialCapacity, float loadFactor) {
+	public EnumFloatMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -62,7 +62,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 *
 	 * @param map an ObjectFloatMap to copy, or a subclass such as this one
 	 */
-	public EnumFloatMap (ObjectFloatMap<? extends K> map) {
+	public EnumFloatMap(ObjectFloatMap<? extends K> map) {
 		super(map);
 	}
 
@@ -73,7 +73,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public EnumFloatMap (K[] keys, float[] values) {
+	public EnumFloatMap(K[] keys, float[] values) {
 		super(keys, values);
 	}
 
@@ -84,26 +84,26 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public EnumFloatMap (Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
+	public EnumFloatMap(Collection<? extends K> keys, PrimitiveCollection.OfFloat values) {
 		super(keys, values);
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place(Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
-			return ((Enum<?>)item).ordinal() & mask;
+			return ((Enum<?>) item).ordinal() & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		K[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
@@ -119,18 +119,26 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 
 	@SuppressWarnings({"rawtypes"})
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof EnumFloatMap)) {return false;}
-		EnumFloatMap other = (EnumFloatMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof EnumFloatMap)) {
+			return false;
+		}
+		EnumFloatMap other = (EnumFloatMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		Enum[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			Enum key = keyTable[i];
 			if (key != null) {
 				float value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				if (value != other.get(key)) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -145,7 +153,7 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K extends Enum<K>> EnumFloatMap<K> with (K key0, Number value0) {
+	public static <K extends Enum<K>> EnumFloatMap<K> with(K key0, Number value0) {
 		EnumFloatMap<K> map = new EnumFloatMap<>(1);
 		map.put(key0, value0.floatValue());
 		return map;
@@ -166,12 +174,12 @@ public class EnumFloatMap<K extends Enum<K>> extends ObjectFloatMap<K> {
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K extends Enum<K>, V> EnumFloatMap<K> with (K key0, Number value0, Object... rest) {
+	public static <K extends Enum<K>, V> EnumFloatMap<K> with(K key0, Number value0, Object... rest) {
 		EnumFloatMap<K> map = new EnumFloatMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.floatValue());
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((K)rest[i - 1], ((Number)rest[i]).floatValue());
+				map.put((K) rest[i - 1], ((Number) rest[i]).floatValue());
 			} catch (ClassCastException ignored) {
 			}
 		}

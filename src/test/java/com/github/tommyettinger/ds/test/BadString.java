@@ -31,12 +31,12 @@ public class BadString implements CharSequence {
 	public CharSequence text;
 	public final int hash;
 
-	public BadString () {
+	public BadString() {
 		text = "aaa0";
 		hash = 0;
 	}
 
-	public BadString (CharSequence text) {
+	public BadString(CharSequence text) {
 		this.text = text;
 		hash = text.toString().hashCode();
 //		hash = Hasher.hashBulk(1234567890123456789L, text);
@@ -47,7 +47,7 @@ public class BadString implements CharSequence {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 //            return text.charAt(0);
 //            return text.charAt(0) * text.charAt(1);
 //            int h = 1;
@@ -67,36 +67,36 @@ public class BadString implements CharSequence {
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		BadString badString = (BadString)o;
+		BadString badString = (BadString) o;
 
 		return text.equals(badString.text);
 	}
 
 	@Override
-	public int length () {
+	public int length() {
 		return text.length();
 	}
 
 	@Override
-	public char charAt (int index) {
+	public char charAt(int index) {
 		return text.charAt(index);
 	}
 
 	@NonNull
 	@Override
-	public CharSequence subSequence (int start, int end) {
+	public CharSequence subSequence(int start, int end) {
 		return new BadString(text.subSequence(start, end));
 	}
 
 	@NonNull
 	@Override
-	public String toString () {
+	public String toString() {
 		return text.toString();
 	}
 }

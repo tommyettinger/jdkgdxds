@@ -79,8 +79,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 */
 	protected int tail = 0;
 
-	@Nullable protected transient IntDequeIterator descendingIterator1;
-	@Nullable protected transient IntDequeIterator descendingIterator2;
+	@Nullable
+	protected transient IntDequeIterator descendingIterator1;
+	@Nullable
+	protected transient IntDequeIterator descendingIterator2;
 
 	/**
 	 * Creates a new IntDeque which can hold 16 values without needing to resize the backing array.
@@ -92,6 +94,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	/**
 	 * Creates a new IntDeque which can hold the specified number of values without needing to resize the backing
 	 * array.
+	 *
 	 * @param initialSize how large the backing array should be, without any padding
 	 */
 	public IntDeque(int initialSize) {
@@ -156,6 +159,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	/**
 	 * Creates a new IntDeque using {@code count} items from {@code a}, starting at {@code offset}.
 	 * If {@code count} is 0 or less, this will create an empty IntDeque with capacity 1.
+	 *
 	 * @param a      an array of int
 	 * @param offset where in {@code a} to start using items
 	 * @param count  how many items to use from {@code a}
@@ -182,9 +186,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * Gets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
+	 *
 	 * @return the current default value
 	 */
-	public int getDefaultValue () {
+	public int getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -192,9 +197,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * Sets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
+	 *
 	 * @param defaultValue any int this can return instead of throwing an Exception, or {@code null}
 	 */
-	public void setDefaultValue (int defaultValue) {
+	public void setDefaultValue(int defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -203,14 +209,14 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @param value can be null
 	 */
-	public void addLast (int value) {
+	public void addLast(int value) {
 		int[] items = this.items;
 
 		if (size == items.length)
 			items = resize(items.length << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(++size == 1) tail = head;
+		if (++size == 1) tail = head;
 		items[tail] = value;
 	}
 
@@ -221,7 +227,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 			items = resize(size + 2 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -235,7 +241,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 			items = resize(size + 3 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -251,7 +257,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 			items = resize(size + 4 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -268,7 +274,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param value can be null
 	 * @see #addLast(int)
 	 */
-	public void addFirst (int value) {
+	public void addFirst(int value) {
 		int[] items = this.items;
 
 		if (size == items.length)
@@ -279,10 +285,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		items[head] = value;
 
 		this.head = head;
-		if(++size == 1) tail = head;
+		if (++size == 1) tail = head;
 	}
 
-	public void addFirst (int value1, int value2) {
+	public void addFirst(int value1, int value2) {
 		int[] items = this.items;
 
 		if (size + 2 > items.length)
@@ -291,7 +297,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value2;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value1;
@@ -300,7 +306,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		this.head = head;
 	}
 
-	public void addFirst (int value1, int value2, int value3) {
+	public void addFirst(int value1, int value2, int value3) {
 		int[] items = this.items;
 
 		if (size + 3 > items.length)
@@ -308,7 +314,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value3;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value2;
@@ -319,7 +325,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		this.head = head;
 	}
 
-	public void addFirst (int value1, int value2, int value3, int value4) {
+	public void addFirst(int value1, int value2, int value3, int value4) {
 		int[] items = this.items;
 
 		if (size + 4 > items.length)
@@ -327,7 +333,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value4;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value3;
@@ -347,8 +353,8 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 */
 	public void trimToSize() {
 		if (size < items.length) {
-			if(head <= tail) {
-				items = Arrays.copyOfRange(items, head, tail+1);
+			if (head <= tail) {
+				items = Arrays.copyOfRange(items, head, tail + 1);
 			} else {
 				int[] next = new int[size];
 				System.arraycopy(items, head, next, 0, items.length - head);
@@ -372,7 +378,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @return the backing array this will use after this call
 	 */
-	public int[] ensureCapacity (int additional) {
+	public int[] ensureCapacity(int additional) {
 		final int needed = size + additional;
 		if (items.length < needed) {
 			resize(needed);
@@ -388,8 +394,8 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @return the new backing array, as a direct reference
 	 */
-	public int[] resize (int newSize) {
-		if(newSize < size)
+	public int[] resize(int newSize) {
+		if (newSize < size)
 			newSize = size;
 		final int[] items = this.items;
 		final int head = this.head;
@@ -419,7 +425,8 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * resize the backing array to achieve this goal. If possible, this will keep the same backing array and modify
 	 * it in-place. The "gap" is not assigned null, and may contain old/duplicate references; calling code <em>must</em>
 	 * overwrite the entire gap with additional values to ensure GC correctness.
-	 * @param index the 0-based index in the iteration order where the gap will be present
+	 *
+	 * @param index   the 0-based index in the iteration order where the gap will be present
 	 * @param gapSize the number of items that will need filling in the gap, and can be filled without issues.
 	 * @return the position in the array where the gap will begin, which is unrelated to the index
 	 */
@@ -435,7 +442,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 			this.head = 0;
 			this.tail = gapSize - 1;
 			if (items.length < gapSize) {
-                this.items = new int[gapSize];
+				this.items = new int[gapSize];
 			}
 			return 0;
 		} else if (size == 1) {
@@ -489,7 +496,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 				return index;
 			} else {
 				if (head + index <= this.items.length) {
-					if(head - gapSize >= 0) {
+					if (head - gapSize >= 0) {
 						System.arraycopy(this.items, head, this.items, head - gapSize, index);
 						this.head -= gapSize;
 						return this.head + index;
@@ -554,7 +561,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return removed int
 	 * @throws NoSuchElementException when the deque is empty
 	 */
-	public int removeFirst () {
+	public int removeFirst() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("IntDeque is empty.");
@@ -568,7 +575,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		return result;
 	}
@@ -580,7 +587,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #removeFirst()
 	 */
-	public int removeLast () {
+	public int removeLast() {
 		if (size == 0) {
 			throw new NoSuchElementException("IntDeque is empty.");
 		}
@@ -594,7 +601,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		} else {
 			--tail;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		this.tail = tail;
 
@@ -617,7 +624,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerFirst (int t) {
+	public boolean offerFirst(int t) {
 		addFirst(t);
 		return true;
 	}
@@ -638,7 +645,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerLast (int t) {
+	public boolean offerLast(int t) {
 		addLast(t);
 		return true;
 	}
@@ -648,10 +655,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
 	 * {@code null} unless it has been changed with {@link #setDefaultValue(int)}.
 	 *
-	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
+	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 */
-	public int pollFirst () {
+	public int pollFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -665,7 +672,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		return result;
 	}
@@ -675,10 +682,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
 	 * {@code null} unless it has been changed with {@link #setDefaultValue(int)}.
 	 *
-	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
+	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 */
-	public int pollLast () {
+	public int pollLast() {
 		if (size == 0) {
 			return defaultValue;
 		}
@@ -692,7 +699,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		} else {
 			--tail;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		this.tail = tail;
 
@@ -708,7 +715,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return the head of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public int getFirst () {
+	public int getFirst() {
 		return first();
 	}
 
@@ -720,7 +727,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return the tail of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public int getLast () {
+	public int getLast() {
 		return last();
 	}
 
@@ -730,7 +737,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public int peekFirst () {
+	public int peekFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -744,7 +751,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public int peekLast () {
+	public int peekLast() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -763,7 +770,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeFirstOccurrence (int o) {
+	public boolean removeFirstOccurrence(int o) {
 		return removeValue(o);
 	}
 
@@ -778,7 +785,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeLastOccurrence (int o) {
+	public boolean removeLastOccurrence(int o) {
 		return removeLastValue(o);
 	}
 
@@ -796,7 +803,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param t the element to add
 	 * @return {@code true} (as specified by {@link Collection#add})
 	 */
-	public boolean add (int t) {
+	public boolean add(int t) {
 		addLast(t);
 		return true;
 	}
@@ -821,13 +828,14 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * Unlike {@link #offerFirst(int)} and {@link #offerLast(int)}, this does not run in expected constant time unless
 	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
 	 * (where it acts like offerLast()).
+	 *
 	 * @param index the index in the deque's insertion order to insert the item
-	 * @param item an int item to insert; may be null
+	 * @param item  an int item to insert; may be null
 	 */
-	public void insert (int index, int item) {
-		if(index <= 0)
+	public void insert(int index, int item) {
+		if (index <= 0)
 			addFirst(item);
-		else if(index >= size)
+		else if (index >= size)
 			addLast(item);
 		else {
 			int[] items = this.items;
@@ -837,11 +845,11 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 				items = this.items;
 			}
 
-			if(head <= tail) {
+			if (head <= tail) {
 				index += head;
-				if(index >= items.length) index -= items.length;
+				if (index >= items.length) index -= items.length;
 				int after = index + 1;
-				if(after >= items.length) after = 0;
+				if (after >= items.length) after = 0;
 
 				System.arraycopy(items, index, items, after, head + size - index - 1);
 				items[index] = item;
@@ -855,8 +863,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 					System.arraycopy(items, head, items, head - 1, index);
 					items[head - 1 + index] = item;
 					head--;
-				}
-				else {
+				} else {
 					// forward shift
 					index = head + index - items.length;
 					System.arraycopy(items, index, items, index + 1, tail - index + 1);
@@ -881,7 +888,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param t the element to add
 	 * @return {@code true} if the element was added to this deque, else {@code false}
 	 */
-	public boolean offer (int t) {
+	public boolean offer(int t) {
 		addLast(t);
 		return true;
 	}
@@ -897,7 +904,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public int remove () {
+	public int remove() {
 		return removeFirst();
 	}
 
@@ -911,7 +918,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return the first element of this deque, or {@link #getDefaultValue() defaultValue} if
 	 * this deque is empty
 	 */
-	public int poll () {
+	public int poll() {
 		return pollFirst();
 	}
 
@@ -926,7 +933,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public int element () {
+	public int element() {
 		return first();
 	}
 
@@ -940,7 +947,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return the head of the queue represented by this deque, or
 	 * {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public int peek () {
+	public int peek() {
 		return peekFirst();
 	}
 
@@ -959,13 +966,13 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (OfInt c) {
+	public boolean addAll(OfInt c) {
 		final int cs = c.size();
-		if(cs == 0) return false;
+		if (cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		if(c == this) {
-			if(head <= tail) {
+		if (c == this) {
+			if (head <= tail) {
 				if (tail + 1 < items.length)
 					System.arraycopy(items, head, items, tail + 1, Math.min(size, items.length - tail - 1));
 				if (items.length - tail - 1 < size)
@@ -984,26 +991,28 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * An alias for {@link #addAll(OfInt)}, this adds every item in {@code c} to this in order at the end.
+	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (OfInt c) {
+	public boolean addAllLast(OfInt c) {
 		return addAll(c);
 	}
 
 	/**
 	 * Adds every item in {@code c} to this in order at the start. The iteration order of {@code c} will be preserved
 	 * for the added items.
+	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (OfInt c) {
+	public boolean addAllFirst(OfInt c) {
 		final int cs = c.size();
-		if(cs == 0) return false;
+		if (cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		if(c == this) {
-			if(head <= tail) {
+		if (c == this) {
+			if (head <= tail) {
 				if (head >= oldSize)
 					System.arraycopy(items, head, items, head - oldSize, oldSize);
 				else if (head > 0) {
@@ -1017,14 +1026,14 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 				System.arraycopy(items, 0, items, items.length - oldSize, tail + 1);
 			}
 			head -= oldSize;
-			if(head < 0) head += items.length;
+			if (head < 0) head += items.length;
 			size += oldSize;
 		} else {
 			int i = ensureGap(0, cs);
 			IntIterator it = c.iterator();
 			while (it.hasNext()) {
 				items[i++] = it.nextInt();
-				if(i == items.length) i = 0;
+				if (i == items.length) i = 0;
 			}
 			size += cs;
 		}
@@ -1044,7 +1053,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @param index index at which to insert the first element from the
 	 *              specified collection
-	 * @param c collection containing elements to be added to this list
+	 * @param c     collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
 	public boolean insertAll(int index, OfInt c) {
@@ -1053,16 +1062,16 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	public boolean addAll(int index, OfInt c) {
 		int oldSize = size;
-		if(index <= 0)
+		if (index <= 0)
 			addAllFirst(c);
-		else if(index >= oldSize)
+		else if (index >= oldSize)
 			addAll(c);
 		else {
 			final int cs = c.size();
-			if(c.isEmpty()) return false;
+			if (c.isEmpty()) return false;
 			int place = ensureGap(index, cs);
 			int[] items = this.items;
-			if(c == this){
+			if (c == this) {
 				System.arraycopy(items, head, items, place, place - head);
 				System.arraycopy(items, place + cs, items, place + place - head, tail + 1 - place - cs);
 			} else {
@@ -1079,83 +1088,90 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Exactly like {@link #addAll(OfInt)}, but takes an array instead of a PrimitiveCollection.OfInt.
-	 * @see #addAll(OfInt)
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(OfInt)
 	 */
-	public boolean addAll (int[] array) {
+	public boolean addAll(int[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #addAll(int[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #addAll(int[])
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(int[])
 	 */
-	public boolean addAll (int[] array, int offset, int length) {
+	public boolean addAll(int[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(size, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * An alias for {@link #addAll(int[])}.
-	 * @see #addAll(int[])
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(int[])
 	 */
-	public boolean addAllLast (int[] array) {
+	public boolean addAllLast(int[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
 	 * An alias for {@link #addAll(int[], int, int)}.
-	 * @see #addAll(int[], int, int)
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(int[], int, int)
 	 */
-	public boolean addAllLast (int[] array, int offset, int length) {
+	public boolean addAllLast(int[] array, int offset, int length) {
 		return addAll(array, offset, length);
 	}
 
 	/**
 	 * Exactly like {@link #addAllFirst(OfInt)}, but takes an array instead of a PrimitiveCollection.OfInt.
-	 * @see #addAllFirst(OfInt)
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(OfInt)
 	 */
-	public boolean addAllFirst (int[] array) {
+	public boolean addAllFirst(int[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #addAllFirst(int[])}, but only uses at most {@code length} items from {@code array}, starting at
 	 * {@code offset}. The order of {@code array} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(int[])
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(int[])
 	 */
-	public boolean addAllFirst (int[] array, int offset, int length) {
+	public boolean addAllFirst(int[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(0, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, int[])}.
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1166,8 +1182,9 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Alias for {@link #addAll(int, int[], int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1180,10 +1197,11 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * Like {@link #addAll(int, OfInt)}, but takes an array instead of a PrimitiveCollection.OfInt and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(int[])
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(int[])
 	 */
 	public boolean addAll(int index, int[] array) {
 		return addAll(index, array, 0, array.length);
@@ -1194,48 +1212,51 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(int[])
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(int[])
 	 */
 	public boolean addAll(int index, int[] array, int offset, int length) {
 		int oldSize = size;
-		if(index <= 0)
+		if (index <= 0)
 			addAllFirst(array, offset, length);
-		else if(index >= oldSize)
+		else if (index >= oldSize)
 			addAll(array, offset, length);
 		else {
 			final int cs = Math.min(array.length - offset, length);
-			if(cs <= 0) return false;
+			if (cs <= 0) return false;
 			int place = ensureGap(index, cs);
 			System.arraycopy(array, offset, this.items, place, cs);
 			size += cs;
-        }
+		}
 		return oldSize != size;
 	}
 
 	/**
 	 * Exactly like {@link #addAll(OfInt)}, but takes an Ordered.OfInt instead of a PrimitiveCollection.OfInt.
-	 * @see #addAll(OfInt)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(OfInt)
 	 */
-	public boolean addAll (Ordered.OfInt ord) {
+	public boolean addAll(Ordered.OfInt ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
 	 * Like {@link #addAll(int[])}, but only uses at most {@code length} items from {@code ord}, starting at {@code offset}.
-	 * @see #addAll(int[])
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(int[])
 	 */
-	public boolean addAll (Ordered.OfInt ord, int offset, int length) {
+	public boolean addAll(Ordered.OfInt ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
@@ -1243,10 +1264,11 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * Like {@link #addAll(int, OfInt)}, but takes an ord instead of a PrimitiveCollection.OfInt and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code ord} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfInt)
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 * @param ord   the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfInt)
 	 */
 	public boolean addAll(int index, Ordered.OfInt ord) {
 		return addAll(index, ord, 0, ord.size());
@@ -1257,75 +1279,81 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfInt)
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfInt)
 	 */
-	public boolean addAll (int index, Ordered.OfInt ord, int offset, int length) {
+	public boolean addAll(int index, Ordered.OfInt ord, int offset, int length) {
 		final int cs = Math.min(ord.size() - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(index, cs);
 		IntList er = ord.order();
 		for (int i = offset, n = offset + cs; i < n; i++) {
 			items[place++] = er.get(i);
-			if(place == items.length) place = 0;
+			if (place == items.length) place = 0;
 		}
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * An alias for {@link #addAll(Ordered.OfInt)}.
-	 * @see #addAll(Ordered.OfInt)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfInt)
 	 */
-	public boolean addAllLast (Ordered.OfInt ord) {
+	public boolean addAllLast(Ordered.OfInt ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
 	 * An alias for {@link #addAll(Ordered.OfInt, int, int)}.
-	 * @see #addAll(Ordered.OfInt, int, int)
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfInt, int, int)
 	 */
-	public boolean addAllLast (Ordered.OfInt ord, int offset, int length) {
+	public boolean addAllLast(Ordered.OfInt ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
 	/**
 	 * Exactly like {@link #addAllFirst(OfInt)}, but takes an ord instead of a PrimitiveCollection.OfInt.
-	 * @see #addAllFirst(OfInt)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(OfInt)
 	 */
-	public boolean addAllFirst (Ordered.OfInt ord) {
+	public boolean addAllFirst(Ordered.OfInt ord) {
 		return addAll(0, ord, 0, ord.size());
 	}
 
 	/**
 	 * Like {@link #addAllFirst(Ordered.OfInt)}, but only uses at most {@code length} items from {@code ord}, starting at
 	 * {@code offset}. The order of {@code ord} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(Ordered.OfInt)
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(Ordered.OfInt)
 	 */
-	public boolean addAllFirst (Ordered.OfInt ord, int offset, int length) {
+	public boolean addAllFirst(Ordered.OfInt ord, int offset, int length) {
 		return addAll(0, ord, offset, length);
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfInt)}.
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 * @param ord   the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean insertAll(int index, Ordered.OfInt ord) {
@@ -1334,8 +1362,9 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfInt, int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code ord}
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1352,7 +1381,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @param t the element to push
 	 */
-	public void push (int t) {
+	public void push(int t) {
 		addFirst(t);
 	}
 
@@ -1366,7 +1395,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * of the stack represented by this deque)
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public int pop () {
+	public int pop() {
 		return removeFirst();
 	}
 
@@ -1383,7 +1412,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean remove (int o) {
+	public boolean remove(int o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -1395,7 +1424,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param o element whose presence in this deque is to be tested
 	 * @return {@code true} if this deque contains the specified element
 	 */
-	public boolean contains (int o) {
+	public boolean contains(int o) {
 		return indexOf(o, 0) != -1;
 	}
 
@@ -1409,7 +1438,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @return the number of elements in this deque
 	 */
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -1428,7 +1457,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code int}, containing all the elements in this collection
 	 */
-	public int @NonNull [] toArray () {
+	public int @NonNull [] toArray() {
 		int[] next = new int[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -1462,35 +1491,37 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Alias for {@link #truncate(int)}.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncateLast (int newSize) {
+	public void truncateLast(int newSize) {
 		truncate(newSize);
 	}
 
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing items from the tail end.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
-		if(newSize <= 0) {
+	public void truncate(int newSize) {
+		if (newSize <= 0) {
 			clear();
 			return;
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail) {
+			if (head <= tail) {
 				// only removing from tail, near the end, toward head, near the start
 				tail -= oldSize - newSize;
 				size = newSize;
-			} else if(head + newSize < items.length) {
+			} else if (head + newSize < items.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
 				tail = head + newSize;
 				size = newSize;
 			} else {
 				// tail is near the start, but we only have to remove some elements between tail and the start
-                tail -= (oldSize - newSize);
+				tail -= (oldSize - newSize);
 				size = newSize;
 			}
 		}
@@ -1499,19 +1530,20 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing from the head.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncateFirst (int newSize) {
-		if(newSize <= 0) {
+	public void truncateFirst(int newSize) {
+		if (newSize <= 0) {
 			clear();
 			return;
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail || head + oldSize - newSize < items.length) {
+			if (head <= tail || head + oldSize - newSize < items.length) {
 				// only removing from head to head + newSize, which is contiguous
 				head += oldSize - newSize;
-				if(head >= items.length) head -= items.length;
+				if (head >= items.length) head -= items.length;
 				size = newSize;
 			} else {
 				// tail is near the start, and we are removing from head to the end and then part near start
@@ -1535,34 +1567,34 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * actually sometimes needs for this in user code.
 	 *
 	 * @param fromIndex index of first element to be removed (inclusive)
-	 * @param toIndex index after last element to be removed (exclusive)
+	 * @param toIndex   index after last element to be removed (exclusive)
 	 */
 	public void removeRange(int fromIndex, int toIndex) {
-		if(fromIndex <= 0){
+		if (fromIndex <= 0) {
 			truncateFirst(size - toIndex);
 			return;
 		}
-		if(toIndex >= size) {
+		if (toIndex >= size) {
 			truncate(fromIndex);
 			return;
 		}
 		if (fromIndex < toIndex) {
 			int removedCount = toIndex - fromIndex;
-			if(head <= tail) {
+			if (head <= tail) {
 				// tail is near the end, head is near the start
 				int tailMinusTo = tail + 1 - (head + toIndex);
-				if(tailMinusTo < 0) tailMinusTo += items.length;
+				if (tailMinusTo < 0) tailMinusTo += items.length;
 				System.arraycopy(items, head + toIndex, items, head + fromIndex, tailMinusTo);
 				tail -= removedCount;
 				size -= removedCount;
-			} else if(head + toIndex < items.length) {
+			} else if (head + toIndex < items.length) {
 				// head is at the end, and tail wraps around, but we are only removing items between head and end
 				int headPlusFrom = head + fromIndex;
-				if(headPlusFrom >= items.length) headPlusFrom -= items.length;
+				if (headPlusFrom >= items.length) headPlusFrom -= items.length;
 				System.arraycopy(items, head, items, headPlusFrom, removedCount);
 				head += removedCount;
 				size -= removedCount;
-			} else if(head + toIndex - items.length - removedCount >= 0) {
+			} else if (head + toIndex - items.length - removedCount >= 0) {
 				// head is at the end, and tail wraps around, but we are only removing items between start and tail
 				System.arraycopy(items, head + toIndex - items.length, items, head + fromIndex - items.length, tail + 1 - (head + toIndex - items.length));
 				tail -= removedCount;
@@ -1584,7 +1616,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param value the int to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int indexOf (int value) {
+	public int indexOf(int value) {
 		return indexOf(value, 0);
 	}
 
@@ -1593,11 +1625,11 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param value the int to look for
+	 * @param value     the int to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int indexOf (int value, int fromIndex) {
+	public int indexOf(int value, int fromIndex) {
 		if (size == 0)
 			return -1;
 		int[] items = this.items;
@@ -1627,7 +1659,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param value the int to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int lastIndexOf (int value) {
+	public int lastIndexOf(int value) {
 		return lastIndexOf(value, size - 1);
 	}
 
@@ -1637,11 +1669,11 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * point, so if you chain calls to indexOf(), the subsequent fromIndex should be smaller than the last-returned
 	 * index.
 	 *
-	 * @param value the int to look for
+	 * @param value     the int to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int lastIndexOf (int value, int fromIndex) {
+	public int lastIndexOf(int value, int fromIndex) {
 		if (size == 0)
 			return -1;
 		int[] items = this.items;
@@ -1687,6 +1719,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Gets an iterator over this deque that starts at the given index.
+	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return a reused iterator starting at the given index
 	 */
@@ -1713,7 +1746,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param value the int to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeValue (int value) {
+	public boolean removeValue(int value) {
 		int index = indexOf(value, 0);
 		if (index == -1)
 			return false;
@@ -1727,7 +1760,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param value the int to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeLastValue (int value) {
+	public boolean removeLastValue(int value) {
 		int index = lastIndexOf(value);
 		if (index == -1)
 			return false;
@@ -1758,13 +1791,13 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
@@ -1823,13 +1856,13 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
@@ -1855,7 +1888,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	@Override
 	public boolean retainAll(OfInt other) {
 		// Gets the deque to be internally the same as an IntList, if not already.
-		if(head != 0) trimToSize();
+		if (head != 0) trimToSize();
 		// That allows us to use the IntList retainAll() verbatim.
 		return super.retainAll(other);
 	}
@@ -1863,14 +1896,14 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	/**
 	 * Returns true if the deque has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
 	/**
 	 * Returns true if the deque is empty.
 	 */
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -1881,7 +1914,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @see #peekFirst() peeking won't throw an exception, and will return the IntDeque's default value if empty
 	 * @see #removeFirst()
 	 */
-	public int first () {
+	public int first() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("IntDeque is empty.");
@@ -1895,7 +1928,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #peekLast() peeking won't throw an exception, and will return the IntDeque's default value if empty
 	 */
-	public int last () {
+	public int last() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("IntDeque is empty.");
@@ -1916,7 +1949,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return the element at the specified position in this deque
 	 * @throws NoSuchElementException if the deque is empty
 	 */
-	public int get (int index) {
+	public int get(int index) {
 		if (index <= 0)
 			return getFirst();
 		if (index >= size - 1)
@@ -1942,7 +1975,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param index index of the element to return
 	 * @return the element at the specified position in this deque
 	 */
-	public int peekAt (int index) {
+	public int peekAt(int index) {
 		if (index <= 0)
 			return peekFirst();
 		if (index >= size - 1)
@@ -1963,10 +1996,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * {@link #getDefaultValue() the default value}.
 	 *
 	 * @param index index of the element to replace
-	 * @param item element to be stored at the specified position
+	 * @param item  element to be stored at the specified position
 	 * @return the element previously at the specified position
 	 */
-	public int assign (int index, int item) {
+	public int assign(int index, int item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return defaultValue;
@@ -1995,7 +2028,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param index index of the element to replace
 	 * @param item  element to be stored at the specified position
 	 */
-	public void set (int index, int item) {
+	public void set(int index, int item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return;
@@ -2025,7 +2058,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	@Override
 	public IntList plus(int value) {
 		final int[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] += value;
 			}
@@ -2053,7 +2086,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	@Override
 	public IntList times(int value) {
 		final int[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] *= value;
 			}
@@ -2081,7 +2114,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	@Override
 	public IntList minus(int value) {
 		final int[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] -= value;
 			}
@@ -2109,7 +2142,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	@Override
 	public IntList div(int value) {
 		final int[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] /= value;
 			}
@@ -2137,7 +2170,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	@Override
 	public IntList rem(int value) {
 		final int[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] %= value;
 			}
@@ -2155,7 +2188,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	@Override
 	public void replaceAll(IntToIntFunction operator) {
 		final int[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] = operator.applyAsInt(items[i]);
 			}
@@ -2172,13 +2205,14 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 *
 	 * @param index the first index to duplicate
 	 * @param count how many items to duplicate
 	 */
 	@Override
 	public boolean duplicateRange(int index, int count) {
 		int place = ensureGap(index + count, count);
-		if(place >= head + index + count){
+		if (place >= head + index + count) {
 			System.arraycopy(items, head + index, items, place, count);
 		} else {
 			System.arraycopy(items, 0, items, count - place, place);
@@ -2191,7 +2225,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	/**
 	 * Removes all values from this deque. This operates in O(1) time.
 	 */
-	public void clear () {
+	public void clear() {
 		if (size == 0)
 			return;
 		this.head = 0;
@@ -2205,7 +2239,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
 	 * iteration, use {@link IntDequeIterator#IntDequeIterator(IntDeque)}.
 	 */
-	public IntListIterator iterator () {
+	public IntListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntDequeIterator(this);
 			iterator2 = new IntDequeIterator(this);
@@ -2232,7 +2266,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public IntListIterator descendingIterator () {
+	public IntListIterator descendingIterator() {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new IntDequeIterator(this, true);
 			descendingIterator2 = new IntDequeIterator(this, true);
@@ -2260,7 +2294,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public IntListIterator descendingIterator (int index) {
+	public IntListIterator descendingIterator(int index) {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new IntDequeIterator(this, index, true);
 			descendingIterator2 = new IntDequeIterator(this, index, true);
@@ -2279,13 +2313,14 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Delegates to {@link #toString(String, boolean)} with a delimiter of {@code ", "} and square brackets enabled.
+	 *
 	 * @return the square-bracketed String representation of this IntDeque, with items separated by ", "
 	 */
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
-	public int hashCode () {
+	public int hashCode() {
 		final int size = this.size;
 		final int[] items = this.items;
 		final int backingLength = items.length;
@@ -2314,6 +2349,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * This uses the {@link OfInt#iterator()} of both this and {@code o},
 	 * so if either is in the
 	 * middle of a concurrent iteration that modifies the collection, this may fail.
+	 *
 	 * @param o object to be compared for equality with this collection
 	 * @return true if this is equal to o, or false otherwise
 	 */
@@ -2324,7 +2360,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 			return false;
 
 		IntIterator e1 = iterator();
-		IntIterator e2 = ((IntList)o).iterator();
+		IntIterator e2 = ((IntList) o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
 			int o1 = e1.nextInt();
 			int o2 = e2.nextInt();
@@ -2340,7 +2376,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param first  the first position, must not be negative and must be less than {@link #size()}
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
-	public void swap (int first, int second) {
+	public void swap(int first, int second) {
 		if (first < 0)
 			throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
 		if (first >= size)
@@ -2349,7 +2385,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 			throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
-		if(first == second) return;
+		if (first == second) return;
 		final int[] items = this.items;
 
 		int f = head + first;
@@ -2368,7 +2404,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	/**
 	 * Reverses this IntDeque in-place.
 	 */
-	public void reverse () {
+	public void reverse() {
 		final int[] items = this.items;
 		int f, s, len = items.length;
 		int fv;
@@ -2385,10 +2421,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		}
 	}
 
-	public void shuffle (Random rng) {
+	public void shuffle(Random rng) {
 		for (int i = size() - 1; i > 0; i--) {
 			int r = rng.nextInt(i + 1);
-			if(r != i)
+			if (r != i)
 				set(i, assign(r, get(i)));
 		}
 	}
@@ -2397,7 +2433,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * Attempts to sort this deque in-place using its natural ordering, which requires int to
 	 * implement {@link Comparable} of int.
 	 */
-	public void sort () {
+	public void sort() {
 		sort(null);
 	}
 
@@ -2413,9 +2449,9 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param comparator the Comparator to use for int items; may be null to use the natural
 	 *                   order of int items when int implements Comparable of int
 	 */
-	public void sort (@Nullable IntComparator comparator) {
+	public void sort(@Nullable IntComparator comparator) {
 		if (head <= tail) {
-			IntComparators.sort(items, head, tail+1, comparator);
+			IntComparators.sort(items, head, tail + 1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			IntComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
@@ -2436,10 +2472,11 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Gets a randomly selected item from this IntDeque. Throws a {@link NoSuchElementException} if empty.
+	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public int random (Random random) {
+	public int random(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("IntDeque is empty.");
 		}
@@ -2448,10 +2485,11 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public int peekRandom (Random random) {
+	public int peekRandom(Random random) {
 		return peekAt(random.nextInt(size));
 	}
 
@@ -2466,6 +2504,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		public IntDequeIterator(IntDeque deque) {
 			this(deque, false);
 		}
+
 		public IntDequeIterator(IntDeque deque, boolean descendingOrder) {
 			super(deque);
 			direction = descendingOrder ? -1 : 1;
@@ -2483,11 +2522,13 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public int nextInt () {
-			if (!hasNext()) {throw new NoSuchElementException();}
+		public int nextInt() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
 			latest = index;
 			index += direction;
-            return list.get(latest);
+			return list.get(latest);
 		}
 
 		/**
@@ -2498,8 +2539,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return direction == 1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2512,8 +2555,10 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 * @return {@code true} if the list iterator has more elements when
 		 * traversing the list in the reverse direction
 		 */
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return direction == -1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2529,10 +2574,12 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public int previous () {
-			if (!hasPrevious()) {throw new NoSuchElementException();}
+		public int previous() {
+			if (!hasPrevious()) {
+				throw new NoSuchElementException();
+			}
 			latest = index -= direction;
-            return list.get(latest);
+			return list.get(latest);
 
 		}
 
@@ -2545,7 +2592,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 * subsequent call to {@code next}, or list size if the list
 		 * iterator is at the end of the list
 		 */
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -2558,7 +2605,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 * subsequent call to {@code previous}, or -1 if the list
 		 * iterator is at the beginning of the list
 		 */
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -2577,9 +2624,13 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -2605,9 +2656,13 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (int t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void set(int t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.set(latest, t);
 		}
 
@@ -2631,20 +2686,24 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (int t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > list.size()) {throw new NoSuchElementException();}
+		public void add(int t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.insert(index, t);
 			index += direction;
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = list.size() - 1 & direction >> 31;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("IntDequeIterator does not satisfy index >= 0 && index < deque.size()");
 			this.index = index;
@@ -2656,7 +2715,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		 *
 		 * @return an IntIterator; really this same IntDequeIterator.
 		 */
-		public IntDequeIterator iterator () {
+		public IntDequeIterator iterator() {
 			return this;
 		}
 	}
@@ -2668,16 +2727,17 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *
 	 * @return a new deque containing nothing
 	 */
-	public static IntDeque with () {
+	public static IntDeque with() {
 		return new IntDeque(1);
 	}
 
 	/**
 	 * Creates a new IntDeque that holds only the given item, but can be resized.
+	 *
 	 * @param item one int item
 	 * @return a new IntDeque that holds the given item
 	 */
-	public static IntDeque with (int item) {
+	public static IntDeque with(int item) {
 		IntDeque deque = new IntDeque(1);
 		deque.add(item);
 		return deque;
@@ -2685,11 +2745,12 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @return a new IntDeque that holds the given items
 	 */
-	public static IntDeque with (int item0, int item1) {
+	public static IntDeque with(int item0, int item1) {
 		IntDeque deque = new IntDeque(2);
 		deque.add(item0, item1);
 		return deque;
@@ -2697,12 +2758,13 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
 	 * @return a new IntDeque that holds the given items
 	 */
-	public static IntDeque with (int item0, int item1, int item2) {
+	public static IntDeque with(int item0, int item1, int item2) {
 		IntDeque deque = new IntDeque(3);
 		deque.add(item0, item1, item2);
 		return deque;
@@ -2710,13 +2772,14 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
 	 * @param item3 an int item
 	 * @return a new IntDeque that holds the given items
 	 */
-	public static IntDeque with (int item0, int item1, int item2, int item3) {
+	public static IntDeque with(int item0, int item1, int item2, int item3) {
 		IntDeque deque = new IntDeque(4);
 		deque.add(item0, item1, item2, item3);
 		return deque;
@@ -2724,6 +2787,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -2731,7 +2795,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param item4 an int item
 	 * @return a new IntDeque that holds the given items
 	 */
-	public static IntDeque with (int item0, int item1, int item2, int item3, int item4) {
+	public static IntDeque with(int item0, int item1, int item2, int item3, int item4) {
 		IntDeque deque = new IntDeque(5);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4);
@@ -2740,6 +2804,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -2748,7 +2813,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param item5 an int item
 	 * @return a new IntDeque that holds the given items
 	 */
-	public static IntDeque with (int item0, int item1, int item2, int item3, int item4, int item5) {
+	public static IntDeque with(int item0, int item1, int item2, int item3, int item4, int item5) {
 		IntDeque deque = new IntDeque(6);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5);
@@ -2757,6 +2822,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -2766,7 +2832,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param item6 an int item
 	 * @return a new IntDeque that holds the given items
 	 */
-	public static IntDeque with (int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
+	public static IntDeque with(int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
 		IntDeque deque = new IntDeque(7);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6);
@@ -2775,6 +2841,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 
 	/**
 	 * Creates a new IntDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -2785,7 +2852,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @param item7 an int item
 	 * @return a new IntDeque that holds the given items
 	 */
-	public static IntDeque with (int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
+	public static IntDeque with(int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
 		IntDeque deque = new IntDeque(8);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6, item7);
@@ -2796,10 +2863,11 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * Creates a new IntDeque that will hold the items in the given array or varargs.
 	 * This overload will only be used when an int array is supplied, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs either 0 or more int items, or an array of int
 	 * @return a new IntDeque that holds the given int items
 	 */
-	public static IntDeque with (int... varargs) {
+	public static IntDeque with(int... varargs) {
 		return new IntDeque(varargs);
 	}
 }

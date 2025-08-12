@@ -41,7 +41,7 @@ public class AllGoldenVectorHashTest {
 
 	public static void main(String[] args) throws IOException {
 		final Vector2[] spiral = generateVectorSpiral(LEN);
-		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));// (long)(Math.pow(LEN, 7.0/6.0));
+		final long THRESHOLD = (long) (Math.pow(LEN, 11.0 / 10.0));// (long)(Math.pow(LEN, 7.0/6.0));
 		LongLongOrderedMap problems = new LongLongOrderedMap(100);
 		LongOrderedSet good = LongOrderedSet.with(MathTools.GOLDEN_LONGS);
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
@@ -55,7 +55,7 @@ public class AllGoldenVectorHashTest {
 					int longestPileup = 0;
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -69,9 +69,9 @@ public class AllGoldenVectorHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -99,7 +99,7 @@ public class AllGoldenVectorHashTest {
 //						hashMultiplier = Utilities.GOOD_MULTIPLIERS[(hashMultiplier ^ hashMultiplier >>> 17 ^ shift) & 511]; // 0 problems, worst collisions nope
 
 //						hashMultiplier = MathTools.GOLDEN_LONGS[(int)(hashMultiplier >>> 48 + shift) & 511];
-						int index = (int)(hashMultiplier >>> 48 + shift) & 511;
+						int index = (int) (hashMultiplier >>> 48 + shift) & 511;
 						chosen[index]++;
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
 						Object[] oldKeyTable = keyTable;
@@ -112,7 +112,9 @@ public class AllGoldenVectorHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
@@ -124,7 +126,7 @@ public class AllGoldenVectorHashTest {
 					}
 
 					@Override
-					public void clear () {
+					public void clear() {
 						System.out.print("Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hashMultiplier));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						minMax[0] = Math.min(minMax[0], collisionTotal);
@@ -134,12 +136,12 @@ public class AllGoldenVectorHashTest {
 						super.clear();
 					}
 				};
-				set.setHashMultiplier((int)g);
+				set.setHashMultiplier((int) g);
 				try {
 					for (int i = 0, n = spiral.length; i < n; i++) {
 						set.add(spiral[i]);
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					System.out.println(g + " FAILURE");
 					continue;
 				}
@@ -158,8 +160,8 @@ public class AllGoldenVectorHashTest {
 		System.out.println(problems.toString(", ", ": ", false, Base.BASE16::appendUnsigned, Base.BASE16::appendUnsigned));
 		System.out.println("\n\nnew int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
-			if((i & 7) == 7)
+			System.out.print("0x" + Base.BASE16.unsigned(good.getAt(i)) + ", ");
+			if ((i & 7) == 7)
 				System.out.println();
 		}
 		System.out.println("};\n");

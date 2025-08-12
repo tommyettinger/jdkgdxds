@@ -65,11 +65,12 @@ public class ExhaustiveBadStringHashTest {
 					int longestPileup = 0;
 					int originalMultiplier, originalAddend;
 					int hashMul = 0x9E3779B9, hashAdd = 0xD192ED03;
+
 					{
 						long hashMultiplier = 0xD1B54A32D192ED03L;
 						long ctr = hashMultiplier << 1;
 						for (int i = 0; i < hashShiftA; i++) {
-							hashMul = hashMul * hashMul + (int)(ctr += 0x9E3779B97F4A7C16L);
+							hashMul = hashMul * hashMul + (int) (ctr += 0x9E3779B97F4A7C16L);
 							hashAdd += ctr;
 						}
 						originalMultiplier = hashMul;
@@ -87,7 +88,7 @@ public class ExhaustiveBadStringHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place (@NonNull Object item) {
+					protected int place(@NonNull Object item) {
 						return item.hashCode() * hashMul + hashAdd >>> shift;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
 //                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
@@ -96,7 +97,7 @@ public class ExhaustiveBadStringHashTest {
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -110,13 +111,13 @@ public class ExhaustiveBadStringHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
-						hashMultiplier *= ((long)size << 3) ^ 0xF1357AEA2E62A9C5L;
+						hashMultiplier *= ((long) size << 3) ^ 0xF1357AEA2E62A9C5L;
 						hashMul = hashMul * 0x2E62A9C5;
 						hashAdd += 0xF1357AEA;
 //                        hashAddend = (hashAddend ^ hashAddend >>> 11 ^ size) * 0x13C6EB ^ 0xC79E7B1D;
@@ -131,7 +132,9 @@ public class ExhaustiveBadStringHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
 //						if(longestPileup > 18) throw new RuntimeException();
@@ -141,9 +144,9 @@ public class ExhaustiveBadStringHashTest {
 					}
 
 					@Override
-					public void clear () {
+					public void clear() {
 //						if(longestPileup <= 11) {
-						if(longestPileup <= 170) {
+						if (longestPileup <= 170) {
 							System.out.println("hash * 0x" + Base.BASE16.unsigned(originalMultiplier) +
 								" + 0x" + Base.BASE16.unsigned(originalAddend) + " on iteration " + hashShiftA);
 //                            System.out.println("shifts: a " + hashShiftA + ", b " + hashShiftB);
@@ -162,7 +165,7 @@ public class ExhaustiveBadStringHashTest {
 					for (int i = 0; i < LEN; i++) {
 						set.add(words[i]);
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					continue;
 				}
 //        System.out.println(System.nanoTime() - start);

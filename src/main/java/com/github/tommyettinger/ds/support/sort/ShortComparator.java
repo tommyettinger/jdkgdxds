@@ -35,10 +35,10 @@ public interface ShortComparator extends Comparator<Short> {
 	 * is less than, equal to, or greater than the second.
 	 * @see Comparator
 	 */
-	int compare (short k1, short k2);
+	int compare(short k1, short k2);
 
 	@Override
-	default ShortComparator reversed () {
+	default ShortComparator reversed() {
 		return ShortComparators.oppositeComparator(this);
 	}
 
@@ -51,7 +51,7 @@ public interface ShortComparator extends Comparator<Short> {
 	 */
 	@Deprecated
 	@Override
-	default int compare (Short ok1, Short ok2) {
+	default int compare(Short ok1, Short ok2) {
 		return compare(ok1.shortValue(), ok2.shortValue());
 	}
 
@@ -61,7 +61,7 @@ public interface ShortComparator extends Comparator<Short> {
 	 *
 	 * @see Comparator#thenComparing(Comparator)
 	 */
-	default ShortComparator thenComparing (ShortComparator second) {
+	default ShortComparator thenComparing(ShortComparator second) {
 		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
@@ -69,8 +69,10 @@ public interface ShortComparator extends Comparator<Short> {
 	}
 
 	@Override
-	default Comparator<Short> thenComparing (Comparator<? super Short> second) {
-		if (second instanceof ShortComparator) {return thenComparing((ShortComparator)second);}
+	default Comparator<Short> thenComparing(Comparator<? super Short> second) {
+		if (second instanceof ShortComparator) {
+			return thenComparing((ShortComparator) second);
+		}
 		return Comparator.super.thenComparing(second);
 	}
 }

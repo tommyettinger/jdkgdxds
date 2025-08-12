@@ -39,27 +39,28 @@ import java.util.Random;
  */
 public class ObjectRing<T> extends ObjectDeque<T> {
 	protected int forgotten = 0;
-	public ObjectRing () {
+
+	public ObjectRing() {
 		super();
 	}
 
-	public ObjectRing (int initialSize) {
+	public ObjectRing(int initialSize) {
 		super(initialSize);
 	}
 
-	public ObjectRing (Collection<? extends T> coll) {
+	public ObjectRing(Collection<? extends T> coll) {
 		super(coll);
 	}
 
-	public ObjectRing (ObjectDeque<? extends T> deque) {
+	public ObjectRing(ObjectDeque<? extends T> deque) {
 		super(deque);
 	}
 
-	public ObjectRing (T[] a) {
+	public ObjectRing(T[] a) {
 		super(a);
 	}
 
-	public ObjectRing (T[] a, int offset, int count) {
+	public ObjectRing(T[] a, int offset, int count) {
 		super(a, offset, count);
 	}
 
@@ -68,100 +69,100 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 	}
 
 	@Override
-	public void ensureCapacity (int additional) {
+	public void ensureCapacity(int additional) {
 		throw new UnsupportedOperationException("Capacity cannot change size in a Ring buffer.");
 	}
 
 	@Override
-	public void resize (int newSize) {
+	public void resize(int newSize) {
 		super.removeFirst();
 		forgotten++;
 	}
 
 	@Override
-	public @Nullable T removeFirst () {
+	public @Nullable T removeFirst() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T removeLast () {
+	public @Nullable T removeLast() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T pollFirst () {
+	public @Nullable T pollFirst() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T pollLast () {
+	public @Nullable T pollLast() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeFirstOccurrence (@Nullable Object o) {
+	public boolean removeFirstOccurrence(@Nullable Object o) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeLastOccurrence (@Nullable Object o) {
+	public boolean removeLastOccurrence(@Nullable Object o) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T remove () {
+	public @Nullable T remove() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeAll (Collection<?> c) {
+	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean retainAll (Collection<?> c) {
+	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T poll () {
+	public @Nullable T poll() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T pop () {
+	public @Nullable T pop() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean remove (@Nullable Object o) {
+	public boolean remove(@Nullable Object o) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeValue (@Nullable Object value, boolean identity) {
+	public boolean removeValue(@Nullable Object value, boolean identity) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeLastValue (@Nullable Object value, boolean identity) {
+	public boolean removeLastValue(@Nullable Object value, boolean identity) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public void add (int index, @Nullable T item) {
-		if(index >= forgotten)
+	public void add(int index, @Nullable T item) {
+		if (index >= forgotten)
 			super.add(index - forgotten, item);
 	}
 
 	@Override
-	public boolean insert (int index, @Nullable T element) {
-		if(index < forgotten) return false;
+	public boolean insert(int index, @Nullable T element) {
+		if (index < forgotten) return false;
 		return super.insert(index - forgotten, element);
 	}
 
 	@Override
-	public @Nullable T removeAt (int index) {
+	public @Nullable T removeAt(int index) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
@@ -171,19 +172,19 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 	}
 
 	@Override
-	public @Nullable T get (int index) {
-		if(index < forgotten) return defaultValue;
+	public @Nullable T get(int index) {
+		if (index < forgotten) return defaultValue;
 		return super.get(index - forgotten);
 	}
 
 	@Override
-	public @Nullable T set (int index, @Nullable T item) {
-		if(index < forgotten) return defaultValue;
+	public @Nullable T set(int index, @Nullable T item) {
+		if (index < forgotten) return defaultValue;
 		return super.set(index - forgotten, item);
 	}
 
 	@Override
-	public @Nullable T random (Random random) {
+	public @Nullable T random(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ObjectRing is empty.");
 		}
@@ -197,27 +198,28 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 	 *
 	 * @return the number of items that have been forgotten
 	 */
-	public int getForgotten () {
+	public int getForgotten() {
 		return forgotten;
 	}
 
 	/**
 	 * Gets the upper exclusive limit for indices in the index-based API here.
 	 * This is equivalent to {@link #getForgotten()} plus {@link #size()}.
+	 *
 	 * @return the upper exclusive limit for indices
 	 */
-	public int getLimit () {
+	public int getLimit() {
 		return forgotten + size;
 	}
 
-	public static <T> ObjectRing<T> with (T item) {
+	public static <T> ObjectRing<T> with(T item) {
 		ObjectRing<T> deque = new ObjectRing<>(1);
 		deque.add(item);
 		return deque;
 	}
 
 	@SafeVarargs
-	public static <T> ObjectRing<T> with (T... items) {
+	public static <T> ObjectRing<T> with(T... items) {
 		return new ObjectRing<>(items);
 	}
 }

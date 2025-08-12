@@ -35,10 +35,10 @@ public interface LongComparator extends Comparator<Long> {
 	 * is less than, equal to, or greater than the second.
 	 * @see Comparator
 	 */
-	int compare (long k1, long k2);
+	int compare(long k1, long k2);
 
 	@Override
-	default LongComparator reversed () {
+	default LongComparator reversed() {
 		return LongComparators.oppositeComparator(this);
 	}
 
@@ -51,7 +51,7 @@ public interface LongComparator extends Comparator<Long> {
 	 */
 	@Deprecated
 	@Override
-	default int compare (Long ok1, Long ok2) {
+	default int compare(Long ok1, Long ok2) {
 		return compare(ok1.longValue(), ok2.longValue());
 	}
 
@@ -61,7 +61,7 @@ public interface LongComparator extends Comparator<Long> {
 	 *
 	 * @see Comparator#thenComparing(Comparator)
 	 */
-	default LongComparator thenComparing (LongComparator second) {
+	default LongComparator thenComparing(LongComparator second) {
 		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
@@ -69,8 +69,10 @@ public interface LongComparator extends Comparator<Long> {
 	}
 
 	@Override
-	default Comparator<Long> thenComparing (Comparator<? super Long> second) {
-		if (second instanceof LongComparator) {return thenComparing((LongComparator)second);}
+	default Comparator<Long> thenComparing(Comparator<? super Long> second) {
+		if (second instanceof LongComparator) {
+			return thenComparing((LongComparator) second);
+		}
 		return Comparator.super.thenComparing(second);
 	}
 }

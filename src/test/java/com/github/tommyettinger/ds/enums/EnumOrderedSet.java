@@ -31,7 +31,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public EnumOrderedSet () {
+	public EnumOrderedSet() {
 		super();
 	}
 
@@ -41,7 +41,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public EnumOrderedSet (int initialCapacity) {
+	public EnumOrderedSet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -52,7 +52,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public EnumOrderedSet (int initialCapacity, float loadFactor) {
+	public EnumOrderedSet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -61,7 +61,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	 *
 	 * @param set an ObjectSet or subclass to copy
 	 */
-	public EnumOrderedSet (ObjectSet<? extends E> set) {
+	public EnumOrderedSet(ObjectSet<? extends E> set) {
 		super(set);
 	}
 
@@ -70,7 +70,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	 *
 	 * @param set an ObjectOrderedSet or subclass to copy, such as another EnumSet
 	 */
-	public EnumOrderedSet (ObjectOrderedSet<? extends E> set) {
+	public EnumOrderedSet(ObjectOrderedSet<? extends E> set) {
 		super(set);
 	}
 
@@ -79,7 +79,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	 *
 	 * @param coll a Collection implementation to copy, such as an ObjectList or a Set that doesn't subclass ObjectSet
 	 */
-	public EnumOrderedSet (Collection<? extends E> coll) {
+	public EnumOrderedSet(Collection<? extends E> coll) {
 		super(coll);
 	}
 
@@ -91,7 +91,7 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public EnumOrderedSet (E[] array, int offset, int length) {
+	public EnumOrderedSet(E[] array, int offset, int length) {
 		super(array, offset, length);
 	}
 
@@ -101,43 +101,45 @@ public class EnumOrderedSet<E extends Enum<E>> extends ObjectOrderedSet<E> {
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public EnumOrderedSet (E[] array) {
+	public EnumOrderedSet(E[] array) {
 		super(array);
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
-			return ((Enum<?>)item).ordinal() & mask;
+			return ((Enum<?>) item).ordinal() & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		Enum[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			Enum key = keyTable[i];
-			if (key != null) {h += key.ordinal() * 421;}
+			if (key != null) {
+				h += key.ordinal() * 421;
+			}
 		}
 		return h;
 	}
 
-	public static <E extends Enum<E>> EnumOrderedSet<E> with (E item) {
+	public static <E extends Enum<E>> EnumOrderedSet<E> with(E item) {
 		EnumOrderedSet<E> set = new EnumOrderedSet<>(1);
 		set.add(item);
 		return set;
 	}
 
 	@SafeVarargs
-	public static <E extends Enum<E>> EnumOrderedSet<E> with (E... array) {
+	public static <E extends Enum<E>> EnumOrderedSet<E> with(E... array) {
 		return new EnumOrderedSet<>(array);
 	}
 

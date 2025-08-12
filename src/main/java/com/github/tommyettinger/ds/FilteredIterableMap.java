@@ -41,14 +41,14 @@ import java.util.Objects;
  * a specialized version of FilteredIterableMap (which can be useful for serialization).
  */
 public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObjectMap<I, V> {
-	protected ObjPredicate<K>      filter = c -> true;
+	protected ObjPredicate<K> filter = c -> true;
 	protected ObjToSameFunction<K> editor = c -> c;
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 * This considers all sub-keys in an Iterable key and does not edit any sub-keys.
 	 */
-	public FilteredIterableMap () {
+	public FilteredIterableMap() {
 		super();
 	}
 
@@ -59,7 +59,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredIterableMap (int initialCapacity) {
+	public FilteredIterableMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -71,7 +71,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredIterableMap (int initialCapacity, float loadFactor) {
+	public FilteredIterableMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -82,7 +82,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 */
-	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor) {
+	public FilteredIterableMap(ObjPredicate<K> filter, ObjToSameFunction<K> editor) {
 		super();
 		this.filter = filter;
 		this.editor = editor;
@@ -93,11 +93,11 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * This set will hold initialCapacity keys before growing the backing table.
 	 * This uses the specified filter and editor.
 	 *
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param filter          a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor          a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity) {
+	public FilteredIterableMap(ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity) {
 		super(initialCapacity);
 		this.filter = filter;
 		this.editor = editor;
@@ -108,12 +108,12 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * growing the backing table.
 	 * This uses the specified filter and editor.
 	 *
-	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
-	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
+	 * @param filter          a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
+	 * @param editor          a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity, float loadFactor) {
+	public FilteredIterableMap(ObjPredicate<K> filter, ObjToSameFunction<K> editor, int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
 		this.editor = editor;
@@ -124,7 +124,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 *
 	 * @param map another FilteredIterableMap to copy
 	 */
-	public FilteredIterableMap (FilteredIterableMap<K, ? extends I, ? extends V> map) {
+	public FilteredIterableMap(FilteredIterableMap<K, ? extends I, ? extends V> map) {
 		super(map.size(), map.loadFactor);
 		filter = map.filter;
 		editor = map.editor;
@@ -139,9 +139,9 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 *
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
-	 * @param map a Map to copy
+	 * @param map    a Map to copy
 	 */
-	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, Map<? extends I, ? extends V> map) {
+	public FilteredIterableMap(ObjPredicate<K> filter, ObjToSameFunction<K> editor, Map<? extends I, ? extends V> map) {
 		this(filter, editor, map.size());
 		putAll(map);
 	}
@@ -153,10 +153,10 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 *
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
-	 * @param keys a Collection of keys
+	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, Collection<? extends I> keys, Collection<? extends V> values) {
+	public FilteredIterableMap(ObjPredicate<K> filter, ObjToSameFunction<K> editor, Collection<? extends I> keys, Collection<? extends V> values) {
 		this(filter, editor, keys.size());
 		putAll(keys, values);
 	}
@@ -167,10 +167,10 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 *
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
-	 * @param keys  an array to draw keys from
-	 * @param values  an array to draw values from
+	 * @param keys   an array to draw keys from
+	 * @param values an array to draw values from
 	 */
-	public FilteredIterableMap (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I[] keys, V[] values) {
+	public FilteredIterableMap(ObjPredicate<K> filter, ObjToSameFunction<K> editor, I[] keys, V[] values) {
 		this(filter, editor, Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -185,6 +185,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * sub-key and return true if that sub-key will be used for hashing/equality, or return false to ignore it.
 	 * The default filter always returns true. If the filter changes, that invalidates anything previously entered into
 	 * this, so before changing the filter <em>this clears the entire data structure</em>, removing all existing entries.
+	 *
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @return this, for chaining
 	 */
@@ -206,6 +207,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * The default filter returns the sub-key it is passed without changes. If the editor changes, that invalidates
 	 * anything previously entered into this, so before changing the editor <em>this clears the entire data
 	 * structure</em>, removing all existing entries.
+	 *
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @return this, for chaining
 	 */
@@ -217,11 +219,12 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 
 	/**
 	 * Equivalent to calling {@code myMap.setFilter(filter).setEditor(editor)}, but only clears the data structure once.
-	 * @see #setFilter(ObjPredicate)
-	 * @see #setEditor(ObjToSameFunction)
+	 *
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @return this, for chaining
+	 * @see #setFilter(ObjPredicate)
+	 * @see #setEditor(ObjToSameFunction)
 	 */
 	public FilteredIterableMap<K, I, V> setModifiers(ObjPredicate<K> filter, ObjToSameFunction<K> editor) {
 		clear();
@@ -233,7 +236,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	protected int hashHelper(I s) {
 		int hash = hashMultiplier;
 		for (K c : s) {
-			if(filter.test(c)){
+			if (filter.test(c)) {
 				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), hashMultiplier);
 			}
 		}
@@ -241,7 +244,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		if (item instanceof Iterable) {
 			return hashHelper((I) item) & mask;
 		}
@@ -259,12 +262,12 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * @return true if left and right are equivalent according to the rules this filtered type uses
 	 */
 	@Override
-	public boolean equate (Object left, @Nullable Object right) {
+	public boolean equate(Object left, @Nullable Object right) {
 		if (left == right)
 			return true;
-		if(right == null) return false;
+		if (right == null) return false;
 		if ((left instanceof Iterable) && (right instanceof Iterable)) {
-			Iterable l = (Iterable)left, r = (Iterable)right;
+			Iterable l = (Iterable) left, r = (Iterable) right;
 			int countL = 0, countR = 0;
 			Iterator<? extends K> i = l.iterator(), j = r.iterator();
 			K cl = null, cr = null;
@@ -276,7 +279,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 					while (i.hasNext() && !(found = filter.test(cl = i.next()))) {
 						cl = null;
 					}
-					if(found) countL++;
+					if (found) countL++;
 				}
 				if (!j.hasNext()) {
 					cr = null;
@@ -285,7 +288,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 					while (j.hasNext() && !(found = filter.test(cr = j.next()))) {
 						cr = null;
 					}
-					if(found) countR++;
+					if (found) countR++;
 				}
 				if (!Objects.equals(cl, cr) && !Objects.equals((editor.apply(cl)), (editor.apply(cr)))) {
 					return false;
@@ -297,16 +300,18 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		Object[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			Object key = keyTable[i];
 			if (key != null) {
-				h ^= hashHelper((I)key);
+				h ^= hashHelper((I) key);
 				V value = valueTable[i];
-				if (value != null) {h ^= value.hashCode();}
+				if (value != null) {
+					h ^= value.hashCode();
+				}
 			}
 		}
 		return h;
@@ -316,33 +321,33 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this takes no
 	 * keys or values, and doesn't allocate an array from using varargs.
 	 *
-	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
-	 * @return a new FilteredIterableOrderedMap containing only the given key and value
 	 * @param <K>    the type of sub-keys inside each Iterable key
 	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
 	 * @param <V>    the type of values, inferred from value0
+	 * @return a new FilteredIterableOrderedMap containing only the given key and value
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 */
-	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor) {
-        return new FilteredIterableMap<>(filter, editor, 0);
+	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with(ObjPredicate<K> filter, ObjToSameFunction<K> editor) {
+		return new FilteredIterableMap<>(filter, editor, 0);
 	}
 
 	/**
 	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this only takes one
 	 * key-value pair, and doesn't allocate an array from using varargs.
 	 *
-	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param key    the only key that will be present in the returned map
 	 * @param value  the only value that will be present in the returned map
-	 * @return a new FilteredIterableOrderedMap containing only the given key and value
 	 * @param <K>    the type of sub-keys inside each Iterable key
 	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
 	 * @param <V>    the type of values, inferred from value0
+	 * @return a new FilteredIterableOrderedMap containing only the given key and value
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 */
-	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key, V value) {
+	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with(ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key, V value) {
 		FilteredIterableMap<K, I, V> map = new FilteredIterableMap<>(filter, editor, 1);
 		map.put(key, value);
 		return map;
@@ -352,19 +357,19 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this only takes
 	 * the given key-value pairs, and doesn't allocate an array from using varargs.
 	 *
-	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param key0   a key that will be present in the returned map
 	 * @param value0 a value that will be present in the returned map
 	 * @param key1   a key that will be present in the returned map
 	 * @param value1 a value that will be present in the returned map
-	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
 	 * @param <K>    the type of sub-keys inside each Iterable key
 	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
 	 * @param <V>    the type of values, inferred from value0
+	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 */
-	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1) {
+	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with(ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1) {
 		FilteredIterableMap<K, I, V> map = new FilteredIterableMap<>(filter, editor, 2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -375,7 +380,6 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this only takes
 	 * the given key-value pairs, and doesn't allocate an array from using varargs.
 	 *
-	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param key0   a key that will be present in the returned map
@@ -384,12 +388,13 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * @param value1 a value that will be present in the returned map
 	 * @param key2   a key that will be present in the returned map
 	 * @param value2 a value that will be present in the returned map
-	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
 	 * @param <K>    the type of sub-keys inside each Iterable key
 	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
 	 * @param <V>    the type of values, inferred from value0
+	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 */
-	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1, I key2, V value2) {
+	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with(ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1, I key2, V value2) {
 		FilteredIterableMap<K, I, V> map = new FilteredIterableMap<>(filter, editor, 3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -401,7 +406,6 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this only takes
 	 * the given key-value pairs, and doesn't allocate an array from using varargs.
 	 *
-	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 * @param filter a ObjPredicate<K> that should return true iff a sub-key should be considered for equality/hashing
 	 * @param editor a ObjToSameFunction<K> that will be given a sub-key and may return a potentially different {@code K} sub-key
 	 * @param key0   a key that will be present in the returned map
@@ -412,12 +416,13 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * @param value2 a value that will be present in the returned map
 	 * @param key3   a key that will be present in the returned map
 	 * @param value3 a value that will be present in the returned map
-	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
 	 * @param <K>    the type of sub-keys inside each Iterable key
 	 * @param <I>    the type of keys, which must extend Iterable; inferred from key0
 	 * @param <V>    the type of values, inferred from value0
+	 * @return a new FilteredIterableOrderedMap containing only the given keys and values
+	 * @see #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)
 	 */
-	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1, I key2, V value2, I key3, V value3) {
+	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with(ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, I key1, V value1, I key2, V value2, I key3, V value3) {
 		FilteredIterableMap<K, I, V> map = new FilteredIterableMap<>(filter, editor, 4);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -447,7 +452,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with (ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, Object... rest) {
+	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with(ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, Object... rest) {
 		FilteredIterableMap<K, I, V> map = new FilteredIterableMap<>(filter, editor, 1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		map.putPairs(rest);

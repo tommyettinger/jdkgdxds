@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -25,7 +26,7 @@ import java.util.Comparator;
  * comparators.
  */
 public final class IntComparators {
-	private IntComparators () {
+	private IntComparators() {
 	}
 
 	/**
@@ -34,12 +35,12 @@ public final class IntComparators {
 	protected static class NaturalImplicitComparator implements IntComparator {
 
 		@Override
-		public final int compare (final int a, final int b) {
+		public final int compare(final int a, final int b) {
 			return Integer.compare(a, b);
 		}
 
 		@Override
-		public IntComparator reversed () {
+		public IntComparator reversed() {
 			return OPPOSITE_COMPARATOR;
 		}
 
@@ -53,12 +54,12 @@ public final class IntComparators {
 	protected static class OppositeImplicitComparator implements IntComparator {
 
 		@Override
-		public final int compare (final int a, final int b) {
+		public final int compare(final int a, final int b) {
 			return Integer.compare(b, a);
 		}
 
 		@Override
-		public IntComparator reversed () {
+		public IntComparator reversed() {
 			return NATURAL_COMPARATOR;
 		}
 
@@ -70,17 +71,17 @@ public final class IntComparators {
 
 		final IntComparator comparator;
 
-		protected OppositeComparator (final IntComparator c) {
+		protected OppositeComparator(final IntComparator c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final int a, final int b) {
+		public final int compare(final int a, final int b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final IntComparator reversed () {
+		public final IntComparator reversed() {
 			return comparator;
 		}
 	}
@@ -91,8 +92,10 @@ public final class IntComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static IntComparator oppositeComparator (final IntComparator c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
+	public static IntComparator oppositeComparator(final IntComparator c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator) c).comparator;
+		}
 		return new OppositeComparator(c);
 	}
 
@@ -103,17 +106,19 @@ public final class IntComparators {
 	 * @param c a comparator, or {@code null}.
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
-	public static IntComparator asIntComparator (final Comparator<? super Integer> c) {
-		if (c instanceof IntComparator) {return (IntComparator)c;}
+	public static IntComparator asIntComparator(final Comparator<? super Integer> c) {
+		if (c instanceof IntComparator) {
+			return (IntComparator) c;
+		}
 		return new IntComparator() {
 			@Override
-			public int compare (int x, int y) {
+			public int compare(int x, int y) {
 				return c.compare(Integer.valueOf(x), Integer.valueOf(y));
 			}
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public int compare (Integer x, Integer y) {
+			public int compare(Integer x, Integer y) {
 				return c.compare(x, y);
 			}
 		};
@@ -126,12 +131,12 @@ public final class IntComparators {
 	protected static class UnsignedComparator implements IntComparator {
 
 		@Override
-		public final int compare (final int a, final int b) {
+		public final int compare(final int a, final int b) {
 			return Integer.compare(a + Integer.MIN_VALUE, b + Integer.MIN_VALUE);
 		}
 
 		@Override
-		public IntComparator reversed () {
+		public IntComparator reversed() {
 			return UNSIGNED_OPPOSITE_COMPARATOR;
 		}
 
@@ -146,12 +151,12 @@ public final class IntComparators {
 	protected static class UnsignedOppositeComparator implements IntComparator {
 
 		@Override
-		public final int compare (final int a, final int b) {
+		public final int compare(final int a, final int b) {
 			return Integer.compare(b + Integer.MIN_VALUE, a + Integer.MIN_VALUE);
 		}
 
 		@Override
-		public IntComparator reversed () {
+		public IntComparator reversed() {
 			return UNSIGNED_COMPARATOR;
 		}
 
@@ -161,7 +166,7 @@ public final class IntComparators {
 
 	/// The remainder of the code is based on FastUtil.
 
-	private static void swap (int[] items, int first, int second) {
+	private static void swap(int[] items, int first, int second) {
 		int firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -173,10 +178,14 @@ public final class IntComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static void inPlaceMerge (int[] items, final int from, int mid, final int to, final IntComparator comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static void inPlaceMerge(int[] items, final int from, int mid, final int to, final IntComparator comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -197,13 +206,19 @@ public final class IntComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -224,7 +239,7 @@ public final class IntComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static int lowerBound (int[] items, int from, final int to, final int pos, final IntComparator comp) {
+	private static int lowerBound(int[] items, int from, final int to, final int pos, final IntComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -252,7 +267,7 @@ public final class IntComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static int upperBound (int[] items, int from, final int to, final int pos, final IntComparator comp) {
+	private static int upperBound(int[] items, int from, final int to, final int pos, final IntComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -274,7 +289,7 @@ public final class IntComparators {
 	 * @param items the int array to be sorted
 	 * @param c     a IntComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (int[] items, final @Nullable IntComparator c) {
+	public static void sort(int[] items, final @Nullable IntComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -296,7 +311,7 @@ public final class IntComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a IntComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (int[] items, final int from, final int to, final @Nullable IntComparator c) {
+	public static void sort(int[] items, final int from, final int to, final @Nullable IntComparator c) {
 		if (to <= 0) {
 			return;
 		}
@@ -333,7 +348,9 @@ public final class IntComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

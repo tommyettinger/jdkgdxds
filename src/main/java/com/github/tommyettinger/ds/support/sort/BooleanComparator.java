@@ -35,10 +35,10 @@ public interface BooleanComparator extends Comparator<Boolean> {
 	 * is less than, equal to, or greater than the second.
 	 * @see Comparator
 	 */
-	int compare (boolean k1, boolean k2);
+	int compare(boolean k1, boolean k2);
 
 	@Override
-	default BooleanComparator reversed () {
+	default BooleanComparator reversed() {
 		return BooleanComparators.oppositeComparator(this);
 	}
 
@@ -51,7 +51,7 @@ public interface BooleanComparator extends Comparator<Boolean> {
 	 */
 	@Deprecated
 	@Override
-	default int compare (Boolean ok1, Boolean ok2) {
+	default int compare(Boolean ok1, Boolean ok2) {
 		return compare(ok1.booleanValue(), ok2.booleanValue());
 	}
 
@@ -61,7 +61,7 @@ public interface BooleanComparator extends Comparator<Boolean> {
 	 *
 	 * @see Comparator#thenComparing(Comparator)
 	 */
-	default BooleanComparator thenComparing (BooleanComparator second) {
+	default BooleanComparator thenComparing(BooleanComparator second) {
 		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
@@ -69,8 +69,10 @@ public interface BooleanComparator extends Comparator<Boolean> {
 	}
 
 	@Override
-	default Comparator<Boolean> thenComparing (Comparator<? super Boolean> second) {
-		if (second instanceof BooleanComparator) {return thenComparing((BooleanComparator)second);}
+	default Comparator<Boolean> thenComparing(Comparator<? super Boolean> second) {
+		if (second instanceof BooleanComparator) {
+			return thenComparing((BooleanComparator) second);
+		}
 		return Comparator.super.thenComparing(second);
 	}
 }

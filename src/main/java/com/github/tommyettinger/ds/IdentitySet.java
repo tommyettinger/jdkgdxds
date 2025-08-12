@@ -36,15 +36,15 @@ import java.util.Iterator;
  * This can potentially be useful for tracking references to ensure they are all unique by identity, such as to avoid referential cycles.
  */
 public class IdentitySet<T> extends ObjectSet<T> {
-	public IdentitySet () {
+	public IdentitySet() {
 		super();
 	}
 
-	public IdentitySet (int initialCapacity) {
+	public IdentitySet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
-	public IdentitySet (int initialCapacity, float loadFactor) {
+	public IdentitySet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -53,43 +53,45 @@ public class IdentitySet<T> extends ObjectSet<T> {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public IdentitySet (Iterator<? extends T> coll) {
+	public IdentitySet(Iterator<? extends T> coll) {
 		super(coll);
 	}
 
-	public IdentitySet (ObjectSet<? extends T> set) {
+	public IdentitySet(ObjectSet<? extends T> set) {
 		super(set);
 	}
 
-	public IdentitySet (Collection<? extends T> coll) {
+	public IdentitySet(Collection<? extends T> coll) {
 		super(coll);
 	}
 
-	public IdentitySet (T[] array, int offset, int length) {
+	public IdentitySet(T[] array, int offset, int length) {
 		super(array, offset, length);
 	}
 
-	public IdentitySet (T[] array) {
+	public IdentitySet(T[] array) {
 		super(array);
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		return System.identityHashCode(item) & mask;
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
-			if (key != null) {h += System.identityHashCode(key);}
+			if (key != null) {
+				h += System.identityHashCode(key);
+			}
 		}
 		return h ^ h >>> 16;
 	}
@@ -120,20 +122,21 @@ public class IdentitySet<T> extends ObjectSet<T> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <T>    the type of items; must be given explicitly
+	 * @param <T> the type of items; must be given explicitly
 	 * @return a new set containing nothing
 	 */
-	public static <T> IdentitySet<T> with () {
+	public static <T> IdentitySet<T> with() {
 		return new IdentitySet<>(0);
 	}
 
 	/**
 	 * Creates a new IdentitySet that holds only the given item, but can be resized.
+	 *
 	 * @param item one T item
+	 * @param <T>  the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given item
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentitySet<T> with (T item) {
+	public static <T> IdentitySet<T> with(T item) {
 		IdentitySet<T> set = new IdentitySet<>(1);
 		set.add(item);
 		return set;
@@ -141,12 +144,13 @@ public class IdentitySet<T> extends ObjectSet<T> {
 
 	/**
 	 * Creates a new IdentitySet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentitySet<T> with (T item0, T item1) {
+	public static <T> IdentitySet<T> with(T item0, T item1) {
 		IdentitySet<T> set = new IdentitySet<>(2);
 		set.add(item0, item1);
 		return set;
@@ -154,13 +158,14 @@ public class IdentitySet<T> extends ObjectSet<T> {
 
 	/**
 	 * Creates a new IdentitySet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentitySet<T> with (T item0, T item1, T item2) {
+	public static <T> IdentitySet<T> with(T item0, T item1, T item2) {
 		IdentitySet<T> set = new IdentitySet<>(3);
 		set.add(item0, item1, item2);
 		return set;
@@ -168,14 +173,15 @@ public class IdentitySet<T> extends ObjectSet<T> {
 
 	/**
 	 * Creates a new IdentitySet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentitySet<T> with (T item0, T item1, T item2, T item3) {
+	public static <T> IdentitySet<T> with(T item0, T item1, T item2, T item3) {
 		IdentitySet<T> set = new IdentitySet<>(4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -183,15 +189,16 @@ public class IdentitySet<T> extends ObjectSet<T> {
 
 	/**
 	 * Creates a new IdentitySet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentitySet<T> with (T item0, T item1, T item2, T item3, T item4) {
+	public static <T> IdentitySet<T> with(T item0, T item1, T item2, T item3, T item4) {
 		IdentitySet<T> set = new IdentitySet<>(5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -200,16 +207,17 @@ public class IdentitySet<T> extends ObjectSet<T> {
 
 	/**
 	 * Creates a new IdentitySet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
 	 * @param item5 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentitySet<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+	public static <T> IdentitySet<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		IdentitySet<T> set = new IdentitySet<>(6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -218,6 +226,7 @@ public class IdentitySet<T> extends ObjectSet<T> {
 
 	/**
 	 * Creates a new IdentitySet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -225,10 +234,10 @@ public class IdentitySet<T> extends ObjectSet<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentitySet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+	public static <T> IdentitySet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		IdentitySet<T> set = new IdentitySet<>(7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -237,6 +246,7 @@ public class IdentitySet<T> extends ObjectSet<T> {
 
 	/**
 	 * Creates a new IdentitySet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -244,10 +254,10 @@ public class IdentitySet<T> extends ObjectSet<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> IdentitySet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+	public static <T> IdentitySet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		IdentitySet<T> set = new IdentitySet<>(8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -259,12 +269,13 @@ public class IdentitySet<T> extends ObjectSet<T> {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @param <T>     the type of item, typically inferred
 	 * @return a new IdentitySet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
 	@SafeVarargs
-	public static <T> IdentitySet<T> with (T... varargs) {
+	public static <T> IdentitySet<T> with(T... varargs) {
 		return new IdentitySet<>(varargs);
 	}
 }

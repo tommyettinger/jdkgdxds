@@ -30,38 +30,38 @@ import java.util.NoSuchElementException;
  * and can also just change the Iterator with {@link #set(CharIterator)}.
  */
 public class EditingCharIterator implements CharIterator {
-    public CharIterator iterator;
-    public CharToCharFunction editor;
+	public CharIterator iterator;
+	public CharToCharFunction editor;
 
-    public EditingCharIterator() {
-    }
+	public EditingCharIterator() {
+	}
 
-    public EditingCharIterator(final CharIterator iterator, final CharToCharFunction editor) {
-        set(iterator, editor);
-    }
+	public EditingCharIterator(final CharIterator iterator, final CharToCharFunction editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final CharIterator iterator, final CharToCharFunction editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final CharIterator iterator, final CharToCharFunction editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final CharIterator iterator) {
-        set(iterator, editor);
-    }
+	public void set(final CharIterator iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public char nextChar () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.applyAsChar(iterator.nextChar());
-    }
+	@Override
+	public char nextChar() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.applyAsChar(iterator.nextChar());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

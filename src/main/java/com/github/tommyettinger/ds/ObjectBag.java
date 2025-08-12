@@ -35,14 +35,14 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Constructs an empty bag with an initial capacity of 10.
 	 */
-	public ObjectBag () {
+	public ObjectBag() {
 		super();
 	}
 
@@ -53,7 +53,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @throws IllegalArgumentException if the specified initial capacity
 	 *                                  is negative
 	 */
-	public ObjectBag (int initialCapacity) {
+	public ObjectBag(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -65,15 +65,15 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @param c the collection whose elements are to be placed into this bag
 	 * @throws NullPointerException if the specified collection is null
 	 */
-	public ObjectBag (Collection<? extends T> c) {
+	public ObjectBag(Collection<? extends T> c) {
 		super(c);
 	}
 
-	public ObjectBag (T[] a) {
+	public ObjectBag(T[] a) {
 		super(a);
 	}
 
-	public ObjectBag (T[] a, int offset, int count) {
+	public ObjectBag(T[] a, int offset, int count) {
 		super(a, offset, count);
 	}
 
@@ -82,7 +82,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public ObjectBag (Iterator<? extends T> coll) {
+	public ObjectBag(Iterator<? extends T> coll) {
 		this();
 		addAll(coll);
 	}
@@ -95,18 +95,18 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public ObjectBag (Ordered<T> other, int offset, int count) {
+	public ObjectBag(Ordered<T> other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering; {@code index} is ignored.
 	 *
-	 * @param index ignored
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void add (int index, @Nullable T element) {
+	public void add(int index, @Nullable T element) {
 		super.add(element);
 	}
 
@@ -118,7 +118,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, @Nullable T element) {
+	public void insert(int index, @Nullable T element) {
 		super.add(element);
 	}
 
@@ -130,7 +130,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @throws IndexOutOfBoundsException if the bag is empty
 	 */
 	@Override
-	public @Nullable T remove (int index) {
+	public @Nullable T remove(int index) {
 		int size = size();
 		T value = super.set(index, get(size - 1));
 		super.remove(size - 1);
@@ -146,7 +146,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @throws IndexOutOfBoundsException if the bag is empty
 	 */
 	@Override
-	public @Nullable T removeAt (int index) {
+	public @Nullable T removeAt(int index) {
 		int size = size();
 		T value = super.set(index, get(size - 1));
 		super.remove(size - 1);
@@ -156,12 +156,12 @@ public class ObjectBag<T> extends ObjectList<T> {
 	/**
 	 * Uses == for comparison of the bags; does not compare their items.
 	 */
-	public boolean equalsIdentity (Object object) {
+	public boolean equalsIdentity(Object object) {
 		return object == this;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int n = size(), h = n;
 		for (int i = 0; i < n; i++) {
 			h += get(i).hashCode();
@@ -174,20 +174,21 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <T>    the type of items; must be given explicitly
+	 * @param <T> the type of items; must be given explicitly
 	 * @return a new bag containing nothing
 	 */
-	public static <T> ObjectBag<T> with () {
+	public static <T> ObjectBag<T> with() {
 		return new ObjectBag<>(0);
 	}
 
 	/**
 	 * Creates a new ObjectBag that holds only the given item, but can be resized.
+	 *
 	 * @param item one T item
+	 * @param <T>  the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given item
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectBag<T> with (T item) {
+	public static <T> ObjectBag<T> with(T item) {
 		ObjectBag<T> bag = new ObjectBag<>(1);
 		bag.add(item);
 		return bag;
@@ -195,12 +196,13 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	/**
 	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectBag<T> with (T item0, T item1) {
+	public static <T> ObjectBag<T> with(T item0, T item1) {
 		ObjectBag<T> bag = new ObjectBag<>(2);
 		bag.add(item0, item1);
 		return bag;
@@ -208,13 +210,14 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	/**
 	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectBag<T> with (T item0, T item1, T item2) {
+	public static <T> ObjectBag<T> with(T item0, T item1, T item2) {
 		ObjectBag<T> bag = new ObjectBag<>(3);
 		bag.add(item0, item1, item2);
 		return bag;
@@ -222,14 +225,15 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	/**
 	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3) {
+	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3) {
 		ObjectBag<T> bag = new ObjectBag<>(4);
 		bag.add(item0, item1, item2, item3);
 		return bag;
@@ -237,15 +241,16 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	/**
 	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3, T item4) {
+	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3, T item4) {
 		ObjectBag<T> bag = new ObjectBag<>(5);
 		bag.add(item0, item1, item2, item3);
 		bag.add(item4);
@@ -254,16 +259,17 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	/**
 	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
 	 * @param item5 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		ObjectBag<T> bag = new ObjectBag<>(6);
 		bag.add(item0, item1, item2, item3);
 		bag.add(item4, item5);
@@ -272,6 +278,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	/**
 	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -279,10 +286,10 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		ObjectBag<T> bag = new ObjectBag<>(7);
 		bag.add(item0, item1, item2, item3);
 		bag.add(item4, item5, item6);
@@ -291,6 +298,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 
 	/**
 	 * Creates a new ObjectBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -298,10 +306,10 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectBag<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		ObjectBag<T> bag = new ObjectBag<>(8);
 		bag.add(item0, item1, item2, item3);
 		bag.add(item4, item5, item6, item7);
@@ -313,12 +321,13 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs either 0 or more T items, or an array of T
+	 * @param <T>     the type of items, typically inferred by all the items being the same type
 	 * @return a new ObjectBag that holds the given T items
-	 * @param <T> the type of items, typically inferred by all the items being the same type
 	 */
 	@SafeVarargs
-	public static <T> ObjectBag<T> with (T... varargs) {
+	public static <T> ObjectBag<T> with(T... varargs) {
 		return new ObjectBag<>(varargs);
 	}
 }

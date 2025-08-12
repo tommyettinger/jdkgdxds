@@ -35,10 +35,10 @@ public interface FloatComparator extends Comparator<Float> {
 	 * is less than, equal to, or greater than the second.
 	 * @see Comparator
 	 */
-	int compare (float k1, float k2);
+	int compare(float k1, float k2);
 
 	@Override
-	default FloatComparator reversed () {
+	default FloatComparator reversed() {
 		return FloatComparators.oppositeComparator(this);
 	}
 
@@ -51,7 +51,7 @@ public interface FloatComparator extends Comparator<Float> {
 	 */
 	@Deprecated
 	@Override
-	default int compare (Float ok1, Float ok2) {
+	default int compare(Float ok1, Float ok2) {
 		return compare(ok1.floatValue(), ok2.floatValue());
 	}
 
@@ -61,7 +61,7 @@ public interface FloatComparator extends Comparator<Float> {
 	 *
 	 * @see Comparator#thenComparing(Comparator)
 	 */
-	default FloatComparator thenComparing (FloatComparator second) {
+	default FloatComparator thenComparing(FloatComparator second) {
 		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
@@ -69,8 +69,10 @@ public interface FloatComparator extends Comparator<Float> {
 	}
 
 	@Override
-	default Comparator<Float> thenComparing (Comparator<? super Float> second) {
-		if (second instanceof FloatComparator) {return thenComparing((FloatComparator)second);}
+	default Comparator<Float> thenComparing(Comparator<? super Float> second) {
+		if (second instanceof FloatComparator) {
+			return thenComparing((FloatComparator) second);
+		}
 		return Comparator.super.thenComparing(second);
 	}
 }

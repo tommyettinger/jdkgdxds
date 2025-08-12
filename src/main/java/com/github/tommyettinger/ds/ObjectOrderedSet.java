@@ -55,30 +55,31 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	protected final ObjectList<T> items;
 
-	public ObjectOrderedSet (OrderType ordering) {
+	public ObjectOrderedSet(OrderType ordering) {
 		items = ordering == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
 	}
 
-	public ObjectOrderedSet (int initialCapacity, float loadFactor, OrderType ordering) {
+	public ObjectOrderedSet(int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
 		items = ordering == OrderType.BAG ? new ObjectBag<>(initialCapacity) : new ObjectList<>(initialCapacity);
 	}
 
-	public ObjectOrderedSet (int initialCapacity, OrderType ordering) {
+	public ObjectOrderedSet(int initialCapacity, OrderType ordering) {
 		super(initialCapacity);
 		items = ordering == OrderType.BAG ? new ObjectBag<>(initialCapacity) : new ObjectList<>(initialCapacity);
 	}
+
 	/**
 	 * Creates a new instance containing the items in the specified iterator.
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public ObjectOrderedSet (Iterator<? extends T> coll, OrderType ordering) {
+	public ObjectOrderedSet(Iterator<? extends T> coll, OrderType ordering) {
 		this(ordering);
 		addAll(coll);
 	}
 
-	public ObjectOrderedSet (ObjectOrderedSet<? extends T> set, OrderType ordering) {
+	public ObjectOrderedSet(ObjectOrderedSet<? extends T> set, OrderType ordering) {
 		super(set);
 		items = ordering == OrderType.BAG ? new ObjectBag<>(set.items) : new ObjectList<>(set.items);
 	}
@@ -86,7 +87,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
 	 */
-	public ObjectOrderedSet (ObjectSet<? extends T> set, OrderType ordering) {
+	public ObjectOrderedSet(ObjectSet<? extends T> set, OrderType ordering) {
 		this(set.size(), set.loadFactor, ordering);
 		hashMultiplier = set.hashMultiplier;
 		addAll(set);
@@ -96,7 +97,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public ObjectOrderedSet (Collection<? extends T> coll, OrderType ordering) {
+	public ObjectOrderedSet(Collection<? extends T> coll, OrderType ordering) {
 		this(coll.size(), ordering);
 		addAll(coll);
 	}
@@ -108,7 +109,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public ObjectOrderedSet (T[] array, int offset, int length, OrderType ordering) {
+	public ObjectOrderedSet(T[] array, int offset, int length, OrderType ordering) {
 		this(length, ordering);
 		addAll(array, offset, length);
 	}
@@ -118,7 +119,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 *
 	 * @param items an array that will be used in full, except for duplicate items
 	 */
-	public ObjectOrderedSet (T[] items, OrderType ordering) {
+	public ObjectOrderedSet(T[] items, OrderType ordering) {
 		this(items.length, ordering);
 		addAll(items);
 	}
@@ -131,34 +132,35 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public ObjectOrderedSet (Ordered<T> other, int offset, int count, OrderType ordering) {
+	public ObjectOrderedSet(Ordered<T> other, int offset, int count, OrderType ordering) {
 		this(count, ordering);
 		addAll(other, offset, count);
 	}
 
 	// default order type
 
-	public ObjectOrderedSet () {
+	public ObjectOrderedSet() {
 		this(OrderType.LIST);
 	}
 
-	public ObjectOrderedSet (int initialCapacity, float loadFactor) {
+	public ObjectOrderedSet(int initialCapacity, float loadFactor) {
 		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
-	public ObjectOrderedSet (int initialCapacity) {
+	public ObjectOrderedSet(int initialCapacity) {
 		this(initialCapacity, OrderType.LIST);
 	}
+
 	/**
 	 * Creates a new instance containing the items in the specified iterator.
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public ObjectOrderedSet (Iterator<? extends T> coll) {
+	public ObjectOrderedSet(Iterator<? extends T> coll) {
 		this(coll, OrderType.LIST);
 	}
 
-	public ObjectOrderedSet (ObjectOrderedSet<? extends T> set) {
+	public ObjectOrderedSet(ObjectOrderedSet<? extends T> set) {
 		super(set);
 		items = set.items instanceof ObjectBag ? new ObjectBag<>(set.items) : new ObjectList<>(set.items);
 	}
@@ -166,7 +168,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
 	 */
-	public ObjectOrderedSet (ObjectSet<? extends T> set) {
+	public ObjectOrderedSet(ObjectSet<? extends T> set) {
 		this(set, OrderType.LIST);
 	}
 
@@ -174,7 +176,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public ObjectOrderedSet (Collection<? extends T> coll) {
+	public ObjectOrderedSet(Collection<? extends T> coll) {
 		this(coll, OrderType.LIST);
 	}
 
@@ -185,7 +187,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public ObjectOrderedSet (T[] array, int offset, int length) {
+	public ObjectOrderedSet(T[] array, int offset, int length) {
 		this(array, offset, length, OrderType.LIST);
 	}
 
@@ -194,7 +196,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 *
 	 * @param items an array that will be used in full, except for duplicate items
 	 */
-	public ObjectOrderedSet (T[] items) {
+	public ObjectOrderedSet(T[] items) {
 		this(items, OrderType.LIST);
 	}
 
@@ -206,12 +208,12 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public ObjectOrderedSet (Ordered<T> other, int offset, int count) {
+	public ObjectOrderedSet(Ordered<T> other, int offset, int count) {
 		this(other, offset, count, OrderType.LIST);
 	}
 
 	@Override
-	public boolean add (T key) {
+	public boolean add(T key) {
 		return super.add(key) && items.add(key);
 	}
 
@@ -224,11 +226,13 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param key   what T item to try to add, if not already present
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
-	public boolean add (int index, T key) {
-		if(key == null || index < 0 || index > size) return false;
+	public boolean add(int index, T key) {
+		if (key == null || index < 0 || index > size) return false;
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index) {items.add(index, items.remove(oldIndex));}
+			if (oldIndex != index) {
+				items.add(index, items.remove(oldIndex));
+			}
 			return false;
 		}
 		items.add(index, key);
@@ -244,7 +248,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (Ordered<T> other, int offset, int count) {
+	public boolean addAll(Ordered<T> other, int offset, int count) {
 		return addAll(size, other, offset, count);
 	}
 
@@ -258,7 +262,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered<T> other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered<T> other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -270,7 +274,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	@Override
-	public boolean remove (@NonNull Object key) {
+	public boolean remove(@NonNull Object key) {
 		return super.remove(key) && items.remove(key);
 	}
 
@@ -280,9 +284,9 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param index the index of the item to remove
 	 * @return the removed item
 	 */
-	public T removeAt (int index) {
+	public T removeAt(int index) {
 		T key = items.removeAt(index);
-		if(key != null)
+		if (key != null)
 			super.remove(key);
 		return key;
 	}
@@ -294,9 +298,11 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 		items.ensureCapacity(additionalCapacity);
 	}
 
@@ -310,9 +316,13 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param after  an item that must not be in this set for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (T before, T after) {
-		if (contains(after)) {return false;}
-		if (!super.remove(before)) {return false;}
+	public boolean alter(T before, T after) {
+		if (contains(after)) {
+			return false;
+		}
+		if (!super.remove(before)) {
+			return false;
+		}
 		super.add(after);
 		items.set(items.indexOf(before), after);
 		return true;
@@ -327,8 +337,10 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, T after) {
-		if (after == null || index < 0 || index >= size || contains(after)) {return false;}
+	public boolean alterAt(int index, T after) {
+		if (after == null || index < 0 || index >= size || contains(after)) {
+			return false;
+		}
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
@@ -342,28 +354,29 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public T getAt (int index) {
+	public T getAt(int index) {
 		return items.get(index);
 	}
 
 	/**
 	 * Returns the first item in the order of this set, or null if the set is empty. This set can never contain null
 	 * normally, so if this returns null, that indicates an abnormal situation, and you can opt to throw an Exception.
+	 *
 	 * @return the first item in the order, or null if this set is empty
 	 */
 	@Override
-	public @Nullable T first () {
+	public @Nullable T first() {
 		return (size == 0) ? null : items.first();
 	}
 
 	@Override
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		items.clear();
 		super.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		items.clear();
 		super.clear();
 	}
@@ -376,14 +389,14 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public ObjectList<T> order () {
+	public ObjectList<T> order() {
 		return items;
 	}
 
 	/**
 	 * Sorts this ObjectOrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
 	 */
-	public void sort () {
+	public void sort() {
 		items.sort(null);
 	}
 
@@ -393,7 +406,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 *
 	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable Comparator<? super T> comp) {
+	public void sort(@Nullable Comparator<? super T> comp) {
 		items.sort(comp);
 	}
 
@@ -407,7 +420,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(items.size(), end);
 		for (int i = start; i < end; i++) {
@@ -423,8 +436,10 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	/**
@@ -435,7 +450,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public @NonNull ObjectSetIterator<T> iterator () {
+	public @NonNull ObjectSetIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectOrderedSetIterator<>(this);
 			iterator2 = new ObjectOrderedSetIterator<>(this);
@@ -453,8 +468,10 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	@Override
-	public String toString (String itemSeparator) {
-		if (size == 0) {return "{}";}
+	public String toString(String itemSeparator) {
+		if (size == 0) {
+			return "{}";
+		}
 		ObjectList<T> items = this.items;
 		StringBuilder buffer = new StringBuilder(32);
 		buffer.append('{');
@@ -474,7 +491,9 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		ObjectList<@Nullable T> order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
 			T key = order.get(i);
-			if (key != null) {h += key.hashCode();}
+			if (key != null) {
+				h += key.hashCode();
+			}
 		}
 		// Using any bitwise operation can help by keeping results in int range on GWT.
 		// This also can improve the low-order bits on problematic item types like Vector2.
@@ -482,28 +501,32 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ");
 	}
 
 	public static class ObjectOrderedSetIterator<K> extends ObjectSetIterator<K> {
 		private final ObjectList<K> items;
 
-		public ObjectOrderedSetIterator (ObjectOrderedSet<K> set) {
+		public ObjectOrderedSetIterator(ObjectOrderedSet<K> set) {
 			super(set);
 			items = set.items;
 		}
 
 		@Override
-		public void reset () {
+		public void reset() {
 			nextIndex = 0;
 			hasNext = set.size > 0;
 		}
 
 		@Override
-		public K next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public K next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			K key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
@@ -511,8 +534,10 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		}
 
 		@Override
-		public void remove () {
-			if (nextIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+		public void remove() {
+			if (nextIndex < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			nextIndex--;
 			set.remove(items.get(nextIndex));
 		}
@@ -523,20 +548,21 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <T>    the type of items; must be given explicitly
+	 * @param <T> the type of items; must be given explicitly
 	 * @return a new set containing nothing
 	 */
-	public static <T> ObjectOrderedSet<T> with () {
+	public static <T> ObjectOrderedSet<T> with() {
 		return new ObjectOrderedSet<>(0);
 	}
 
 	/**
 	 * Creates a new ObjectOrderedSet that holds only the given item, but can be resized.
+	 *
 	 * @param item one T item
+	 * @param <T>  the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given item
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectOrderedSet<T> with (T item) {
+	public static <T> ObjectOrderedSet<T> with(T item) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(1);
 		set.add(item);
 		return set;
@@ -544,12 +570,13 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	/**
 	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectOrderedSet<T> with (T item0, T item1) {
+	public static <T> ObjectOrderedSet<T> with(T item0, T item1) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(2);
 		set.add(item0, item1);
 		return set;
@@ -557,13 +584,14 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	/**
 	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2) {
+	public static <T> ObjectOrderedSet<T> with(T item0, T item1, T item2) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(3);
 		set.add(item0, item1, item2);
 		return set;
@@ -571,14 +599,15 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	/**
 	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3) {
+	public static <T> ObjectOrderedSet<T> with(T item0, T item1, T item2, T item3) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -586,15 +615,16 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	/**
 	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4) {
+	public static <T> ObjectOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -603,16 +633,17 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	/**
 	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
 	 * @param item3 a T item
 	 * @param item4 a T item
 	 * @param item5 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5) {
+	public static <T> ObjectOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -621,6 +652,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	/**
 	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -628,10 +660,10 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+	public static <T> ObjectOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -640,6 +672,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	/**
 	 * Creates a new ObjectOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a T item
 	 * @param item1 a T item
 	 * @param item2 a T item
@@ -647,10 +680,10 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
-	public static <T> ObjectOrderedSet<T> with (T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+	public static <T> ObjectOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		ObjectOrderedSet<T> set = new ObjectOrderedSet<>(8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -662,12 +695,13 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a T varargs or T array; remember that varargs allocate
+	 * @param <T>     the type of item, typically inferred
 	 * @return a new ObjectOrderedSet that holds the given items
-	 * @param <T> the type of item, typically inferred
 	 */
 	@SafeVarargs
-	public static <T> ObjectOrderedSet<T> with (T... varargs) {
+	public static <T> ObjectOrderedSet<T> with(T... varargs) {
 		return new ObjectOrderedSet<>(varargs);
 	}
 }

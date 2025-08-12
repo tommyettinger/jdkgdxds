@@ -22,187 +22,221 @@ import java.util.*;
 
 /**
  * A combination List/Deque with some expanded features based on Deque's mix of exceptional and non-exceptional methods.
+ *
  * @param <T> the generic type of items
  */
 public interface Lisque<T> extends List<T>, Deque<T>, Collection<T> {
-    boolean add(@Nullable T t);
+	boolean add(@Nullable T t);
 
-    void add(int index, @Nullable T element);
+	void add(int index, @Nullable T element);
 
-    @Nullable T set(int index, @Nullable T element);
+	@Nullable
+	T set(int index, @Nullable T element);
 
-    boolean contains(@Nullable Object o);
+	boolean contains(@Nullable Object o);
 
-    boolean containsAll(Collection<@Nullable ?> c);
+	boolean containsAll(Collection<@Nullable ?> c);
 
-    boolean removeAll(Collection<@Nullable ?> c);
+	boolean removeAll(Collection<@Nullable ?> c);
 
-    boolean retainAll(Collection<@Nullable ?> c);
+	boolean retainAll(Collection<@Nullable ?> c);
 
-    void sort(@Nullable Comparator<? super T> c);
+	void sort(@Nullable Comparator<? super T> c);
 
-    int indexOf(@Nullable Object o);
+	int indexOf(@Nullable Object o);
 
-    int lastIndexOf(@Nullable Object o);
+	int lastIndexOf(@Nullable Object o);
 
-    default boolean insert (int index, @Nullable T item) {
-        add(index, item);
-        return true;
-    }
-    default boolean insertAll(int index, Collection<@Nullable ? extends T> c){
-        return addAll(index, c);
-    }
-    default boolean addAllLast (Collection<@Nullable ? extends T> c) {
-        return addAll(c);
-    }
-    boolean addAllFirst (Collection<? extends T> c);
-    boolean addAll (@Nullable T[] array);
-    boolean addAll (@Nullable T[] array, int offset, int length);
-    boolean addAll (int index, @Nullable T[] array);
-    boolean addAll (int index, @Nullable T[] array, int offset, int length);
-    default boolean insertAll (int index, @Nullable T[] array) {
-        return addAll(index, array);
-    }
-    default boolean insertAll (int index, @Nullable T[] array, int offset, int length){
-        return addAll(index, array, offset, length);
-    }
-    default boolean addAllLast (@Nullable T[] array) {
-        return addAll(array);
-    }
-    default boolean addAllLast (@Nullable T[] array, int offset, int length) {
-        return addAll(array, offset, length);
-    }
-    boolean addAllFirst (@Nullable T[] array);
-    boolean addAllFirst (@Nullable T[] array, int offset, int length);
+	default boolean insert(int index, @Nullable T item) {
+		add(index, item);
+		return true;
+	}
 
-    boolean retainAll (@Nullable Object[] array);
-    boolean retainAll (@Nullable Object[] array, int offset, int length);
+	default boolean insertAll(int index, Collection<@Nullable ? extends T> c) {
+		return addAll(index, c);
+	}
 
-    void truncate (int newSize);
-    default void truncateLast (int newSize) {
-        truncate(newSize);
-    }
-    void truncateFirst (int newSize);
+	default boolean addAllLast(Collection<@Nullable ? extends T> c) {
+		return addAll(c);
+	}
 
-    void removeRange(int fromIndex, int toIndex);
+	boolean addAllFirst(Collection<? extends T> c);
 
-    int indexOf (@Nullable Object value, int fromIndex);
-    int lastIndexOf (@Nullable Object value, int fromIndex);
+	boolean addAll(@Nullable T[] array);
 
-    default @Nullable T removeAt(int index) {
-        return remove(index);
-    }
+	boolean addAll(@Nullable T[] array, int offset, int length);
 
-    @Nullable T poll(int index);
-    default @Nullable T pollAt(int index) {
-        return poll(index);
-    }
+	boolean addAll(int index, @Nullable T[] array);
 
-    default boolean notEmpty (){
-        return !isEmpty();
-    }
-    @Nullable T last ();
-    @Nullable T peekAt (int index);
+	boolean addAll(int index, @Nullable T[] array, int offset, int length);
 
-    @Nullable T random (Random random);
-    default @Nullable T peekRandom (Random random) {
-        return peekAt(random.nextInt(size()));
-    }
+	default boolean insertAll(int index, @Nullable T[] array) {
+		return addAll(index, array);
+	}
 
-    default boolean offerFirst(@Nullable T t) {
-        addFirst(t);
-        return true;
+	default boolean insertAll(int index, @Nullable T[] array, int offset, int length) {
+		return addAll(index, array, offset, length);
+	}
 
-    }
+	default boolean addAllLast(@Nullable T[] array) {
+		return addAll(array);
+	}
 
-    default boolean offerLast(@Nullable T t) {
-        addLast(t);
-        return true;
-    }
+	default boolean addAllLast(@Nullable T[] array, int offset, int length) {
+		return addAll(array, offset, length);
+	}
 
-    default @Nullable T pollFirst() {
-        if(isEmpty()) return null;
-        return removeFirst();
-    }
+	boolean addAllFirst(@Nullable T[] array);
 
-    default @Nullable T pollLast() {
-        if(isEmpty()) return null;
-        return removeLast();
-    }
+	boolean addAllFirst(@Nullable T[] array, int offset, int length);
 
-    default @Nullable T peekFirst() {
-        if(isEmpty()) return null;
-        return getFirst();
-    }
+	boolean retainAll(@Nullable Object[] array);
 
-    default @Nullable T peekLast() {
-        if(isEmpty()) return null;
-        return getLast();
-    }
+	boolean retainAll(@Nullable Object[] array, int offset, int length);
 
-    default boolean removeFirstOccurrence(@Nullable Object o) {
-        int idx = indexOf(o);
-        if(idx == -1) return false;
-        removeAt(idx);
-        return true;
-    }
+	void truncate(int newSize);
 
-    default boolean removeLastOccurrence(@Nullable Object o) {
-        int idx = lastIndexOf(o);
-        if(idx == -1) return false;
-        removeAt(idx);
-        return true;
-    }
+	default void truncateLast(int newSize) {
+		truncate(newSize);
+	}
 
-    default boolean offer(@Nullable T t) {
-        addLast(t);
-        return true;
-    }
+	void truncateFirst(int newSize);
 
-    default @Nullable T remove() {
-        return removeFirst();
-    }
+	void removeRange(int fromIndex, int toIndex);
 
-    default @Nullable T poll() {
-        return pollFirst();
-    }
+	int indexOf(@Nullable Object value, int fromIndex);
 
-    default @Nullable T element() {
-        return getFirst();
-    }
+	int lastIndexOf(@Nullable Object value, int fromIndex);
 
-    default @Nullable T peek() {
-        return isEmpty() ? null : getFirst();
-    }
+	default @Nullable T removeAt(int index) {
+		return remove(index);
+	}
 
-    default void push(@Nullable T t) {
-        addFirst(t);
-    }
+	@Nullable
+	T poll(int index);
 
-    default @Nullable T pop() {
-        return removeFirst();
-    }
+	default @Nullable T pollAt(int index) {
+		return poll(index);
+	}
 
-    default boolean isEmpty() {
-        return size() == 0;
-    }
+	default boolean notEmpty() {
+		return !isEmpty();
+	}
 
-    void addFirst(@Nullable T t);
+	@Nullable
+	T last();
 
-    void addLast(@Nullable T t);
+	@Nullable
+	T peekAt(int index);
 
-    @Nullable T getFirst();
+	@Nullable
+	T random(Random random);
 
-    @Nullable T getLast();
+	default @Nullable T peekRandom(Random random) {
+		return peekAt(random.nextInt(size()));
+	}
 
-    @Nullable T removeFirst();
+	default boolean offerFirst(@Nullable T t) {
+		addFirst(t);
+		return true;
 
-    @Nullable T removeLast();
+	}
 
-    Lisque<T> reversed();
+	default boolean offerLast(@Nullable T t) {
+		addLast(t);
+		return true;
+	}
 
-    Iterator<T> iterator();
-    ListIterator<T> listIterator();
-    ListIterator<T> listIterator(int index);
-    Iterator<T> descendingIterator();
+	default @Nullable T pollFirst() {
+		if (isEmpty()) return null;
+		return removeFirst();
+	}
+
+	default @Nullable T pollLast() {
+		if (isEmpty()) return null;
+		return removeLast();
+	}
+
+	default @Nullable T peekFirst() {
+		if (isEmpty()) return null;
+		return getFirst();
+	}
+
+	default @Nullable T peekLast() {
+		if (isEmpty()) return null;
+		return getLast();
+	}
+
+	default boolean removeFirstOccurrence(@Nullable Object o) {
+		int idx = indexOf(o);
+		if (idx == -1) return false;
+		removeAt(idx);
+		return true;
+	}
+
+	default boolean removeLastOccurrence(@Nullable Object o) {
+		int idx = lastIndexOf(o);
+		if (idx == -1) return false;
+		removeAt(idx);
+		return true;
+	}
+
+	default boolean offer(@Nullable T t) {
+		addLast(t);
+		return true;
+	}
+
+	default @Nullable T remove() {
+		return removeFirst();
+	}
+
+	default @Nullable T poll() {
+		return pollFirst();
+	}
+
+	default @Nullable T element() {
+		return getFirst();
+	}
+
+	default @Nullable T peek() {
+		return isEmpty() ? null : getFirst();
+	}
+
+	default void push(@Nullable T t) {
+		addFirst(t);
+	}
+
+	default @Nullable T pop() {
+		return removeFirst();
+	}
+
+	default boolean isEmpty() {
+		return size() == 0;
+	}
+
+	void addFirst(@Nullable T t);
+
+	void addLast(@Nullable T t);
+
+	@Nullable
+	T getFirst();
+
+	@Nullable
+	T getLast();
+
+	@Nullable
+	T removeFirst();
+
+	@Nullable
+	T removeLast();
+
+	Lisque<T> reversed();
+
+	Iterator<T> iterator();
+
+	ListIterator<T> listIterator();
+
+	ListIterator<T> listIterator(int index);
+
+	Iterator<T> descendingIterator();
 }

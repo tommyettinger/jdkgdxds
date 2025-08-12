@@ -80,8 +80,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	protected int tail = 0;
 
-	@Nullable protected transient DoubleDequeIterator descendingIterator1;
-	@Nullable protected transient DoubleDequeIterator descendingIterator2;
+	@Nullable
+	protected transient DoubleDequeIterator descendingIterator1;
+	@Nullable
+	protected transient DoubleDequeIterator descendingIterator2;
 
 	/**
 	 * Creates a new DoubleDeque which can hold 16 values without needing to resize the backing array.
@@ -93,6 +95,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	/**
 	 * Creates a new DoubleDeque which can hold the specified number of values without needing to resize the backing
 	 * array.
+	 *
 	 * @param initialSize how large the backing array should be, without any padding
 	 */
 	public DoubleDeque(int initialSize) {
@@ -157,6 +160,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	/**
 	 * Creates a new DoubleDeque using {@code count} items from {@code a}, starting at {@code offset}.
 	 * If {@code count} is 0 or less, this will create an empty DoubleDeque with capacity 1.
+	 *
 	 * @param a      an array of double
 	 * @param offset where in {@code a} to start using items
 	 * @param count  how many items to use from {@code a}
@@ -183,9 +187,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * Gets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
+	 *
 	 * @return the current default value
 	 */
-	public double getDefaultValue () {
+	public double getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -193,9 +198,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * Sets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
+	 *
 	 * @param defaultValue any double this can return instead of throwing an Exception, or {@code null}
 	 */
-	public void setDefaultValue (double defaultValue) {
+	public void setDefaultValue(double defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -204,14 +210,14 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @param value can be null
 	 */
-	public void addLast (double value) {
+	public void addLast(double value) {
 		double[] items = this.items;
 
 		if (size == items.length)
 			items = resize(items.length << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(++size == 1) tail = head;
+		if (++size == 1) tail = head;
 		items[tail] = value;
 	}
 
@@ -222,7 +228,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			items = resize(size + 2 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -236,7 +242,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			items = resize(size + 3 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -252,7 +258,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			items = resize(size + 4 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -269,7 +275,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param value can be null
 	 * @see #addLast(double)
 	 */
-	public void addFirst (double value) {
+	public void addFirst(double value) {
 		double[] items = this.items;
 
 		if (size == items.length)
@@ -280,10 +286,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		items[head] = value;
 
 		this.head = head;
-		if(++size == 1) tail = head;
+		if (++size == 1) tail = head;
 	}
 
-	public void addFirst (double value1, double value2) {
+	public void addFirst(double value1, double value2) {
 		double[] items = this.items;
 
 		if (size + 2 > items.length)
@@ -292,7 +298,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value2;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value1;
@@ -301,7 +307,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		this.head = head;
 	}
 
-	public void addFirst (double value1, double value2, double value3) {
+	public void addFirst(double value1, double value2, double value3) {
 		double[] items = this.items;
 
 		if (size + 3 > items.length)
@@ -309,7 +315,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value3;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value2;
@@ -320,7 +326,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		this.head = head;
 	}
 
-	public void addFirst (double value1, double value2, double value3, double value4) {
+	public void addFirst(double value1, double value2, double value3, double value4) {
 		double[] items = this.items;
 
 		if (size + 4 > items.length)
@@ -328,7 +334,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value4;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value3;
@@ -348,8 +354,8 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	public void trimToSize() {
 		if (size < items.length) {
-			if(head <= tail) {
-				items = Arrays.copyOfRange(items, head, tail+1);
+			if (head <= tail) {
+				items = Arrays.copyOfRange(items, head, tail + 1);
 			} else {
 				double[] next = new double[size];
 				System.arraycopy(items, head, next, 0, items.length - head);
@@ -373,7 +379,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @return the backing array this will use after this call
 	 */
-	public double[] ensureCapacity (int additional) {
+	public double[] ensureCapacity(int additional) {
 		final int needed = size + additional;
 		if (items.length < needed) {
 			resize(needed);
@@ -389,8 +395,8 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @return the new backing array, as a direct reference
 	 */
-	public double[] resize (int newSize) {
-		if(newSize < size)
+	public double[] resize(int newSize) {
+		if (newSize < size)
 			newSize = size;
 		final double[] items = this.items;
 		final int head = this.head;
@@ -420,7 +426,8 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * resize the backing array to achieve this goal. If possible, this will keep the same backing array and modify
 	 * it in-place. The "gap" is not assigned null, and may contain old/duplicate references; calling code <em>must</em>
 	 * overwrite the entire gap with additional values to ensure GC correctness.
-	 * @param index the 0-based index in the iteration order where the gap will be present
+	 *
+	 * @param index   the 0-based index in the iteration order where the gap will be present
 	 * @param gapSize the number of items that will need filling in the gap, and can be filled without issues.
 	 * @return the position in the array where the gap will begin, which is unrelated to the index
 	 */
@@ -436,7 +443,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			this.head = 0;
 			this.tail = gapSize - 1;
 			if (items.length < gapSize) {
-                this.items = new double[gapSize];
+				this.items = new double[gapSize];
 			}
 			return 0;
 		} else if (size == 1) {
@@ -490,7 +497,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 				return index;
 			} else {
 				if (head + index <= this.items.length) {
-					if(head - gapSize >= 0) {
+					if (head - gapSize >= 0) {
 						System.arraycopy(this.items, head, this.items, head - gapSize, index);
 						this.head -= gapSize;
 						return this.head + index;
@@ -555,7 +562,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return removed double
 	 * @throws NoSuchElementException when the deque is empty
 	 */
-	public double removeFirst () {
+	public double removeFirst() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("DoubleDeque is empty.");
@@ -569,7 +576,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		return result;
 	}
@@ -581,7 +588,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #removeFirst()
 	 */
-	public double removeLast () {
+	public double removeLast() {
 		if (size == 0) {
 			throw new NoSuchElementException("DoubleDeque is empty.");
 		}
@@ -595,7 +602,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		} else {
 			--tail;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		this.tail = tail;
 
@@ -618,7 +625,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerFirst (double t) {
+	public boolean offerFirst(double t) {
 		addFirst(t);
 		return true;
 	}
@@ -639,7 +646,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerLast (double t) {
+	public boolean offerLast(double t) {
 		addLast(t);
 		return true;
 	}
@@ -649,10 +656,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
 	 * {@code null} unless it has been changed with {@link #setDefaultValue(double)}.
 	 *
-	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
+	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 */
-	public double pollFirst () {
+	public double pollFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -666,7 +673,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		return result;
 	}
@@ -676,10 +683,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
 	 * {@code null} unless it has been changed with {@link #setDefaultValue(double)}.
 	 *
-	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
+	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 */
-	public double pollLast () {
+	public double pollLast() {
 		if (size == 0) {
 			return defaultValue;
 		}
@@ -693,7 +700,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		} else {
 			--tail;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		this.tail = tail;
 
@@ -709,7 +716,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return the head of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public double getFirst () {
+	public double getFirst() {
 		return first();
 	}
 
@@ -721,7 +728,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return the tail of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public double getLast () {
+	public double getLast() {
 		return last();
 	}
 
@@ -731,7 +738,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public double peekFirst () {
+	public double peekFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -745,7 +752,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public double peekLast () {
+	public double peekLast() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -764,7 +771,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeFirstOccurrence (double o) {
+	public boolean removeFirstOccurrence(double o) {
 		return removeValue(o);
 	}
 
@@ -779,7 +786,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeLastOccurrence (double o) {
+	public boolean removeLastOccurrence(double o) {
 		return removeLastValue(o);
 	}
 
@@ -797,7 +804,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param t the element to add
 	 * @return {@code true} (as specified by {@link Collection#add})
 	 */
-	public boolean add (double t) {
+	public boolean add(double t) {
 		addLast(t);
 		return true;
 	}
@@ -822,13 +829,14 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * Unlike {@link #offerFirst(double)} and {@link #offerLast(double)}, this does not run in expected constant time unless
 	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
 	 * (where it acts like offerLast()).
+	 *
 	 * @param index the index in the deque's insertion order to insert the item
-	 * @param item a double item to insert; may be null
+	 * @param item  a double item to insert; may be null
 	 */
-	public void insert (int index, double item) {
-		if(index <= 0)
+	public void insert(int index, double item) {
+		if (index <= 0)
 			addFirst(item);
-		else if(index >= size)
+		else if (index >= size)
 			addLast(item);
 		else {
 			double[] items = this.items;
@@ -838,11 +846,11 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 				items = this.items;
 			}
 
-			if(head <= tail) {
+			if (head <= tail) {
 				index += head;
-				if(index >= items.length) index -= items.length;
+				if (index >= items.length) index -= items.length;
 				int after = index + 1;
-				if(after >= items.length) after = 0;
+				if (after >= items.length) after = 0;
 
 				System.arraycopy(items, index, items, after, head + size - index - 1);
 				items[index] = item;
@@ -856,8 +864,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 					System.arraycopy(items, head, items, head - 1, index);
 					items[head - 1 + index] = item;
 					head--;
-				}
-				else {
+				} else {
 					// forward shift
 					index = head + index - items.length;
 					System.arraycopy(items, index, items, index + 1, tail - index + 1);
@@ -882,7 +889,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param t the element to add
 	 * @return {@code true} if the element was added to this deque, else {@code false}
 	 */
-	public boolean offer (double t) {
+	public boolean offer(double t) {
 		addLast(t);
 		return true;
 	}
@@ -898,7 +905,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public double remove () {
+	public double remove() {
 		return removeFirst();
 	}
 
@@ -912,7 +919,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return the first element of this deque, or {@link #getDefaultValue() defaultValue} if
 	 * this deque is empty
 	 */
-	public double poll () {
+	public double poll() {
 		return pollFirst();
 	}
 
@@ -927,7 +934,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public double element () {
+	public double element() {
 		return first();
 	}
 
@@ -941,7 +948,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return the head of the queue represented by this deque, or
 	 * {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public double peek () {
+	public double peek() {
 		return peekFirst();
 	}
 
@@ -960,13 +967,13 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (OfDouble c) {
+	public boolean addAll(OfDouble c) {
 		final int cs = c.size();
-		if(cs == 0) return false;
+		if (cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		if(c == this) {
-			if(head <= tail) {
+		if (c == this) {
+			if (head <= tail) {
 				if (tail + 1 < items.length)
 					System.arraycopy(items, head, items, tail + 1, Math.min(size, items.length - tail - 1));
 				if (items.length - tail - 1 < size)
@@ -985,26 +992,28 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * An alias for {@link #addAll(OfDouble)}, this adds every item in {@code c} to this in order at the end.
+	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (OfDouble c) {
+	public boolean addAllLast(OfDouble c) {
 		return addAll(c);
 	}
 
 	/**
 	 * Adds every item in {@code c} to this in order at the start. The iteration order of {@code c} will be preserved
 	 * for the added items.
+	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (OfDouble c) {
+	public boolean addAllFirst(OfDouble c) {
 		final int cs = c.size();
-		if(cs == 0) return false;
+		if (cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		if(c == this) {
-			if(head <= tail) {
+		if (c == this) {
+			if (head <= tail) {
 				if (head >= oldSize)
 					System.arraycopy(items, head, items, head - oldSize, oldSize);
 				else if (head > 0) {
@@ -1018,14 +1027,14 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 				System.arraycopy(items, 0, items, items.length - oldSize, tail + 1);
 			}
 			head -= oldSize;
-			if(head < 0) head += items.length;
+			if (head < 0) head += items.length;
 			size += oldSize;
 		} else {
 			int i = ensureGap(0, cs);
 			DoubleIterator it = c.iterator();
 			while (it.hasNext()) {
 				items[i++] = it.nextDouble();
-				if(i == items.length) i = 0;
+				if (i == items.length) i = 0;
 			}
 			size += cs;
 		}
@@ -1045,7 +1054,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @param index index at which to insert the first element from the
 	 *              specified collection
-	 * @param c collection containing elements to be added to this list
+	 * @param c     collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
 	public boolean insertAll(int index, OfDouble c) {
@@ -1054,16 +1063,16 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	public boolean addAll(int index, OfDouble c) {
 		int oldSize = size;
-		if(index <= 0)
+		if (index <= 0)
 			addAllFirst(c);
-		else if(index >= oldSize)
+		else if (index >= oldSize)
 			addAll(c);
 		else {
 			final int cs = c.size();
-			if(c.isEmpty()) return false;
+			if (c.isEmpty()) return false;
 			int place = ensureGap(index, cs);
 			double[] items = this.items;
-			if(c == this){
+			if (c == this) {
 				System.arraycopy(items, head, items, place, place - head);
 				System.arraycopy(items, place + cs, items, place + place - head, tail + 1 - place - cs);
 			} else {
@@ -1080,83 +1089,90 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Exactly like {@link #addAll(OfDouble)}, but takes an array instead of a PrimitiveCollection.OfDouble.
-	 * @see #addAll(OfDouble)
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(OfDouble)
 	 */
-	public boolean addAll (double[] array) {
+	public boolean addAll(double[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #addAll(double[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #addAll(double[])
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(double[])
 	 */
-	public boolean addAll (double[] array, int offset, int length) {
+	public boolean addAll(double[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(size, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * An alias for {@link #addAll(double[])}.
-	 * @see #addAll(double[])
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(double[])
 	 */
-	public boolean addAllLast (double[] array) {
+	public boolean addAllLast(double[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
 	 * An alias for {@link #addAll(double[], int, int)}.
-	 * @see #addAll(double[], int, int)
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(double[], int, int)
 	 */
-	public boolean addAllLast (double[] array, int offset, int length) {
+	public boolean addAllLast(double[] array, int offset, int length) {
 		return addAll(array, offset, length);
 	}
 
 	/**
 	 * Exactly like {@link #addAllFirst(OfDouble)}, but takes an array instead of a PrimitiveCollection.OfDouble.
-	 * @see #addAllFirst(OfDouble)
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(OfDouble)
 	 */
-	public boolean addAllFirst (double[] array) {
+	public boolean addAllFirst(double[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #addAllFirst(double[])}, but only uses at most {@code length} items from {@code array}, starting at
 	 * {@code offset}. The order of {@code array} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(double[])
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(double[])
 	 */
-	public boolean addAllFirst (double[] array, int offset, int length) {
+	public boolean addAllFirst(double[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(0, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, double[])}.
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1167,8 +1183,9 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Alias for {@link #addAll(int, double[], int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1181,10 +1198,11 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * Like {@link #addAll(int, OfDouble)}, but takes an array instead of a PrimitiveCollection.OfDouble and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(double[])
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(double[])
 	 */
 	public boolean addAll(int index, double[] array) {
 		return addAll(index, array, 0, array.length);
@@ -1195,48 +1213,51 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(double[])
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(double[])
 	 */
 	public boolean addAll(int index, double[] array, int offset, int length) {
 		int oldSize = size;
-		if(index <= 0)
+		if (index <= 0)
 			addAllFirst(array, offset, length);
-		else if(index >= oldSize)
+		else if (index >= oldSize)
 			addAll(array, offset, length);
 		else {
 			final int cs = Math.min(array.length - offset, length);
-			if(cs <= 0) return false;
+			if (cs <= 0) return false;
 			int place = ensureGap(index, cs);
 			System.arraycopy(array, offset, this.items, place, cs);
 			size += cs;
-        }
+		}
 		return oldSize != size;
 	}
 
 	/**
 	 * Exactly like {@link #addAll(OfDouble)}, but takes an Ordered.OfDouble instead of a PrimitiveCollection.OfDouble.
-	 * @see #addAll(OfDouble)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(OfDouble)
 	 */
-	public boolean addAll (Ordered.OfDouble ord) {
+	public boolean addAll(Ordered.OfDouble ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
 	 * Like {@link #addAll(double[])}, but only uses at most {@code length} items from {@code ord}, starting at {@code offset}.
-	 * @see #addAll(double[])
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(double[])
 	 */
-	public boolean addAll (Ordered.OfDouble ord, int offset, int length) {
+	public boolean addAll(Ordered.OfDouble ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
@@ -1244,10 +1265,11 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * Like {@link #addAll(int, OfDouble)}, but takes an ord instead of a PrimitiveCollection.OfDouble and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code ord} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfDouble)
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 * @param ord   the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfDouble)
 	 */
 	public boolean addAll(int index, Ordered.OfDouble ord) {
 		return addAll(index, ord, 0, ord.size());
@@ -1258,75 +1280,81 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfDouble)
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfDouble)
 	 */
-	public boolean addAll (int index, Ordered.OfDouble ord, int offset, int length) {
+	public boolean addAll(int index, Ordered.OfDouble ord, int offset, int length) {
 		final int cs = Math.min(ord.size() - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(index, cs);
 		DoubleList er = ord.order();
 		for (int i = offset, n = offset + cs; i < n; i++) {
 			items[place++] = er.get(i);
-			if(place == items.length) place = 0;
+			if (place == items.length) place = 0;
 		}
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * An alias for {@link #addAll(Ordered.OfDouble)}.
-	 * @see #addAll(Ordered.OfDouble)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfDouble)
 	 */
-	public boolean addAllLast (Ordered.OfDouble ord) {
+	public boolean addAllLast(Ordered.OfDouble ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
 	 * An alias for {@link #addAll(Ordered.OfDouble, int, int)}.
-	 * @see #addAll(Ordered.OfDouble, int, int)
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfDouble, int, int)
 	 */
-	public boolean addAllLast (Ordered.OfDouble ord, int offset, int length) {
+	public boolean addAllLast(Ordered.OfDouble ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
 	/**
 	 * Exactly like {@link #addAllFirst(OfDouble)}, but takes an ord instead of a PrimitiveCollection.OfDouble.
-	 * @see #addAllFirst(OfDouble)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(OfDouble)
 	 */
-	public boolean addAllFirst (Ordered.OfDouble ord) {
+	public boolean addAllFirst(Ordered.OfDouble ord) {
 		return addAll(0, ord, 0, ord.size());
 	}
 
 	/**
 	 * Like {@link #addAllFirst(Ordered.OfDouble)}, but only uses at most {@code length} items from {@code ord}, starting at
 	 * {@code offset}. The order of {@code ord} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(Ordered.OfDouble)
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(Ordered.OfDouble)
 	 */
-	public boolean addAllFirst (Ordered.OfDouble ord, int offset, int length) {
+	public boolean addAllFirst(Ordered.OfDouble ord, int offset, int length) {
 		return addAll(0, ord, offset, length);
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfDouble)}.
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 * @param ord   the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean insertAll(int index, Ordered.OfDouble ord) {
@@ -1335,8 +1363,9 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfDouble, int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code ord}
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1353,7 +1382,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @param t the element to push
 	 */
-	public void push (double t) {
+	public void push(double t) {
 		addFirst(t);
 	}
 
@@ -1367,7 +1396,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * of the stack represented by this deque)
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public double pop () {
+	public double pop() {
 		return removeFirst();
 	}
 
@@ -1384,7 +1413,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean remove (double o) {
+	public boolean remove(double o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -1396,7 +1425,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param o element whose presence in this deque is to be tested
 	 * @return {@code true} if this deque contains the specified element
 	 */
-	public boolean contains (double o) {
+	public boolean contains(double o) {
 		return indexOf(o, 0) != -1;
 	}
 
@@ -1410,7 +1439,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @return the number of elements in this deque
 	 */
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -1429,7 +1458,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code double}, containing all the elements in this collection
 	 */
-	public double @NonNull [] toArray () {
+	public double @NonNull [] toArray() {
 		double[] next = new double[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -1463,35 +1492,37 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Alias for {@link #truncate(int)}.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncateLast (int newSize) {
+	public void truncateLast(int newSize) {
 		truncate(newSize);
 	}
 
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing items from the tail end.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
-		if(newSize <= 0) {
+	public void truncate(int newSize) {
+		if (newSize <= 0) {
 			clear();
 			return;
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail) {
+			if (head <= tail) {
 				// only removing from tail, near the end, toward head, near the start
 				tail -= oldSize - newSize;
 				size = newSize;
-			} else if(head + newSize < items.length) {
+			} else if (head + newSize < items.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
 				tail = head + newSize;
 				size = newSize;
 			} else {
 				// tail is near the start, but we only have to remove some elements between tail and the start
-                tail -= (oldSize - newSize);
+				tail -= (oldSize - newSize);
 				size = newSize;
 			}
 		}
@@ -1500,19 +1531,20 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing from the head.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncateFirst (int newSize) {
-		if(newSize <= 0) {
+	public void truncateFirst(int newSize) {
+		if (newSize <= 0) {
 			clear();
 			return;
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail || head + oldSize - newSize < items.length) {
+			if (head <= tail || head + oldSize - newSize < items.length) {
 				// only removing from head to head + newSize, which is contiguous
 				head += oldSize - newSize;
-				if(head >= items.length) head -= items.length;
+				if (head >= items.length) head -= items.length;
 				size = newSize;
 			} else {
 				// tail is near the start, and we are removing from head to the end and then part near start
@@ -1536,34 +1568,34 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * actually sometimes needs for this in user code.
 	 *
 	 * @param fromIndex index of first element to be removed (inclusive)
-	 * @param toIndex index after last element to be removed (exclusive)
+	 * @param toIndex   index after last element to be removed (exclusive)
 	 */
 	public void removeRange(int fromIndex, int toIndex) {
-		if(fromIndex <= 0){
+		if (fromIndex <= 0) {
 			truncateFirst(size - toIndex);
 			return;
 		}
-		if(toIndex >= size) {
+		if (toIndex >= size) {
 			truncate(fromIndex);
 			return;
 		}
 		if (fromIndex < toIndex) {
 			int removedCount = toIndex - fromIndex;
-			if(head <= tail) {
+			if (head <= tail) {
 				// tail is near the end, head is near the start
 				int tailMinusTo = tail + 1 - (head + toIndex);
-				if(tailMinusTo < 0) tailMinusTo += items.length;
+				if (tailMinusTo < 0) tailMinusTo += items.length;
 				System.arraycopy(items, head + toIndex, items, head + fromIndex, tailMinusTo);
 				tail -= removedCount;
 				size -= removedCount;
-			} else if(head + toIndex < items.length) {
+			} else if (head + toIndex < items.length) {
 				// head is at the end, and tail wraps around, but we are only removing items between head and end
 				int headPlusFrom = head + fromIndex;
-				if(headPlusFrom >= items.length) headPlusFrom -= items.length;
+				if (headPlusFrom >= items.length) headPlusFrom -= items.length;
 				System.arraycopy(items, head, items, headPlusFrom, removedCount);
 				head += removedCount;
 				size -= removedCount;
-			} else if(head + toIndex - items.length - removedCount >= 0) {
+			} else if (head + toIndex - items.length - removedCount >= 0) {
 				// head is at the end, and tail wraps around, but we are only removing items between start and tail
 				System.arraycopy(items, head + toIndex - items.length, items, head + fromIndex - items.length, tail + 1 - (head + toIndex - items.length));
 				tail -= removedCount;
@@ -1585,7 +1617,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param value the double to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int indexOf (double value) {
+	public int indexOf(double value) {
 		return indexOf(value, 0);
 	}
 
@@ -1594,11 +1626,11 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param value the double to look for
+	 * @param value     the double to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int indexOf (double value, int fromIndex) {
+	public int indexOf(double value, int fromIndex) {
 		if (size == 0)
 			return -1;
 		double[] items = this.items;
@@ -1628,7 +1660,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param value the double to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int lastIndexOf (double value) {
+	public int lastIndexOf(double value) {
 		return lastIndexOf(value, size - 1);
 	}
 
@@ -1638,11 +1670,11 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * point, so if you chain calls to indexOf(), the subsequent fromIndex should be smaller than the last-returned
 	 * index.
 	 *
-	 * @param value the double to look for
+	 * @param value     the double to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int lastIndexOf (double value, int fromIndex) {
+	public int lastIndexOf(double value, int fromIndex) {
 		if (size == 0)
 			return -1;
 		double[] items = this.items;
@@ -1688,6 +1720,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Gets an iterator over this deque that starts at the given index.
+	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return a reused iterator starting at the given index
 	 */
@@ -1714,7 +1747,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param value the double to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeValue (double value) {
+	public boolean removeValue(double value) {
 		int index = indexOf(value, 0);
 		if (index == -1)
 			return false;
@@ -1728,7 +1761,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param value the double to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeLastValue (double value) {
+	public boolean removeLastValue(double value) {
 		int index = lastIndexOf(value);
 		if (index == -1)
 			return false;
@@ -1759,13 +1792,13 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
@@ -1824,13 +1857,13 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
@@ -1856,7 +1889,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	@Override
 	public boolean retainAll(OfDouble other) {
 		// Gets the deque to be internally the same as a DoubleList, if not already.
-		if(head != 0) trimToSize();
+		if (head != 0) trimToSize();
 		// That allows us to use the DoubleList retainAll() verbatim.
 		return super.retainAll(other);
 	}
@@ -1864,14 +1897,14 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	/**
 	 * Returns true if the deque has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
 	/**
 	 * Returns true if the deque is empty.
 	 */
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -1882,7 +1915,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @see #peekFirst() peeking won't throw an exception, and will return the DoubleDeque's default value if empty
 	 * @see #removeFirst()
 	 */
-	public double first () {
+	public double first() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("DoubleDeque is empty.");
@@ -1896,7 +1929,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #peekLast() peeking won't throw an exception, and will return the DoubleDeque's default value if empty
 	 */
-	public double last () {
+	public double last() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("DoubleDeque is empty.");
@@ -1917,7 +1950,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return the element at the specified position in this deque
 	 * @throws NoSuchElementException if the deque is empty
 	 */
-	public double get (int index) {
+	public double get(int index) {
 		if (index <= 0)
 			return getFirst();
 		if (index >= size - 1)
@@ -1943,7 +1976,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param index index of the element to return
 	 * @return the element at the specified position in this deque
 	 */
-	public double peekAt (int index) {
+	public double peekAt(int index) {
 		if (index <= 0)
 			return peekFirst();
 		if (index >= size - 1)
@@ -1964,10 +1997,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * {@link #getDefaultValue() the default value}.
 	 *
 	 * @param index index of the element to replace
-	 * @param item element to be stored at the specified position
+	 * @param item  element to be stored at the specified position
 	 * @return the element previously at the specified position
 	 */
-	public double assign (int index, double item) {
+	public double assign(int index, double item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return defaultValue;
@@ -1996,7 +2029,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param index index of the element to replace
 	 * @param item  element to be stored at the specified position
 	 */
-	public void set (int index, double item) {
+	public void set(int index, double item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return;
@@ -2026,7 +2059,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	@Override
 	public DoubleList plus(double value) {
 		final double[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] += value;
 			}
@@ -2054,7 +2087,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	@Override
 	public DoubleList times(double value) {
 		final double[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] *= value;
 			}
@@ -2082,7 +2115,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	@Override
 	public DoubleList minus(double value) {
 		final double[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] -= value;
 			}
@@ -2110,7 +2143,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	@Override
 	public DoubleList div(double value) {
 		final double[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] /= value;
 			}
@@ -2138,7 +2171,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	@Override
 	public DoubleList rem(double value) {
 		final double[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] %= value;
 			}
@@ -2156,7 +2189,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	@Override
 	public void replaceAll(DoubleToDoubleFunction operator) {
 		final double[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] = operator.applyAsDouble(items[i]);
 			}
@@ -2173,13 +2206,14 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 *
 	 * @param index the first index to duplicate
 	 * @param count how many items to duplicate
 	 */
 	@Override
 	public boolean duplicateRange(int index, int count) {
 		int place = ensureGap(index + count, count);
-		if(place >= head + index + count){
+		if (place >= head + index + count) {
 			System.arraycopy(items, head + index, items, place, count);
 		} else {
 			System.arraycopy(items, 0, items, count - place, place);
@@ -2192,7 +2226,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	/**
 	 * Removes all values from this deque. This operates in O(1) time.
 	 */
-	public void clear () {
+	public void clear() {
 		if (size == 0)
 			return;
 		this.head = 0;
@@ -2206,7 +2240,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
 	 * iteration, use {@link DoubleDequeIterator#DoubleDequeIterator(DoubleDeque)}.
 	 */
-	public DoubleListIterator iterator () {
+	public DoubleListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new DoubleDequeIterator(this);
 			iterator2 = new DoubleDequeIterator(this);
@@ -2233,7 +2267,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public DoubleListIterator descendingIterator () {
+	public DoubleListIterator descendingIterator() {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new DoubleDequeIterator(this, true);
 			descendingIterator2 = new DoubleDequeIterator(this, true);
@@ -2261,7 +2295,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public DoubleListIterator descendingIterator (int index) {
+	public DoubleListIterator descendingIterator(int index) {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new DoubleDequeIterator(this, index, true);
 			descendingIterator2 = new DoubleDequeIterator(this, index, true);
@@ -2280,13 +2314,14 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Delegates to {@link #toString(String, boolean)} with a delimiter of {@code ", "} and square brackets enabled.
+	 *
 	 * @return the square-bracketed String representation of this DoubleDeque, with items separated by ", "
 	 */
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
-	public int hashCode () {
+	public int hashCode() {
 		final int size = this.size;
 		final double[] items = this.items;
 		final int backingLength = items.length;
@@ -2315,6 +2350,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * This uses the {@link OfDouble#iterator()} of both this and {@code o},
 	 * so if either is in the
 	 * middle of a concurrent iteration that modifies the collection, this may fail.
+	 *
 	 * @param o object to be compared for equality with this collection
 	 * @return true if this is equal to o, or false otherwise
 	 */
@@ -2325,7 +2361,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			return false;
 
 		DoubleIterator e1 = iterator();
-		DoubleIterator e2 = ((DoubleList)o).iterator();
+		DoubleIterator e2 = ((DoubleList) o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
 			double o1 = e1.nextDouble();
 			double o2 = e2.nextDouble();
@@ -2344,7 +2380,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			return false;
 
 		DoubleIterator e1 = iterator();
-		DoubleIterator e2 = ((DoubleList)o).iterator();
+		DoubleIterator e2 = ((DoubleList) o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
 			double o1 = e1.nextDouble();
 			double o2 = e2.nextDouble();
@@ -2360,7 +2396,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param first  the first position, must not be negative and must be less than {@link #size()}
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
-	public void swap (int first, int second) {
+	public void swap(int first, int second) {
 		if (first < 0)
 			throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
 		if (first >= size)
@@ -2369,7 +2405,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 			throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
-		if(first == second) return;
+		if (first == second) return;
 		final double[] items = this.items;
 
 		int f = head + first;
@@ -2388,7 +2424,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	/**
 	 * Reverses this DoubleDeque in-place.
 	 */
-	public void reverse () {
+	public void reverse() {
 		final double[] items = this.items;
 		int f, s, len = items.length;
 		double fv;
@@ -2405,10 +2441,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		}
 	}
 
-	public void shuffle (Random rng) {
+	public void shuffle(Random rng) {
 		for (int i = size() - 1; i > 0; i--) {
 			int r = rng.nextInt(i + 1);
-			if(r != i)
+			if (r != i)
 				set(i, assign(r, get(i)));
 		}
 	}
@@ -2417,7 +2453,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * Attempts to sort this deque in-place using its natural ordering, which requires double to
 	 * implement {@link Comparable} of double.
 	 */
-	public void sort () {
+	public void sort() {
 		sort(null);
 	}
 
@@ -2433,9 +2469,9 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param comparator the Comparator to use for double items; may be null to use the natural
 	 *                   order of double items when double implements Comparable of double
 	 */
-	public void sort (@Nullable DoubleComparator comparator) {
+	public void sort(@Nullable DoubleComparator comparator) {
 		if (head <= tail) {
-			DoubleComparators.sort(items, head, tail+1, comparator);
+			DoubleComparators.sort(items, head, tail + 1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			DoubleComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
@@ -2456,10 +2492,11 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Gets a randomly selected item from this DoubleDeque. Throws a {@link NoSuchElementException} if empty.
+	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public double random (Random random) {
+	public double random(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("DoubleDeque is empty.");
 		}
@@ -2468,10 +2505,11 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public double peekRandom (Random random) {
+	public double peekRandom(Random random) {
 		return peekAt(random.nextInt(size));
 	}
 
@@ -2486,6 +2524,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		public DoubleDequeIterator(DoubleDeque deque) {
 			this(deque, false);
 		}
+
 		public DoubleDequeIterator(DoubleDeque deque, boolean descendingOrder) {
 			super(deque);
 			direction = descendingOrder ? -1 : 1;
@@ -2503,11 +2542,13 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public double nextDouble () {
-			if (!hasNext()) {throw new NoSuchElementException();}
+		public double nextDouble() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
 			latest = index;
 			index += direction;
-            return list.get(latest);
+			return list.get(latest);
 		}
 
 		/**
@@ -2518,8 +2559,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return direction == 1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2532,8 +2575,10 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 * @return {@code true} if the list iterator has more elements when
 		 * traversing the list in the reverse direction
 		 */
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return direction == -1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2549,10 +2594,12 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public double previous () {
-			if (!hasPrevious()) {throw new NoSuchElementException();}
+		public double previous() {
+			if (!hasPrevious()) {
+				throw new NoSuchElementException();
+			}
 			latest = index -= direction;
-            return list.get(latest);
+			return list.get(latest);
 
 		}
 
@@ -2565,7 +2612,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 * subsequent call to {@code next}, or list size if the list
 		 * iterator is at the end of the list
 		 */
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -2578,7 +2625,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 * subsequent call to {@code previous}, or -1 if the list
 		 * iterator is at the beginning of the list
 		 */
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -2597,9 +2644,13 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -2625,9 +2676,13 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (double t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void set(double t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.set(latest, t);
 		}
 
@@ -2651,20 +2706,24 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (double t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > list.size()) {throw new NoSuchElementException();}
+		public void add(double t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.insert(index, t);
 			index += direction;
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = list.size() - 1 & direction >> 31;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("DoubleDequeIterator does not satisfy index >= 0 && index < deque.size()");
 			this.index = index;
@@ -2676,7 +2735,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 *
 		 * @return a DoubleIterator; really this same DoubleDequeIterator.
 		 */
-		public DoubleDequeIterator iterator () {
+		public DoubleDequeIterator iterator() {
 			return this;
 		}
 	}
@@ -2688,16 +2747,17 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *
 	 * @return a new deque containing nothing
 	 */
-	public static DoubleDeque with () {
+	public static DoubleDeque with() {
 		return new DoubleDeque(1);
 	}
 
 	/**
 	 * Creates a new DoubleDeque that holds only the given item, but can be resized.
+	 *
 	 * @param item one double item
 	 * @return a new DoubleDeque that holds the given item
 	 */
-	public static DoubleDeque with (double item) {
+	public static DoubleDeque with(double item) {
 		DoubleDeque deque = new DoubleDeque(1);
 		deque.add(item);
 		return deque;
@@ -2705,11 +2765,12 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @return a new DoubleDeque that holds the given items
 	 */
-	public static DoubleDeque with (double item0, double item1) {
+	public static DoubleDeque with(double item0, double item1) {
 		DoubleDeque deque = new DoubleDeque(2);
 		deque.add(item0, item1);
 		return deque;
@@ -2717,12 +2778,13 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
 	 * @return a new DoubleDeque that holds the given items
 	 */
-	public static DoubleDeque with (double item0, double item1, double item2) {
+	public static DoubleDeque with(double item0, double item1, double item2) {
 		DoubleDeque deque = new DoubleDeque(3);
 		deque.add(item0, item1, item2);
 		return deque;
@@ -2730,13 +2792,14 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
 	 * @param item3 a double item
 	 * @return a new DoubleDeque that holds the given items
 	 */
-	public static DoubleDeque with (double item0, double item1, double item2, double item3) {
+	public static DoubleDeque with(double item0, double item1, double item2, double item3) {
 		DoubleDeque deque = new DoubleDeque(4);
 		deque.add(item0, item1, item2, item3);
 		return deque;
@@ -2744,6 +2807,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -2751,7 +2815,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param item4 a double item
 	 * @return a new DoubleDeque that holds the given items
 	 */
-	public static DoubleDeque with (double item0, double item1, double item2, double item3, double item4) {
+	public static DoubleDeque with(double item0, double item1, double item2, double item3, double item4) {
 		DoubleDeque deque = new DoubleDeque(5);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4);
@@ -2760,6 +2824,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -2768,7 +2833,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param item5 a double item
 	 * @return a new DoubleDeque that holds the given items
 	 */
-	public static DoubleDeque with (double item0, double item1, double item2, double item3, double item4, double item5) {
+	public static DoubleDeque with(double item0, double item1, double item2, double item3, double item4, double item5) {
 		DoubleDeque deque = new DoubleDeque(6);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5);
@@ -2777,6 +2842,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -2786,7 +2852,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param item6 a double item
 	 * @return a new DoubleDeque that holds the given items
 	 */
-	public static DoubleDeque with (double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
+	public static DoubleDeque with(double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
 		DoubleDeque deque = new DoubleDeque(7);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6);
@@ -2795,6 +2861,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 
 	/**
 	 * Creates a new DoubleDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -2805,7 +2872,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @param item7 a double item
 	 * @return a new DoubleDeque that holds the given items
 	 */
-	public static DoubleDeque with (double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
+	public static DoubleDeque with(double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
 		DoubleDeque deque = new DoubleDeque(8);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6, item7);
@@ -2816,10 +2883,11 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * Creates a new DoubleDeque that will hold the items in the given array or varargs.
 	 * This overload will only be used when a double array is supplied, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs either 0 or more double items, or an array of double
 	 * @return a new DoubleDeque that holds the given double items
 	 */
-	public static DoubleDeque with (double... varargs) {
+	public static DoubleDeque with(double... varargs) {
 		return new DoubleDeque(varargs);
 	}
 }

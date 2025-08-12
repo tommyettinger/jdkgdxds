@@ -48,16 +48,18 @@ import java.util.Set;
  */
 public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable<Enum<?>>, EnhancedCollection<Enum<?>> {
 	protected int size;
-	protected int @Nullable[] table;
-	protected Enum<?> @Nullable[] universe;
-	@Nullable protected transient EnumSetIterator iterator1;
-	@Nullable protected transient EnumSetIterator iterator2;
+	protected int @Nullable [] table;
+	protected Enum<?> @Nullable [] universe;
+	@Nullable
+	protected transient EnumSetIterator iterator1;
+	@Nullable
+	protected transient EnumSetIterator iterator2;
 
 	/**
 	 * Empty constructor; using this will postpone allocating any internal arrays until {@link #add(Enum)} is first called
 	 * (potentially indirectly).
 	 */
-	public EnumSet () {
+	public EnumSet() {
 		super();
 	}
 
@@ -71,13 +73,13 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Because the {@code boolean} parameter here is easy to forget, you may want to prefer calling {@link #noneOf(Enum[])}
 	 * instead of using this directly.
 	 *
-	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
+	 * @param universe             almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @param ignoredToDistinguish an ignored boolean that differentiates this constructor, which defined a key universe,
-	 *                               from one that takes contents
+	 *                             from one that takes contents
 	 */
-	public EnumSet (Enum<?>@Nullable [] universe, boolean ignoredToDistinguish) {
+	public EnumSet(Enum<?> @Nullable [] universe, boolean ignoredToDistinguish) {
 		super();
-		if(universe == null) return;
+		if (universe == null) return;
 		this.universe = universe;
 		table = new int[universe.length + 31 >>> 5];
 	}
@@ -91,7 +93,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumSet (@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumSet(@Nullable Class<? extends Enum<?>> universeClass) {
 		this(universeClass == null ? null : universeClass.getEnumConstants(), true);
 	}
 
@@ -105,7 +107,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public EnumSet (Enum<?> @NonNull [] contents) {
+	public EnumSet(Enum<?> @NonNull [] contents) {
 		super();
 		addAll(contents);
 	}
@@ -116,7 +118,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumSet (@NonNull Iterator<? extends Enum<?>> contents) {
+	public EnumSet(@NonNull Iterator<? extends Enum<?>> contents) {
 		super();
 		addAll(contents);
 	}
@@ -127,18 +129,19 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumSet (@NonNull Collection<? extends Enum<?>> contents) {
+	public EnumSet(@NonNull Collection<? extends Enum<?>> contents) {
 		super();
 		addAll(contents);
 	}
 
 	/**
 	 * Copy constructor; uses a direct reference to the enum values that may be cached in {@code other}, but copies other fields.
+	 *
 	 * @param other another EnumSet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
-	public EnumSet (@NonNull EnumSet other) {
+	public EnumSet(@NonNull EnumSet other) {
 		this.size = other.size;
-		if(other.table != null)
+		if (other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
 		this.universe = other.universe;
 	}
@@ -151,7 +154,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @return the number of elements in this set (its cardinality)
 	 */
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -161,7 +164,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @return {@code true} if this set contains no elements
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -175,13 +178,13 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @return {@code true} if this set contains the specified element
 	 */
 	@Override
-	public boolean contains (Object item) {
-		if(table == null || universe == null || size == 0 || !(item instanceof Enum<?>)) return false;
-		final Enum<?> e = (Enum<?>)item;
+	public boolean contains(Object item) {
+		if (table == null || universe == null || size == 0 || !(item instanceof Enum<?>)) return false;
+		final Enum<?> e = (Enum<?>) item;
 		final int ord = e.ordinal();
-		if(ord >= universe.length || universe[ord] != item) return false;
+		if (ord >= universe.length || universe[ord] != item) return false;
 		final int upper = ord >>> 5;
-		if(table.length <= upper) return false;
+		if (table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
 		return (table[upper] & 1 << ord) != 0;
 	}
@@ -193,7 +196,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Use the {@link EnumSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public @NonNull Iterator<Enum<?>> iterator () {
+	public @NonNull Iterator<Enum<?>> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new EnumSetIterator(this);
 			iterator2 = new EnumSetIterator(this);
@@ -233,17 +236,18 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * element
 	 */
 	@Override
-	public boolean add (Enum<?> item) {
-		if(item == null) return false;
-		if(universe == null) universe = item.getDeclaringClass().getEnumConstants();
-		if(table == null) table = new int[universe.length + 31 >>> 5];
+	public boolean add(Enum<?> item) {
+		if (item == null) return false;
+		if (universe == null) universe = item.getDeclaringClass().getEnumConstants();
+		if (table == null) table = new int[universe.length + 31 >>> 5];
 		final int ord = item.ordinal();
-		if(ord >= universe.length || universe[ord] != item) throw new ClassCastException("Incompatible item for this EnumSet: " + item);
+		if (ord >= universe.length || universe[ord] != item)
+			throw new ClassCastException("Incompatible item for this EnumSet: " + item);
 		final int upper = ord >>> 5;
-		if(table.length <= upper) return false;
+		if (table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
 		boolean changed = (table[upper]) != (table[upper] |= 1 << ord);
-		if(changed) size++;
+		if (changed) size++;
 		return changed;
 	}
 
@@ -269,16 +273,16 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *                                       is not supported by this set
 	 */
 	@Override
-	public boolean remove (Object item) {
-		if(table == null || universe == null || size == 0 || !(item instanceof Enum<?>)) return false;
-		final Enum<?> e = (Enum<?>)item;
+	public boolean remove(Object item) {
+		if (table == null || universe == null || size == 0 || !(item instanceof Enum<?>)) return false;
+		final Enum<?> e = (Enum<?>) item;
 		final int ord = e.ordinal();
-		if(ord >= universe.length || universe[ord] != e) return false;
+		if (ord >= universe.length || universe[ord] != e) return false;
 		final int upper = ord >>> 5;
-		if(table.length <= upper) return false;
+		if (table.length <= upper) return false;
 		// (1 << ord) has ord implicitly used modulo 32
 		final boolean changed = table[upper] != (table[upper] &= ~(1 << ord));
-		if(changed) size--;
+		if (changed) size--;
 		return changed;
 	}
 
@@ -288,12 +292,12 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean retainAll (@NonNull Collection<?> c) {
-		if(size == 0 || table == null || universe == null || universe.length == 0) return false;
-		if(!(c instanceof EnumSet))
+	public boolean retainAll(@NonNull Collection<?> c) {
+		if (size == 0 || table == null || universe == null || universe.length == 0) return false;
+		if (!(c instanceof EnumSet))
 			return super.retainAll(c);
-		EnumSet es = (EnumSet)c;
-		if(es.table == null || es.universe == null || es.size == 0 || universe[0] != es.universe[0]) {
+		EnumSet es = (EnumSet) c;
+		if (es.table == null || es.universe == null || es.size == 0 || universe[0] != es.universe[0]) {
 			clear();
 			return true;
 		}
@@ -311,14 +315,14 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean addAll (@NonNull Collection<? extends Enum<?>> c) {
-		if(!(c instanceof EnumSet))
+	public boolean addAll(@NonNull Collection<? extends Enum<?>> c) {
+		if (!(c instanceof EnumSet))
 			return super.addAll(c);
-		EnumSet es = (EnumSet)c;
-		if(es.universe == null || es.table == null || es.universe.length == 0) return false;
-		if(universe == null) universe = es.universe;
-		if(table == null) table = new int[universe.length + 31 >>> 5];
-		if(es.universe.length != universe.length || universe[0] != es.universe[0]) return false;
+		EnumSet es = (EnumSet) c;
+		if (es.universe == null || es.table == null || es.universe.length == 0) return false;
+		if (universe == null) universe = es.universe;
+		if (table == null) table = new int[universe.length + 31 >>> 5];
+		if (es.universe.length != universe.length || universe[0] != es.universe[0]) return false;
 		int oldSize = size;
 		size = 0;
 		for (int i = 0; i < table.length; i++) {
@@ -329,33 +333,36 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Returns true if this EnumSet contains all items in the given Collection, or false otherwise.
+	 *
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean containsAll (@NonNull Collection<?> c) {
-		if(!(c instanceof EnumSet))
+	public boolean containsAll(@NonNull Collection<?> c) {
+		if (!(c instanceof EnumSet))
 			return super.containsAll(c);
-		EnumSet es = (EnumSet)c;
-		if(es.size == 0 || es.universe == null || es.table == null || es.universe.length == 0) return true;
-		if(size < es.size || universe == null || table == null || universe.length != es.universe.length || universe[0] != es.universe[0]) return false;
+		EnumSet es = (EnumSet) c;
+		if (es.size == 0 || es.universe == null || es.table == null || es.universe.length == 0) return true;
+		if (size < es.size || universe == null || table == null || universe.length != es.universe.length || universe[0] != es.universe[0])
+			return false;
 		for (int i = 0; i < table.length; i++) {
-			if((~table[i] & es.table[i]) != 0) return false;
+			if ((~table[i] & es.table[i]) != 0) return false;
 		}
 		return true;
 	}
 
 	/**
 	 * Removes from this EnumSet every element in the given Collection.
+	 *
 	 * @param c usually another EnumSet, but not required to be
 	 * @return {@code true} if this set changed as a result of the call
 	 */
 	@Override
-	public boolean removeAll (@NonNull Collection<?> c) {
-		if(table == null || universe == null || universe.length == 0) return false;
-		if(!(c instanceof EnumSet))
+	public boolean removeAll(@NonNull Collection<?> c) {
+		if (table == null || universe == null || universe.length == 0) return false;
+		if (!(c instanceof EnumSet))
 			return super.removeAll(c);
-		EnumSet es = (EnumSet)c;
-		if(es.table == null || es.universe == null || es.universe.length != universe.length || es.size == 0 || universe[0] != es.universe[0])
+		EnumSet es = (EnumSet) c;
+		if (es.table == null || es.universe == null || es.universe.length != universe.length || es.size == 0 || universe[0] != es.universe[0])
 			return false;
 		int oldSize = size;
 		size = 0;
@@ -371,7 +378,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @see #add(Enum)
 	 */
-	public boolean addAll (Enum<?>@NonNull [] c) {
+	public boolean addAll(Enum<?> @NonNull [] c) {
 		boolean modified = false;
 		for (int i = 0; i < c.length; i++) {
 			modified |= add(c[i]);
@@ -385,9 +392,9 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * This does not change the universe of possible Enum items this can hold.
 	 */
 	@Override
-	public void clear () {
+	public void clear() {
 		size = 0;
-		if(table != null)
+		if (table != null)
 			Arrays.fill(table, 0);
 	}
 
@@ -405,12 +412,12 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clearToUniverse (Enum<?>@Nullable [] universe) {
+	public void clearToUniverse(Enum<?> @Nullable [] universe) {
 		size = 0;
 		if (universe == null) {
 			table = null;
-		} else if(this.universe != null && universe.length >>> 5 <= this.universe.length >>> 5) {
-			if(table != null)
+		} else if (this.universe != null && universe.length >>> 5 <= this.universe.length >>> 5) {
+			if (table != null)
 				Arrays.fill(table, 0);
 		} else {
 			table = new int[universe.length + 31 >>> 5];
@@ -435,15 +442,15 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
 	 */
-	public void clearToUniverse (@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
 		size = 0;
 		if (universe == null) {
 			table = null;
 			this.universe = null;
 		} else {
 			Enum<?>[] cons = universe.getEnumConstants();
-			if(this.universe != null && cons.length >>> 5 <= this.universe.length >>> 5) {
-				if(table != null)
+			if (this.universe != null && cons.length >>> 5 <= this.universe.length >>> 5) {
+				if (table != null)
 					Arrays.fill(table, 0);
 			} else {
 				table = new int[cons.length + 31 >>> 5];
@@ -456,9 +463,10 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Gets the current key universe; this is a technically-mutable array, but should never be modified.
 	 * To set the universe on an existing EnumSet (with existing contents), you can use {@link #clearToUniverse(Enum[])}.
 	 * If an EnumSet has not been initialized, just adding an item will set its key universe to match the given item.
+	 *
 	 * @return the current key universe
 	 */
-	public Enum<?> @Nullable[] getUniverse () {
+	public Enum<?> @Nullable [] getUniverse() {
 		return universe;
 	}
 
@@ -466,13 +474,14 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Returns the first ordinal equal to or greater than the {@code minOrdinal} of an Enum contained in the set.
 	 * If no such Enum exists, or if minOrdinal is invalid (such as if it is negative or greater than the highest ordinal in the
 	 * Enum type this holds), then {@code -1} is returned.
+	 *
 	 * @param minOrdinal the index to start looking at; does not need to have an Enum present there, but must be non-negative
 	 * @return the first ordinal of an Enum contained in the set on or after the specified starting point, or {@code -1} if none can be found
 	 */
-	public int nextOrdinal (int minOrdinal) {
-		if(minOrdinal < 0) return -1;
+	public int nextOrdinal(int minOrdinal) {
+		if (minOrdinal < 0) return -1;
 		int[] bits = this.table;
-		if(bits == null) return -1;
+		if (bits == null) return -1;
 		int word = minOrdinal >>> 5;
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
@@ -501,16 +510,16 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		newSize = Math.max(0, newSize);
 		int difference = size - newSize;
-		if(difference <= 0 || table == null) return;
+		if (difference <= 0 || table == null) return;
 		int upper = 0;
 		for (; difference >= 32; difference -= 32, upper++) {
 			table[upper] = 0;
 		}
 		for (int ord = 1; difference > 0; ord <<= 1) {
-			if((table[upper] & ord) != 0) {
+			if ((table[upper] & ord) != 0) {
 				table[upper] ^= ord;
 				difference--;
 			}
@@ -521,13 +530,14 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Returns the first Enum contained in the set with an ordinal equal to or greater than {@code minOrdinal}.
 	 * If no such Enum exists, or if minOrdinal is invalid (such as if it is negative or greater than the highest ordinal in the
 	 * Enum type this holds), then {@code null} is returned.
+	 *
 	 * @param minOrdinal the index to start looking at; does not need to have an Enum present there, but must be non-negative
 	 * @return the first Enum contained in the set on or after the specified starting point, or null if none can be found
 	 */
-	public Enum<?> nextEnum (int minOrdinal) {
-		if(minOrdinal < 0) return null;
+	public Enum<?> nextEnum(int minOrdinal) {
+		if (minOrdinal < 0) return null;
 		int[] bits = this.table;
-		if(bits == null) return null;
+		if (bits == null) return null;
 		int word = minOrdinal >>> 5;
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
@@ -549,14 +559,15 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	/**
 	 * Returns the first Enum contained in the set on or after the point where the given Enum {@code from} would occur.
 	 * If no such Enum exists then {@code null} is returned.
+	 *
 	 * @param from the Enum to start looking at; does not need to be present in the set
 	 * @return the first Enum contained in the set on or after the specified starting point, or null if none can be found
 	 */
-	public Enum<?> nextEnum (Enum<?> from) {
-		if(from == null) return null;
+	public Enum<?> nextEnum(Enum<?> from) {
+		if (from == null) return null;
 		int fromIndex = from.ordinal();
 		int[] bits = this.table;
-		if(bits == null) return null;
+		if (bits == null) return null;
 		int word = fromIndex >>> 5;
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
@@ -575,7 +586,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -588,18 +599,18 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public EnumSetIterator (EnumSet set) {
+		public EnumSetIterator(EnumSet set) {
 			this.set = set;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
 			findNextIndex();
 		}
 
-		void findNextIndex () {
+		void findNextIndex() {
 			nextIndex = set.nextOrdinal(nextIndex + 1);
 			hasNext = nextIndex != INDEX_ILLEGAL;
 		}
@@ -612,13 +623,15 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 
 		@Override
-		public void remove () {
+		public void remove() {
 			if (currentIndex < 0) {
 				throw new IllegalStateException("next must be called before remove.");
 			}
@@ -627,9 +640,13 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		}
 
 		@Override
-		public Enum<?> next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public Enum<?> next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			currentIndex = nextIndex;
 			findNextIndex();
 			return set.universe[currentIndex];
@@ -639,7 +656,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<Enum<?>> toList () {
+		public ObjectList<Enum<?>> toList() {
 			ObjectList<Enum<?>> list = new ObjectList<Enum<?>>(set.size());
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
@@ -655,13 +672,16 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		/**
 		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfInt.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable PrimitiveCollection.OfInt; may have items appended into it
 		 * @return the given primitive collection
 		 */
 		public Collection<Enum<?>> appendInto(Collection<Enum<?>> coll) {
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
-			while (hasNext) {coll.add(next());}
+			while (hasNext) {
+				coll.add(next());
+			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
 			hasNext = hn;
@@ -672,21 +692,24 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Builds an EnumSet that contains only the given element.
+	 *
 	 * @param item the one item to initialize the EnumSet with
 	 * @return a new EnumSet containing {@code item}
 	 */
-	public static EnumSet with (Enum<?> item) {
+	public static EnumSet with(Enum<?> item) {
 		EnumSet set = new EnumSet();
 		set.add(item);
 		return set;
 	}
+
 	/**
 	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an Enum item
 	 * @param item1 an Enum item
 	 * @return a new EnumSet that holds the given items
 	 */
-	public static EnumSet with (Enum<?> item0, Enum<?> item1) {
+	public static EnumSet with(Enum<?> item0, Enum<?> item1) {
 		EnumSet set = new EnumSet();
 		set.add(item0);
 		set.add(item1);
@@ -695,12 +718,13 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an Enum item
 	 * @param item1 an Enum item
 	 * @param item2 an Enum item
 	 * @return a new EnumSet that holds the given items
 	 */
-	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2) {
+	public static EnumSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2) {
 		EnumSet set = new EnumSet();
 		set.add(item0);
 		set.add(item1);
@@ -710,13 +734,14 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an Enum item
 	 * @param item1 an Enum item
 	 * @param item2 an Enum item
 	 * @param item3 an Enum item
 	 * @return a new EnumSet that holds the given items
 	 */
-	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3) {
+	public static EnumSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3) {
 		EnumSet set = new EnumSet();
 		set.add(item0);
 		set.add(item1);
@@ -727,6 +752,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an Enum item
 	 * @param item1 an Enum item
 	 * @param item2 an Enum item
@@ -734,7 +760,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param item4 an Enum item
 	 * @return a new EnumSet that holds the given items
 	 */
-	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4) {
+	public static EnumSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4) {
 		EnumSet set = new EnumSet();
 		set.add(item0);
 		set.add(item1);
@@ -746,6 +772,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an Enum item
 	 * @param item1 an Enum item
 	 * @param item2 an Enum item
@@ -754,7 +781,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param item5 an Enum item
 	 * @return a new EnumSet that holds the given items
 	 */
-	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5) {
+	public static EnumSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5) {
 		EnumSet set = new EnumSet();
 		set.add(item0);
 		set.add(item1);
@@ -767,6 +794,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an Enum item
 	 * @param item1 an Enum item
 	 * @param item2 an Enum item
@@ -776,7 +804,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param item6 an Enum item
 	 * @return a new EnumSet that holds the given items
 	 */
-	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6) {
+	public static EnumSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6) {
 		EnumSet set = new EnumSet();
 		set.add(item0);
 		set.add(item1);
@@ -790,6 +818,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Creates a new EnumSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an Enum item
 	 * @param item1 an Enum item
 	 * @param item2 an Enum item
@@ -799,7 +828,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param item6 an Enum item
 	 * @return a new EnumSet that holds the given items
 	 */
-	public static EnumSet with (Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6, Enum<?> item7) {
+	public static EnumSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6, Enum<?> item7) {
 		EnumSet set = new EnumSet();
 		set.add(item0);
 		set.add(item1);
@@ -814,28 +843,31 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 	/**
 	 * Builds an EnumSet that contains the unique elements from the given {@code array} or varargs.
+	 *
 	 * @param array an array or varargs of Enum constants, which should all have the same Enum type
 	 * @return a new EnumSet containing each unique item from {@code array}
 	 */
-	public static EnumSet with (Enum<?>... array) {
+	public static EnumSet with(Enum<?>... array) {
 		return new EnumSet(array);
 	}
 
 	/**
 	 * Alias of {@link #with(Enum)} for compatibility.
+	 *
 	 * @param item the one item to initialize the EnumSet with
 	 * @return a new EnumSet containing {@code item}
 	 */
-	public static EnumSet of (Enum<?> item) {
+	public static EnumSet of(Enum<?> item) {
 		return with(item);
 	}
 
 	/**
 	 * Alias of {@link #with(Enum[])} for compatibility.
+	 *
 	 * @param array an array or varargs of Enum constants, which should all have the same Enum type
 	 * @return a new EnumSet containing each unique item from {@code array}
 	 */
-	public static EnumSet of (Enum<?>... array) {
+	public static EnumSet of(Enum<?>... array) {
 		return with(array);
 	}
 
@@ -848,7 +880,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @return a new EnumSet with the specified universe of possible items, but none present in the set
 	 */
-	public static EnumSet noneOf(Enum<?>@Nullable [] universe) {
+	public static EnumSet noneOf(Enum<?> @Nullable [] universe) {
 		return new EnumSet(universe, true);
 	}
 
@@ -859,8 +891,8 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @return a new EnumSet with the specified universe of possible items, and all of them present in the set
 	 */
-	public static EnumSet allOf(Enum<?>@Nullable [] universe) {
-		if(universe == null) return new EnumSet();
+	public static EnumSet allOf(Enum<?> @Nullable [] universe) {
+		if (universe == null) return new EnumSet();
 		return new EnumSet(universe);
 	}
 
@@ -874,7 +906,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @return a new EnumSet with the specified universe of possible items, but none present in the set
 	 */
 	public static EnumSet noneOf(@Nullable Class<? extends Enum<?>> clazz) {
-		if(clazz == null)
+		if (clazz == null)
 			return new EnumSet();
 		return new EnumSet(clazz.getEnumConstants(), true);
 	}
@@ -887,7 +919,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @return a new EnumSet with the specified universe of possible items, and all of them present in the set
 	 */
 	public static EnumSet allOf(@Nullable Class<? extends Enum<?>> clazz) {
-		if(clazz == null)
+		if (clazz == null)
 			return new EnumSet();
 		return new EnumSet(clazz.getEnumConstants());
 	}
@@ -900,7 +932,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @return a complemented copy of {@code other}
 	 */
 	public static EnumSet complementOf(EnumSet other) {
-		if(other == null) return new EnumSet();
+		if (other == null) return new EnumSet();
 		EnumSet coll = new EnumSet(other);
 		for (int i = 0; i < coll.table.length - 1; i++) {
 			coll.table[i] ^= -1;
@@ -913,11 +945,12 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	/**
 	 * Creates an EnumSet holding any Enum items in the given {@code contents}, which may be any Collection of Enum, including another
 	 * EnumSet. If given an EnumSet, this will copy its Enum universe and other information even if it is empty.
+	 *
 	 * @param contents a Collection of Enum values, which may be another EnumSet
 	 * @return a new EnumSet containing the unique items in contents
 	 */
 	public static EnumSet copyOf(Collection<? extends Enum<?>> contents) {
-		if(contents == null) throw new NullPointerException("Cannot copy a null EnumSet.");
+		if (contents == null) throw new NullPointerException("Cannot copy a null EnumSet.");
 		return new EnumSet(contents);
 	}
 
@@ -927,21 +960,21 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * If start and end are the same, this just inserts that one Enum.
 	 *
 	 * @param start the starting inclusive Enum to insert
-	 * @param end the ending inclusive Enum to insert
+	 * @param end   the ending inclusive Enum to insert
+	 * @param <E>   the shared Enum type of both start and end
 	 * @return a new EnumSet containing start, end, and any Enum constants with ordinals between them
-	 * @param <E> the shared Enum type of both start and end
 	 * @throws IllegalArgumentException if the {@link Enum#ordinal() ordinal} of end is less than the ordinal of start
 	 */
-	public static  <E extends Enum<E>> EnumSet range(Enum<E> start, Enum<E> end) {
+	public static <E extends Enum<E>> EnumSet range(Enum<E> start, Enum<E> end) {
 		final int mn = start.ordinal();
 		final int mx = end.ordinal();
-		if(mx < mn) throw new IllegalArgumentException("The ordinal of " + end + " (" + mx +
-			") must be at least equal to the ordinal of " + start + " ("+mn+")");
+		if (mx < mn) throw new IllegalArgumentException("The ordinal of " + end + " (" + mx +
+			") must be at least equal to the ordinal of " + start + " (" + mn + ")");
 		final int upperMin = mn >>> 5;
 		final int upperMax = mx >>> 5;
 		EnumSet coll = new EnumSet();
 		coll.add(start);
-		if(upperMin == upperMax){
+		if (upperMin == upperMax) {
 			coll.table[upperMin] = (-1 >>> ~mx) ^ (-1 >>> -mn);
 		} else {
 			coll.table[upperMin] = -1 << mn;

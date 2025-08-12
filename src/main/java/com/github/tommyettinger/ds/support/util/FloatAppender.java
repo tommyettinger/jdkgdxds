@@ -25,19 +25,19 @@ import com.github.tommyettinger.function.ObjFloatToObjBiFunction;
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, float)}.
  */
 public interface FloatAppender extends ObjFloatToObjBiFunction<StringBuilder, StringBuilder> {
-    /**
-     * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
-     * {@code StringBuilder::append} is present at a call-site. This should be used in place of
-     * {@link StringBuilder#append(float)} when you want to use that as a FloatAppender.
-     */
-    FloatAppender DEFAULT = StringBuilder::append;
+	/**
+	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
+	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
+	 * {@link StringBuilder#append(float)} when you want to use that as a FloatAppender.
+	 */
+	FloatAppender DEFAULT = StringBuilder::append;
 
-    /**
-     * An alternative FloatAppender constant that appends five {@link Base#BASE90} digits for every float input.
-     * The five ASCII chars are not expected to be human-readable.
-     * <br>
-     * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
-     * this lambda would be present at a call-site.
-     */
-    FloatAppender DENSE = (StringBuilder sb, float f) -> Base.BASE90.appendUnsigned(sb, BitConversion.floatToRawIntBits(f));
+	/**
+	 * An alternative FloatAppender constant that appends five {@link Base#BASE90} digits for every float input.
+	 * The five ASCII chars are not expected to be human-readable.
+	 * <br>
+	 * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
+	 * this lambda would be present at a call-site.
+	 */
+	FloatAppender DENSE = (StringBuilder sb, float f) -> Base.BASE90.appendUnsigned(sb, BitConversion.floatToRawIntBits(f));
 }

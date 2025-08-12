@@ -50,6 +50,7 @@ public class ObjectObjectOrderedMapTest {
 			objArray2[i] = objArray[i].toString();
 		}
 	}
+
 	public void runBattery(Map<String, String> map) {
 		try {
 			map.put("one", "1");
@@ -57,11 +58,11 @@ public class ObjectObjectOrderedMapTest {
 			map.clear();
 			assertEquals("size should be zero", 0, map.size());
 			assertTrue("Should not have entries", !map.entrySet().iterator()
-					.hasNext());
+				.hasNext());
 			assertTrue("Should not have keys", !map.keySet().iterator()
-					.hasNext());
+				.hasNext());
 			assertTrue("Should not have values", !map.values().iterator()
-					.hasNext());
+				.hasNext());
 		} catch (UnsupportedOperationException e) {
 		}
 
@@ -71,16 +72,17 @@ public class ObjectObjectOrderedMapTest {
 			map.remove("one");
 			assertEquals("size should be zero", 0, map.size());
 			assertTrue("Should not have entries", !map.entrySet().iterator()
-					.hasNext());
+				.hasNext());
 			assertTrue("Should not have keys", !map.keySet().iterator()
-					.hasNext());
+				.hasNext());
 			assertTrue("Should not have values", !map.values().iterator()
-					.hasNext());
+				.hasNext());
 		} catch (UnsupportedOperationException e) {
 		}
 	}
 
-	@Test public void test_Constructor () {
+	@Test
+	public void test_Constructor() {
 		// Test for method com.github.tommyettinger.ds.ObjectObjectOrderedMap()
 		runBattery(new ObjectObjectOrderedMap());
 
@@ -88,18 +90,19 @@ public class ObjectObjectOrderedMapTest {
 		assertEquals("Created incorrect ObjectObjectOrderedMap", 0, hm2.size());
 	}
 
-	@Test public void test_ConstructorI () {
+	@Test
+	public void test_ConstructorI() {
 		// Test for method com.github.tommyettinger.ds.ObjectObjectOrderedMap(int)
 		ObjectObjectOrderedMap hm2 = new ObjectObjectOrderedMap(5);
 		assertEquals("Created incorrect ObjectObjectOrderedMap", 0, hm2.size());
-		do{
+		do {
 			try {
 				new ObjectObjectOrderedMap(-1);
 			} catch (IllegalArgumentException e) {
 				break;
 			}
 			Assert.fail("Failed to throw IllegalArgumentException for initial capacity < 0");
-		}while (false);
+		} while (false);
 
 		ObjectObjectOrderedMap empty = new ObjectObjectOrderedMap(0);
 		Assert.assertNull("Empty ObjectObjectOrderedMap access", empty.get("nothing"));
@@ -107,25 +110,27 @@ public class ObjectObjectOrderedMapTest {
 		assertTrue("cannot get element", empty.get("something") == "here");
 	}
 
-	@Test public void test_ConstructorIF () {
+	@Test
+	public void test_ConstructorIF() {
 		// Test for method com.github.tommyettinger.ds.ObjectObjectOrderedMap(int, float)
-		ObjectObjectOrderedMap hm2 = new ObjectObjectOrderedMap(5, (float)0.5);
+		ObjectObjectOrderedMap hm2 = new ObjectObjectOrderedMap(5, (float) 0.5);
 		assertEquals("Created incorrect ObjectObjectOrderedMap", 0, hm2.size());
-		do{
+		do {
 			try {
 				new ObjectObjectOrderedMap(0, 0);
 			} catch (IllegalArgumentException e) {
 				break;
 			}
 			Assert.fail("Failed to throw IllegalArgumentException for initial load factor <= 0");
-		}while (false);
+		} while (false);
 		ObjectObjectOrderedMap empty = new ObjectObjectOrderedMap(0, 0.75f);
 		Assert.assertNull("Empty hashtable access", empty.get("nothing"));
 		empty.put("something", "here");
 		assertTrue("cannot get element", empty.get("something") == "here");
 	}
 
-	@Test public void test_ConstructorLjava_util_Map () {
+	@Test
+	public void test_ConstructorLjava_util_Map() {
 		// Test for method com.github.tommyettinger.ds.ObjectObjectOrderedMap(com.github.tommyettinger.ds.ObjectObjectOrderedMap)
 		ObjectObjectOrderedMap myMap = new ObjectObjectOrderedMap();
 		for (int counter = 0; counter < hmSize; counter++)
@@ -136,7 +141,8 @@ public class ObjectObjectOrderedMapTest {
 				hm.get(objArray2[counter]) == hm2.get(objArray2[counter]));
 	}
 
-	@Test public void test_getLjava_lang_Object () {
+	@Test
+	public void test_getLjava_lang_Object() {
 		// Test for method java.lang.Object
 		// com.github.tommyettinger.ds.ObjectObjectOrderedMap.get(java.lang.Object)
 		Assert.assertNull("Get returned non-null for non existent key", hm.get("T"));
@@ -150,7 +156,8 @@ public class ObjectObjectOrderedMapTest {
 //				.get(new Integer(0)));
 	}
 
-	@Test public void test_putLjava_lang_ObjectLjava_lang_Object () {
+	@Test
+	public void test_putLjava_lang_ObjectLjava_lang_Object() {
 		// Test for method java.lang.Object
 		// com.github.tommyettinger.ds.ObjectObjectOrderedMap.put(java.lang.Object, java.lang.Object)
 		hm.put("KEY", "VALUE");
@@ -166,7 +173,8 @@ public class ObjectObjectOrderedMapTest {
 //				new Integer(0)));
 	}
 
-	@Test public void test_putAllLjava_util_Map () {
+	@Test
+	public void test_putAllLjava_util_Map() {
 		// Test for method void com.github.tommyettinger.ds.ObjectObjectOrderedMap.putAll(java.util.Map)
 		ObjectObjectOrderedMap hm2 = new ObjectObjectOrderedMap();
 		hm2.putAll(hm);
@@ -190,20 +198,22 @@ public class ObjectObjectOrderedMapTest {
 //        } catch (NullPointerException e) {
 //            // expected.
 //        }
-//    } 
+//    }
 
-	@Test public void test_entrySet () {
+	@Test
+	public void test_entrySet() {
 		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectOrderedMap.entrySet()
 		Set s = hm.entrySet();
 		Iterator i = s.iterator();
 		assertTrue("Returned set of incorrect size", hm.size() == s.size());
 		while (i.hasNext()) {
-			Map.Entry m = (Map.Entry)i.next();
+			Map.Entry m = (Map.Entry) i.next();
 			assertTrue("Returned incorrect entry set", hm.containsKey(m.getKey()) && hm.containsValue(m.getValue(), false));
 		}
 	}
 
-	@Test public void test_keySet () {
+	@Test
+	public void test_keySet() {
 		// Test for method java.util.Set com.github.tommyettinger.ds.ObjectObjectOrderedMap.keySet()
 		Set s = hm.keySet();
 		assertTrue("Returned set of incorrect size()", s.size() == hm.size());
@@ -221,12 +231,12 @@ public class ObjectObjectOrderedMapTest {
 		map.put(new Integer(102), "102");
 		map.put(new Integer(203), "203");
 		Iterator it = map.keySet().iterator();
-		Integer remove1 = (Integer)it.next();
+		Integer remove1 = (Integer) it.next();
 		it.hasNext();
 		it.remove();
-		Integer remove2 = (Integer)it.next();
+		Integer remove2 = (Integer) it.next();
 		it.remove();
-		ObjectList list = new ObjectList(Arrays.asList(new Integer[] {new Integer(1), new Integer(102), new Integer(203)}));
+		ObjectList list = new ObjectList(Arrays.asList(new Integer[]{new Integer(1), new Integer(102), new Integer(203)}));
 		list.remove(remove1);
 		list.remove(remove2);
 		assertTrue("Wrong result", it.next().equals(list.get(0)));
@@ -237,7 +247,7 @@ public class ObjectObjectOrderedMapTest {
 		map2.put(new Integer(1), "1");
 		map2.put(new Integer(4), "4");
 		Iterator it2 = map2.keySet().iterator();
-		Integer remove3 = (Integer)it2.next();
+		Integer remove3 = (Integer) it2.next();
 		Integer next;
 		if (remove3.intValue() == 1)
 			next = new Integer(4);
@@ -250,7 +260,8 @@ public class ObjectObjectOrderedMapTest {
 		assertTrue("Wrong contents 2", map2.keySet().iterator().next().equals(next));
 	}
 
-	@Test public void test_values () {
+	@Test
+	public void test_values() {
 		// Test for method java.util.Collection com.github.tommyettinger.ds.ObjectObjectOrderedMap.values()
 		Collection c = hm.values();
 		assertTrue("Returned collection of incorrect size()", c.size() == hm.size());
@@ -273,12 +284,13 @@ public class ObjectObjectOrderedMapTest {
 
 	}
 
-	@Test public void test_removeLjava_lang_Object () {
+	@Test
+	public void test_removeLjava_lang_Object() {
 		// Test for method java.lang.Object
 		// com.github.tommyettinger.ds.ObjectObjectOrderedMap.remove(java.lang.Object)
 		int size = hm.size();
 		Integer y = new Integer(9);
-		Integer x = (Integer)hm.remove(y.toString());
+		Integer x = (Integer) hm.remove(y.toString());
 		assertTrue("Remove returned incorrect value", x.equals(new Integer(9)));
 		Assert.assertNull("Failed to remove given key", hm.get(new Integer(9)));
 		assertTrue("Failed to decrement size", hm.size() == size - 1);
@@ -291,7 +303,8 @@ public class ObjectObjectOrderedMapTest {
 //		assertEquals("Failed with null key", "test", m.remove(null));
 	}
 
-	@Test public void test_clear () {
+	@Test
+	public void test_clear() {
 		// Test for method void com.github.tommyettinger.ds.ObjectObjectOrderedMap.clear()
 		hm.clear();
 		assertEquals("Clear failed to reset size", 0, hm.size());
@@ -300,7 +313,8 @@ public class ObjectObjectOrderedMapTest {
 
 	}
 
-	@Test public void test_containsKeyLjava_lang_Object () {
+	@Test
+	public void test_containsKeyLjava_lang_Object() {
 		// Test for method boolean
 		// com.github.tommyettinger.ds.ObjectObjectOrderedMap.containsKey(java.lang.Object)
 		assertTrue("Returned false for valid key", hm.containsKey(new Integer(876).toString()));
@@ -313,25 +327,29 @@ public class ObjectObjectOrderedMapTest {
 //				.containsKey(new Integer(0)));
 	}
 
-	@Test public void test_containsValueLjava_lang_Object () {
+	@Test
+	public void test_containsValueLjava_lang_Object() {
 		// Test for method boolean
 		// com.github.tommyettinger.ds.ObjectObjectOrderedMap.containsValue(java.lang.Object)
 		assertTrue("Returned false for valid value", hm.containsValue(new Integer(875), false));
 		assertTrue("Returned true for invalid value", !hm.containsValue(new Integer(-9), false));
 	}
 
-	@Test public void test_isEmpty () {
+	@Test
+	public void test_isEmpty() {
 		// Test for method boolean com.github.tommyettinger.ds.ObjectObjectOrderedMap.isEmpty()
 		assertTrue("Returned false for new map", new ObjectObjectOrderedMap().isEmpty());
 		assertTrue("Returned true for non-empty", !hm.isEmpty());
 	}
 
-	@Test public void test_size () {
+	@Test
+	public void test_size() {
 		// Test for method int com.github.tommyettinger.ds.ObjectObjectOrderedMap.size()
 		assertTrue("Returned incorrect size", hm.size() == objArray.length + 1);
 	}
 
-	@Test public void test_ordered_entrySet () {
+	@Test
+	public void test_ordered_entrySet() {
 		int i;
 		int sz = 100;
 		ObjectObjectOrderedMap lhm = new ObjectObjectOrderedMap();
@@ -344,13 +362,14 @@ public class ObjectObjectOrderedMapTest {
 		Iterator it1 = s1.iterator();
 		assertTrue("Returned set of incorrect size 1", lhm.size() == s1.size());
 		for (i = 0; it1.hasNext(); i++) {
-			Map.Entry m = (Map.Entry)it1.next();
-			Integer jj = (Integer)m.getKey();
+			Map.Entry m = (Map.Entry) it1.next();
+			Integer jj = (Integer) m.getKey();
 			assertTrue("Returned incorrect entry set 1", jj.intValue() == i);
 		}
 	}
 
-	@Test public void test_ordered_keySet () {
+	@Test
+	public void test_ordered_keySet() {
 		int i;
 		int sz = 100;
 		ObjectObjectOrderedMap lhm = new ObjectObjectOrderedMap();
@@ -363,12 +382,13 @@ public class ObjectObjectOrderedMapTest {
 		Iterator it1 = s1.iterator();
 		assertTrue("Returned set of incorrect size", lhm.size() == s1.size());
 		for (i = 0; it1.hasNext(); i++) {
-			Integer jj = (Integer)it1.next();
+			Integer jj = (Integer) it1.next();
 			assertTrue("Returned incorrect entry set", jj.intValue() == i);
 		}
 	}
 
-	@Test public void test_ordered_values () {
+	@Test
+	public void test_ordered_values() {
 		int i;
 		int sz = 100;
 		ObjectObjectOrderedMap lhm = new ObjectObjectOrderedMap();
@@ -381,7 +401,7 @@ public class ObjectObjectOrderedMapTest {
 		Iterator it1 = s1.iterator();
 		assertTrue("Returned set of incorrect size 1", lhm.size() == s1.size());
 		for (i = 0; it1.hasNext(); i++) {
-			Integer jj = (Integer)it1.next();
+			Integer jj = (Integer) it1.next();
 			assertTrue("Returned incorrect entry set 1", jj.intValue() == i * 2);
 		}
 	}
@@ -390,7 +410,8 @@ public class ObjectObjectOrderedMapTest {
 	 * Sets up the fixture, for example, open a network connection. This method
 	 * is called before a test is executed.
 	 */
-	@Before public void setUp () {
+	@Before
+	public void setUp() {
 		hm = new ObjectObjectOrderedMap();
 		for (int i = 0; i < objArray.length; i++)
 			hm.put(objArray2[i], objArray[i]);
@@ -401,6 +422,7 @@ public class ObjectObjectOrderedMapTest {
 	 * Tears down the fixture, for example, close a network connection. This
 	 * method is called after a test is executed.
 	 */
-	@After public void tearDown () {
+	@After
+	public void tearDown() {
 	}
 }

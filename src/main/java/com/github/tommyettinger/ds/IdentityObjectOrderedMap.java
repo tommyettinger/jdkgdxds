@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -128,7 +129,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public IdentityObjectOrderedMap () {
+	public IdentityObjectOrderedMap() {
 		super();
 	}
 
@@ -137,7 +138,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public IdentityObjectOrderedMap (int initialCapacity) {
+	public IdentityObjectOrderedMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -148,7 +149,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public IdentityObjectOrderedMap (int initialCapacity, float loadFactor) {
+	public IdentityObjectOrderedMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -157,7 +158,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 *
 	 * @param map an ObjectObjectOrderedMap to copy, or a subclass such as this one
 	 */
-	public IdentityObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> map) {
+	public IdentityObjectOrderedMap(ObjectObjectOrderedMap<? extends K, ? extends V> map) {
 		super(map);
 	}
 
@@ -166,7 +167,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 *
 	 * @param map an ObjectObjectMap to copy, or a subclass
 	 */
-	public IdentityObjectOrderedMap (ObjectObjectMap<? extends K, ? extends V> map) {
+	public IdentityObjectOrderedMap(ObjectObjectMap<? extends K, ? extends V> map) {
 		super(map);
 	}
 
@@ -175,7 +176,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 *
 	 * @param map a Map to copy
 	 */
-	public IdentityObjectOrderedMap (Map<? extends K, ? extends V> map) {
+	public IdentityObjectOrderedMap(Map<? extends K, ? extends V> map) {
 		super(map);
 	}
 
@@ -186,7 +187,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public IdentityObjectOrderedMap (K[] keys, V[] values) {
+	public IdentityObjectOrderedMap(K[] keys, V[] values) {
 		super(keys, values);
 	}
 
@@ -197,7 +198,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public IdentityObjectOrderedMap (Collection<? extends K> keys, Collection<? extends V> values) {
+	public IdentityObjectOrderedMap(Collection<? extends K> keys, Collection<? extends V> values) {
 		super(keys, values);
 	}
 
@@ -209,7 +210,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public IdentityObjectOrderedMap (ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count) {
+	public IdentityObjectOrderedMap(ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count) {
 		this(count);
 		putAll(0, other, offset, count);
 	}
@@ -225,17 +226,17 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @param item a non-null Object; its identityHashCode is used here
 	 */
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		return (System.identityHashCode(item) & mask);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		@Nullable K[] keyTable = this.keyTable;
 		@Nullable V[] valueTable = this.valueTable;
@@ -244,7 +245,9 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 			if (key != null) {
 				h ^= System.identityHashCode(key);
 				V value = valueTable[i];
-				if (value != null) {h ^= value.hashCode();}
+				if (value != null) {
+					h ^= value.hashCode();
+				}
 			}
 		}
 		return h;
@@ -276,11 +279,11 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <K>    the type of keys
-	 * @param <V>    the type of values
+	 * @param <K> the type of keys
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <K, V> IdentityObjectOrderedMap<K, V> with () {
+	public static <K, V> IdentityObjectOrderedMap<K, V> with() {
 		return new IdentityObjectOrderedMap<>(0);
 	}
 
@@ -295,7 +298,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K, V> IdentityObjectOrderedMap<K, V> with (K key0, V value0) {
+	public static <K, V> IdentityObjectOrderedMap<K, V> with(K key0, V value0) {
 		IdentityObjectOrderedMap<K, V> map = new IdentityObjectOrderedMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -318,7 +321,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> IdentityObjectOrderedMap<K, V> with (K key0, V value0, Object... rest) {
+	public static <K, V> IdentityObjectOrderedMap<K, V> with(K key0, V value0, Object... rest) {
 		IdentityObjectOrderedMap<K, V> map = new IdentityObjectOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		map.putPairs(rest);

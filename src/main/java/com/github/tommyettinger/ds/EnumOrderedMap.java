@@ -64,7 +64,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap (OrderType type) {
+	public EnumOrderedMap(OrderType type) {
 		ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
 	}
 
@@ -74,13 +74,14 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
 	 * reference to one Enum array across many EnumOrderedMap instances if you don't modify the shared array. Sharing the same
 	 * universe helps save some memory if you have (very) many EnumOrderedMap instances.
+	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type     either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *                 use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap (Enum<?> @Nullable [] universe, OrderType type) {
+	public EnumOrderedMap(Enum<?> @Nullable [] universe, OrderType type) {
 		super();
-		if(universe == null) {
+		if (universe == null) {
 			ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
 			return;
 		}
@@ -94,11 +95,12 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumOrderedMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
 	 * if you use {@link #EnumOrderedMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
+	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type          either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *                      use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap (@Nullable Class<? extends Enum<?>> universeClass, OrderType type) {
+	public EnumOrderedMap(@Nullable Class<? extends Enum<?>> universeClass, OrderType type) {
 		this(universeClass == null ? null : universeClass.getEnumConstants(), type);
 	}
 
@@ -106,13 +108,13 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * Creates a new map identical to the specified EnumOrderedMap. This will share a key universe with the given EnumOrderedMap, if non-null.
 	 * This overload allows specifying the OrderType independently of the one used in {@code map}.
 	 *
-	 * @param map an EnumMap to copy
+	 * @param map  an EnumMap to copy
 	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap (EnumOrderedMap<? extends V> map, OrderType type) {
+	public EnumOrderedMap(EnumOrderedMap<? extends V> map, OrderType type) {
 		universe = map.universe;
-		if(map.valueTable != null)
+		if (map.valueTable != null)
 			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
 		size = map.size;
 		defaultValue = map.defaultValue;
@@ -122,11 +124,11 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	/**
 	 * Creates a new map identical to the specified map.
 	 *
-	 * @param map a Map to copy; EnumOrderedMap will be faster
+	 * @param map  a Map to copy; EnumOrderedMap will be faster
 	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap (Map<? extends Enum<?>, ? extends V> map, OrderType type) {
+	public EnumOrderedMap(Map<? extends Enum<?>, ? extends V> map, OrderType type) {
 		this(type);
 		putAll(map);
 	}
@@ -137,10 +139,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param keys   an array of Enum keys
 	 * @param values an array of V values
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type   either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *               use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap (Enum<?>[] keys, V[] values, OrderType type) {
+	public EnumOrderedMap(Enum<?>[] keys, V[] values, OrderType type) {
 		this(type);
 		putAll(keys, values);
 	}
@@ -151,10 +153,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param keys   a Collection of Enum keys
 	 * @param values a Collection of V values
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type   either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *               use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap (Collection<? extends Enum<?>> keys, Collection<? extends V> values, OrderType type) {
+	public EnumOrderedMap(Collection<? extends Enum<?>> keys, Collection<? extends V> values, OrderType type) {
 		this(type);
 		putAll(keys, values);
 	}
@@ -166,8 +168,8 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param other  another EnumOrderedMap of the same types
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
-	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
-	 *             use a list type that takes longer to delete but maintains insertion order reliably
+	 * @param type   either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
+	 *               use a list type that takes longer to delete but maintains insertion order reliably
 	 */
 	public EnumOrderedMap(EnumOrderedMap<? extends V> other, int offset, int count, OrderType type) {
 		this(type);
@@ -180,7 +182,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
 	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
 	 */
-	public EnumOrderedMap () {
+	public EnumOrderedMap() {
 		this(OrderType.LIST);
 	}
 
@@ -190,9 +192,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
 	 * reference to one Enum array across many EnumOrderedMap instances if you don't modify the shared array. Sharing the same
 	 * universe helps save some memory if you have (very) many EnumOrderedMap instances.
+	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
-	public EnumOrderedMap (Enum<?> @Nullable [] universe) {
+	public EnumOrderedMap(Enum<?> @Nullable [] universe) {
 		this(universe, OrderType.LIST);
 	}
 
@@ -201,9 +204,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumOrderedMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
 	 * if you use {@link #EnumOrderedMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
+	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumOrderedMap (@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumOrderedMap(@Nullable Class<? extends Enum<?>> universeClass) {
 		this(universeClass, OrderType.LIST);
 	}
 
@@ -213,9 +217,9 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param map an EnumMap to copy
 	 */
-	public EnumOrderedMap (EnumOrderedMap<? extends V> map) {
+	public EnumOrderedMap(EnumOrderedMap<? extends V> map) {
 		universe = map.universe;
-		if(map.valueTable != null)
+		if (map.valueTable != null)
 			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
 		size = map.size;
 		defaultValue = map.defaultValue;
@@ -227,7 +231,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param map a Map to copy; EnumOrderedMap will be faster
 	 */
-	public EnumOrderedMap (Map<? extends Enum<?>, ? extends V> map) {
+	public EnumOrderedMap(Map<? extends Enum<?>, ? extends V> map) {
 		this(map, OrderType.LIST);
 	}
 
@@ -238,7 +242,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param keys   an array of Enum keys
 	 * @param values an array of V values
 	 */
-	public EnumOrderedMap (Enum<?>[] keys, V[] values) {
+	public EnumOrderedMap(Enum<?>[] keys, V[] values) {
 		this(keys, values, OrderType.LIST);
 	}
 
@@ -249,7 +253,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param keys   a Collection of Enum keys
 	 * @param values a Collection of V values
 	 */
-	public EnumOrderedMap (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
+	public EnumOrderedMap(Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
 		this(keys, values, OrderType.LIST);
 	}
 
@@ -271,14 +275,14 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * If this EnumOrderedMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
 	 * from now on for this EnumOrderedMap.
 	 *
-	 * @param key the Enum key to try to place into this EnumOrderedMap
+	 * @param key   the Enum key to try to place into this EnumOrderedMap
 	 * @param value the V value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	@Override
 	@Nullable
-	public V put (Enum<?> key, @Nullable V value) {
-		if(key != null) {
+	public V put(Enum<?> key, @Nullable V value) {
+		if (key != null) {
 			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
 			if (valueTable == null) valueTable = new Object[universe.length];
 			int i = key.ordinal();
@@ -307,8 +311,8 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return the previous value associated with key, if there was one, or null otherwise
 	 */
 	@Nullable
-	public V put (Enum<?> key, @Nullable V value, int index) {
-		if(key != null) {
+	public V put(Enum<?> key, @Nullable V value, int index) {
+		if (key != null) {
 			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
 			if (valueTable == null) valueTable = new Object[universe.length];
 			int i = key.ordinal();
@@ -333,8 +337,8 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 	@Nullable
 	@Override
-	public V putOrDefault (Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
-		if(key != null) {
+	public V putOrDefault(Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
+		if (key != null) {
 			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
 			if (valueTable == null) valueTable = new Object[universe.length];
 			int i = key.ordinal();
@@ -358,7 +362,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (EnumOrderedMap<? extends V> map) {
+	public void putAll(EnumOrderedMap<? extends V> map) {
 		for (int i = 0, kl = map.size; i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
 		}
@@ -372,7 +376,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 */
-	public void putAll (EnumOrderedMap<? extends V> other, int offset, int count) {
+	public void putAll(EnumOrderedMap<? extends V> other, int offset, int count) {
 		putAll(size, other, offset, count);
 	}
 
@@ -385,7 +389,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll (int insertionIndex, EnumOrderedMap<? extends V> other, int offset, int count) {
+	public void putAll(int insertionIndex, EnumOrderedMap<? extends V> other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
 		for (int i = offset; i < end; i++) {
 			put(other.keyAt(i), other.getAt(i), insertionIndex++);
@@ -393,9 +397,11 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	}
 
 	@Override
-	public V remove (Object key) {
+	public V remove(Object key) {
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
-		if (!super.containsKey(key)) {return defaultValue;}
+		if (!super.containsKey(key)) {
+			return defaultValue;
+		}
 		ordering.remove(key);
 		return super.remove(key);
 	}
@@ -407,7 +413,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return the value of the removed entry
 	 */
 	@Nullable
-	public V removeAt (int index) {
+	public V removeAt(int index) {
 		return super.remove(ordering.removeAt(index));
 	}
 
@@ -421,10 +427,14 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (Enum<?> before, Enum<?> after) {
-		if (before == null || after == null || containsKey(after)) {return false;}
+	public boolean alter(Enum<?> before, Enum<?> after) {
+		if (before == null || after == null || containsKey(after)) {
+			return false;
+		}
 		int index = ordering.indexOf(before);
-		if (index == -1) {return false;}
+		if (index == -1) {
+			return false;
+		}
 		super.put(after, super.remove(before));
 		ordering.set(index, after);
 		return true;
@@ -439,8 +449,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, Enum<?> after) {
-		if (after == null || index < 0 || index >= size || containsKey(after)) {return false;}
+	public boolean alterAt(int index, Enum<?> after) {
+		if (after == null || index < 0 || index >= size || containsKey(after)) {
+			return false;
+		}
 		super.put(after, super.remove(ordering.get(index)));
 		ordering.set(index, after);
 		return true;
@@ -456,12 +468,14 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
 	@Nullable
-	public V setAt (int index, V v) {
-		if (index < 0 || index >= size || universe == null || valueTable == null) {return null;}
+	public V setAt(int index, V v) {
+		if (index < 0 || index >= size || universe == null || valueTable == null) {
+			return null;
+		}
 		int pos = ordering.get(index).ordinal();
 		final Object oldValue = valueTable[pos];
 		valueTable[pos] = v;
-		if(oldValue == null) return null;
+		if (oldValue == null) return null;
 		return release(oldValue);
 	}
 
@@ -473,7 +487,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return the value at the given index
 	 */
 	@Nullable
-	public V getAt (int index) {
+	public V getAt(int index) {
 		return get(ordering.get(index));
 	}
 
@@ -484,7 +498,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the key at the given index
 	 */
-	public Enum<?> keyAt (int index) {
+	public Enum<?> keyAt(int index) {
 		return ordering.get(index);
 	}
 
@@ -495,7 +509,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * This does not change the universe of possible Enum items this can hold.
 	 */
 	@Override
-	public void clear () {
+	public void clear() {
 		super.clear();
 		ordering.clear();
 	}
@@ -514,7 +528,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clearToUniverse (Enum<?>@Nullable [] universe) {
+	public void clearToUniverse(Enum<?> @Nullable [] universe) {
 		super.clearToUniverse(universe);
 		ordering.clear();
 	}
@@ -536,7 +550,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
 	 */
-	public void clearToUniverse (@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
 		super.clearToUniverse(universe);
 		ordering.clear();
 	}
@@ -549,14 +563,14 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return the ObjectList of keys, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public ObjectList<Enum<?>> order () {
+	public ObjectList<Enum<?>> order() {
 		return ordering;
 	}
 
 	/**
 	 * Sorts this EnumOrderedMap in-place by the keys' natural ordering.
 	 */
-	public void sort () {
+	public void sort() {
 		ordering.sort(null);
 	}
 
@@ -566,7 +580,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
 	 */
-	public void sort (@Nullable Comparator<? super Enum<?>> comp) {
+	public void sort(@Nullable Comparator<? super Enum<?>> comp) {
 		ordering.sort(comp);
 	}
 
@@ -579,8 +593,8 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param comp a Comparator that can compare {@code V} values; may be null to use natural order of Comparable values
 	 */
-	public void sortByValue (@Nullable Comparator<V> comp) {
-		if(comp == null)
+	public void sortByValue(@Nullable Comparator<V> comp) {
+		if (comp == null)
 			//noinspection unchecked
 			ordering.sort((a, b) -> ((Comparator<V>) ObjectComparators.NATURAL_COMPARATOR).compare(get(a), get(b)));
 		else
@@ -597,7 +611,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(ordering.size(), end);
 		for (int i = start; i < end; i++) {
@@ -613,8 +627,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	/**
@@ -637,7 +653,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NonNull Keys keySet () {
+	public @NonNull Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys(this);
 			keys2 = new OrderedMapKeys(this);
@@ -662,7 +678,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NonNull Values<V> values () {
+	public @NonNull Values<V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -688,7 +704,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NonNull Entries<V> entrySet () {
+	public @NonNull Entries<V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -715,7 +731,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
+	public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -734,55 +750,69 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
+		if (size == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
 		ObjectList<Enum<?>> keys = this.ordering;
 		for (int i = 0, n = keys.size(); i < n; i++) {
 			Enum<?> key = keys.get(i);
-			if (i > 0) {sb.append(entrySeparator);}
+			if (i > 0) {
+				sb.append(entrySeparator);
+			}
 			keyAppender.apply(sb, key);
 			sb.append(keyValueSeparator);
 			V value = get(key);
-			if(value == this)
+			if (value == this)
 				sb.append("(this)");
 			else
 				valueAppender.apply(sb, value);
 
 		}
-		if (braces) {sb.append('}');}
+		if (braces) {
+			sb.append('}');
+		}
 		return sb;
 	}
 
 	public static class OrderedMapEntries<V> extends Entries<V> {
 		protected ObjectList<Enum<?>> keys;
 
-		public OrderedMapEntries (EnumOrderedMap<V> map) {
+		public OrderedMapEntries(EnumOrderedMap<V> map) {
 			super(map);
 			keys = map.ordering;
 			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
-				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
+				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 					return this;
 				}
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 
 				@Override
-				public Entry<V> next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Entry<V> next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
 					entry.value = map.get(entry.key);
@@ -792,8 +822,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					assert entry.key != null;
 					map.remove(entry.key);
 					nextIndex--;
@@ -807,32 +839,38 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	public static class OrderedMapKeys extends Keys {
 		private final ObjectList<Enum<?>> ordering;
 
-		public OrderedMapKeys (EnumOrderedMap<?> map) {
+		public OrderedMapKeys(EnumOrderedMap<?> map) {
 			super(map);
 			ordering = map.ordering;
 			iter = new MapIterator<Object, Enum<?>>(map) {
 				@Override
-				public @NonNull MapIterator<?, Enum<?>> iterator () {
+				public @NonNull MapIterator<?, Enum<?>> iterator() {
 					return this;
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
 				}
 
 				@Override
-				public Enum<?> next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Enum<?> next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					Enum<?> key = ordering.get(nextIndex);
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -841,8 +879,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(ordering.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -855,23 +895,25 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	public static class OrderedMapValues<V> extends Values<V> {
 		private final ObjectList<Enum<?>> keys;
 
-		public OrderedMapValues (EnumOrderedMap<V> map) {
+		public OrderedMapValues(EnumOrderedMap<V> map) {
 			super(map);
 			keys = map.ordering;
 			iter = new MapIterator<V, V>(map) {
 				@Override
-				public @NonNull MapIterator<V, V> iterator () {
+				public @NonNull MapIterator<V, V> iterator() {
 					return this;
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 
 				@Override
-				public void reset () {
+				public void reset() {
 					currentIndex = -1;
 					nextIndex = 0;
 					hasNext = map.size > 0;
@@ -879,9 +921,13 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 				@Override
 				@Nullable
-				public V next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public V next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					V value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
 					nextIndex++;
@@ -890,8 +936,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				}
 
 				@Override
-				public void remove () {
-					if (currentIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+				public void remove() {
+					if (currentIndex < 0) {
+						throw new IllegalStateException("next must be called before remove.");
+					}
 					map.remove(keys.get(currentIndex));
 					nextIndex = currentIndex;
 					currentIndex = -1;
@@ -906,10 +954,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> EnumOrderedMap<V> with () {
+	public static <V> EnumOrderedMap<V> with() {
 		return new EnumOrderedMap<>();
 	}
 
@@ -923,7 +971,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> EnumOrderedMap<V> with (Enum<?> key0, V value0) {
+	public static <V> EnumOrderedMap<V> with(Enum<?> key0, V value0) {
 		EnumOrderedMap<V> map = new EnumOrderedMap<>();
 		map.put(key0, value0);
 		return map;
@@ -941,7 +989,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> EnumOrderedMap<V> with (Enum<?> key0, V value0, Enum<?> key1, V value1) {
+	public static <V> EnumOrderedMap<V> with(Enum<?> key0, V value0, Enum<?> key1, V value1) {
 		EnumOrderedMap<V> map = new EnumOrderedMap<>();
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -962,7 +1010,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> EnumOrderedMap<V> with (Enum<?> key0, V value0, Enum<?> key1, V value1, Enum<?> key2, V value2) {
+	public static <V> EnumOrderedMap<V> with(Enum<?> key0, V value0, Enum<?> key1, V value1, Enum<?> key2, V value2) {
 		EnumOrderedMap<V> map = new EnumOrderedMap<>();
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -986,7 +1034,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> EnumOrderedMap<V> with (Enum<?> key0, V value0, Enum<?> key1, V value1, Enum<?> key2, V value2, Enum<?> key3, V value3) {
+	public static <V> EnumOrderedMap<V> with(Enum<?> key0, V value0, Enum<?> key1, V value1, Enum<?> key2, V value2, Enum<?> key3, V value3) {
 		EnumOrderedMap<V> map = new EnumOrderedMap<>();
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1010,7 +1058,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	public static <V> EnumOrderedMap<V> with (Enum<?> key0, V value0, Object... rest) {
+	public static <V> EnumOrderedMap<V> with(Enum<?> key0, V value0, Object... rest) {
 		EnumOrderedMap<V> map = new EnumOrderedMap<>();
 		map.put(key0, value0);
 		map.putPairs(rest);
@@ -1027,7 +1075,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param <V>      the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> EnumOrderedMap<V> noneOf (Enum<?>[] universe) {
+	public static <V> EnumOrderedMap<V> noneOf(Enum<?>[] universe) {
 		return new EnumOrderedMap<>(universe);
 	}
 }

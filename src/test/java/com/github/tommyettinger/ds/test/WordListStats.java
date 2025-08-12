@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+
 import com.github.tommyettinger.function.IntToIntFunction;
 
 public class WordListStats {
@@ -34,6 +35,7 @@ public class WordListStats {
 		h -> h << 16, // hash 5, imitating float hash behavior in Vector2
 		h -> Float.floatToIntBits(h), // hash 6, current BadString behavior
 	};
+
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		int wordCount = words.size();
@@ -41,10 +43,10 @@ public class WordListStats {
 			IntToIntFunction op = worse[i];
 			System.out.println("Working with hash-worsening operator " + i);
 			long sum = words.parallelStream().mapToLong(s -> op.applyAsInt(s.hashCode())).sum();
-			double averageHashCode = sum / (double)wordCount;
-			double averageBitCount = words.parallelStream().mapToLong((s) -> Integer.bitCount(op.applyAsInt(s.hashCode()))).sum() / (double)wordCount;
-			double averageExtent = words.parallelStream().mapToLong((s) -> 32 - Integer.numberOfLeadingZeros(op.applyAsInt(s.hashCode()))).sum() / (double)wordCount;
-			long collisionCount = wordCount - words.parallelStream().mapToInt((s)->op.applyAsInt(s.hashCode())).distinct().count();
+			double averageHashCode = sum / (double) wordCount;
+			double averageBitCount = words.parallelStream().mapToLong((s) -> Integer.bitCount(op.applyAsInt(s.hashCode()))).sum() / (double) wordCount;
+			double averageExtent = words.parallelStream().mapToLong((s) -> 32 - Integer.numberOfLeadingZeros(op.applyAsInt(s.hashCode()))).sum() / (double) wordCount;
+			long collisionCount = wordCount - words.parallelStream().mapToInt((s) -> op.applyAsInt(s.hashCode())).distinct().count();
 			System.out.printf("Number of words   : %d\n", wordCount);
 			System.out.printf("Collision count   : %d\n", collisionCount);
 			System.out.printf("hashCode() sum    : %d\n", sum);

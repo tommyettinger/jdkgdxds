@@ -15,15 +15,15 @@
  */
 
 buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.34.0'
-    }
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.34.0'
+	}
 }
 
 apply plugin: 'java-library'
@@ -38,38 +38,38 @@ group 'com.github.tommyettinger'
 // Disable JDK 8's doclint
 // http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
 if (JavaVersion.current().isJava8Compatible()) {
-    allprojects {
-        tasks.withType(Javadoc).tap {
-            configureEach {
-                // The -quiet is because of some sort of weird JDK JavaCompiler bug:
-                // https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
-                options.addStringOption('Xdoclint:none,-missing', '-quiet')
-                options.tags('apiNote:a:"API Note"', 'implSpec:a:"Implementation Requirements"', 'implNote:a:"Implementation Note"')
-            }
-        }
-    }
+	allprojects {
+		tasks.withType(Javadoc).tap {
+			configureEach {
+				// The -quiet is because of some sort of weird JDK JavaCompiler bug:
+				// https://discuss.gradle.org/t/passing-arguments-to-compiler-and-javadoc/1661
+				options.addStringOption('Xdoclint:none,-missing', '-quiet')
+				options.tags('apiNote:a:"API Note"', 'implSpec:a:"Implementation Requirements"', 'implNote:a:"Implementation Note"')
+			}
+		}
+	}
 }
 
 import com.vanniktech.maven.publish.JavaLibrary
 import com.vanniktech.maven.publish.JavadocJar
 
 mavenPublishing {
-    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+	configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
 }
 plainJavadocJar.archiveBaseName.set("$projectName")
 
 java.sourceCompatibility = 1.8
 java.targetCompatibility = 1.8
 
-if(JavaVersion.current().isJava9Compatible()) {
-    compileJava.targetCompatibility = 8
-    allprojects {
-        tasks.withType(JavaCompile).tap {
-            configureEach {
-                options.release.set(8)
-            }
-        }
-    }
+if (JavaVersion.current().isJava9Compatible()) {
+	compileJava.targetCompatibility = 8
+	allprojects {
+		tasks.withType(JavaCompile).tap {
+			configureEach {
+				options.release.set(8)
+			}
+		}
+	}
 }
 
 apply plugin: 'idea'
@@ -78,27 +78,27 @@ idea.module.excludeDirs += [file("docs/")]
 javadoc.options.source("17")
 javadoc.destinationDir = file("docs/apidocs")
 
-sourceSets.test.resources.srcDirs = [ file('src/test/resources').path ]
+sourceSets.test.resources.srcDirs = [file('src/test/resources').path]
 
 jar {
-    archiveBaseName.set(projectName)
-    manifest {
-        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
-    }
+	archiveBaseName.set(projectName)
+	manifest {
+		attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+	}
 }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://jitpack.io' }
+	mavenLocal()
+	mavenCentral()
+	maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    api "com.github.tommyettinger:funderby:$funderbyVersion"
-    api "com.github.tommyettinger:digital:$digitalVersion"
-    api "org.checkerframework:checker-qual:$checkerVersion" // provides nullity annotations
+	api "com.github.tommyettinger:funderby:$funderbyVersion"
+	api "com.github.tommyettinger:digital:$digitalVersion"
+	api "org.checkerframework:checker-qual:$checkerVersion" // provides nullity annotations
 //    api 'com.google.code.findbugs:jsr305:3.0.2' // may cause issues if JDK9+ modules are used
-    testImplementation "com.github.tommyettinger:juniper:$juniperVersion"
-    testImplementation "junit:junit:4.13.2"
+	testImplementation "com.github.tommyettinger:juniper:$juniperVersion"
+	testImplementation "junit:junit:4.13.2"
 }

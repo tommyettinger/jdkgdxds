@@ -47,15 +47,15 @@ public final class Select {
 	/**
 	 * Not instantiable.
 	 */
-	private Select () {
+	private Select() {
 	}
 
-	public static <T> T select (T[] items, Comparator<T> comp, int kthLowest, int size) {
+	public static <T> T select(T[] items, Comparator<T> comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items[idx];
 	}
 
-	public static <T> int selectIndex (T[] items, Comparator<T> comp, int kthLowest, int size) {
+	public static <T> int selectIndex(T[] items, Comparator<T> comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -78,7 +78,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static <T> int fastMin (T[] items, Comparator<T> comp, int size) {
+	private static <T> int fastMin(T[] items, Comparator<T> comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items[i], items[lowestIdx]);
@@ -92,7 +92,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static <T> int fastMax (T[] items, Comparator<T> comp, int size) {
+	private static <T> int fastMax(T[] items, Comparator<T> comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items[i], items[highestIdx]);
@@ -103,12 +103,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static <T> T select (Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int kthLowest, int size) {
+	public static <T> T select(Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static <T> int selectIndex (Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int kthLowest, int size) {
+	public static <T> int selectIndex(Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -131,7 +131,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min.
 	 */
-	private static <T> int fastMin (Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int size) {
+	private static <T> int fastMin(Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -145,7 +145,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max.
 	 */
-	private static <T> int fastMax (Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int size) {
+	private static <T> int fastMax(Arrangeable.ArrangeableList<T> items, Comparator<T> comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
@@ -156,12 +156,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static int select (IntList items, IntComparator comp, int kthLowest, int size) {
+	public static int select(IntList items, IntComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static int selectIndex (IntList items, IntComparator comp, int kthLowest, int size) {
+	public static int selectIndex(IntList items, IntComparator comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -184,7 +184,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static int fastMin (IntList items, IntComparator comp, int size) {
+	private static int fastMin(IntList items, IntComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -198,7 +198,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static int fastMax (IntList items, IntComparator comp, int size) {
+	private static int fastMax(IntList items, IntComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
@@ -209,12 +209,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static long select (LongList items, LongComparator comp, int kthLowest, int size) {
+	public static long select(LongList items, LongComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static int selectIndex (LongList items, LongComparator comp, int kthLowest, int size) {
+	public static int selectIndex(LongList items, LongComparator comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -237,7 +237,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static int fastMin (LongList items, LongComparator comp, int size) {
+	private static int fastMin(LongList items, LongComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -251,7 +251,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static int fastMax (LongList items, LongComparator comp, int size) {
+	private static int fastMax(LongList items, LongComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
@@ -262,12 +262,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static float select (FloatList items, FloatComparator comp, int kthLowest, int size) {
+	public static float select(FloatList items, FloatComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static int selectIndex (FloatList items, FloatComparator comp, int kthLowest, int size) {
+	public static int selectIndex(FloatList items, FloatComparator comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -290,7 +290,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static int fastMin (FloatList items, FloatComparator comp, int size) {
+	private static int fastMin(FloatList items, FloatComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -304,7 +304,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static int fastMax (FloatList items, FloatComparator comp, int size) {
+	private static int fastMax(FloatList items, FloatComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
@@ -315,12 +315,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static double select (DoubleList items, DoubleComparator comp, int kthLowest, int size) {
+	public static double select(DoubleList items, DoubleComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static int selectIndex (DoubleList items, DoubleComparator comp, int kthLowest, int size) {
+	public static int selectIndex(DoubleList items, DoubleComparator comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -343,7 +343,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static int fastMin (DoubleList items, DoubleComparator comp, int size) {
+	private static int fastMin(DoubleList items, DoubleComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -357,7 +357,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static int fastMax (DoubleList items, DoubleComparator comp, int size) {
+	private static int fastMax(DoubleList items, DoubleComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
@@ -368,12 +368,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static short select (ShortList items, ShortComparator comp, int kthLowest, int size) {
+	public static short select(ShortList items, ShortComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static int selectIndex (ShortList items, ShortComparator comp, int kthLowest, int size) {
+	public static int selectIndex(ShortList items, ShortComparator comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -396,7 +396,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static int fastMin (ShortList items, ShortComparator comp, int size) {
+	private static int fastMin(ShortList items, ShortComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -410,7 +410,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static int fastMax (ShortList items, ShortComparator comp, int size) {
+	private static int fastMax(ShortList items, ShortComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
@@ -421,12 +421,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static byte select (ByteList items, ByteComparator comp, int kthLowest, int size) {
+	public static byte select(ByteList items, ByteComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static int selectIndex (ByteList items, ByteComparator comp, int kthLowest, int size) {
+	public static int selectIndex(ByteList items, ByteComparator comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -449,7 +449,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static int fastMin (ByteList items, ByteComparator comp, int size) {
+	private static int fastMin(ByteList items, ByteComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -463,7 +463,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static int fastMax (ByteList items, ByteComparator comp, int size) {
+	private static int fastMax(ByteList items, ByteComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
@@ -474,12 +474,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static char select (CharList items, CharComparator comp, int kthLowest, int size) {
+	public static char select(CharList items, CharComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static int selectIndex (CharList items, CharComparator comp, int kthLowest, int size) {
+	public static int selectIndex(CharList items, CharComparator comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -502,7 +502,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static int fastMin (CharList items, CharComparator comp, int size) {
+	private static int fastMin(CharList items, CharComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -516,7 +516,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static int fastMax (CharList items, CharComparator comp, int size) {
+	private static int fastMax(CharList items, CharComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));
@@ -527,12 +527,12 @@ public final class Select {
 		return highestIdx;
 	}
 
-	public static boolean select (BooleanList items, BooleanComparator comp, int kthLowest, int size) {
+	public static boolean select(BooleanList items, BooleanComparator comp, int kthLowest, int size) {
 		int idx = selectIndex(items, comp, kthLowest, size);
 		return items.get(idx);
 	}
 
-	public static int selectIndex (BooleanList items, BooleanComparator comp, int kthLowest, int size) {
+	public static int selectIndex(BooleanList items, BooleanComparator comp, int kthLowest, int size) {
 		if (size < 1) {
 			throw new RuntimeException("cannot select from empty array (size < 1)");
 		} else if (kthLowest > size) {
@@ -555,7 +555,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = min
 	 */
-	private static int fastMin (BooleanList items, BooleanComparator comp, int size) {
+	private static int fastMin(BooleanList items, BooleanComparator comp, int size) {
 		int lowestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(lowestIdx));
@@ -569,7 +569,7 @@ public final class Select {
 	/**
 	 * Faster than quickselect for n = max
 	 */
-	private static int fastMax (BooleanList items, BooleanComparator comp, int size) {
+	private static int fastMax(BooleanList items, BooleanComparator comp, int size) {
 		int highestIdx = 0;
 		for (int i = 1; i < size; i++) {
 			int comparison = comp.compare(items.get(i), items.get(highestIdx));

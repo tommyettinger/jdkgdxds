@@ -152,7 +152,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * Holds a cached {@link #entrySet()}.
 	 */
 	@Nullable
-	protected transient Set<Map.Entry<K,V>> entrySet;
+	protected transient Set<Map.Entry<K, V>> entrySet;
 
 	/**
 	 * Holds a cached {@link #keySet()}.
@@ -170,7 +170,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * Constructs an empty {@code ObjectObjectMap} with the default initial capacity (16)
 	 * and the default load factor of {@code 0.45}.
 	 */
-	public ObjectObjectMap () {
+	public ObjectObjectMap() {
 		this(DEFAULT_START_SIZE, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -181,7 +181,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 *
 	 * @param initialCapacity the initial capacity
 	 */
-	public ObjectObjectMap (int initialCapacity) {
+	public ObjectObjectMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
@@ -195,7 +195,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 *
 	 * @param loadFactor the load factor
 	 */
-	public ObjectObjectMap (float loadFactor) {
+	public ObjectObjectMap(float loadFactor) {
 		this(DEFAULT_START_SIZE, loadFactor);
 	}
 
@@ -208,10 +208,10 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * space.
 	 *
 	 * @param initialCapacity the initial capacity
-	 * @param loadFactor the load factor
+	 * @param loadFactor      the load factor
 	 */
 	@SuppressWarnings("unchecked")
-	public ObjectObjectMap (int initialCapacity, float loadFactor) {
+	public ObjectObjectMap(int initialCapacity, float loadFactor) {
 		if (initialCapacity <= 0) {
 			throw new IllegalArgumentException("initial capacity must be strictly positive");
 		}
@@ -225,15 +225,15 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		shift = BitConversion.countLeadingZeros(tableSize - 1L);
 		flipThreshold = BitConversion.countTrailingZeros(tableSize) + 4;
 
-		keyTable = (K[])new Object[tableSize];
-		valueTable = (V[])new Object[tableSize];
+		keyTable = (K[]) new Object[tableSize];
+		valueTable = (V[]) new Object[tableSize];
 		this.loadFactor = loadFactor;
-		loadThreshold = (int)(loadFactor * tableSize);
+		loadThreshold = (int) (loadFactor * tableSize);
 
 		regenHashMultipliers(tableSize);
 	}
 
-	public ObjectObjectMap (ObjectObjectMap<? extends K, ? extends V> other) {
+	public ObjectObjectMap(ObjectObjectMap<? extends K, ? extends V> other) {
 		size = other.size;
 		mask = other.mask;
 		shift = other.shift;
@@ -248,11 +248,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public boolean containsKey (Object key) {
-		if(key == null) return false;
-		if(flipThreshold == 0){
+	public boolean containsKey(Object key) {
+		if (key == null) return false;
+		if (flipThreshold == 0) {
 			K[] keyTable = this.keyTable;
-			for (int i = (int)(key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
+			for (int i = (int) (key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
 				K other = keyTable[i];
 				if (key.equals(other))
 					return true;
@@ -262,21 +262,21 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 		final int hc = key.hashCode();
 
-		return key == keyTable[(int)(hashMultiplier1 * hc >>> shift) | 1] ||
-			key == keyTable[(int)(hashMultiplier2 * hc >>> shift) & -2];
+		return key == keyTable[(int) (hashMultiplier1 * hc >>> shift) | 1] ||
+			key == keyTable[(int) (hashMultiplier2 * hc >>> shift) & -2];
 	}
 
 	@Override
-	public V get (Object key) {
+	public V get(Object key) {
 		return getOrDefault(key, defaultValue);
 	}
 
-	public V getOrDefault (Object key, @Nullable V defaultValue) {
-		if(key == null) return defaultValue;
+	public V getOrDefault(Object key, @Nullable V defaultValue) {
+		if (key == null) return defaultValue;
 
-		if(flipThreshold == 0){
+		if (flipThreshold == 0) {
 			K[] keyTable = this.keyTable;
-			for (int i = (int)(key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
+			for (int i = (int) (key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
 				K other = keyTable[i];
 				if (key.equals(other))
 					return valueTable[i];
@@ -285,12 +285,12 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			}
 		}
 		int hc = key.hashCode();
-		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+		int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 		if (key == keyTable[hr1]) {
 			return valueTable[hr1];
 		}
 
-		int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+		int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 		if (key == keyTable[hr2]) {
 			return valueTable[hr2];
 		}
@@ -299,10 +299,10 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public V put (K key, V value) {
-		if(key == null) throw new NullPointerException("ObjectObjectMap does not permit null keys.");
+	public V put(K key, V value) {
+		if (key == null) throw new NullPointerException("ObjectObjectMap does not permit null keys.");
 
-		if(flipThreshold == 0) {
+		if (flipThreshold == 0) {
 			int i = locateKey(key);
 			if (i >= 0) { // Existing key was found.
 				V oldValue = valueTable[i];
@@ -312,19 +312,21 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			i = ~i; // Empty space was found.
 			keyTable[i] = key;
 			valueTable[i] = value;
-			if (++size >= loadThreshold) {resize(keyTable.length << 1);}
+			if (++size >= loadThreshold) {
+				resize(keyTable.length << 1);
+			}
 			return defaultValue;
 		}
 
 		boolean absent = true;
 		V old = defaultValue;
 		int hc = key.hashCode();
-		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+		int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 		if (key == keyTable[hr1]) {
 			old = valueTable[hr1];
 			absent = false;
 		} else {
-			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+			int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 			if (key == keyTable[hr2]) {
 				old = valueTable[hr2];
 				absent = false;
@@ -349,7 +351,9 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			i = ~i; // Empty space was found.
 			keyTable[i] = key;
 			valueTable[i] = value;
-			if (++size >= loadThreshold) {resize(keyTable.length << 1);}
+			if (++size >= loadThreshold) {
+				resize(keyTable.length << 1);
+			}
 			return old;
 		}
 
@@ -364,20 +368,21 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	/**
 	 * Attempts to place the given key and value, but is permitted to fail. If this fails, it returns a displaced key
 	 * and assigns its displaced value to {@link #displacedValue}.
+	 *
 	 * @return the key we failed to move because of collisions or <tt>null</tt> if
 	 * successful.
 	 */
-	protected K putSafe (K key, V value) {
+	protected K putSafe(K key, V value) {
 		int loop = 0;
 		while (loop++ < flipThreshold) {
 			int hc = key.hashCode();
-			int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+			int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 			K k1 = keyTable[hr1];
 			if (k1 == null || key == k1) {
 				valueTable[hr1] = value;
 				return null;
 			}
-			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+			int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 			K k2 = keyTable[hr2];
 			if (k2 == null || key == k2) {
 				valueTable[hr2] = value;
@@ -397,20 +402,22 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public V remove (Object key) {
+	public V remove(Object key) {
 		if (key == null)
 			return null;
 
-		if(flipThreshold == 0) {
+		if (flipThreshold == 0) {
 			int i = locateKey(key);
-			if (i < 0) {return defaultValue;}
+			if (i < 0) {
+				return defaultValue;
+			}
 			K[] keyTable = this.keyTable;
 			V[] valueTable = this.valueTable;
 			K rem;
 			V oldValue = valueTable[i];
 			int mask = this.mask, next = i + 1 & mask;
 			while ((rem = keyTable[next]) != null) {
-				int placement = (int)(rem.hashCode() * hashMultiplier1 >>> shift);
+				int placement = (int) (rem.hashCode() * hashMultiplier1 >>> shift);
 				if ((next - placement & mask) > (i - placement & mask)) {
 					keyTable[i] = rem;
 					valueTable[i] = valueTable[next];
@@ -425,7 +432,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 
 		int hc = key.hashCode();
-		int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+		int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 		V oldValue = null;
 
 		if (key == keyTable[hr1]) {
@@ -434,7 +441,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			valueTable[hr1] = null;
 			size--;
 		} else {
-			int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+			int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 			if (key == keyTable[hr2]) {
 				oldValue = valueTable[hr2];
 				keyTable[hr2] = null;
@@ -447,7 +454,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		size = 0;
 		Arrays.fill(keyTable, null);
 		Arrays.fill(valueTable, null);
@@ -460,7 +467,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * @return the current default value
 	 */
 	@Nullable
-	public V getDefaultValue () {
+	public V getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -471,7 +478,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 *
 	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (@Nullable V defaultValue) {
+	public void setDefaultValue(@Nullable V defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -480,14 +487,15 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * {@code modifier} to determine which multipliers to choose. This draws multipliers exactly from
 	 * {@link Utilities#GOOD_MULTIPLIERS}, with {@code hashMultiplier1} receiving a value from the first 256 items in
 	 * that table, and {@code hashMultiplier2} receiving a value from the last 256 items.
+	 *
 	 * @param modifier usually refers to a new size of table when they are being resized (but doesn't have to)
 	 */
 	protected void regenHashMultipliers(int modifier) {
 		//This is close to a kind of Xor-Square-Or pattern, or XQO, that (if modifier weren't added) would be a passable
 		//random number generator. The result is used to select one of 256 possible long values for hashMultiplier1, and
 		//a different result selects from a different 256 possible long values for hashMultiplier2.
-		int idx1 = (int)(-(hashMultiplier2 ^ ((modifier + hashMultiplier2) * hashMultiplier2 | 5L)) >>> 56);
-		int idx2 = (int)(-(hashMultiplier1 ^ ((modifier + hashMultiplier1) * hashMultiplier1 | 7L)) >>> 56) | 256;
+		int idx1 = (int) (-(hashMultiplier2 ^ ((modifier + hashMultiplier2) * hashMultiplier2 | 5L)) >>> 56);
+		int idx2 = (int) (-(hashMultiplier1 ^ ((modifier + hashMultiplier1) * hashMultiplier1 | 7L)) >>> 56) | 256;
 		hashMultiplier1 = Utilities.GOOD_MULTIPLIERS[idx1];
 		hashMultiplier2 = Utilities.GOOD_MULTIPLIERS[idx2];
 	}
@@ -497,7 +505,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * we currently contain.
 	 */
 	protected void resize() {
-		if(size == 0) return;
+		if (size == 0) return;
 		int newSize = keyTable.length;
 		do {
 			newSize <<= 1;
@@ -506,24 +514,26 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 
 	@SuppressWarnings("unchecked")
 	protected boolean resize(final int newSize) {
-		if(size == 0) return true;
-		if(flipThreshold == 0) {
+		if (size == 0) return true;
+		if (flipThreshold == 0) {
 			int oldCapacity = keyTable.length;
-			loadThreshold = (int)(newSize * loadFactor);
+			loadThreshold = (int) (newSize * loadFactor);
 			mask = newSize - 1;
 			shift = BitConversion.countLeadingZeros(newSize - 1L);
 
-			hashMultiplier1 = Utilities.GOOD_MULTIPLIERS[(int)(hashMultiplier1 >>> 48 + shift) & 511];
+			hashMultiplier1 = Utilities.GOOD_MULTIPLIERS[(int) (hashMultiplier1 >>> 48 + shift) & 511];
 			K[] oldKeyTable = keyTable;
 			V[] oldValueTable = valueTable;
 
-			keyTable = (K[])new Object[newSize];
-			valueTable = (V[])new Object[newSize];
+			keyTable = (K[]) new Object[newSize];
+			valueTable = (V[]) new Object[newSize];
 
 			if (size > 0) {
 				for (int i = 0; i < oldCapacity; i++) {
 					K key = oldKeyTable[i];
-					if (key != null) {putResize(key, oldValueTable[i]);}
+					if (key != null) {
+						putResize(key, oldValueTable[i]);
+					}
 				}
 			}
 			return true;
@@ -537,11 +547,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(newSize - 1L);
 		flipThreshold = BitConversion.countTrailingZeros(newSize) + 4;
-		loadThreshold = (int)(loadFactor * newSize);
+		loadThreshold = (int) (loadFactor * newSize);
 
 		// Already point keyTable and valueTable to the new tables since putSafe operates on them.
-		keyTable = (K[])new Object[newSize];
-		valueTable = (V[])new Object[newSize];
+		keyTable = (K[]) new Object[newSize];
+		valueTable = (V[]) new Object[newSize];
 
 		regenHashMultipliers(newSize);
 
@@ -555,7 +565,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 					mask = keyTable.length - 1;
 					shift = BitConversion.countLeadingZeros(newSize - 1L);
 					flipThreshold = BitConversion.countTrailingZeros(keyTable.length) + 4;
-					loadThreshold = (int)(loadFactor * keyTable.length);
+					loadThreshold = (int) (loadFactor * keyTable.length);
 					return false;
 				}
 			}
@@ -582,7 +592,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 
 		loadFactor = (float) Math.sqrt(loadFactor);
 		flipThreshold = 0;
-		loadThreshold = (int)(loadFactor * keyTable.length);
+		loadThreshold = (int) (loadFactor * keyTable.length);
 		size = 0;
 
 		for (int i = 0; i < oldK.length; i++) {
@@ -593,24 +603,24 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
 	@Override
-	public void putAll (Map<? extends K, ? extends V> m) {
+	public void putAll(Map<? extends K, ? extends V> m) {
 		for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
 			put(entry.getKey(), entry.getValue());
 		}
 	}
 
 	@Override
-	public boolean containsValue (Object value) {
+	public boolean containsValue(Object value) {
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null && Objects.equals(valueTable[i], value)) {
 				return true;
@@ -625,9 +635,9 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * @param key a non-null K key
 	 * @return a negative index if the key was not found, or the non-negative index of the existing key if found
 	 */
-	protected int locateKey (Object key) {
+	protected int locateKey(Object key) {
 		K[] keyTable = this.keyTable;
-		for (int i = (int)(key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
+		for (int i = (int) (key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
 			K other = keyTable[i];
 			if (key.equals(other))
 				return i; // Same key was found.
@@ -640,9 +650,9 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * Puts key and value but skips checks for existing keys, and doesn't increment size. Meant for use during
 	 * {@link #resize(int)}, hence the name, when using linear probing.
 	 */
-	protected void putResize (K key, @Nullable V value) {
+	protected void putResize(K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
-		for (int i = (int)(key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
+		for (int i = (int) (key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
 				keyTable[i] = key;
 				valueTable[i] = value;
@@ -652,36 +662,39 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public @NonNull Set<Map.Entry<K, V>> entrySet () {
-		Set<Map.Entry<K,V>> entries;
+	public @NonNull Set<Map.Entry<K, V>> entrySet() {
+		Set<Map.Entry<K, V>> entries;
 		return (entries = entrySet) == null ? (entrySet = new EntrySet<>(this)) : entries;
 	}
 
 	/**
 	 * Just a {@link Map.Entry} with a mutable key and a mutable value, so it can be reused.
+	 *
 	 * @param <K> Should match the {@code K} of a Map that contains this Entry
 	 * @param <V> Should match the {@code V} of a Map that contains this Entry
 	 */
 	public static class Entry<K, V> implements Map.Entry<K, V> {
-		@Nullable public K key;
-		@Nullable public V value;
+		@Nullable
+		public K key;
+		@Nullable
+		public V value;
 
-		public Entry () {
+		public Entry() {
 		}
 
-		public Entry (@Nullable K key, @Nullable V value) {
+		public Entry(@Nullable K key, @Nullable V value) {
 			this.key = key;
 			this.value = value;
 		}
 
-		public Entry (Map.Entry<? extends K, ? extends V> entry) {
+		public Entry(Map.Entry<? extends K, ? extends V> entry) {
 			key = entry.getKey();
 			value = entry.getValue();
 		}
 
 		@Override
 		@Nullable
-		public String toString () {
+		public String toString() {
 			return key + "=" + value;
 		}
 
@@ -694,7 +707,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public K getKey () {
+		public K getKey() {
 			Objects.requireNonNull(key);
 			return key;
 		}
@@ -711,7 +724,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 */
 		@Override
 		@Nullable
-		public V getValue () {
+		public V getValue() {
 			return value;
 		}
 
@@ -737,25 +750,31 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 */
 		@Override
 		@Nullable
-		public V setValue (V value) {
+		public V setValue(V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals (@Nullable Object o) {
-			if (this == o) {return true;}
-			if (o == null || getClass() != o.getClass()) {return false;}
+		public boolean equals(@Nullable Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
 
-			Entry<?, ?> entry = (Entry<?, ?>)o;
+			Entry<?, ?> entry = (Entry<?, ?>) o;
 
-			if (!Objects.equals(key, entry.key)) {return false;}
+			if (!Objects.equals(key, entry.key)) {
+				return false;
+			}
 			return Objects.equals(value, entry.value);
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int result = key != null ? key.hashCode() : 0;
 			result = 31 * result + (value != null ? value.hashCode() : 0);
 			return result;
@@ -766,15 +785,18 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * A Set of {@link Map.Entry} that is closely tied to a map, and represents the K,V entries in that map.
 	 * You normally create an EntrySet via {@link #entrySet()}, but you can also call the constructor yourself if you
 	 * want to iterate over the same map at the same time at different rates.
+	 *
 	 * @param <K> Should match the {@code K} of the related map
 	 * @param <V> Should match the {@code V} of the related map
 	 */
 	public static class EntrySet<K, V> extends AbstractSet<Map.Entry<K, V>> {
 
 		protected final ObjectObjectMap<K, V> map;
+
 		public EntrySet(ObjectObjectMap<K, V> map) {
 			this.map = map;
 		}
+
 		/**
 		 * Returns an iterator over the elements contained in this collection.
 		 *
@@ -806,13 +828,13 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = -1;
 			nextIndex = -1;
 			findNextIndex();
 		}
 
-		protected void findNextIndex () {
+		protected void findNextIndex() {
 			K[] keyTable = map.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
@@ -829,9 +851,13 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return a reused Entry that will have its key and value set to the next pair
 		 */
 		@Override
-		public Map.Entry<K, V> next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public Map.Entry<K, V> next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			K[] keyTable = map.keyTable;
 			entry.key = keyTable[nextIndex];
 			entry.value = map.valueTable[nextIndex];
@@ -841,24 +867,28 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 
 		@Override
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
-			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
+			if (i < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			K[] keyTable = map.keyTable;
 			V[] valueTable = map.valueTable;
 
-			if(map.flipThreshold == 0) {
+			if (map.flipThreshold == 0) {
 				final long hashMultiplier1 = map.hashMultiplier1;
 				K rem;
 				int mask = map.mask, next = i + 1 & mask, shift = map.shift;
 				while ((rem = keyTable[next]) != null) {
-					int placement = (int)(rem.hashCode() * hashMultiplier1 >>> shift);
+					int placement = (int) (rem.hashCode() * hashMultiplier1 >>> shift);
 					if ((next - placement & mask) > (i - placement & mask)) {
 						keyTable[i] = rem;
 						valueTable[i] = valueTable[next];
@@ -869,29 +899,35 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 				keyTable[i] = null;
 				valueTable[i] = null;
 				map.size--;
-				if (i != currentIndex) {--nextIndex;}
+				if (i != currentIndex) {
+					--nextIndex;
+				}
 				currentIndex = -1;
 				return;
 			}
 			K key = keyTable[i];
 			final long hashMultiplier1 = map.hashMultiplier1, hashMultiplier2 = map.hashMultiplier2;
 			int hc = key.hashCode(), shift = map.shift;
-			int hr1 = (int)(hashMultiplier1 * hc >>> shift) | 1;
+			int hr1 = (int) (hashMultiplier1 * hc >>> shift) | 1;
 
 			if (key == keyTable[hr1]) {
 				keyTable[hr1] = null;
 				valueTable[hr1] = null;
 				map.size--;
-				if (i != currentIndex) {--nextIndex;}
+				if (i != currentIndex) {
+					--nextIndex;
+				}
 				currentIndex = -1;
 
 			} else {
-				int hr2 = (int)(hashMultiplier2 * hc >>> shift) & -2;
+				int hr2 = (int) (hashMultiplier2 * hc >>> shift) & -2;
 				if (key == keyTable[hr2]) {
 					keyTable[hr2] = null;
 					valueTable[hr2] = null;
 					map.size--;
-					if (i != currentIndex) {--nextIndex;}
+					if (i != currentIndex) {
+						--nextIndex;
+					}
 					currentIndex = -1;
 				}
 			}
@@ -910,6 +946,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 
 	public static class KeySet<K> extends AbstractSet<K> {
 		ObjectObjectMap<K, ?> map;
+
 		public KeySet(ObjectObjectMap<K, ?> map) {
 			this.map = map;
 		}
@@ -935,18 +972,19 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 	}
 
-    public @NonNull Set<K> keySet() {
-        Set<K> ks = keySet;
-        if (ks == null) {
-            ks = new KeySet<>(this);
+	public @NonNull Set<K> keySet() {
+		Set<K> ks = keySet;
+		if (ks == null) {
+			ks = new KeySet<>(this);
 			keySet = ks;
-        }
-        return ks;
-    }
+		}
+		return ks;
+	}
 
 
 	public static class ValueCollection<V> extends AbstractCollection<V> {
 		ObjectObjectMap<?, V> map;
+
 		public ValueCollection(ObjectObjectMap<?, V> map) {
 			this.map = map;
 		}
@@ -973,13 +1011,13 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	public @NonNull Collection<V> values() {
-        Collection<V> vals = values;
-        if (vals == null) {
-            vals = new ValueCollection<>(this);
-            values = vals;
-        }
-        return vals;
-    }
+		Collection<V> vals = values;
+		if (vals == null) {
+			vals = new ValueCollection<>(this);
+			values = vals;
+		}
+		return vals;
+	}
 
 
 	protected static class KeyIterator<K> implements Iterable<K>, Iterator<K> {
@@ -1007,10 +1045,11 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an Iterator.
 		 */
 		@Override
-		public @NonNull Iterator<K> iterator () {
+		public @NonNull Iterator<K> iterator() {
 			return this;
 		}
 	}
+
 	protected static class ValueIterator<V> implements Iterator<V>, Iterable<V> {
 		protected final Iterator<? extends Map.Entry<?, V>> iter;
 
@@ -1036,7 +1075,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an Iterator.
 		 */
 		@Override
-		public @NonNull Iterator<V> iterator () {
+		public @NonNull Iterator<V> iterator() {
 			return this;
 		}
 	}

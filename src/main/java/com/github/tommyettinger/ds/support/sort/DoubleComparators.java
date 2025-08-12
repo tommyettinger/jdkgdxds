@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -25,7 +26,7 @@ import java.util.Comparator;
  * comparators.
  */
 public final class DoubleComparators {
-	private DoubleComparators () {
+	private DoubleComparators() {
 	}
 
 	/**
@@ -34,12 +35,12 @@ public final class DoubleComparators {
 	protected static class NaturalImplicitComparator implements DoubleComparator {
 
 		@Override
-		public final int compare (final double a, final double b) {
+		public final int compare(final double a, final double b) {
 			return Double.compare(a, b);
 		}
 
 		@Override
-		public DoubleComparator reversed () {
+		public DoubleComparator reversed() {
 			return OPPOSITE_COMPARATOR;
 		}
 	}
@@ -52,12 +53,12 @@ public final class DoubleComparators {
 	protected static class OppositeImplicitComparator implements DoubleComparator {
 
 		@Override
-		public final int compare (final double a, final double b) {
+		public final int compare(final double a, final double b) {
 			return Double.compare(b, a);
 		}
 
 		@Override
-		public DoubleComparator reversed () {
+		public DoubleComparator reversed() {
 			return NATURAL_COMPARATOR;
 		}
 	}
@@ -68,17 +69,17 @@ public final class DoubleComparators {
 
 		final DoubleComparator comparator;
 
-		protected OppositeComparator (final DoubleComparator c) {
+		protected OppositeComparator(final DoubleComparator c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final double a, final double b) {
+		public final int compare(final double a, final double b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final DoubleComparator reversed () {
+		public final DoubleComparator reversed() {
 			return comparator;
 		}
 	}
@@ -89,8 +90,10 @@ public final class DoubleComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static DoubleComparator oppositeComparator (final DoubleComparator c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
+	public static DoubleComparator oppositeComparator(final DoubleComparator c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator) c).comparator;
+		}
 		return new OppositeComparator(c);
 	}
 
@@ -101,17 +104,19 @@ public final class DoubleComparators {
 	 * @param c a comparator, or {@code null}.
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
-	public static DoubleComparator asDoubleComparator (final Comparator<? super Double> c) {
-		if (c instanceof DoubleComparator) {return (DoubleComparator)c;}
+	public static DoubleComparator asDoubleComparator(final Comparator<? super Double> c) {
+		if (c instanceof DoubleComparator) {
+			return (DoubleComparator) c;
+		}
 		return new DoubleComparator() {
 			@Override
-			public int compare (double x, double y) {
+			public int compare(double x, double y) {
 				return c.compare(Double.valueOf(x), Double.valueOf(y));
 			}
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public int compare (Double x, Double y) {
+			public int compare(Double x, Double y) {
 				return c.compare(x, y);
 			}
 		};
@@ -122,17 +127,17 @@ public final class DoubleComparators {
 		public final double tolerance;
 		protected final DoubleComparator reverse;
 
-		public TolerantComparator () {
+		public TolerantComparator() {
 			this(0.000001f);
 		}
 
-		public TolerantComparator (double tolerance) {
+		public TolerantComparator(double tolerance) {
 			this.tolerance = tolerance;
 			reverse = oppositeComparator(this);
 		}
 
 		@Override
-		public int compare (double k1, double k2) {
+		public int compare(double k1, double k2) {
 			final double diff = k1 - k2;
 			if (diff <= tolerance && diff >= -tolerance)
 				return 0;
@@ -146,7 +151,7 @@ public final class DoubleComparators {
 		}
 
 		@Override
-		public DoubleComparator reversed () {
+		public DoubleComparator reversed() {
 			return reverse;
 		}
 	}
@@ -163,13 +168,13 @@ public final class DoubleComparators {
 	 * @param tolerance how much tolerance is acceptable when comparing two doubles as equal
 	 * @return the new DoubleComparator
 	 */
-	public static DoubleComparator tolerantComparator (double tolerance) {
+	public static DoubleComparator tolerantComparator(double tolerance) {
 		return new TolerantComparator(tolerance);
 	}
 
 	/// The remainder of the code is based on FastUtil.
 
-	private static void swap (double[] items, int first, int second) {
+	private static void swap(double[] items, int first, int second) {
 		double firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -181,10 +186,14 @@ public final class DoubleComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static void inPlaceMerge (double[] items, final int from, int mid, final int to, final DoubleComparator comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static void inPlaceMerge(double[] items, final int from, int mid, final int to, final DoubleComparator comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -205,13 +214,19 @@ public final class DoubleComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -232,7 +247,7 @@ public final class DoubleComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static int lowerBound (double[] items, int from, final int to, final int pos, final DoubleComparator comp) {
+	private static int lowerBound(double[] items, int from, final int to, final int pos, final DoubleComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -260,7 +275,7 @@ public final class DoubleComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static int upperBound (double[] items, int from, final int to, final int pos, final DoubleComparator comp) {
+	private static int upperBound(double[] items, int from, final int to, final int pos, final DoubleComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -282,7 +297,7 @@ public final class DoubleComparators {
 	 * @param items the double array to be sorted
 	 * @param c     a DoubleComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (double[] items, final @Nullable DoubleComparator c) {
+	public static void sort(double[] items, final @Nullable DoubleComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -304,7 +319,7 @@ public final class DoubleComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a DoubleComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (double[] items, final int from, final int to, final @Nullable DoubleComparator c) {
+	public static void sort(double[] items, final int from, final int to, final @Nullable DoubleComparator c) {
 		if (to <= 0) {
 			return;
 		}
@@ -341,7 +356,9 @@ public final class DoubleComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

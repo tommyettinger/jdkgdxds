@@ -73,7 +73,7 @@ public class AllGoldenPointHashTest {
 		}
 		System.out.println(collisions.size() + "/" + LEN + " hashes are unique.");
 //		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));
-		final long THRESHOLD = (long)((double)LEN * (double) LEN / (0.125 * collisions.size()));
+		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.125 * collisions.size()));
 
 		final int[] problems = {0};
 		final int COUNT = 512;
@@ -94,11 +94,11 @@ public class AllGoldenPointHashTest {
 
 					@Override
 					protected int place(@NonNull Object item) {
-						return (int)(item.hashCode() * hm >>> shift);
+						return (int) (item.hashCode() * hm >>> shift);
 					}
 
 					@Override
-					protected void addResize (@NonNull Object key) {
+					protected void addResize(@NonNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -113,9 +113,9 @@ public class AllGoldenPointHashTest {
 					}
 
 					@Override
-					protected void resize (int newSize) {
+					protected void resize(int newSize) {
 						int oldCapacity = keyTable.length;
-						threshold = (int)(newSize * loadFactor);
+						threshold = (int) (newSize * loadFactor);
 						mask = newSize - 1;
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -145,7 +145,7 @@ public class AllGoldenPointHashTest {
 //						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 //						int index = (int)(hm >>> 48 + shift) & 511;
 //						int index = (int)(hm * shift >>> 10) & 511;
-						int index = (int)(hm * shift >>> 5) & 511;
+						int index = (int) (hm * shift >>> 5) & 511;
 						chosen[index]++;
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
 						hm = LongUtilities.GOOD_MULTIPLIERS[index];
@@ -159,7 +159,9 @@ public class AllGoldenPointHashTest {
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
 								Object key = oldKeyTable[i];
-								if (key != null) {addResize(key);}
+								if (key != null) {
+									addResize(key);
+								}
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
@@ -172,7 +174,7 @@ public class AllGoldenPointHashTest {
 					}
 
 					@Override
-					public void clear () {
+					public void clear() {
 						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + good.get(g));
 						minMax[0] = Math.min(minMax[0], collisionTotal);
@@ -192,7 +194,7 @@ public class AllGoldenPointHashTest {
 					for (int i = 0, n = spiral.length; i < n; i++) {
 						set.add(spiral[i]);
 					}
-				}catch (RuntimeException ignored){
+				} catch (RuntimeException ignored) {
 					System.out.println(g + " FAILURE");
 					continue;
 				}
@@ -211,8 +213,8 @@ public class AllGoldenPointHashTest {
 
 		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x"+Base.BASE16.unsigned(good.keyAt(i))+"=0x"+Base.BASE16.unsigned(good.getAt(i))+", ");
-			if((i & 7) == 7)
+			System.out.print("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "=0x" + Base.BASE16.unsigned(good.getAt(i)) + ", ");
+			if ((i & 7) == 7)
 				System.out.println();
 		}
 		System.out.println("};\n");

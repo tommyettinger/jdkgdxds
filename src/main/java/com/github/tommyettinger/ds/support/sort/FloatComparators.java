@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -25,7 +26,7 @@ import java.util.Comparator;
  * comparators.
  */
 public final class FloatComparators {
-	private FloatComparators () {
+	private FloatComparators() {
 	}
 
 	/**
@@ -34,12 +35,12 @@ public final class FloatComparators {
 	protected static class NaturalImplicitComparator implements FloatComparator {
 
 		@Override
-		public final int compare (final float a, final float b) {
+		public final int compare(final float a, final float b) {
 			return Float.compare(a, b);
 		}
 
 		@Override
-		public FloatComparator reversed () {
+		public FloatComparator reversed() {
 			return OPPOSITE_COMPARATOR;
 		}
 	}
@@ -52,12 +53,12 @@ public final class FloatComparators {
 	protected static class OppositeImplicitComparator implements FloatComparator {
 
 		@Override
-		public final int compare (final float a, final float b) {
+		public final int compare(final float a, final float b) {
 			return Float.compare(b, a);
 		}
 
 		@Override
-		public FloatComparator reversed () {
+		public FloatComparator reversed() {
 			return NATURAL_COMPARATOR;
 		}
 	}
@@ -68,17 +69,17 @@ public final class FloatComparators {
 
 		final FloatComparator comparator;
 
-		protected OppositeComparator (final FloatComparator c) {
+		protected OppositeComparator(final FloatComparator c) {
 			comparator = c;
 		}
 
 		@Override
-		public final int compare (final float a, final float b) {
+		public final int compare(final float a, final float b) {
 			return comparator.compare(b, a);
 		}
 
 		@Override
-		public final FloatComparator reversed () {
+		public final FloatComparator reversed() {
 			return comparator;
 		}
 	}
@@ -89,8 +90,10 @@ public final class FloatComparators {
 	 * @param c a comparator.
 	 * @return a comparator representing the opposite order of {@code c}.
 	 */
-	public static FloatComparator oppositeComparator (final FloatComparator c) {
-		if (c instanceof OppositeComparator) {return ((OppositeComparator)c).comparator;}
+	public static FloatComparator oppositeComparator(final FloatComparator c) {
+		if (c instanceof OppositeComparator) {
+			return ((OppositeComparator) c).comparator;
+		}
 		return new OppositeComparator(c);
 	}
 
@@ -101,17 +104,19 @@ public final class FloatComparators {
 	 * @param c a comparator, or {@code null}.
 	 * @return a type-specific comparator representing the order of {@code c}.
 	 */
-	public static FloatComparator asFloatComparator (final Comparator<? super Float> c) {
-		if (c instanceof FloatComparator) {return (FloatComparator)c;}
+	public static FloatComparator asFloatComparator(final Comparator<? super Float> c) {
+		if (c instanceof FloatComparator) {
+			return (FloatComparator) c;
+		}
 		return new FloatComparator() {
 			@Override
-			public int compare (float x, float y) {
+			public int compare(float x, float y) {
 				return c.compare(Float.valueOf(x), Float.valueOf(y));
 			}
 
 			@SuppressWarnings("deprecation")
 			@Override
-			public int compare (Float x, Float y) {
+			public int compare(Float x, Float y) {
 				return c.compare(x, y);
 			}
 		};
@@ -122,17 +127,17 @@ public final class FloatComparators {
 		public final float tolerance;
 		protected final FloatComparator reverse;
 
-		public TolerantComparator () {
+		public TolerantComparator() {
 			this(0.000001f);
 		}
 
-		public TolerantComparator (float tolerance) {
+		public TolerantComparator(float tolerance) {
 			this.tolerance = tolerance;
 			reverse = oppositeComparator(this);
 		}
 
 		@Override
-		public int compare (float k1, float k2) {
+		public int compare(float k1, float k2) {
 			final float diff = k1 - k2;
 			if (diff <= tolerance && diff >= -tolerance)
 				return 0;
@@ -146,7 +151,7 @@ public final class FloatComparators {
 		}
 
 		@Override
-		public FloatComparator reversed () {
+		public FloatComparator reversed() {
 			return reverse;
 		}
 	}
@@ -163,13 +168,13 @@ public final class FloatComparators {
 	 * @param tolerance how much tolerance is acceptable when comparing two floats as equal
 	 * @return the new FloatComparator
 	 */
-	public static FloatComparator tolerantComparator (float tolerance) {
+	public static FloatComparator tolerantComparator(float tolerance) {
 		return new TolerantComparator(tolerance);
 	}
 
 	/// The remainder of the code is based on FastUtil.
 
-	private static void swap (float[] items, int first, int second) {
+	private static void swap(float[] items, int first, int second) {
 		float firstValue = items[first];
 		items[first] = items[second];
 		items[second] = firstValue;
@@ -181,10 +186,14 @@ public final class FloatComparators {
 	 * {@code [first..last)}. Elements in the first input range will precede equal elements in
 	 * the second.
 	 */
-	private static void inPlaceMerge (float[] items, final int from, int mid, final int to, final FloatComparator comp) {
-		if (from >= mid || mid >= to) {return;}
+	private static void inPlaceMerge(float[] items, final int from, int mid, final int to, final FloatComparator comp) {
+		if (from >= mid || mid >= to) {
+			return;
+		}
 		if (to - from == 2) {
-			if (comp.compare(items[mid], items[from]) < 0) {swap(items, from, mid);}
+			if (comp.compare(items[mid], items[from]) < 0) {
+				swap(items, from, mid);
+			}
 			return;
 		}
 
@@ -205,13 +214,19 @@ public final class FloatComparators {
 		if (middle2 != first2 && middle2 != last2) {
 			int first1 = first2;
 			int last1 = middle2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = middle2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 			first1 = first2;
 			last1 = last2;
-			while (first1 < --last1) {swap(items, first1++, last1);}
+			while (first1 < --last1) {
+				swap(items, first1++, last1);
+			}
 		}
 
 		mid = firstCut + secondCut - mid;
@@ -232,7 +247,7 @@ public final class FloatComparators {
 	 * @return the largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(j), get(pos))} is {@code true}.
 	 */
-	private static int lowerBound (float[] items, int from, final int to, final int pos, final FloatComparator comp) {
+	private static int lowerBound(float[] items, int from, final int to, final int pos, final FloatComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -260,7 +275,7 @@ public final class FloatComparators {
 	 * @return The largest index i such that, for every j in the range {@code [first..i)},
 	 * {@code comp.compare(get(pos), get(j))} is {@code false}.
 	 */
-	private static int upperBound (float[] items, int from, final int to, final int pos, final FloatComparator comp) {
+	private static int upperBound(float[] items, int from, final int to, final int pos, final FloatComparator comp) {
 		int len = to - from;
 		while (len > 0) {
 			int half = len / 2;
@@ -282,7 +297,7 @@ public final class FloatComparators {
 	 * @param items the float array to be sorted
 	 * @param c     a FloatComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (float[] items, final @Nullable FloatComparator c) {
+	public static void sort(float[] items, final @Nullable FloatComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -304,7 +319,7 @@ public final class FloatComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a FloatComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort (float[] items, final int from, final int to, final @Nullable FloatComparator c) {
+	public static void sort(float[] items, final int from, final int to, final @Nullable FloatComparator c) {
 		if (to <= 0) {
 			return;
 		}
@@ -341,7 +356,9 @@ public final class FloatComparators {
 
 		// If list is already sorted, nothing left to do. This is an
 		// optimization that results in faster sorts for nearly ordered lists.
-		if (c.compare(items[mid - 1], items[mid]) <= 0) {return;}
+		if (c.compare(items[mid - 1], items[mid]) <= 0) {
+			return;
+		}
 
 		// Merge sorted halves
 		inPlaceMerge(items, from, mid, to, c);

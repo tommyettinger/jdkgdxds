@@ -31,7 +31,7 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public EnumLongMap () {
+	public EnumLongMap() {
 		super();
 	}
 
@@ -41,7 +41,7 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public EnumLongMap (int initialCapacity) {
+	public EnumLongMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -52,7 +52,7 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public EnumLongMap (int initialCapacity, float loadFactor) {
+	public EnumLongMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -61,7 +61,7 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	 *
 	 * @param map an ObjectLongMap to copy, or a subclass such as this one
 	 */
-	public EnumLongMap (ObjectLongMap<? extends K> map) {
+	public EnumLongMap(ObjectLongMap<? extends K> map) {
 		super(map);
 	}
 
@@ -72,7 +72,7 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public EnumLongMap (K[] keys, long[] values) {
+	public EnumLongMap(K[] keys, long[] values) {
 		super(keys, values);
 	}
 
@@ -83,26 +83,26 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public EnumLongMap (Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
+	public EnumLongMap(Collection<? extends K> keys, PrimitiveCollection.OfLong values) {
 		super(keys, values);
 	}
 
 	@Override
-	protected int place (Object item) {
+	protected int place(Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
-			return ((Enum<?>)item).ordinal() & mask;
+			return ((Enum<?>) item).ordinal() & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
@@ -119,18 +119,26 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 
 	@SuppressWarnings({"rawtypes"})
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof EnumLongMap)) {return false;}
-		EnumLongMap other = (EnumLongMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof EnumLongMap)) {
+			return false;
+		}
+		EnumLongMap other = (EnumLongMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		Enum[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			Enum key = keyTable[i];
 			if (key != null) {
 				long value = valueTable[i];
-				if (value != other.get(key)) {return false;}
+				if (value != other.get(key)) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -145,7 +153,7 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K extends Enum<K>> EnumLongMap<K> with (K key0, Number value0) {
+	public static <K extends Enum<K>> EnumLongMap<K> with(K key0, Number value0) {
 		EnumLongMap<K> map = new EnumLongMap<>(1);
 		map.put(key0, value0.longValue());
 		return map;
@@ -166,12 +174,12 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K extends Enum<K>, V> EnumLongMap<K> with (K key0, Number value0, Object... rest) {
+	public static <K extends Enum<K>, V> EnumLongMap<K> with(K key0, Number value0, Object... rest) {
 		EnumLongMap<K> map = new EnumLongMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0.longValue());
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((K)rest[i - 1], ((Number)rest[i]).longValue());
+				map.put((K) rest[i - 1], ((Number) rest[i]).longValue());
 			} catch (ClassCastException ignored) {
 			}
 		}

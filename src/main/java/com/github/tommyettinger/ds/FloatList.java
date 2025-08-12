@@ -40,50 +40,55 @@ import java.util.Random;
 public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, Arrangeable {
 	/**
 	 * Returns true if this implementation retains order, which it does.
+	 *
 	 * @return true
 	 */
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return true;
 	}
 
 	public float[] items;
 	protected int size;
-	@Nullable protected transient FloatListIterator iterator1;
-	@Nullable protected transient FloatListIterator iterator2;
+	@Nullable
+	protected transient FloatListIterator iterator1;
+	@Nullable
+	protected transient FloatListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.
 	 */
-	public FloatList () {
+	public FloatList() {
 		this(10);
 	}
 
 	/**
 	 * Creates an ordered list with the specified capacity.
+	 *
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 */
-	public FloatList (int capacity) {
+	public FloatList(int capacity) {
 		items = new float[capacity];
 	}
 
 	/**
 	 * Creates an ordered list with the specified capacity.
 	 *
-	 * @param ordered ignored; for an unordered list use {@link FloatBag}
+	 * @param ordered  ignored; for an unordered list use {@link FloatBag}
 	 * @param capacity Any elements added beyond this will cause the backing array to be grown.
 	 * @deprecated FloatList is always ordered; for an unordered list use {@link FloatBag}
 	 */
 	@Deprecated
-	public FloatList (boolean ordered, int capacity) {
+	public FloatList(boolean ordered, int capacity) {
 		this(capacity);
 	}
 
 	/**
 	 * Creates a new list containing the elements in the given list. The new list will be ordered. The capacity is set
 	 * to the number of elements, so any subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param list another FloatList (or FloatBag) to copy from
 	 */
-	public FloatList (FloatList list) {
+	public FloatList(FloatList list) {
 		size = list.size;
 		items = new float[size];
 		System.arraycopy(list.items, 0, items, 0, size);
@@ -92,9 +97,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
+	 *
 	 * @param array a float array to copy from
 	 */
-	public FloatList (float[] array) {
+	public FloatList(float[] array) {
 		this(array, 0, array.length);
 	}
 
@@ -102,11 +108,11 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null float array to add to this list
+	 * @param array      a non-null float array to add to this list
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public FloatList (float[] array, int startIndex, int count) {
+	public FloatList(float[] array, int startIndex, int count) {
 		this(count);
 		size = count;
 		System.arraycopy(array, startIndex, items, 0, count);
@@ -116,14 +122,14 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param ordered ignored; for an unordered list use {@link FloatBag}
-	 * @param array a non-null float array to add to this list
+	 * @param ordered    ignored; for an unordered list use {@link FloatBag}
+	 * @param array      a non-null float array to add to this list
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 * @deprecated FloatList is always ordered; for an unordered list use {@link FloatBag}
 	 */
 	@Deprecated
-	public FloatList (boolean ordered, float[] array, int startIndex, int count) {
+	public FloatList(boolean ordered, float[] array, int startIndex, int count) {
 		this(array, startIndex, count);
 	}
 
@@ -132,7 +138,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public FloatList (OfFloat coll) {
+	public FloatList(OfFloat coll) {
 		this(coll.size());
 		addAll(coll);
 	}
@@ -142,7 +148,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public FloatList (FloatIterator coll) {
+	public FloatList(FloatIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -152,7 +158,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @param other another Ordered.OfFloat that will have its contents copied into this
 	 */
-	public FloatList (Ordered.OfFloat other) {
+	public FloatList(Ordered.OfFloat other) {
 		this(other.order());
 	}
 
@@ -164,47 +170,53 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public FloatList (Ordered.OfFloat other, int offset, int count) {
+	public FloatList(Ordered.OfFloat other, int offset, int count) {
 		this(count);
 		addAll(0, other, offset, count);
 	}
 
 	// Newly-added
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	// Modified from libGDX
 	@Override
-	public boolean add (float value) {
+	public boolean add(float value) {
 		float[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size++] = value;
 		return true;
 	}
 
-	public void add (float value1, float value2) {
+	public void add(float value1, float value2) {
 		float[] items = this.items;
-		if (size + 1 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size + 1 >= items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		size += 2;
 	}
 
-	public void add (float value1, float value2, float value3) {
+	public void add(float value1, float value2, float value3) {
 		float[] items = this.items;
-		if (size + 2 >= items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size + 2 >= items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = value1;
 		items[size + 1] = value2;
 		items[size + 2] = value3;
 		size += 3;
 	}
 
-	public void add (float value1, float value2, float value3, float value4) {
+	public void add(float value1, float value2, float value3, float value4) {
 		float[] items = this.items;
 		if (size + 3 >= items.length) {
-			items = resize(Math.max(9, (int)(size * 1.75f)));
+			items = resize(Math.max(9, (int) (size * 1.75f)));
 		}
 		items[size] = value1;
 		items[size + 1] = value2;
@@ -214,13 +226,15 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	// Modified from libGDX
-	public boolean addAll (FloatList list) {
+	public boolean addAll(FloatList list) {
 		return addAll(list.items, 0, list.size);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (FloatList list, int offset, int count) {
-		if (offset + count > list.size) {throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);}
+	public boolean addAll(FloatList list, int offset, int count) {
+		if (offset + count > list.size) {
+			throw new IllegalArgumentException("offset + count must be <= list.size: " + offset + " + " + count + " <= " + list.size);
+		}
 		return addAll(list.items, offset, count);
 	}
 
@@ -233,7 +247,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(FloatList)} does
 	 */
-	public boolean addAll (Ordered.OfFloat other, int offset, int count) {
+	public boolean addAll(Ordered.OfFloat other, int offset, int count) {
 		return addAll(size(), other, offset, count);
 	}
 
@@ -247,7 +261,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(FloatList)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered.OfFloat other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered.OfFloat other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -259,35 +273,43 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	// Modified from libGDX
-	public boolean addAll (float... array) {
+	public boolean addAll(float... array) {
 		return addAll(array, 0, array.length);
 	}
 
 	// Modified from libGDX
-	public boolean addAll (float[] array, int offset, int length) {
+	public boolean addAll(float[] array, int offset, int length) {
 		float[] items = this.items;
 		int sizeNeeded = size + length;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		System.arraycopy(array, offset, items, size, length);
 		size += length;
 		return true;
 	}
 
 	//Kotlin-friendly operator
-	public float get (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public float get(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		return items[index];
 	}
 
 	//Kotlin-friendly operator
-	public void set (int index, float value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void set(int index, float value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] = value;
 	}
 
 	// Modified from libGDX
-	public void plus (int index, float value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void plus(int index, float value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] += value;
 	}
 
@@ -301,15 +323,19 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public FloatList plus (float value) {
+	public FloatList plus(float value) {
 		float[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] += value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] += value;
+		}
 		return this;
 	}
 
 	// Modified from libGDX
-	public void times (int index, float value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void times(int index, float value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] *= value;
 	}
 
@@ -323,15 +349,19 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	// Modified from libGDX
 	// Kotlin-friendly operator
-	public FloatList times (float value) {
+	public FloatList times(float value) {
 		float[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] *= value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] *= value;
+		}
 		return this;
 	}
 
 	// Newly-added
-	public void minus (int index, float value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void minus(int index, float value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] -= value;
 	}
 
@@ -346,15 +376,19 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public FloatList minus (float value) {
+	public FloatList minus(float value) {
 		float[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] -= value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] -= value;
+		}
 		return this;
 	}
 
 	// Newly-added
-	public void div (int index, float value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void div(int index, float value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] /= value;
 	}
 
@@ -368,15 +402,19 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public FloatList div (float value) {
+	public FloatList div(float value) {
 		float[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] /= value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] /= value;
+		}
 		return this;
 	}
 
 	// Newly-added
-	public void rem (int index, float value) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public void rem(int index, float value) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		items[index] %= value;
 	}
 
@@ -390,16 +428,22 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	// Newly-added
 	// Kotlin-friendly operator
-	public FloatList rem (float value) {
+	public FloatList rem(float value) {
 		float[] items = this.items;
-		for (int i = 0, n = size; i < n; i++) {items[i] %= value;}
+		for (int i = 0, n = size; i < n; i++) {
+			items[i] %= value;
+		}
 		return this;
 	}
 
-	public void insert (int index, float value) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, float value) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		float[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		System.arraycopy(items, index, items, index + 1, size - index);
 		size++;
 		items[index] = value;
@@ -408,13 +452,18 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 *
 	 * @param index the first index to duplicate
 	 * @param count how many items to duplicate
 	 */
-	public boolean duplicateRange (int index, int count) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public boolean duplicateRange(int index, int count) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		int sizeNeeded = size + count;
-		if (sizeNeeded > items.length) {items = resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			items = resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		System.arraycopy(items, index, items, index + count, size - index);
 		size = sizeNeeded;
 		return count > 0;
@@ -427,14 +476,18 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @return this FloatList
 	 */
 	@Override
-	public FloatList order () {
+	public FloatList order() {
 		return this;
 	}
 
 	@Override
-	public void swap (int first, int second) {
-		if (first >= size) {throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);}
-		if (second >= size) {throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);}
+	public void swap(int first, int second) {
+		if (first >= size) {
+			throw new IndexOutOfBoundsException("first can't be >= size: " + first + " >= " + size);
+		}
+		if (second >= size) {
+			throw new IndexOutOfBoundsException("second can't be >= size: " + second + " >= " + size);
+		}
 		float[] items = this.items;
 		float firstValue = items[first];
 		items[first] = items[second];
@@ -442,7 +495,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	@Override
-	public boolean contains (float value) {
+	public boolean contains(float value) {
 		int i = size - 1;
 		float[] items = this.items;
 		final int valueBits = BitConversion.floatToRawIntBits(value);
@@ -461,11 +514,13 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @return true if this contains every item in {@code other}, otherwise false
 	 */
 	// Newly-added
-	public boolean containsAll (FloatList other) {
+	public boolean containsAll(FloatList other) {
 		float[] others = other.items;
 		int otherSize = other.size;
 		for (int i = 0; i < otherSize; i++) {
-			if (!contains(others[i])) {return false;}
+			if (!contains(others[i])) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -476,7 +531,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param value a float value to search for
 	 * @return the first index of the given value, or -1 if it is not present
 	 */
-	public int indexOf (float value) {
+	public int indexOf(float value) {
 		float[] items = this.items;
 		final int valueBits = BitConversion.floatToRawIntBits(value);
 		for (int i = 0, n = size; i < n; i++) {
@@ -493,7 +548,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param value a float value to search for
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
-	public int lastIndexOf (float value) {
+	public int lastIndexOf(float value) {
 		float[] items = this.items;
 		final int valueBits = BitConversion.floatToRawIntBits(value);
 		for (int i = size - 1; i >= 0; i--) {
@@ -513,7 +568,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	// Modified from libGDX
 	@Override
-	public boolean remove (float value) {
+	public boolean remove(float value) {
 		float[] items = this.items;
 		final int valueBits = BitConversion.floatToRawIntBits(value);
 		for (int i = 0, n = size; i < n; i++) {
@@ -533,8 +588,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param index the index of the item to remove and return
 	 * @return the removed item
 	 */
-	public float removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public float removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		float[] items = this.items;
 		float value = items[index];
 		size--;
@@ -551,10 +608,14 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param start the first index to remove, inclusive
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start;
 		System.arraycopy(items, start + count, items, start, n - (start + count));
 		size = n - count;
@@ -566,7 +627,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param c a primitive collection of int items to remove fully, such as another FloatList or a FloatDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeAll (OfFloat c) {
+	public boolean removeAll(OfFloat c) {
 		int size = this.size;
 		int startSize = size;
 		float[] items = this.items;
@@ -592,7 +653,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param c a primitive collection of int items to remove one-by-one, such as another FloatList or a FloatDeque
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEach (OfFloat c) {
+	public boolean removeEach(OfFloat c) {
 		int size = this.size;
 		int startSize = size;
 		float[] items = this.items;
@@ -617,7 +678,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @return true if this FloatList changed as a result of this call, otherwise false
 	 */
 	// Newly-added
-	public boolean retainAll (OfFloat other) {
+	public boolean retainAll(OfFloat other) {
 		final int size = this.size;
 		final float[] items = this.items;
 		int r = 0, w = 0;
@@ -636,7 +697,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @param operator a FloatToFloatFunction (a functional interface defined in funderby)
 	 */
-	public void replaceAll (FloatToFloatFunction operator) {
+	public void replaceAll(FloatToFloatFunction operator) {
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsFloat(items[i]);
 		}
@@ -647,8 +708,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @return the last item, removed from this
 	 */
-	public float pop () {
-		if (size == 0) {throw new IndexOutOfBoundsException("FloatList is empty.");}
+	public float pop() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("FloatList is empty.");
+		}
 		return items[--size];
 	}
 
@@ -657,8 +720,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @return the last item, without modifying this
 	 */
-	public float peek () {
-		if (size == 0) {throw new IndexOutOfBoundsException("FloatList is empty.");}
+	public float peek() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("FloatList is empty.");
+		}
 		return items[size - 1];
 	}
 
@@ -668,8 +733,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @return the first item, without modifying this
 	 */
 	// Modified from libGDX
-	public float first () {
-		if (size == 0) {throw new IndexOutOfBoundsException("FloatList is empty.");}
+	public float first() {
+		if (size == 0) {
+			throw new IndexOutOfBoundsException("FloatList is empty.");
+		}
 		return items[0];
 	}
 
@@ -678,7 +745,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @return true if the list has one or more items, or false otherwise
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -688,7 +755,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @return true if the list is empty, or false if it has any items
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -697,7 +764,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * This is done simply by setting size to 0; because a {@code float} item isn't a reference, it doesn't need to be set to null.
 	 */
 	@Override
-	public void clear () {
+	public void clear() {
 		size = 0;
 	}
 
@@ -707,8 +774,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
-	public float[] shrink () {
-		if (items.length != size) {resize(size);}
+	public float[] shrink() {
+		if (items.length != size) {
+			resize(size);
+		}
 		return items;
 	}
 
@@ -722,10 +791,14 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized
 	 */
-	public float[] ensureCapacity (int additionalCapacity) {
-		if (additionalCapacity < 0) {throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);}
+	public float[] ensureCapacity(int additionalCapacity) {
+		if (additionalCapacity < 0) {
+			throw new IllegalArgumentException("additionalCapacity must be >= 0: " + additionalCapacity);
+		}
 		int sizeNeeded = size + additionalCapacity;
-		if (sizeNeeded > items.length) {resize(Math.max(Math.max(8, sizeNeeded), (int)(size * 1.75f)));}
+		if (sizeNeeded > items.length) {
+			resize(Math.max(Math.max(8, sizeNeeded), (int) (size * 1.75f)));
+		}
 		return items;
 	}
 
@@ -734,14 +807,18 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @return {@link #items}; this will be a different reference if this resized to a larger capacity
 	 */
-	public float[] setSize (int newSize) {
-		if (newSize < 0) {throw new IllegalArgumentException("newSize must be >= 0: " + newSize);}
-		if (newSize > items.length) {resize(Math.max(8, newSize));}
+	public float[] setSize(int newSize) {
+		if (newSize < 0) {
+			throw new IllegalArgumentException("newSize must be >= 0: " + newSize);
+		}
+		if (newSize > items.length) {
+			resize(Math.max(8, newSize));
+		}
 		size = newSize;
 		return items;
 	}
 
-	protected float[] resize (int newSize) {
+	protected float[] resize(int newSize) {
 		float[] newItems = new float[newSize];
 		float[] items = this.items;
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));
@@ -749,7 +826,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		return newItems;
 	}
 
-	public void sort () {
+	public void sort() {
 		Arrays.sort(items, 0, size);
 	}
 
@@ -766,7 +843,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @param c the comparator to determine the order of the FloatList
 	 */
-	public void sort (@Nullable final FloatComparator c) {
+	public void sort(@Nullable final FloatComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -784,12 +861,12 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param to   the index of the last element (exclusive) to be sorted.
 	 * @param c    the comparator to determine the order of the FloatList
 	 */
-	public void sort (final int from, final int to, final FloatComparator c) {
+	public void sort(final int from, final int to, final FloatComparator c) {
 		FloatComparators.sort(items, from, to, c);
 	}
 
 	@Override
-	public void reverse () {
+	public void reverse() {
 		float[] items = this.items;
 		for (int i = 0, lastIndex = size - 1, n = size / 2; i < n; i++) {
 			int ii = lastIndex - i;
@@ -801,7 +878,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	// Modified from libGDX
 	@Override
-	public void shuffle (Random random) {
+	public void shuffle(Random random) {
 		float[] items = this.items;
 		for (int i = size - 1; i > 0; i--) {
 			int ii = random.nextInt(i + 1);
@@ -815,9 +892,11 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * Reduces the size of the list to the specified size. If the list is already smaller than the specified size, no action is
 	 * taken.
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		newSize = Math.max(0, newSize);
-		if (size > newSize) {size = newSize;}
+		if (size > newSize) {
+			size = newSize;
+		}
 	}
 
 	/**
@@ -826,8 +905,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
 	 */
-	public float random (Random random) {
-		if (size == 0) {return 0;}
+	public float random(Random random) {
+		if (size == 0) {
+			return 0;
+		}
 		return items[random.nextInt(size)];
 	}
 
@@ -836,7 +917,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @return a new float array with the same contents as this
 	 */
-	public float[] toArray () {
+	public float[] toArray() {
 		float[] array = new float[size];
 		System.arraycopy(items, 0, array, 0, size);
 		return array;
@@ -850,7 +931,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param array a float array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
-	public float[] toArray (float[] array) {
+	public float[] toArray(float[] array) {
 		if (array.length < size)
 			array = new float[size];
 		System.arraycopy(items, 0, array, 0, size);
@@ -858,7 +939,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		float[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -868,12 +949,18 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	@Override
-	public boolean equals (Object object) {
-		if (object == this) {return true;}
-		if (!(object instanceof FloatList)) {return false;}
-		FloatList list = (FloatList)object;
+	public boolean equals(Object object) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof FloatList)) {
+			return false;
+		}
+		FloatList list = (FloatList) object;
 		int n = size;
-		if (n != list.size()) {return false;}
+		if (n != list.size()) {
+			return false;
+		}
 		float[] items1 = this.items, items2 = list.items;
 		for (int i = 0; i < n; i++) {
 			if (BitConversion.floatToRawIntBits(items1[i]) != BitConversion.floatToRawIntBits(items2[i])) {
@@ -886,19 +973,29 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	/**
 	 * Compares float items with the given tolerance for error.
 	 */
-	public boolean equals (Object object, float tolerance) {
-		if (object == this) {return true;}
-		if (!(object instanceof FloatList)) {return false;}
-		FloatList array = (FloatList)object;
+	public boolean equals(Object object, float tolerance) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof FloatList)) {
+			return false;
+		}
+		FloatList array = (FloatList) object;
 		int n = size;
-		if (n != array.size) {return false;}
+		if (n != array.size) {
+			return false;
+		}
 		float[] items1 = this.items, items2 = array.items;
-		for (int i = 0; i < n; i++) {if (Math.abs(items1[i] - items2[i]) > tolerance) {return false;}}
+		for (int i = 0; i < n; i++) {
+			if (Math.abs(items1[i] - items2[i]) > tolerance) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -912,7 +1009,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @return a {@link FloatIterator}; use its nextFloat() method instead of next()
 	 */
 	@Override
-	public FloatListIterator iterator () {
+	public FloatListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new FloatListIterator(this);
 			iterator2 = new FloatListIterator(this);
@@ -943,11 +1040,11 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 */
 		public boolean valid = true;
 
-		public FloatListIterator (FloatList list) {
+		public FloatListIterator(FloatList list) {
 			this.list = list;
 		}
 
-		public FloatListIterator (FloatList list, int index) {
+		public FloatListIterator(FloatList list, int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("FloatListIterator does not satisfy index >= 0 && index < list.size()");
 			this.list = list;
@@ -961,9 +1058,13 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public float nextFloat () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index >= list.size()) {throw new NoSuchElementException();}
+		public float nextFloat() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			return list.get(latest = index++);
 		}
 
@@ -975,8 +1076,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index < list.size();
 		}
 
@@ -989,8 +1092,10 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 * @return {@code true} if the list iterator has more elements when
 		 * traversing the list in the reverse direction
 		 */
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -1006,9 +1111,13 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public float previousFloat () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index <= 0 || list.isEmpty()) {throw new NoSuchElementException();}
+		public float previousFloat() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index <= 0 || list.isEmpty()) {
+				throw new NoSuchElementException();
+			}
 			return list.get(latest = --index);
 		}
 
@@ -1021,7 +1130,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 * subsequent call to {@code next}, or list size if the list
 		 * iterator is at the end of the list
 		 */
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -1034,7 +1143,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 * subsequent call to {@code previous}, or -1 if the list
 		 * iterator is at the beginning of the list
 		 */
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -1053,9 +1162,13 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -1081,9 +1194,13 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (float t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void set(float t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.set(latest, t);
 		}
 
@@ -1107,20 +1224,24 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (float t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > list.size()) {throw new NoSuchElementException();}
+		public void add(float t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.insert(index, t);
-			if(list.keepsOrder()) ++index;
+			if (list.keepsOrder()) ++index;
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = 0;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("FloatListIterator does not satisfy index >= 0 && index < list.size()");
 			this.index = index;
@@ -1132,7 +1253,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 *
 		 * @return this same FloatListIterator.
 		 */
-		public FloatList.FloatListIterator iterator () {
+		public FloatList.FloatListIterator iterator() {
 			return this;
 		}
 	}
@@ -1144,17 +1265,18 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @return a new list containing nothing
 	 */
-	public static FloatList with () {
+	public static FloatList with() {
 		return new FloatList(0);
 	}
 
 	/**
 	 * Creates a new FloatList that holds only the given item, but can be resized.
+	 *
 	 * @param item a float item
 	 * @return a new FloatList that holds the given item
 	 */
 
-	public static FloatList with (float item) {
+	public static FloatList with(float item) {
 		FloatList list = new FloatList(1);
 		list.add(item);
 		return list;
@@ -1162,11 +1284,12 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	/**
 	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float item0, float item1) {
+	public static FloatList with(float item0, float item1) {
 		FloatList list = new FloatList(2);
 		list.add(item0);
 		list.add(item1);
@@ -1175,12 +1298,13 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	/**
 	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
 	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float item0, float item1, float item2) {
+	public static FloatList with(float item0, float item1, float item2) {
 		FloatList list = new FloatList(3);
 		list.add(item0);
 		list.add(item1);
@@ -1190,13 +1314,14 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	/**
 	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
 	 * @param item3 a float item
 	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float item0, float item1, float item2, float item3) {
+	public static FloatList with(float item0, float item1, float item2, float item3) {
 		FloatList list = new FloatList(4);
 		list.add(item0);
 		list.add(item1);
@@ -1207,6 +1332,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	/**
 	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -1214,7 +1340,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param item4 a float item
 	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float item0, float item1, float item2, float item3, float item4) {
+	public static FloatList with(float item0, float item1, float item2, float item3, float item4) {
 		FloatList list = new FloatList(5);
 		list.add(item0);
 		list.add(item1);
@@ -1226,6 +1352,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	/**
 	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -1234,7 +1361,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param item5 a float item
 	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float item0, float item1, float item2, float item3, float item4, float item5) {
+	public static FloatList with(float item0, float item1, float item2, float item3, float item4, float item5) {
 		FloatList list = new FloatList(6);
 		list.add(item0);
 		list.add(item1);
@@ -1247,6 +1374,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	/**
 	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -1256,7 +1384,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param item6 a float item
 	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
+	public static FloatList with(float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
 		FloatList list = new FloatList(7);
 		list.add(item0);
 		list.add(item1);
@@ -1270,6 +1398,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	/**
 	 * Creates a new FloatList that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -1279,7 +1408,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param item6 a float item
 	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
+	public static FloatList with(float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
 		FloatList list = new FloatList(8);
 		list.add(item0);
 		list.add(item1);
@@ -1297,10 +1426,11 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a float varargs or float array; remember that varargs allocate
 	 * @return a new FloatList that holds the given items
 	 */
-	public static FloatList with (float... varargs) {
+	public static FloatList with(float... varargs) {
 		return new FloatList(varargs);
 	}
 }

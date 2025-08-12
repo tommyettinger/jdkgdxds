@@ -64,26 +64,33 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 
 	protected Enum<?> @Nullable [] universe = null;
 
-	protected @Nullable Object @Nullable[] valueTable = null;
+	protected @Nullable Object @Nullable [] valueTable = null;
 
-	@Nullable protected transient Entries<V> entries1;
-	@Nullable protected transient Entries<V> entries2;
-	@Nullable protected transient Values<V> values1;
-	@Nullable protected transient Values<V> values2;
-	@Nullable protected transient Keys keys1;
-	@Nullable protected transient Keys keys2;
+	@Nullable
+	protected transient Entries<V> entries1;
+	@Nullable
+	protected transient Entries<V> entries2;
+	@Nullable
+	protected transient Values<V> values1;
+	@Nullable
+	protected transient Values<V> values2;
+	@Nullable
+	protected transient Keys keys1;
+	@Nullable
+	protected transient Keys keys2;
 
 	/**
 	 * Returned by {@link #get(Object)} when no value exists for the given key, as well as some other methods to indicate that
 	 * no value in the Map could be returned. Defaults to {@code null}.
 	 */
-	@Nullable public V defaultValue = null;
+	@Nullable
+	public V defaultValue = null;
 
 	/**
 	 * Empty constructor; using this will postpone creating the key universe and allocating the value table until {@link #put} is
 	 * first called (potentially indirectly). You can also use {@link #clearToUniverse} to set the key universe and value table.
 	 */
-	public EnumMap () {
+	public EnumMap() {
 	}
 
 	/**
@@ -92,11 +99,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * You almost always obtain universe from calling {@code values()} on an Enum type, and you can share one
 	 * reference to one Enum array across many EnumMap instances if you don't modify the shared array. Sharing the same
 	 * universe helps save some memory if you have (very) many EnumMap instances.
+	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
-	public EnumMap (Enum<?> @Nullable [] universe) {
+	public EnumMap(Enum<?> @Nullable [] universe) {
 		super();
-		if(universe == null) return;
+		if (universe == null) return;
 		this.universe = universe;
 		valueTable = new Object[universe.length];
 	}
@@ -106,9 +114,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * Class {@code universeClass}, assuming universeClass is non-null. This simply calls {@link #EnumMap(Enum[])}
 	 * for convenience. Note that this constructor allocates a new array of Enum constants each time it is called, where
 	 * if you use {@link #EnumMap(Enum[])}, you can reuse an unmodified array to reduce allocations.
+	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumMap (@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumMap(@Nullable Class<? extends Enum<?>> universeClass) {
 		this(universeClass == null ? null : universeClass.getEnumConstants());
 	}
 
@@ -117,9 +126,9 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *
 	 * @param map an EnumMap to copy
 	 */
-	public EnumMap (EnumMap<? extends V> map) {
+	public EnumMap(EnumMap<? extends V> map) {
 		universe = map.universe;
-		if(map.valueTable != null)
+		if (map.valueTable != null)
 			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
 		size = map.size;
 		defaultValue = map.defaultValue;
@@ -130,7 +139,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *
 	 * @param map a Map to copy; EnumMap or its subclasses will be faster
 	 */
-	public EnumMap (Map<? extends Enum<?>, ? extends V> map) {
+	public EnumMap(Map<? extends Enum<?>, ? extends V> map) {
 		this();
 		putAll(map);
 	}
@@ -142,7 +151,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param keys   an array of Enum keys
 	 * @param values an array of V values
 	 */
-	public EnumMap (Enum<?>[] keys, V[] values) {
+	public EnumMap(Enum<?>[] keys, V[] values) {
 		this();
 		putAll(keys, values);
 	}
@@ -154,7 +163,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param keys   a Collection of Enum keys
 	 * @param values a Collection of V values
 	 */
-	public EnumMap (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
+	public EnumMap(Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
 		this();
 		putAll(keys, values);
 	}
@@ -162,23 +171,25 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	/**
 	 * If the given Object is {@code null}, this replaces it with a placeholder value ({@link Utilities#neverIdentical});
 	 * otherwise, it returns the given Object as-is.
+	 *
 	 * @param o any Object; will be returned as-is unless it is null
 	 * @return the given Object or {@link Utilities#neverIdentical}
 	 */
-	protected Object hold(@Nullable Object o){
+	protected Object hold(@Nullable Object o) {
 		return o == null ? neverIdentical : o;
 	}
 
 	/**
 	 * If the given Object is {@link Utilities#neverIdentical}, this "releases its hold" on that placeholder value and returns
 	 * null; otherwise, it returns the given Object (cast to V if non-null).
+	 *
 	 * @param o any Object, but should be the placeholder {@link Utilities#neverIdentical} or a V instance
 	 * @return the V passed in, or null if it is the placeholder
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
 	protected V release(@Nullable Object o) {
-		if(o == neverIdentical || o == null)
+		if (o == neverIdentical || o == null)
 			return null;
 		return (V) o;
 	}
@@ -188,18 +199,18 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * If this EnumMap does not yet have a key universe and/or value table, this gets the key universe from {@code key} and uses it
 	 * from now on for this EnumMap.
 	 *
-	 * @param key the Enum key to try to place into this EnumMap
+	 * @param key   the Enum key to try to place into this EnumMap
 	 * @param value the V value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	@Override
 	@Nullable
-	public V put (Enum<?> key, @Nullable V value) {
-		if(key == null) return defaultValue;
-		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
-		if(valueTable == null) valueTable = new Object[universe.length];
+	public V put(Enum<?> key, @Nullable V value) {
+		if (key == null) return defaultValue;
+		if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
+		if (valueTable == null) valueTable = new Object[universe.length];
 		int i = key.ordinal();
-		if(i >= valueTable.length || universe[i] != key)
+		if (i >= valueTable.length || universe[i] != key)
 			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
 		Object oldValue = valueTable[i];
 		valueTable[i] = hold(value);
@@ -214,18 +225,19 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	/**
 	 * Acts like {@link #put(Enum, Object)}, but uses the specified {@code defaultValue} instead of
 	 * {@link #getDefaultValue() the default value for this EnumMap}.
-	 * @param key the Enum key to try to place into this EnumMap
-	 * @param value the V value to associate with {@code key}
+	 *
+	 * @param key          the Enum key to try to place into this EnumMap
+	 * @param value        the V value to associate with {@code key}
 	 * @param defaultValue the V value to return if {@code key} was not already present
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
 	@Nullable
-	public V putOrDefault (Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
-		if(key == null) return defaultValue;
-		if(universe == null) universe = key.getDeclaringClass().getEnumConstants();
-		if(valueTable == null) valueTable = new Object[universe.length];
+	public V putOrDefault(Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
+		if (key == null) return defaultValue;
+		if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
+		if (valueTable == null) valueTable = new Object[universe.length];
 		int i = key.ordinal();
-		if(i >= valueTable.length || universe[i] != key)
+		if (i >= valueTable.length || universe[i] != key)
 			throw new ClassCastException("Incompatible key for the EnumMap's universe.");
 		Object oldValue = valueTable[i];
 		valueTable[i] = hold(value);
@@ -246,21 +258,21 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (@NonNull EnumMap<? extends V> map) {
-		if(map.universe == null) return;
-		if(universe == null) universe = map.universe;
-		if(valueTable == null) valueTable = new Object[universe.length];
-		if(map.size == 0) return;
+	public void putAll(@NonNull EnumMap<? extends V> map) {
+		if (map.universe == null) return;
+		if (universe == null) universe = map.universe;
+		if (valueTable == null) valueTable = new Object[universe.length];
+		if (map.size == 0) return;
 		final int n = map.valueTable.length;
-		if(this.valueTable.length != n) return;
+		if (this.valueTable.length != n) return;
 		Object[] valueTable = map.valueTable;
 		Object value;
 		for (int i = 0; i < n; i++) {
-			if(universe[i] != map.universe[i])
+			if (universe[i] != map.universe[i])
 				throw new ClassCastException("Incompatible key for the EnumMap's universe.");
 			value = valueTable[i];
 			if (value != null) {
-				if(this.valueTable[i] == null) ++size;
+				if (this.valueTable[i] == null) ++size;
 				this.valueTable[i] = value;
 			}
 		}
@@ -273,7 +285,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public void putAll (Enum<?>[] keys, V[] values) {
+	public void putAll(Enum<?>[] keys, V[] values) {
 		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
 	}
 
@@ -285,7 +297,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
-	public void putAll (Enum<?>[] keys, V[] values, int length) {
+	public void putAll(Enum<?>[] keys, V[] values, int length) {
 		putAll(keys, 0, values, 0, Math.min(length, Math.min(keys.length, values.length)));
 	}
 
@@ -299,7 +311,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param valueOffset the first index in values to insert
 	 * @param length      how many items from keys and values to insert, at-most
 	 */
-	public void putAll (Enum<?>[] keys, int keyOffset, V[] values, int valueOffset, int length) {
+	public void putAll(Enum<?>[] keys, int keyOffset, V[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
 		Enum<?> key;
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
@@ -317,7 +329,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param keys   a Collection of Enum keys
 	 * @param values a Collection of V values
 	 */
-	public void putAll (Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
+	public void putAll(Collection<? extends Enum<?>> keys, Collection<? extends V> values) {
 		Enum<?> key;
 		Iterator<? extends Enum<?>> ki = keys.iterator();
 		Iterator<? extends V> vi = values.iterator();
@@ -339,12 +351,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 */
 	@Override
 	@Nullable
-	public V get (Object key) {
-		if(size == 0 || !(key instanceof Enum<?>))
+	public V get(Object key) {
+		if (size == 0 || !(key instanceof Enum<?>))
 			return defaultValue;
-		final Enum<?> e = (Enum<?>)key;
+		final Enum<?> e = (Enum<?>) key;
 		final int ord = e.ordinal();
-		if(ord >= universe.length || universe[ord] != e)
+		if (ord >= universe.length || universe[ord] != e)
 			return defaultValue;
 		Object o = valueTable[ord];
 		return o == null ? defaultValue : release(o);
@@ -355,23 +367,23 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 */
 	@Override
 	@Nullable
-	public V getOrDefault (Object key, @Nullable V defaultValue) {
-		if(size == 0 || valueTable == null || !(key instanceof Enum<?>))
+	public V getOrDefault(Object key, @Nullable V defaultValue) {
+		if (size == 0 || valueTable == null || !(key instanceof Enum<?>))
 			return defaultValue;
-		Enum<?> e = (Enum<?>)key;
+		Enum<?> e = (Enum<?>) key;
 		Object o = valueTable[e.ordinal()];
 		return o == null ? defaultValue : release(o);
 	}
 
 	@Override
 	@Nullable
-	public V remove (Object key) {
-		if(size == 0 || !(key instanceof Enum<?>))
+	public V remove(Object key) {
+		if (size == 0 || !(key instanceof Enum<?>))
 			return defaultValue;
-		Enum<?> e = (Enum<?>)key;
+		Enum<?> e = (Enum<?>) key;
 		Object o = valueTable[e.ordinal()];
 		valueTable[e.ordinal()] = null;
-		if(o == null) return defaultValue;
+		if (o == null) return defaultValue;
 		--size;
 		return release(o);
 	}
@@ -399,14 +411,16 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *                                       the specified map prevents it from being stored in this map
 	 */
 	@Override
-	public void putAll (Map<? extends Enum<?>, ? extends V> m) {
-		for (Map.Entry<? extends Enum<?>, ? extends V> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
+	public void putAll(Map<? extends Enum<?>, ? extends V> m) {
+		for (Map.Entry<? extends Enum<?>, ? extends V> kv : m.entrySet()) {
+			put(kv.getKey(), kv.getValue());
+		}
 	}
 
 	/**
 	 * Returns true if the map has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -418,7 +432,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return the number of key-value mappings in this map
 	 */
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -426,7 +440,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * Returns true if the map is empty.
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -437,7 +451,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return the current default value
 	 */
 	@Nullable
-	public V getDefaultValue () {
+	public V getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -448,7 +462,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *
 	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (@Nullable V defaultValue) {
+	public void setDefaultValue(@Nullable V defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -458,9 +472,9 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * This does not change the universe of possible Enum items this can hold.
 	 */
 	@Override
-	public void clear () {
+	public void clear() {
 		size = 0;
-		if(valueTable != null)
+		if (valueTable != null)
 			Utilities.clear(valueTable);
 	}
 
@@ -478,12 +492,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clearToUniverse (Enum<?>@Nullable [] universe) {
+	public void clearToUniverse(Enum<?> @Nullable [] universe) {
 		size = 0;
 		if (universe == null) {
 			valueTable = null;
-		} else if(universe.length <= this.universe.length) {
-			if(valueTable != null)
+		} else if (universe.length <= this.universe.length) {
+			if (valueTable != null)
 				Utilities.clear(valueTable);
 		} else {
 			valueTable = new Object[universe.length];
@@ -508,15 +522,15 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
 	 */
-	public void clearToUniverse (@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
 		size = 0;
 		if (universe == null) {
 			valueTable = null;
 			this.universe = null;
 		} else {
 			Enum<?>[] cons = universe.getEnumConstants();
-			if(this.universe != null && cons.length <= this.universe.length) {
-				if(valueTable != null)
+			if (this.universe != null && cons.length <= this.universe.length) {
+				if (valueTable != null)
 					Utilities.clear(valueTable);
 			} else {
 				valueTable = new Object[cons.length];
@@ -529,9 +543,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * Gets the current key universe; this is a technically-mutable array, but should never be modified.
 	 * To set the universe on an existing EnumMap (with existing contents), you can use {@link #clearToUniverse(Enum[])}.
 	 * If an EnumMap has not been initialized, just adding a key will set the key universe to match the given item.
+	 *
 	 * @return the current key universe
 	 */
-	public Enum<?> @Nullable[] getUniverse () {
+	public Enum<?> @Nullable [] getUniverse() {
 		return universe;
 	}
 
@@ -546,7 +561,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		@Nullable Object[] table = this.valueTable;
 		newSize = Math.max(0, newSize);
 		for (int i = table.length - 1; i >= 0 && size > newSize; i--) {
@@ -564,23 +579,31 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
 	 *                 {@link #equals(Object)}.
 	 */
-	public boolean containsValue (@Nullable Object value, boolean identity) {
-		if(this.valueTable == null) return false;
-		@Nullable Object @Nullable[] valueTable = this.valueTable;
+	public boolean containsValue(@Nullable Object value, boolean identity) {
+		if (this.valueTable == null) return false;
+		@Nullable Object @Nullable [] valueTable = this.valueTable;
 		Object held = hold(value);
 		if (identity) {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (valueTable[i] == held) {return true;}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (valueTable[i] == held) {
+					return true;
+				}
+			}
 		} else {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (held.equals(valueTable[i])) {return true;}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (held.equals(valueTable[i])) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
 
 	@Override
-	public boolean containsKey (Object key) {
-		if(size == 0 || universe == null || !(key instanceof Enum<?>))
+	public boolean containsKey(Object key) {
+		if (size == 0 || universe == null || !(key instanceof Enum<?>))
 			return false;
-		final Enum<?> e = (Enum<?>)key;
+		final Enum<?> e = (Enum<?>) key;
 		final int ord = e.ordinal();
 		return ord < universe.length && universe[ord] == e && valueTable[ord] != null;
 	}
@@ -604,7 +627,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *                              (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean containsValue (Object value) {
+	public boolean containsValue(Object value) {
 		return containsValue(value, false);
 	}
 
@@ -617,22 +640,30 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return the corresponding Enum if the value was found, or null otherwise
 	 */
 	@Nullable
-	public Enum<?> findKey (@Nullable Object value, boolean identity) {
-		if(this.universe == null || this.valueTable == null) return null;
+	public Enum<?> findKey(@Nullable Object value, boolean identity) {
+		if (this.universe == null || this.valueTable == null) return null;
 		@Nullable Object[] valueTable = this.valueTable;
 		Object held = hold(value);
 		if (identity) {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (valueTable[i] == held) {return universe[i];}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (valueTable[i] == held) {
+					return universe[i];
+				}
+			}
 		} else {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (held.equals(valueTable[i])) {return universe[i];}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (held.equals(valueTable[i])) {
+					return universe[i];
+				}
+			}
 		}
 		return null;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
-		if(this.universe != null && this.valueTable != null) {
+		if (this.universe != null && this.valueTable != null) {
 			Enum<?>[] universe = this.universe;
 			@Nullable Object[] valueTable = this.valueTable;
 			for (int i = 0, n = universe.length; i < n; i++) {
@@ -649,27 +680,37 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof Map)) {return false;}
-		Map other = (Map)obj;
-		if (other.size() != size) {return false;}
-		Enum<?> @Nullable[] universe = this.universe;
-		@Nullable Object @Nullable[] valueTable = this.valueTable;
-		if(universe == null || valueTable == null || size == 0) return other.isEmpty();
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Map)) {
+			return false;
+		}
+		Map other = (Map) obj;
+		if (other.size() != size) {
+			return false;
+		}
+		Enum<?> @Nullable [] universe = this.universe;
+		@Nullable Object @Nullable [] valueTable = this.valueTable;
+		if (universe == null || valueTable == null || size == 0) return other.isEmpty();
 		try {
 			for (int i = 0, n = universe.length; i < n; i++) {
 				@Nullable Object rawValue = valueTable[i];
 				if (rawValue != null) {
 					V value = release(rawValue);
 					if (value == null) {
-						if (other.getOrDefault(universe[i], neverIdentical) != null) {return false;}
+						if (other.getOrDefault(universe[i], neverIdentical) != null) {
+							return false;
+						}
 					} else {
-						if (!value.equals(other.get(universe[i]))) {return false;}
+						if (!value.equals(other.get(universe[i]))) {
+							return false;
+						}
 					}
 				}
 			}
-		}catch (ClassCastException | NullPointerException unused) {
+		} catch (ClassCastException | NullPointerException unused) {
 			return false;
 		}
 
@@ -679,23 +720,31 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	/**
 	 * Uses == for comparison of each value.
 	 */
-	public boolean equalsIdentity (@Nullable Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof EnumMap)) {return false;}
-		EnumMap other = (EnumMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equalsIdentity(@Nullable Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof EnumMap)) {
+			return false;
+		}
+		EnumMap other = (EnumMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		Enum<?>[] universe = this.universe;
 		Object[] valueTable = this.valueTable;
 		for (int i = 0, n = universe.length; i < n; i++) {
 			Enum<?> key = universe[i];
-			if (key != null && release(valueTable[i]) != other.getOrDefault(key, neverIdentical)) {return false;}
+			if (key != null && release(valueTable[i]) != other.getOrDefault(key, neverIdentical)) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -706,31 +755,33 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator) {
+	public String toString(String entrySeparator) {
 		return toString(entrySeparator, false);
 	}
 
-	public String toString (String entrySeparator, boolean braces) {
+	public String toString(String entrySeparator, boolean braces) {
 		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
 	}
+
 	/**
 	 * Makes a String from the contents of this EnumMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<Enum<?>> keyAppender, Appender<V> valueAppender){
+	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
+						   Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
+
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, (builder, e) -> builder.append(e.name()), StringBuilder::append);
 	}
 
@@ -740,51 +791,59 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * to a StringBuilder. To use
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
 	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-		public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
-			if (size == 0 || this.universe == null || this.valueTable == null) {
-				return braces ? sb.append("{}") : sb;
-			}
-			if (braces) {sb.append('{');}
-			Enum<?>[] universe = this.universe;
-			@Nullable Object[] valueTable = this.valueTable;
-			int i = -1;
-			final int len = universe.length;
-			while (++i < len) {
-				@Nullable Object v = valueTable[i];
-				if (v == null) {continue;}
-				keyAppender.apply(sb, universe[i]);
-				sb.append(keyValueSeparator);
-				V value = release(v);
-				if(value == this) sb.append("(this)");
-				else valueAppender.apply(sb, value);
-				break;
-			}
-			while (++i < len) {
-				@Nullable Object v = valueTable[i];
-				if (v == null) {continue;}
-				sb.append(entrySeparator);
-				keyAppender.apply(sb, universe[i]);
-				sb.append(keyValueSeparator);
-				V value = release(v);
-				if(value == this) sb.append("(this)");
-				else valueAppender.apply(sb, value);
-			}
-			if (braces) {sb.append('}');}
-			return sb;
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+								  Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
+		if (size == 0 || this.universe == null || this.valueTable == null) {
+			return braces ? sb.append("{}") : sb;
 		}
+		if (braces) {
+			sb.append('{');
+		}
+		Enum<?>[] universe = this.universe;
+		@Nullable Object[] valueTable = this.valueTable;
+		int i = -1;
+		final int len = universe.length;
+		while (++i < len) {
+			@Nullable Object v = valueTable[i];
+			if (v == null) {
+				continue;
+			}
+			keyAppender.apply(sb, universe[i]);
+			sb.append(keyValueSeparator);
+			V value = release(v);
+			if (value == this) sb.append("(this)");
+			else valueAppender.apply(sb, value);
+			break;
+		}
+		while (++i < len) {
+			@Nullable Object v = valueTable[i];
+			if (v == null) {
+				continue;
+			}
+			sb.append(entrySeparator);
+			keyAppender.apply(sb, universe[i]);
+			sb.append(keyValueSeparator);
+			V value = release(v);
+			if (value == this) sb.append("(this)");
+			else valueAppender.apply(sb, value);
+		}
+		if (braces) {
+			sb.append('}');
+		}
+		return sb;
+	}
 
 	@Override
 	@Nullable
-	public V replace (Enum<?> key, V value) {
+	public V replace(Enum<?> key, V value) {
 		if (key != null) {
 			int i = key.ordinal();
 			if (i < universe.length) {
@@ -800,16 +859,17 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM), and this
 	 * won't remove entries if the remappingFunction returns null (in that case, it will call {@code put(key, null)}).
 	 * This also uses a functional interface from Funderby instead of the JDK, for RoboVM support.
-	 * @param key key with which the resulting value is to be associated
-	 * @param value the value to be merged with the existing value
-	 *        associated with the key or, if no existing value
-	 *        is associated with the key, to be associated with the key
+	 *
+	 * @param key               key with which the resulting value is to be associated
+	 * @param value             the value to be merged with the existing value
+	 *                          associated with the key or, if no existing value
+	 *                          is associated with the key, to be associated with the key
 	 * @param remappingFunction given a V from this and the V {@code value}, this should return what V to use
 	 * @return the value now associated with key
 	 */
 	@Nullable
-	public V combine (Enum<?> key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-		if(key == null) return defaultValue;
+	public V combine(Enum<?> key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+		if (key == null) return defaultValue;
 		int i = key.ordinal();
 		V next = (valueTable[i] == null) ? value : remappingFunction.apply(release(valueTable[i]), value);
 		put(key, next);
@@ -820,10 +880,11 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * Simply calls {@link #combine(Enum, Object, ObjObjToObjBiFunction)} on this map using every
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
-	 * @param other a non-null Map (or subclass) with compatible key and value types
+	 *
+	 * @param other             a non-null Map (or subclass) with compatible key and value types
 	 * @param remappingFunction given a V value from this and a value from other, this should return what V to use
 	 */
-	public void combine (Map<? extends Enum<?>, ? extends V> other, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public void combine(Map<? extends Enum<?>, ? extends V> other, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		for (Map.Entry<? extends Enum<?>, ? extends V> e : other.entrySet()) {
 			combine(e.getKey(), e.getValue(), remappingFunction);
 		}
@@ -838,7 +899,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
+	public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -862,7 +923,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NonNull Keys keySet () {
+	public @NonNull Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys(this);
 			keys2 = new Keys(this);
@@ -886,7 +947,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NonNull Values<V> values () {
+	public @NonNull Values<V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -911,7 +972,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NonNull Entries<V> entrySet () {
+	public @NonNull Entries<V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -929,25 +990,27 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	public static class Entry<V> implements Map.Entry<Enum<?>, V> {
-		@Nullable public Enum<?> key;
-		@Nullable public V value;
+		@Nullable
+		public Enum<?> key;
+		@Nullable
+		public V value;
 
-		public Entry () {
+		public Entry() {
 		}
 
-		public Entry (@Nullable Enum<?> key, @Nullable V value) {
+		public Entry(@Nullable Enum<?> key, @Nullable V value) {
 			this.key = key;
 			this.value = value;
 		}
 
-		public Entry (Map.Entry<? extends Enum<?>, ? extends V> entry) {
+		public Entry(Map.Entry<? extends Enum<?>, ? extends V> entry) {
 			key = entry.getKey();
 			value = entry.getValue();
 		}
 
 		@Override
 		@Nullable
-		public String toString () {
+		public String toString() {
 			return key + "=" + value;
 		}
 
@@ -960,7 +1023,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public Enum<?> getKey () {
+		public Enum<?> getKey() {
 			Objects.requireNonNull(key);
 			return key;
 		}
@@ -977,36 +1040,43 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		@Nullable
-		public V getValue () {
+		public V getValue() {
 			return value;
 		}
 
 		/**
 		 * Sets the value of this Entry, but does <em>not</em> write through to the containing EnumMap.
+		 *
 		 * @param value the new V value to use
 		 * @return the old value this held, before modification
 		 */
 		@Override
 		@Nullable
-		public V setValue (V value) {
+		public V setValue(V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals (@Nullable Object o) {
-			if (this == o) {return true;}
-			if (!(o instanceof Map.Entry)) {return false;}
+		public boolean equals(@Nullable Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof Map.Entry)) {
+				return false;
+			}
 
-			Map.Entry entry = (Map.Entry)o;
+			Map.Entry entry = (Map.Entry) o;
 
-			if (!Objects.equals(key, entry.getKey())) {return false;}
+			if (!Objects.equals(key, entry.getKey())) {
+				return false;
+			}
 			return Objects.equals(value, entry.getValue());
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			return (key != null ? key.hashCode() : 0) ^ (value != null ? value.hashCode() : 0);
 		}
 	}
@@ -1018,20 +1088,20 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		protected int nextIndex, currentIndex;
 		public boolean valid = true;
 
-		public MapIterator (EnumMap<? extends V> map) {
+		public MapIterator(EnumMap<? extends V> map) {
 			this.map = map;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = -1;
 			nextIndex = -1;
 			findNextIndex();
 		}
 
-		protected void findNextIndex () {
+		protected void findNextIndex() {
 			Object[] valueTable = map.valueTable;
-			if(valueTable != null) {
+			if (valueTable != null) {
 				for (int n = map.universe.length; ++nextIndex < n; ) {
 					if (valueTable[nextIndex] != null) {
 						hasNext = true;
@@ -1043,13 +1113,15 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
-			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
+			if (i < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			Object[] valueTable = map.valueTable;
-			if(valueTable == null) return;
+			if (valueTable == null) return;
 			// This condition can happen if the map had this the current item removed without using this method.
-			if(valueTable[i] != null)
+			if (valueTable[i] != null)
 				map.size--;
 			valueTable[i] = null;
 			currentIndex = -1;
@@ -1060,10 +1132,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		protected Entry<V> entry = new Entry<>();
 		protected MapIterator<V, Map.Entry<Enum<?>, V>> iter;
 
-		public Entries (EnumMap<V> map) {
+		public Entries(EnumMap<V> map) {
 			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
-				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
+				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 					return this;
 				}
 
@@ -1073,9 +1145,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 				 * @return a reused Entry that will have its key and value set to the next pair
 				 */
 				@Override
-				public Map.Entry<Enum<?>, V> next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Map.Entry<Enum<?>, V> next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					Enum<?>[] universe = map.universe;
 					entry.key = universe[nextIndex];
 					entry.value = map.release(map.valueTable[nextIndex]);
@@ -1085,19 +1161,21 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 			};
 		}
 
 		@Override
-		public boolean contains (Object o) {
-			if(o instanceof Map.Entry) {
-				Map.Entry ent = ((Map.Entry)o);
-				if(ent.getKey() instanceof Enum<?>){
-					Enum<?> e = (Enum<?>)ent.getKey();
+		public boolean contains(Object o) {
+			if (o instanceof Map.Entry) {
+				Map.Entry ent = ((Map.Entry) o);
+				if (ent.getKey() instanceof Enum<?>) {
+					Enum<?> e = (Enum<?>) ent.getKey();
 					int ord = e.ordinal();
 					return (ord < iter.map.universe.length && iter.map.universe[ord] == e
 						&& iter.map.valueTable[ord] != null && iter.map.valueTable[ord].equals(iter.map.hold(ent.getValue())));
@@ -1107,14 +1185,14 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public boolean remove (Object o) {
-			if(o instanceof Map.Entry) {
-				Map.Entry ent = ((Map.Entry)o);
-				if(ent.getKey() instanceof Enum<?>){
-					Enum<?> e = (Enum<?>)ent.getKey();
+		public boolean remove(Object o) {
+			if (o instanceof Map.Entry) {
+				Map.Entry ent = ((Map.Entry) o);
+				if (ent.getKey() instanceof Enum<?>) {
+					Enum<?> e = (Enum<?>) ent.getKey();
 					int ord = e.ordinal();
 					if (ord < iter.map.universe.length && iter.map.universe[ord] == e
-						&& iter.map.valueTable[ord] != null && iter.map.valueTable[ord].equals(iter.map.hold(ent.getValue()))){
+						&& iter.map.valueTable[ord] != null && iter.map.valueTable[ord].equals(iter.map.hold(ent.getValue()))) {
 						iter.map.remove(e);
 						return true;
 					}
@@ -1134,10 +1212,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return {@code true} if this set changed as a result of the call
 		 */
 		@Override
-		public boolean removeAll (Collection<?> c) {
+		public boolean removeAll(Collection<?> c) {
 			iter.reset();
 			boolean res = false;
-			for(Object o : c) {
+			for (Object o : c) {
 				if (remove(o)) {
 					iter.reset();
 					res = true;
@@ -1156,7 +1234,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * from this collection with the iterator's {@code remove} method.
 		 */
 		@Override
-		public boolean retainAll (Collection<?> c) {
+		public boolean retainAll(Collection<?> c) {
 			Objects.requireNonNull(c);
 			iter.reset();
 			boolean modified = false;
@@ -1184,7 +1262,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @see #contains(Object)
 		 */
 		@Override
-		public boolean containsAll (Collection<?> c) {
+		public boolean containsAll(Collection<?> c) {
 			iter.reset();
 			return super.containsAll(c);
 		}
@@ -1195,17 +1273,17 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator () {
+		public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1217,7 +1295,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public boolean equals (Object other) {
+		public boolean equals(Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1230,7 +1308,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
@@ -1238,7 +1316,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void clear () {
+		public void clear() {
 			iter.map.clear();
 			iter.reset();
 		}
@@ -1247,7 +1325,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1255,7 +1333,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NonNull [] toArray () {
+		public Object @NonNull [] toArray() {
 			Object[] a = new Object[iter.map.size];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1276,13 +1354,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @param a
 		 */
 		@Override
-		public <T> T @NonNull [] toArray (T[] a) {
-			if(a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
+		public <T> T @NonNull [] toArray(T[] a) {
+			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				a[i++] = (T)new Entry<>(iter.next());
+				a[i++] = (T) new Entry<>(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1295,11 +1373,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<Map.Entry<Enum<?>, V>> toList () {
+		public ObjectList<Map.Entry<Enum<?>, V>> toList() {
 			ObjectList<Map.Entry<Enum<?>, V>> list = new ObjectList<>(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(new Entry<>(iter.next()));}
+			while (iter.hasNext) {
+				list.add(new Entry<>(iter.next()));
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1309,13 +1389,16 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public Collection<Map.Entry<Enum<?>, V>> appendInto(Collection<Map.Entry<Enum<?>, V>> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(new Entry<>(iter.next()));}
+			while (iter.hasNext) {
+				coll.add(new Entry<>(iter.next()));
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1325,6 +1408,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		/**
 		 * Append the remaining items that this can iterate through into the given Map.
 		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 *
 		 * @param coll any modifiable Map; may have items appended into it
 		 * @return the given map
 		 */
@@ -1345,23 +1429,29 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	public static class Values<V> extends AbstractCollection<V> implements EnhancedCollection<V> {
 		protected MapIterator<V, V> iter;
 
-		public Values (EnumMap<V> map) {
+		public Values(EnumMap<V> map) {
 			iter = new MapIterator<V, V>(map) {
 				@Override
-				public @NonNull MapIterator<V, V> iterator () {
+				public @NonNull MapIterator<V, V> iterator() {
 					return this;
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 
 				@Override
-				public V next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public V next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					V value = map.release(map.valueTable[nextIndex]);
 					currentIndex = nextIndex;
 					findNextIndex();
@@ -1377,12 +1467,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<V, V> iterator () {
+		public @NonNull MapIterator<V, V> iterator() {
 			return iter;
 		}
 
 		@Override
-		public boolean contains (Object o) {
+		public boolean contains(Object o) {
 			return iter.map.containsValue(o);
 		}
 
@@ -1398,7 +1488,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * from the collection using the iterator's remove method.
 		 */
 		@Override
-		public boolean remove (Object o) {
+		public boolean remove(Object o) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1418,7 +1508,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @throws NullPointerException          {@inheritDoc}
 		 */
 		@Override
-		public boolean removeAll (@NonNull Collection<?> c) {
+		public boolean removeAll(@NonNull Collection<?> c) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1431,7 +1521,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public boolean retainAll (@NonNull Collection<?> c) {
+		public boolean retainAll(@NonNull Collection<?> c) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1446,20 +1536,20 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void clear () {
+		public void clear() {
 			iter.map.clear();
 			iter.reset();
 		}
 
 		@Override
-		public final boolean equals (Object o) {
+		public final boolean equals(Object o) {
 			if (this == o)
 				return true;
 			if (!(o instanceof Collection))
 				return false;
 
-			Collection<?> values = (Collection<?>)o;
-			if(size() != values.size()) return false;
+			Collection<?> values = (Collection<?>) o;
+			if (size() != values.size()) return false;
 
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
@@ -1483,7 +1573,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1500,25 +1590,26 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
+
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NonNull [] toArray () {
+		public Object @NonNull [] toArray() {
 			Object[] a = new Object[iter.map.size];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1539,13 +1630,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @param a
 		 */
 		@Override
-		public <T> T @NonNull [] toArray (T[] a) {
-			if(a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
+		public <T> T @NonNull [] toArray(T[] a) {
+			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				a[i++] = (T)iter.next();
+				a[i++] = (T) iter.next();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1558,11 +1649,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<V> toList () {
+		public ObjectList<V> toList() {
 			ObjectList<V> list = new ObjectList<>(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.next());}
+			while (iter.hasNext) {
+				list.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1572,13 +1665,16 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public Collection<V> appendInto(Collection<V> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.next());}
+			while (iter.hasNext) {
+				coll.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1589,23 +1685,29 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	public static class Keys extends AbstractSet<Enum<?>> implements EnhancedCollection<Enum<?>> {
 		protected MapIterator<?, Enum<?>> iter;
 
-		public Keys (EnumMap<?> map) {
+		public Keys(EnumMap<?> map) {
 			iter = new MapIterator<Object, Enum<?>>(map) {
 				@Override
-				public @NonNull MapIterator<?, Enum<?>> iterator () {
+				public @NonNull MapIterator<?, Enum<?>> iterator() {
 					return this;
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 
 				@Override
-				public Enum<?> next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Enum<?> next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					Enum<?> key = map.universe[nextIndex];
 					currentIndex = nextIndex;
 					findNextIndex();
@@ -1615,7 +1717,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public boolean contains (Object o) {
+		public boolean contains(Object o) {
 			return iter.map.containsKey(o);
 		}
 
@@ -1636,18 +1738,19 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * method and this collection contains the specified object.
 		 */
 		@Override
-		public boolean remove (Object o) {
-			if(o instanceof Enum<?>){
-				Enum<?> e = (Enum<?>)o;
+		public boolean remove(Object o) {
+			if (o instanceof Enum<?>) {
+				Enum<?> e = (Enum<?>) o;
 				int ord = e.ordinal();
 				if (ord < iter.map.universe.length && iter.map.universe[ord] == e
-					&& iter.map.valueTable[ord] != null){
+					&& iter.map.valueTable[ord] != null) {
 					iter.map.remove(e);
 					return true;
 				}
 			}
 			return false;
 		}
+
 		/**
 		 * Removes from this set all of its elements that are contained in the
 		 * specified collection (optional operation).  If the specified
@@ -1659,10 +1762,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return {@code true} if this set changed as a result of the call
 		 */
 		@Override
-		public boolean removeAll (Collection<?> c) {
+		public boolean removeAll(Collection<?> c) {
 			iter.reset();
 			boolean res = false;
-			for(Object o : c) {
+			for (Object o : c) {
 				if (remove(o)) {
 					iter.reset();
 					res = true;
@@ -1677,7 +1780,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<?, Enum<?>> iterator () {
+		public @NonNull MapIterator<?, Enum<?>> iterator() {
 			return iter;
 		}
 
@@ -1685,24 +1788,24 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void clear () {
+		public void clear() {
 			iter.map.clear();
 			iter.reset();
 		}
 
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public boolean equals (Object other) {
+		public boolean equals(Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1714,7 +1817,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1729,7 +1832,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1737,7 +1840,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NonNull [] toArray () {
+		public Object @NonNull [] toArray() {
 			Object[] a = new Object[iter.map.size];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1758,13 +1861,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @param a
 		 */
 		@Override
-		public <T> T @NonNull [] toArray (T[] a) {
-			if(a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
+		public <T> T @NonNull [] toArray(T[] a) {
+			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				a[i++] = (T)iter.next();
+				a[i++] = (T) iter.next();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1776,13 +1879,16 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
+		 *
 		 * @return a new ObjectList containing the remaining items
 		 */
-		public ObjectList<Enum<?>> toList () {
+		public ObjectList<Enum<?>> toList() {
 			ObjectList<Enum<?>> list = new ObjectList<>(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.next());}
+			while (iter.hasNext) {
+				list.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1793,13 +1899,16 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * Returns a new {@link EnumSet} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 * The EnumSet this returns will share a key universe with the map linked to this key set.
+		 *
 		 * @return a new EnumSet containing the remaining items, sharing a universe with this key set
 		 */
 		public EnumSet toEnumSet() {
 			EnumSet es = new EnumSet(iter.map.universe, true);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {es.add(iter.next());}
+			while (iter.hasNext) {
+				es.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1809,13 +1918,16 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection, potentially after modifications
 		 */
 		public Collection<Enum<?>> appendInto(Collection<Enum<?>> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.next());}
+			while (iter.hasNext) {
+				coll.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1828,10 +1940,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> EnumMap<V> with () {
+	public static <V> EnumMap<V> with() {
 		return new EnumMap<>();
 	}
 
@@ -1845,7 +1957,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> EnumMap<V> with (Enum<?> key0, V value0) {
+	public static <V> EnumMap<V> with(Enum<?> key0, V value0) {
 		EnumMap<V> map = new EnumMap<>();
 		map.put(key0, value0);
 		return map;
@@ -1863,7 +1975,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> EnumMap<V> with (Enum<?> key0, V value0, Enum<?> key1, V value1) {
+	public static <V> EnumMap<V> with(Enum<?> key0, V value0, Enum<?> key1, V value1) {
 		EnumMap<V> map = new EnumMap<>();
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1884,7 +1996,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> EnumMap<V> with (Enum<?> key0, V value0, Enum<?> key1, V value1, Enum<?> key2, V value2) {
+	public static <V> EnumMap<V> with(Enum<?> key0, V value0, Enum<?> key1, V value1, Enum<?> key2, V value2) {
 		EnumMap<V> map = new EnumMap<>();
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1908,7 +2020,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>    the type of value0
 	 * @return a new map containing entries mapping each key to the following value
 	 */
-	public static <V> EnumMap<V> with (Enum<?> key0, V value0, Enum<?> key1, V value1, Enum<?> key2, V value2, Enum<?> key3, V value3) {
+	public static <V> EnumMap<V> with(Enum<?> key0, V value0, Enum<?> key1, V value1, Enum<?> key2, V value2, Enum<?> key3, V value3) {
 		EnumMap<V> map = new EnumMap<>();
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1932,7 +2044,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	public static <V> EnumMap<V> with (Enum<?> key0, V value0, Object... rest) {
+	public static <V> EnumMap<V> with(Enum<?> key0, V value0, Object... rest) {
 		EnumMap<V> map = new EnumMap<>();
 		map.put(key0, value0);
 		map.putPairs(rest);
@@ -1954,10 +2066,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 */
 	@SuppressWarnings("unchecked")
 	public void putPairs(Object... pairs) {
-		if(pairs != null) {
+		if (pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
 				try {
-					if(pairs[i-1] != null)
+					if (pairs[i - 1] != null)
 						put((Enum<?>) pairs[i - 1], (V) pairs[i]);
 				} catch (ClassCastException ignored) {
 				}
@@ -1975,9 +2087,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * {@link PartialParser#enumParser(ObjToObjFunction)}. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing parseable text
-	 * @param keyParser a PartialParser that returns a {@code Enum<?>} key from a section of {@code str}, typically
-	 *                     produced by {@link PartialParser#enumParser(ObjToObjFunction)}
+	 *
+	 * @param str         a String containing parseable text
+	 * @param keyParser   a PartialParser that returns a {@code Enum<?>} key from a section of {@code str}, typically
+	 *                    produced by {@link PartialParser#enumParser(ObjToObjFunction)}
 	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public void putLegible(String str, PartialParser<Enum<?>> keyParser, PartialParser<V> valueParser) {
@@ -1994,11 +2107,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * {@link PartialParser#enumParser(ObjToObjFunction)}. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing parseable text
+	 *
+	 * @param str            a String containing parseable text
 	 * @param entrySeparator the String separating every key-value pair
-	 * @param keyParser a PartialParser that returns a {@code Enum<?>} key from a section of {@code str}, typically
-	 *                     produced by {@link PartialParser#enumParser(ObjToObjFunction)}
-	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param keyParser      a PartialParser that returns a {@code Enum<?>} key from a section of {@code str}, typically
+	 *                       produced by {@link PartialParser#enumParser(ObjToObjFunction)}
+	 * @param valueParser    a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public void putLegible(String str, String entrySeparator, PartialParser<Enum<?>> keyParser, PartialParser<V> valueParser) {
 		putLegible(str, entrySeparator, "=", keyParser, valueParser, 0, -1);
@@ -2011,12 +2125,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * produced by {@link PartialParser#enumParser(ObjToObjFunction)}. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing parseable text
-	 * @param entrySeparator the String separating every key-value pair
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param keyParser a PartialParser that returns a {@code Enum<?>} key from a section of {@code str}, typically
-	 *                     produced by {@link PartialParser#enumParser(ObjToObjFunction)}
-	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param keyParser         a PartialParser that returns a {@code Enum<?>} key from a section of {@code str}, typically
+	 *                          produced by {@link PartialParser#enumParser(ObjToObjFunction)}
+	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<Enum<?>> keyParser, PartialParser<V> valueParser) {
 		putLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, 0, -1);
@@ -2029,37 +2144,38 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * produced by {@link PartialParser#enumParser(ObjToObjFunction)}. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing parseable text
-	 * @param entrySeparator the String separating every key-value pair
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param keyParser a PartialParser that returns a {@code Enum<?>} key from a section of {@code str}, typically
-	 *                     produced by {@link PartialParser#enumParser(ObjToObjFunction)}
-	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
-	 * @param offset the first position to read parseable text from in {@code str}
-	 * @param length how many chars to read; -1 is treated as maximum length
+	 * @param keyParser         a PartialParser that returns a {@code Enum<?>} key from a section of {@code str}, typically
+	 *                          produced by {@link PartialParser#enumParser(ObjToObjFunction)}
+	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<Enum<?>> keyParser, PartialParser<V> valueParser, int offset, int length) {
 		int sl, el, kvl;
-		if(str == null || entrySeparator == null || keyValueSeparator == null || keyParser == null || valueParser == null
-				|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
-				|| offset < 0 || offset > sl - 1) return;
+		if (str == null || entrySeparator == null || keyValueSeparator == null || keyParser == null || valueParser == null
+			|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
+			|| offset < 0 || offset > sl - 1) return;
 		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
-		int end = str.indexOf(keyValueSeparator, offset+1);
+		int end = str.indexOf(keyValueSeparator, offset + 1);
 		@Nullable Enum<?> k = null;
 		boolean incomplete = false;
 		while (end != -1 && end + kvl < lim) {
 			k = keyParser.parse(str, offset, end);
 			offset = end + kvl;
-			end = str.indexOf(entrySeparator, offset+1);
-			if(end != -1 && end + el < lim){
+			end = str.indexOf(entrySeparator, offset + 1);
+			if (end != -1 && end + el < lim) {
 				put(k, valueParser.parse(str, offset, end));
 				offset = end + el;
-				end = str.indexOf(keyValueSeparator, offset+1);
+				end = str.indexOf(keyValueSeparator, offset + 1);
 			} else {
 				incomplete = true;
 			}
 		}
-		if(incomplete && offset < lim){
+		if (incomplete && offset < lim) {
 			put(k, valueParser.parse(str, offset, lim));
 		}
 	}
@@ -2067,10 +2183,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	/**
 	 * Constructs an empty map given the types as generic type arguments; an alias for {@link #with()}.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> EnumMap<V> of () {
+	public static <V> EnumMap<V> of() {
 		return with();
 	}
 
@@ -2082,7 +2198,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> EnumMap<V> of (Enum<?> key0, V value0) {
+	public static <V> EnumMap<V> of(Enum<?> key0, V value0) {
 		return with(key0, value0);
 	}
 
@@ -2095,7 +2211,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	public static <V> EnumMap<V> of (Enum<?> key0, V value0, Object... rest) {
+	public static <V> EnumMap<V> of(Enum<?> key0, V value0, Object... rest) {
 		return with(key0, value0, rest);
 	}
 
@@ -2109,7 +2225,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param <V>      the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> EnumMap<V> noneOf (Enum<?>[] universe) {
+	public static <V> EnumMap<V> noneOf(Enum<?>[] universe) {
 		return new EnumMap<>(universe);
 	}
 }

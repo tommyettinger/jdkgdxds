@@ -52,38 +52,42 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	protected final IntList items;
 
-	public IntOrderedSet () {
+	public IntOrderedSet() {
 		this(Utilities.getDefaultTableCapacity());
 	}
 
 	/**
 	 * Creates an IntOrderedSet with the option to use an IntDeque or IntBag for keeping order.
+	 *
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntOrderedSet (OrderType ordering) {
+	public IntOrderedSet(OrderType ordering) {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor(), ordering);
 	}
 
-	public IntOrderedSet (int initialCapacity, float loadFactor) {
+	public IntOrderedSet(int initialCapacity, float loadFactor) {
 		this(initialCapacity, loadFactor, OrderType.LIST);
 	}
 
-	public IntOrderedSet (int initialCapacity, float loadFactor, OrderType ordering) {
+	public IntOrderedSet(int initialCapacity, float loadFactor, OrderType ordering) {
 		super(initialCapacity, loadFactor);
-		switch (ordering){
-			case DEQUE: items = new IntDeque(initialCapacity);
+		switch (ordering) {
+			case DEQUE:
+				items = new IntDeque(initialCapacity);
 				break;
-			case BAG: items = new IntBag(initialCapacity);
+			case BAG:
+				items = new IntBag(initialCapacity);
 				break;
-			default: items = new IntList(initialCapacity);
+			default:
+				items = new IntList(initialCapacity);
 		}
 	}
 
-	public IntOrderedSet (int initialCapacity, OrderType ordering) {
+	public IntOrderedSet(int initialCapacity, OrderType ordering) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), ordering);
 	}
 
-	public IntOrderedSet (int initialCapacity) {
+	public IntOrderedSet(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor(), OrderType.LIST);
 	}
 
@@ -92,7 +96,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public IntOrderedSet (IntIterator coll, OrderType ordering) {
+	public IntOrderedSet(IntIterator coll, OrderType ordering) {
 		this(ordering);
 		addAll(coll);
 	}
@@ -102,43 +106,48 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public IntOrderedSet (IntIterator coll) {
+	public IntOrderedSet(IntIterator coll) {
 		this();
 		addAll(coll);
 	}
 
-	public IntOrderedSet (IntOrderedSet set, OrderType ordering) {
+	public IntOrderedSet(IntOrderedSet set, OrderType ordering) {
 		super(set);
-		switch (ordering){
-			case DEQUE: items = new IntDeque(set.items.iterator());
+		switch (ordering) {
+			case DEQUE:
+				items = new IntDeque(set.items.iterator());
 				break;
-			case BAG: items = new IntBag(set.items);
+			case BAG:
+				items = new IntBag(set.items);
 				break;
-			default: items = new IntList(set.items);
+			default:
+				items = new IntList(set.items);
 		}
 	}
 
-	public IntOrderedSet (IntOrderedSet set) {
+	public IntOrderedSet(IntOrderedSet set) {
 		super(set);
-		if(set.items instanceof IntDeque) items = new IntDeque((IntDeque) set.items);
-		else if(set.items instanceof IntBag) items = new IntBag(set.items);
+		if (set.items instanceof IntDeque) items = new IntDeque((IntDeque) set.items);
+		else if (set.items instanceof IntBag) items = new IntBag(set.items);
 		else items = new IntList(set.items);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
+	 *
 	 * @param set a IntSet without an order
 	 */
-	public IntOrderedSet (IntSet set) {
+	public IntOrderedSet(IntSet set) {
 		this(set, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
-	 * @param set a IntSet without an order
+	 *
+	 * @param set      a IntSet without an order
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntOrderedSet (IntSet set, OrderType ordering) {
+	public IntOrderedSet(IntSet set, OrderType ordering) {
 		this(set.size(), set.loadFactor, ordering);
 		hashMultiplier = set.hashMultiplier;
 		addAll(set);
@@ -147,16 +156,17 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
 	 */
-	public IntOrderedSet (OfInt coll) {
+	public IntOrderedSet(OfInt coll) {
 		this(coll, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code coll}.
-	 * @param coll any {@link PrimitiveCollection.OfInt}
+	 *
+	 * @param coll     any {@link PrimitiveCollection.OfInt}
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntOrderedSet (OfInt coll, OrderType ordering) {
+	public IntOrderedSet(OfInt coll, OrderType ordering) {
 		this(coll.size(), Utilities.getDefaultLoadFactor(), ordering);
 		addAll(coll);
 	}
@@ -169,7 +179,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public IntOrderedSet (Ordered.OfInt other, int offset, int count) {
+	public IntOrderedSet(Ordered.OfInt other, int offset, int count) {
 		this(other, offset, count, OrderType.LIST);
 	}
 
@@ -177,12 +187,12 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * Creates a new set by copying {@code count} items from the given Ordered, starting at {@code offset} in that Ordered,
 	 * into this.
 	 *
-	 * @param other  another Ordered.OfInt
-	 * @param offset the first index in other's ordering to draw an item from
-	 * @param count  how many items to copy from other
+	 * @param other    another Ordered.OfInt
+	 * @param offset   the first index in other's ordering to draw an item from
+	 * @param count    how many items to copy from other
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntOrderedSet (Ordered.OfInt other, int offset, int count, OrderType ordering) {
+	public IntOrderedSet(Ordered.OfInt other, int offset, int count, OrderType ordering) {
 		this(count, Utilities.getDefaultLoadFactor(), ordering);
 		addAll(0, other, offset, count);
 	}
@@ -194,19 +204,19 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public IntOrderedSet (int[] array, int offset, int length) {
+	public IntOrderedSet(int[] array, int offset, int length) {
 		this(array, offset, length, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set using {@code length} items from the given {@code array}, starting at {@code} offset (inclusive).
 	 *
-	 * @param array  an array to draw items from
-	 * @param offset the first index in array to draw an item from
-	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
+	 * @param array    an array to draw items from
+	 * @param offset   the first index in array to draw an item from
+	 * @param length   how many items to take from array; bounds-checking is the responsibility of the using code
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntOrderedSet (int[] array, int offset, int length, OrderType ordering) {
+	public IntOrderedSet(int[] array, int offset, int length, OrderType ordering) {
 		this(length, Utilities.getDefaultLoadFactor(), ordering);
 		addAll(array, offset, length);
 	}
@@ -216,22 +226,22 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 *
 	 * @param items an array that will be used in full, except for duplicate items
 	 */
-	public IntOrderedSet (int[] items) {
+	public IntOrderedSet(int[] items) {
 		this(items, 0, items.length, OrderType.LIST);
 	}
 
 	/**
 	 * Creates a new set that contains all distinct elements in {@code items}.
 	 *
-	 * @param items an array that will be used in full, except for duplicate items
+	 * @param items    an array that will be used in full, except for duplicate items
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
-	public IntOrderedSet (int[] items, OrderType ordering) {
+	public IntOrderedSet(int[] items, OrderType ordering) {
 		this(items, 0, items.length, ordering);
 	}
 
 	@Override
-	public boolean add (int key) {
+	public boolean add(int key) {
 		return super.add(key) && items.add(key);
 	}
 
@@ -244,10 +254,12 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param key   what int item to try to add, if not already present
 	 * @return true if the key was added for the first time, or false if the key was already present (even if moved)
 	 */
-	public boolean add (int index, int key) {
+	public boolean add(int index, int key) {
 		if (!super.add(key)) {
 			int oldIndex = items.indexOf(key);
-			if (oldIndex != index) {items.insert(index, items.removeAt(oldIndex));}
+			if (oldIndex != index) {
+				items.insert(index, items.removeAt(oldIndex));
+			}
 			return false;
 		}
 		items.insert(index, key);
@@ -263,7 +275,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(IntSet)} does
 	 */
-	public boolean addAll (Ordered.OfInt other, int offset, int count) {
+	public boolean addAll(Ordered.OfInt other, int offset, int count) {
 		return addAll(size, other, offset, count);
 	}
 
@@ -277,7 +289,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(IntSet)} does
 	 */
-	public boolean addAll (int insertionIndex, Ordered.OfInt other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered.OfInt other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -289,7 +301,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	}
 
 	@Override
-	public boolean remove (int key) {
+	public boolean remove(int key) {
 		return super.remove(key) && items.remove(key);
 	}
 
@@ -299,7 +311,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param index the index of the item to remove
 	 * @return the removed item
 	 */
-	public int removeAt (int index) {
+	public int removeAt(int index) {
 		int key = items.removeAt(index);
 		super.remove(key);
 		return key;
@@ -315,7 +327,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		start = Math.max(0, start);
 		end = Math.min(items.size(), end);
 		for (int i = start; i < end; i++) {
@@ -325,7 +337,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	}
 
 	@Override
-	public int first () {
+	public int first() {
 		if (size == 0)
 			throw new IllegalStateException("Cannot get the first() item of an empty IntOrderedSet.");
 		return items.items[0];
@@ -338,9 +350,11 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
 	@Override
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 		items.ensureCapacity(additionalCapacity);
 	}
 
@@ -354,9 +368,13 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param after  an item that must not be in this set for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter (int before, int after) {
-		if (contains(after)) {return false;}
-		if (!super.remove(before)) {return false;}
+	public boolean alter(int before, int after) {
+		if (contains(after)) {
+			return false;
+		}
+		if (!super.remove(before)) {
+			return false;
+		}
 		super.add(after);
 		items.set(items.indexOf(before), after);
 		return true;
@@ -371,8 +389,10 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param after the item that will replace the contents at {@code index}; this item must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the contents at {@code index}, false otherwise
 	 */
-	public boolean alterAt (int index, int after) {
-		if (index < 0 || index >= size || contains(after)) {return false;}
+	public boolean alterAt(int index, int after) {
+		if (index < 0 || index >= size || contains(after)) {
+			return false;
+		}
 		super.remove(items.get(index));
 		super.add(after);
 		items.set(index, after);
@@ -386,18 +406,18 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the item at the given index
 	 */
-	public int getAt (int index) {
+	public int getAt(int index) {
 		return items.get(index);
 	}
 
 	@Override
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		items.clear();
 		super.clear(maximumCapacity);
 	}
 
 	@Override
-	public void clear () {
+	public void clear() {
 		items.clear();
 		super.clear();
 	}
@@ -410,14 +430,14 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @return the ObjectList of items, in iteration order (usually insertion-order), that this uses
 	 */
 	@Override
-	public IntList order () {
+	public IntList order() {
 		return items;
 	}
 
 	/**
 	 * Sorts this ObjectOrderedSet in-place by the keys' natural ordering; {@code T} must implement {@link Comparable}.
 	 */
-	public void sort () {
+	public void sort() {
 		items.sort();
 	}
 
@@ -428,8 +448,10 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
 	@Override
-	public void truncate (int newSize) {
-		if (size > newSize) {removeRange(newSize, size);}
+	public void truncate(int newSize) {
+		if (size > newSize) {
+			removeRange(newSize, size);
+		}
 	}
 
 	/**
@@ -440,7 +462,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public IntSetIterator iterator () {
+	public IntSetIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new IntOrderedSetIterator(this);
 			iterator2 = new IntOrderedSetIterator(this);
@@ -474,21 +496,25 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	public static class IntOrderedSetIterator extends IntSetIterator {
 		private final IntList items;
 
-		public IntOrderedSetIterator (IntOrderedSet set) {
+		public IntOrderedSetIterator(IntOrderedSet set) {
 			super(set);
 			items = set.items;
 		}
 
 		@Override
-		public void reset () {
+		public void reset() {
 			nextIndex = 0;
 			hasNext = set.size > 0;
 		}
 
 		@Override
-		public int nextInt () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public int nextInt() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			int key = items.get(nextIndex);
 			nextIndex++;
 			hasNext = nextIndex < set.size;
@@ -496,8 +522,10 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		}
 
 		@Override
-		public void remove () {
-			if (nextIndex < 0) {throw new IllegalStateException("next must be called before remove.");}
+		public void remove() {
+			if (nextIndex < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			nextIndex--;
 			set.remove(items.get(nextIndex));
 		}
@@ -510,16 +538,17 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 *
 	 * @return a new set containing nothing
 	 */
-	public static IntOrderedSet with () {
+	public static IntOrderedSet with() {
 		return new IntOrderedSet(0);
 	}
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given item, but can be resized.
+	 *
 	 * @param item an int item
 	 * @return a new IntOrderedSet that holds the given item
 	 */
-	public static IntOrderedSet with (int item) {
+	public static IntOrderedSet with(int item) {
 		IntOrderedSet set = new IntOrderedSet(1);
 		set.add(item);
 		return set;
@@ -527,11 +556,12 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @return a new IntOrderedSet that holds the given items
 	 */
-	public static IntOrderedSet with (int item0, int item1) {
+	public static IntOrderedSet with(int item0, int item1) {
 		IntOrderedSet set = new IntOrderedSet(2);
 		set.add(item0);
 		set.add(item1);
@@ -540,12 +570,13 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
 	 * @return a new IntOrderedSet that holds the given items
 	 */
-	public static IntOrderedSet with (int item0, int item1, int item2) {
+	public static IntOrderedSet with(int item0, int item1, int item2) {
 		IntOrderedSet set = new IntOrderedSet(3);
 		set.add(item0);
 		set.add(item1);
@@ -555,13 +586,14 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
 	 * @param item3 an int item
 	 * @return a new IntOrderedSet that holds the given items
 	 */
-	public static IntOrderedSet with (int item0, int item1, int item2, int item3) {
+	public static IntOrderedSet with(int item0, int item1, int item2, int item3) {
 		IntOrderedSet set = new IntOrderedSet(4);
 		set.add(item0);
 		set.add(item1);
@@ -572,6 +604,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -579,7 +612,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param item4 an int item
 	 * @return a new IntOrderedSet that holds the given items
 	 */
-	public static IntOrderedSet with (int item0, int item1, int item2, int item3, int item4) {
+	public static IntOrderedSet with(int item0, int item1, int item2, int item3, int item4) {
 		IntOrderedSet set = new IntOrderedSet(5);
 		set.add(item0);
 		set.add(item1);
@@ -591,6 +624,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -599,7 +633,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param item5 an int item
 	 * @return a new IntOrderedSet that holds the given items
 	 */
-	public static IntOrderedSet with (int item0, int item1, int item2, int item3, int item4, int item5) {
+	public static IntOrderedSet with(int item0, int item1, int item2, int item3, int item4, int item5) {
 		IntOrderedSet set = new IntOrderedSet(6);
 		set.add(item0);
 		set.add(item1);
@@ -612,6 +646,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -621,7 +656,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param item6 an int item
 	 * @return a new IntOrderedSet that holds the given items
 	 */
-	public static IntOrderedSet with (int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
+	public static IntOrderedSet with(int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
 		IntOrderedSet set = new IntOrderedSet(7);
 		set.add(item0);
 		set.add(item1);
@@ -635,6 +670,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	/**
 	 * Creates a new IntOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 an int item
 	 * @param item1 an int item
 	 * @param item2 an int item
@@ -644,7 +680,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * @param item6 an int item
 	 * @return a new IntOrderedSet that holds the given items
 	 */
-	public static IntOrderedSet with (int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
+	public static IntOrderedSet with(int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
 		IntOrderedSet set = new IntOrderedSet(8);
 		set.add(item0);
 		set.add(item1);
@@ -662,10 +698,11 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs an int varargs or int array; remember that varargs allocate
 	 * @return a new IntOrderedSet that holds the given items
 	 */
-	public static IntOrderedSet with (int... varargs) {
+	public static IntOrderedSet with(int... varargs) {
 		return new IntOrderedSet(varargs);
 	}
 }

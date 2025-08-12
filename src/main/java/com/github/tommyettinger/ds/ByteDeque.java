@@ -75,8 +75,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 */
 	protected int tail = 0;
 
-	@Nullable protected transient ByteDequeIterator descendingIterator1;
-	@Nullable protected transient ByteDequeIterator descendingIterator2;
+	@Nullable
+	protected transient ByteDequeIterator descendingIterator1;
+	@Nullable
+	protected transient ByteDequeIterator descendingIterator2;
 
 	/**
 	 * Creates a new ByteDeque which can hold 16 values without needing to resize the backing array.
@@ -88,6 +90,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Creates a new ByteDeque which can hold the specified number of values without needing to resize the backing
 	 * array.
+	 *
 	 * @param initialSize how large the backing array should be, without any padding
 	 */
 	public ByteDeque(int initialSize) {
@@ -152,6 +155,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Creates a new ByteDeque using {@code count} items from {@code a}, starting at {@code offset}.
 	 * If {@code count} is 0 or less, this will create an empty ByteDeque with capacity 1.
+	 *
 	 * @param a      an array of byte
 	 * @param offset where in {@code a} to start using items
 	 * @param count  how many items to use from {@code a}
@@ -178,9 +182,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Gets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
+	 *
 	 * @return the current default value
 	 */
-	public byte getDefaultValue () {
+	public byte getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -188,9 +193,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Sets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
+	 *
 	 * @param defaultValue any byte this can return instead of throwing an Exception, or {@code null}
 	 */
-	public void setDefaultValue (byte defaultValue) {
+	public void setDefaultValue(byte defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -199,14 +205,14 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @param value can be null
 	 */
-	public void addLast (byte value) {
+	public void addLast(byte value) {
 		byte[] items = this.items;
 
 		if (size == items.length)
 			items = resize(items.length << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(++size == 1) tail = head;
+		if (++size == 1) tail = head;
 		items[tail] = value;
 	}
 
@@ -217,7 +223,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 			items = resize(size + 2 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -231,7 +237,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 			items = resize(size + 3 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -247,7 +253,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 			items = resize(size + 4 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -264,7 +270,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param value can be null
 	 * @see #addLast(byte)
 	 */
-	public void addFirst (byte value) {
+	public void addFirst(byte value) {
 		byte[] items = this.items;
 
 		if (size == items.length)
@@ -275,10 +281,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		items[head] = value;
 
 		this.head = head;
-		if(++size == 1) tail = head;
+		if (++size == 1) tail = head;
 	}
 
-	public void addFirst (byte value1, byte value2) {
+	public void addFirst(byte value1, byte value2) {
 		byte[] items = this.items;
 
 		if (size + 2 > items.length)
@@ -287,7 +293,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value2;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value1;
@@ -296,7 +302,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		this.head = head;
 	}
 
-	public void addFirst (byte value1, byte value2, byte value3) {
+	public void addFirst(byte value1, byte value2, byte value3) {
 		byte[] items = this.items;
 
 		if (size + 3 > items.length)
@@ -304,7 +310,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value3;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value2;
@@ -315,7 +321,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		this.head = head;
 	}
 
-	public void addFirst (byte value1, byte value2, byte value3, byte value4) {
+	public void addFirst(byte value1, byte value2, byte value3, byte value4) {
 		byte[] items = this.items;
 
 		if (size + 4 > items.length)
@@ -323,7 +329,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value4;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value3;
@@ -343,8 +349,8 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 */
 	public void trimToSize() {
 		if (size < items.length) {
-			if(head <= tail) {
-				items = Arrays.copyOfRange(items, head, tail+1);
+			if (head <= tail) {
+				items = Arrays.copyOfRange(items, head, tail + 1);
 			} else {
 				byte[] next = new byte[size];
 				System.arraycopy(items, head, next, 0, items.length - head);
@@ -368,7 +374,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the backing array this will use after this call
 	 */
-	public byte[] ensureCapacity (int additional) {
+	public byte[] ensureCapacity(int additional) {
 		final int needed = size + additional;
 		if (items.length < needed) {
 			resize(needed);
@@ -384,8 +390,8 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the new backing array, as a direct reference
 	 */
-	public byte[] resize (int newSize) {
-		if(newSize < size)
+	public byte[] resize(int newSize) {
+		if (newSize < size)
 			newSize = size;
 		final byte[] items = this.items;
 		final int head = this.head;
@@ -415,7 +421,8 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * resize the backing array to achieve this goal. If possible, this will keep the same backing array and modify
 	 * it in-place. The "gap" is not assigned null, and may contain old/duplicate references; calling code <em>must</em>
 	 * overwrite the entire gap with additional values to ensure GC correctness.
-	 * @param index the 0-based index in the iteration order where the gap will be present
+	 *
+	 * @param index   the 0-based index in the iteration order where the gap will be present
 	 * @param gapSize the number of items that will need filling in the gap, and can be filled without issues.
 	 * @return the position in the array where the gap will begin, which is unrelated to the index
 	 */
@@ -431,7 +438,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 			this.head = 0;
 			this.tail = gapSize - 1;
 			if (items.length < gapSize) {
-                this.items = new byte[gapSize];
+				this.items = new byte[gapSize];
 			}
 			return 0;
 		} else if (size == 1) {
@@ -485,7 +492,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 				return index;
 			} else {
 				if (head + index <= this.items.length) {
-					if(head - gapSize >= 0) {
+					if (head - gapSize >= 0) {
 						System.arraycopy(this.items, head, this.items, head - gapSize, index);
 						this.head -= gapSize;
 						return this.head + index;
@@ -550,7 +557,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return removed byte
 	 * @throws NoSuchElementException when the deque is empty
 	 */
-	public byte removeFirst () {
+	public byte removeFirst() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ByteDeque is empty.");
@@ -564,7 +571,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		return result;
 	}
@@ -576,7 +583,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #removeFirst()
 	 */
-	public byte removeLast () {
+	public byte removeLast() {
 		if (size == 0) {
 			throw new NoSuchElementException("ByteDeque is empty.");
 		}
@@ -590,7 +597,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		} else {
 			--tail;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		this.tail = tail;
 
@@ -613,7 +620,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerFirst (byte t) {
+	public boolean offerFirst(byte t) {
 		addFirst(t);
 		return true;
 	}
@@ -634,7 +641,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerLast (byte t) {
+	public boolean offerLast(byte t) {
 		addLast(t);
 		return true;
 	}
@@ -644,10 +651,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
 	 * {@code null} unless it has been changed with {@link #setDefaultValue(byte)}.
 	 *
-	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
+	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 */
-	public byte pollFirst () {
+	public byte pollFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -661,7 +668,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		return result;
 	}
@@ -671,10 +678,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
 	 * {@code null} unless it has been changed with {@link #setDefaultValue(byte)}.
 	 *
-	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
+	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 */
-	public byte pollLast () {
+	public byte pollLast() {
 		if (size == 0) {
 			return defaultValue;
 		}
@@ -688,7 +695,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		} else {
 			--tail;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		this.tail = tail;
 
@@ -704,7 +711,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return the head of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public byte getFirst () {
+	public byte getFirst() {
 		return first();
 	}
 
@@ -716,7 +723,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return the tail of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public byte getLast () {
+	public byte getLast() {
 		return last();
 	}
 
@@ -726,7 +733,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public byte peekFirst () {
+	public byte peekFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -740,7 +747,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public byte peekLast () {
+	public byte peekLast() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -759,7 +766,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeFirstOccurrence (byte o) {
+	public boolean removeFirstOccurrence(byte o) {
 		return removeValue(o);
 	}
 
@@ -774,7 +781,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeLastOccurrence (byte o) {
+	public boolean removeLastOccurrence(byte o) {
 		return removeLastValue(o);
 	}
 
@@ -792,7 +799,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param t the element to add
 	 * @return {@code true} (as specified by {@link Collection#add})
 	 */
-	public boolean add (byte t) {
+	public boolean add(byte t) {
 		addLast(t);
 		return true;
 	}
@@ -817,13 +824,14 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Unlike {@link #offerFirst(byte)} and {@link #offerLast(byte)}, this does not run in expected constant time unless
 	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
 	 * (where it acts like offerLast()).
+	 *
 	 * @param index the index in the deque's insertion order to insert the item
-	 * @param item a byte item to insert; may be null
+	 * @param item  a byte item to insert; may be null
 	 */
-	public void insert (int index, byte item) {
-		if(index <= 0)
+	public void insert(int index, byte item) {
+		if (index <= 0)
 			addFirst(item);
-		else if(index >= size)
+		else if (index >= size)
 			addLast(item);
 		else {
 			byte[] items = this.items;
@@ -833,11 +841,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 				items = this.items;
 			}
 
-			if(head <= tail) {
+			if (head <= tail) {
 				index += head;
-				if(index >= items.length) index -= items.length;
+				if (index >= items.length) index -= items.length;
 				int after = index + 1;
-				if(after >= items.length) after = 0;
+				if (after >= items.length) after = 0;
 
 				System.arraycopy(items, index, items, after, head + size - index - 1);
 				items[index] = item;
@@ -851,8 +859,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 					System.arraycopy(items, head, items, head - 1, index);
 					items[head - 1 + index] = item;
 					head--;
-				}
-				else {
+				} else {
 					// forward shift
 					index = head + index - items.length;
 					System.arraycopy(items, index, items, index + 1, tail - index + 1);
@@ -877,7 +884,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param t the element to add
 	 * @return {@code true} if the element was added to this deque, else {@code false}
 	 */
-	public boolean offer (byte t) {
+	public boolean offer(byte t) {
 		addLast(t);
 		return true;
 	}
@@ -893,7 +900,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public byte remove () {
+	public byte remove() {
 		return removeFirst();
 	}
 
@@ -907,7 +914,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return the first element of this deque, or {@link #getDefaultValue() defaultValue} if
 	 * this deque is empty
 	 */
-	public byte poll () {
+	public byte poll() {
 		return pollFirst();
 	}
 
@@ -922,7 +929,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public byte element () {
+	public byte element() {
 		return first();
 	}
 
@@ -936,7 +943,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return the head of the queue represented by this deque, or
 	 * {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public byte peek () {
+	public byte peek() {
 		return peekFirst();
 	}
 
@@ -955,13 +962,13 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (OfByte c) {
+	public boolean addAll(OfByte c) {
 		final int cs = c.size();
-		if(cs == 0) return false;
+		if (cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		if(c == this) {
-			if(head <= tail) {
+		if (c == this) {
+			if (head <= tail) {
 				if (tail + 1 < items.length)
 					System.arraycopy(items, head, items, tail + 1, Math.min(size, items.length - tail - 1));
 				if (items.length - tail - 1 < size)
@@ -980,26 +987,28 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * An alias for {@link #addAll(OfByte)}, this adds every item in {@code c} to this in order at the end.
+	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (OfByte c) {
+	public boolean addAllLast(OfByte c) {
 		return addAll(c);
 	}
 
 	/**
 	 * Adds every item in {@code c} to this in order at the start. The iteration order of {@code c} will be preserved
 	 * for the added items.
+	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (OfByte c) {
+	public boolean addAllFirst(OfByte c) {
 		final int cs = c.size();
-		if(cs == 0) return false;
+		if (cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		if(c == this) {
-			if(head <= tail) {
+		if (c == this) {
+			if (head <= tail) {
 				if (head >= oldSize)
 					System.arraycopy(items, head, items, head - oldSize, oldSize);
 				else if (head > 0) {
@@ -1013,14 +1022,14 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 				System.arraycopy(items, 0, items, items.length - oldSize, tail + 1);
 			}
 			head -= oldSize;
-			if(head < 0) head += items.length;
+			if (head < 0) head += items.length;
 			size += oldSize;
 		} else {
 			int i = ensureGap(0, cs);
 			ByteIterator it = c.iterator();
 			while (it.hasNext()) {
 				items[i++] = it.nextByte();
-				if(i == items.length) i = 0;
+				if (i == items.length) i = 0;
 			}
 			size += cs;
 		}
@@ -1040,7 +1049,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @param index index at which to insert the first element from the
 	 *              specified collection
-	 * @param c collection containing elements to be added to this list
+	 * @param c     collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
 	public boolean insertAll(int index, OfByte c) {
@@ -1049,16 +1058,16 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	public boolean addAll(int index, OfByte c) {
 		int oldSize = size;
-		if(index <= 0)
+		if (index <= 0)
 			addAllFirst(c);
-		else if(index >= oldSize)
+		else if (index >= oldSize)
 			addAll(c);
 		else {
 			final int cs = c.size();
-			if(c.isEmpty()) return false;
+			if (c.isEmpty()) return false;
 			int place = ensureGap(index, cs);
 			byte[] items = this.items;
-			if(c == this){
+			if (c == this) {
 				System.arraycopy(items, head, items, place, place - head);
 				System.arraycopy(items, place + cs, items, place + place - head, tail + 1 - place - cs);
 			} else {
@@ -1075,83 +1084,90 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Exactly like {@link #addAll(OfByte)}, but takes an array instead of a PrimitiveCollection.OfByte.
-	 * @see #addAll(OfByte)
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(OfByte)
 	 */
-	public boolean addAll (byte[] array) {
+	public boolean addAll(byte[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #addAll(byte[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #addAll(byte[])
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(byte[])
 	 */
-	public boolean addAll (byte[] array, int offset, int length) {
+	public boolean addAll(byte[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(size, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * An alias for {@link #addAll(byte[])}.
-	 * @see #addAll(byte[])
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(byte[])
 	 */
-	public boolean addAllLast (byte[] array) {
+	public boolean addAllLast(byte[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
 	 * An alias for {@link #addAll(byte[], int, int)}.
-	 * @see #addAll(byte[], int, int)
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(byte[], int, int)
 	 */
-	public boolean addAllLast (byte[] array, int offset, int length) {
+	public boolean addAllLast(byte[] array, int offset, int length) {
 		return addAll(array, offset, length);
 	}
 
 	/**
 	 * Exactly like {@link #addAllFirst(OfByte)}, but takes an array instead of a PrimitiveCollection.OfByte.
-	 * @see #addAllFirst(OfByte)
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(OfByte)
 	 */
-	public boolean addAllFirst (byte[] array) {
+	public boolean addAllFirst(byte[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #addAllFirst(byte[])}, but only uses at most {@code length} items from {@code array}, starting at
 	 * {@code offset}. The order of {@code array} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(byte[])
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(byte[])
 	 */
-	public boolean addAllFirst (byte[] array, int offset, int length) {
+	public boolean addAllFirst(byte[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(0, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, byte[])}.
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1162,8 +1178,9 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Alias for {@link #addAll(int, byte[], int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1176,10 +1193,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Like {@link #addAll(int, OfByte)}, but takes an array instead of a PrimitiveCollection.OfByte and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(byte[])
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(byte[])
 	 */
 	public boolean addAll(int index, byte[] array) {
 		return addAll(index, array, 0, array.length);
@@ -1190,48 +1208,51 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(byte[])
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(byte[])
 	 */
 	public boolean addAll(int index, byte[] array, int offset, int length) {
 		int oldSize = size;
-		if(index <= 0)
+		if (index <= 0)
 			addAllFirst(array, offset, length);
-		else if(index >= oldSize)
+		else if (index >= oldSize)
 			addAll(array, offset, length);
 		else {
 			final int cs = Math.min(array.length - offset, length);
-			if(cs <= 0) return false;
+			if (cs <= 0) return false;
 			int place = ensureGap(index, cs);
 			System.arraycopy(array, offset, this.items, place, cs);
 			size += cs;
-        }
+		}
 		return oldSize != size;
 	}
 
 	/**
 	 * Exactly like {@link #addAll(OfByte)}, but takes an Ordered.OfByte instead of a PrimitiveCollection.OfByte.
-	 * @see #addAll(OfByte)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(OfByte)
 	 */
-	public boolean addAll (Ordered.OfByte ord) {
+	public boolean addAll(Ordered.OfByte ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
 	 * Like {@link #addAll(byte[])}, but only uses at most {@code length} items from {@code ord}, starting at {@code offset}.
-	 * @see #addAll(byte[])
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(byte[])
 	 */
-	public boolean addAll (Ordered.OfByte ord, int offset, int length) {
+	public boolean addAll(Ordered.OfByte ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
@@ -1239,10 +1260,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Like {@link #addAll(int, OfByte)}, but takes an ord instead of a PrimitiveCollection.OfByte and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code ord} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfByte)
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 * @param ord   the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfByte)
 	 */
 	public boolean addAll(int index, Ordered.OfByte ord) {
 		return addAll(index, ord, 0, ord.size());
@@ -1253,75 +1275,81 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfByte)
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfByte)
 	 */
-	public boolean addAll (int index, Ordered.OfByte ord, int offset, int length) {
+	public boolean addAll(int index, Ordered.OfByte ord, int offset, int length) {
 		final int cs = Math.min(ord.size() - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(index, cs);
 		ByteList er = ord.order();
 		for (int i = offset, n = offset + cs; i < n; i++) {
 			items[place++] = er.get(i);
-			if(place == items.length) place = 0;
+			if (place == items.length) place = 0;
 		}
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * An alias for {@link #addAll(Ordered.OfByte)}.
-	 * @see #addAll(Ordered.OfByte)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfByte)
 	 */
-	public boolean addAllLast (Ordered.OfByte ord) {
+	public boolean addAllLast(Ordered.OfByte ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
 	 * An alias for {@link #addAll(Ordered.OfByte, int, int)}.
-	 * @see #addAll(Ordered.OfByte, int, int)
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfByte, int, int)
 	 */
-	public boolean addAllLast (Ordered.OfByte ord, int offset, int length) {
+	public boolean addAllLast(Ordered.OfByte ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
 	/**
 	 * Exactly like {@link #addAllFirst(OfByte)}, but takes an ord instead of a PrimitiveCollection.OfByte.
-	 * @see #addAllFirst(OfByte)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(OfByte)
 	 */
-	public boolean addAllFirst (Ordered.OfByte ord) {
+	public boolean addAllFirst(Ordered.OfByte ord) {
 		return addAll(0, ord, 0, ord.size());
 	}
 
 	/**
 	 * Like {@link #addAllFirst(Ordered.OfByte)}, but only uses at most {@code length} items from {@code ord}, starting at
 	 * {@code offset}. The order of {@code ord} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(Ordered.OfByte)
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(Ordered.OfByte)
 	 */
-	public boolean addAllFirst (Ordered.OfByte ord, int offset, int length) {
+	public boolean addAllFirst(Ordered.OfByte ord, int offset, int length) {
 		return addAll(0, ord, offset, length);
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfByte)}.
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 * @param ord   the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean insertAll(int index, Ordered.OfByte ord) {
@@ -1330,8 +1358,9 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfByte, int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code ord}
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1348,7 +1377,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @param t the element to push
 	 */
-	public void push (byte t) {
+	public void push(byte t) {
 		addFirst(t);
 	}
 
@@ -1362,7 +1391,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * of the stack represented by this deque)
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public byte pop () {
+	public byte pop() {
 		return removeFirst();
 	}
 
@@ -1379,7 +1408,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean remove (byte o) {
+	public boolean remove(byte o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -1391,7 +1420,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param o element whose presence in this deque is to be tested
 	 * @return {@code true} if this deque contains the specified element
 	 */
-	public boolean contains (byte o) {
+	public boolean contains(byte o) {
 		return indexOf(o, 0) != -1;
 	}
 
@@ -1405,7 +1434,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return the number of elements in this deque
 	 */
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -1424,7 +1453,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code byte}, containing all the elements in this collection
 	 */
-	public byte @NonNull [] toArray () {
+	public byte @NonNull [] toArray() {
 		byte[] next = new byte[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -1458,35 +1487,37 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Alias for {@link #truncate(int)}.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncateLast (int newSize) {
+	public void truncateLast(int newSize) {
 		truncate(newSize);
 	}
 
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing items from the tail end.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
-		if(newSize <= 0) {
+	public void truncate(int newSize) {
+		if (newSize <= 0) {
 			clear();
 			return;
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail) {
+			if (head <= tail) {
 				// only removing from tail, near the end, toward head, near the start
 				tail -= oldSize - newSize;
 				size = newSize;
-			} else if(head + newSize < items.length) {
+			} else if (head + newSize < items.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
 				tail = head + newSize;
 				size = newSize;
 			} else {
 				// tail is near the start, but we only have to remove some elements between tail and the start
-                tail -= (oldSize - newSize);
+				tail -= (oldSize - newSize);
 				size = newSize;
 			}
 		}
@@ -1495,19 +1526,20 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing from the head.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncateFirst (int newSize) {
-		if(newSize <= 0) {
+	public void truncateFirst(int newSize) {
+		if (newSize <= 0) {
 			clear();
 			return;
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail || head + oldSize - newSize < items.length) {
+			if (head <= tail || head + oldSize - newSize < items.length) {
 				// only removing from head to head + newSize, which is contiguous
 				head += oldSize - newSize;
-				if(head >= items.length) head -= items.length;
+				if (head >= items.length) head -= items.length;
 				size = newSize;
 			} else {
 				// tail is near the start, and we are removing from head to the end and then part near start
@@ -1531,34 +1563,34 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * actually sometimes needs for this in user code.
 	 *
 	 * @param fromIndex index of first element to be removed (inclusive)
-	 * @param toIndex index after last element to be removed (exclusive)
+	 * @param toIndex   index after last element to be removed (exclusive)
 	 */
 	public void removeRange(int fromIndex, int toIndex) {
-		if(fromIndex <= 0){
+		if (fromIndex <= 0) {
 			truncateFirst(size - toIndex);
 			return;
 		}
-		if(toIndex >= size) {
+		if (toIndex >= size) {
 			truncate(fromIndex);
 			return;
 		}
 		if (fromIndex < toIndex) {
 			int removedCount = toIndex - fromIndex;
-			if(head <= tail) {
+			if (head <= tail) {
 				// tail is near the end, head is near the start
 				int tailMinusTo = tail + 1 - (head + toIndex);
-				if(tailMinusTo < 0) tailMinusTo += items.length;
+				if (tailMinusTo < 0) tailMinusTo += items.length;
 				System.arraycopy(items, head + toIndex, items, head + fromIndex, tailMinusTo);
 				tail -= removedCount;
 				size -= removedCount;
-			} else if(head + toIndex < items.length) {
+			} else if (head + toIndex < items.length) {
 				// head is at the end, and tail wraps around, but we are only removing items between head and end
 				int headPlusFrom = head + fromIndex;
-				if(headPlusFrom >= items.length) headPlusFrom -= items.length;
+				if (headPlusFrom >= items.length) headPlusFrom -= items.length;
 				System.arraycopy(items, head, items, headPlusFrom, removedCount);
 				head += removedCount;
 				size -= removedCount;
-			} else if(head + toIndex - items.length - removedCount >= 0) {
+			} else if (head + toIndex - items.length - removedCount >= 0) {
 				// head is at the end, and tail wraps around, but we are only removing items between start and tail
 				System.arraycopy(items, head + toIndex - items.length, items, head + fromIndex - items.length, tail + 1 - (head + toIndex - items.length));
 				tail -= removedCount;
@@ -1580,7 +1612,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param value the byte to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int indexOf (byte value) {
+	public int indexOf(byte value) {
 		return indexOf(value, 0);
 	}
 
@@ -1589,11 +1621,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param value the byte to look for
+	 * @param value     the byte to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int indexOf (byte value, int fromIndex) {
+	public int indexOf(byte value, int fromIndex) {
 		if (size == 0)
 			return -1;
 		byte[] items = this.items;
@@ -1623,7 +1655,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param value the byte to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int lastIndexOf (byte value) {
+	public int lastIndexOf(byte value) {
 		return lastIndexOf(value, size - 1);
 	}
 
@@ -1633,11 +1665,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * point, so if you chain calls to indexOf(), the subsequent fromIndex should be smaller than the last-returned
 	 * index.
 	 *
-	 * @param value the byte to look for
+	 * @param value     the byte to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int lastIndexOf (byte value, int fromIndex) {
+	public int lastIndexOf(byte value, int fromIndex) {
 		if (size == 0)
 			return -1;
 		byte[] items = this.items;
@@ -1683,6 +1715,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Gets an iterator over this deque that starts at the given index.
+	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return a reused iterator starting at the given index
 	 */
@@ -1709,7 +1742,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param value the byte to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeValue (byte value) {
+	public boolean removeValue(byte value) {
 		int index = indexOf(value, 0);
 		if (index == -1)
 			return false;
@@ -1723,7 +1756,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param value the byte to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeLastValue (byte value) {
+	public boolean removeLastValue(byte value) {
 		int index = lastIndexOf(value);
 		if (index == -1)
 			return false;
@@ -1754,13 +1787,13 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
@@ -1819,13 +1852,13 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
@@ -1851,7 +1884,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public boolean retainAll(OfByte other) {
 		// Gets the deque to be internally the same as a ByteList, if not already.
-		if(head != 0) trimToSize();
+		if (head != 0) trimToSize();
 		// That allows us to use the ByteList retainAll() verbatim.
 		return super.retainAll(other);
 	}
@@ -1859,14 +1892,14 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Returns true if the deque has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
 	/**
 	 * Returns true if the deque is empty.
 	 */
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -1877,7 +1910,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @see #peekFirst() peeking won't throw an exception, and will return the ByteDeque's default value if empty
 	 * @see #removeFirst()
 	 */
-	public byte first () {
+	public byte first() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ByteDeque is empty.");
@@ -1891,7 +1924,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #peekLast() peeking won't throw an exception, and will return the ByteDeque's default value if empty
 	 */
-	public byte last () {
+	public byte last() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ByteDeque is empty.");
@@ -1912,7 +1945,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return the element at the specified position in this deque
 	 * @throws NoSuchElementException if the deque is empty
 	 */
-	public byte get (int index) {
+	public byte get(int index) {
 		if (index <= 0)
 			return getFirst();
 		if (index >= size - 1)
@@ -1938,7 +1971,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param index index of the element to return
 	 * @return the element at the specified position in this deque
 	 */
-	public byte peekAt (int index) {
+	public byte peekAt(int index) {
 		if (index <= 0)
 			return peekFirst();
 		if (index >= size - 1)
@@ -1959,10 +1992,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * {@link #getDefaultValue() the default value}.
 	 *
 	 * @param index index of the element to replace
-	 * @param item element to be stored at the specified position
+	 * @param item  element to be stored at the specified position
 	 * @return the element previously at the specified position
 	 */
-	public byte assign (int index, byte item) {
+	public byte assign(int index, byte item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return defaultValue;
@@ -1991,7 +2024,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param index index of the element to replace
 	 * @param item  element to be stored at the specified position
 	 */
-	public void set (int index, byte item) {
+	public void set(int index, byte item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return;
@@ -2021,7 +2054,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public ByteList plus(byte value) {
 		final byte[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] += value;
 			}
@@ -2049,7 +2082,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public ByteList times(byte value) {
 		final byte[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] *= value;
 			}
@@ -2077,7 +2110,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public ByteList minus(byte value) {
 		final byte[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] -= value;
 			}
@@ -2105,7 +2138,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public ByteList div(byte value) {
 		final byte[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] /= value;
 			}
@@ -2133,7 +2166,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public ByteList rem(byte value) {
 		final byte[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] %= value;
 			}
@@ -2151,7 +2184,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public void replaceAll(ByteToByteFunction operator) {
 		final byte[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] = operator.applyAsByte(items[i]);
 			}
@@ -2168,13 +2201,14 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 *
 	 * @param index the first index to duplicate
 	 * @param count how many items to duplicate
 	 */
 	@Override
 	public boolean duplicateRange(int index, int count) {
 		int place = ensureGap(index + count, count);
-		if(place >= head + index + count){
+		if (place >= head + index + count) {
 			System.arraycopy(items, head + index, items, place, count);
 		} else {
 			System.arraycopy(items, 0, items, count - place, place);
@@ -2187,7 +2221,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Removes all values from this deque. This operates in O(1) time.
 	 */
-	public void clear () {
+	public void clear() {
 		if (size == 0)
 			return;
 		this.head = 0;
@@ -2201,7 +2235,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
 	 * iteration, use {@link ByteDequeIterator#ByteDequeIterator(ByteDeque)}.
 	 */
-	public ByteListIterator iterator () {
+	public ByteListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ByteDequeIterator(this);
 			iterator2 = new ByteDequeIterator(this);
@@ -2228,7 +2262,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public ByteListIterator descendingIterator () {
+	public ByteListIterator descendingIterator() {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ByteDequeIterator(this, true);
 			descendingIterator2 = new ByteDequeIterator(this, true);
@@ -2256,7 +2290,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public ByteListIterator descendingIterator (int index) {
+	public ByteListIterator descendingIterator(int index) {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ByteDequeIterator(this, index, true);
 			descendingIterator2 = new ByteDequeIterator(this, index, true);
@@ -2275,13 +2309,14 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Delegates to {@link #toString(String, boolean)} with a delimiter of {@code ", "} and square brackets enabled.
+	 *
 	 * @return the square-bracketed String representation of this ByteDeque, with items separated by ", "
 	 */
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
-	public int hashCode () {
+	public int hashCode() {
 		final int size = this.size;
 		final byte[] items = this.items;
 		final int backingLength = items.length;
@@ -2310,6 +2345,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * This uses the {@link OfByte#iterator()} of both this and {@code o},
 	 * so if either is in the
 	 * middle of a concurrent iteration that modifies the collection, this may fail.
+	 *
 	 * @param o object to be compared for equality with this collection
 	 * @return true if this is equal to o, or false otherwise
 	 */
@@ -2320,7 +2356,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 			return false;
 
 		ByteIterator e1 = iterator();
-		ByteIterator e2 = ((ByteList)o).iterator();
+		ByteIterator e2 = ((ByteList) o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
 			byte o1 = e1.nextByte();
 			byte o2 = e2.nextByte();
@@ -2336,7 +2372,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param first  the first position, must not be negative and must be less than {@link #size()}
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
-	public void swap (int first, int second) {
+	public void swap(int first, int second) {
 		if (first < 0)
 			throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
 		if (first >= size)
@@ -2345,7 +2381,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 			throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
-		if(first == second) return;
+		if (first == second) return;
 		final byte[] items = this.items;
 
 		int f = head + first;
@@ -2364,7 +2400,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Reverses this ByteDeque in-place.
 	 */
-	public void reverse () {
+	public void reverse() {
 		final byte[] items = this.items;
 		int f, s, len = items.length;
 		byte fv;
@@ -2381,10 +2417,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		}
 	}
 
-	public void shuffle (Random rng) {
+	public void shuffle(Random rng) {
 		for (int i = size() - 1; i > 0; i--) {
 			int r = rng.nextInt(i + 1);
-			if(r != i)
+			if (r != i)
 				set(i, assign(r, get(i)));
 		}
 	}
@@ -2393,7 +2429,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Attempts to sort this deque in-place using its natural ordering, which requires byte to
 	 * implement {@link Comparable} of byte.
 	 */
-	public void sort () {
+	public void sort() {
 		sort(null);
 	}
 
@@ -2409,9 +2445,9 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param comparator the Comparator to use for byte items; may be null to use the natural
 	 *                   order of byte items when byte implements Comparable of byte
 	 */
-	public void sort (@Nullable ByteComparator comparator) {
+	public void sort(@Nullable ByteComparator comparator) {
 		if (head <= tail) {
-			ByteComparators.sort(items, head, tail+1, comparator);
+			ByteComparators.sort(items, head, tail + 1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			ByteComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
@@ -2432,10 +2468,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Gets a randomly selected item from this ByteDeque. Throws a {@link NoSuchElementException} if empty.
+	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public byte random (Random random) {
+	public byte random(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ByteDeque is empty.");
 		}
@@ -2444,10 +2481,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public byte peekRandom (Random random) {
+	public byte peekRandom(Random random) {
 		return peekAt(random.nextInt(size));
 	}
 
@@ -2462,6 +2500,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		public ByteDequeIterator(ByteDeque deque) {
 			this(deque, false);
 		}
+
 		public ByteDequeIterator(ByteDeque deque, boolean descendingOrder) {
 			super(deque);
 			direction = descendingOrder ? -1 : 1;
@@ -2479,11 +2518,13 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public byte nextByte () {
-			if (!hasNext()) {throw new NoSuchElementException();}
+		public byte nextByte() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
 			latest = index;
 			index += direction;
-            return list.get(latest);
+			return list.get(latest);
 		}
 
 		/**
@@ -2494,8 +2535,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return direction == 1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2508,8 +2551,10 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 * @return {@code true} if the list iterator has more elements when
 		 * traversing the list in the reverse direction
 		 */
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return direction == -1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2525,10 +2570,12 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public byte previous () {
-			if (!hasPrevious()) {throw new NoSuchElementException();}
+		public byte previous() {
+			if (!hasPrevious()) {
+				throw new NoSuchElementException();
+			}
 			latest = index -= direction;
-            return list.get(latest);
+			return list.get(latest);
 
 		}
 
@@ -2541,7 +2588,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 * subsequent call to {@code next}, or list size if the list
 		 * iterator is at the end of the list
 		 */
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -2554,7 +2601,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 * subsequent call to {@code previous}, or -1 if the list
 		 * iterator is at the beginning of the list
 		 */
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -2573,9 +2620,13 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -2601,9 +2652,13 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (byte t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void set(byte t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.set(latest, t);
 		}
 
@@ -2627,20 +2682,24 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (byte t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > list.size()) {throw new NoSuchElementException();}
+		public void add(byte t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.insert(index, t);
 			index += direction;
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = list.size() - 1 & direction >> 31;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("ByteDequeIterator does not satisfy index >= 0 && index < deque.size()");
 			this.index = index;
@@ -2652,7 +2711,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		 *
 		 * @return a ByteIterator; really this same ByteDequeIterator.
 		 */
-		public ByteDequeIterator iterator () {
+		public ByteDequeIterator iterator() {
 			return this;
 		}
 	}
@@ -2664,16 +2723,17 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *
 	 * @return a new deque containing nothing
 	 */
-	public static ByteDeque with () {
+	public static ByteDeque with() {
 		return new ByteDeque(1);
 	}
 
 	/**
 	 * Creates a new ByteDeque that holds only the given item, but can be resized.
+	 *
 	 * @param item one byte item
 	 * @return a new ByteDeque that holds the given item
 	 */
-	public static ByteDeque with (byte item) {
+	public static ByteDeque with(byte item) {
 		ByteDeque deque = new ByteDeque(1);
 		deque.add(item);
 		return deque;
@@ -2681,11 +2741,12 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @return a new ByteDeque that holds the given items
 	 */
-	public static ByteDeque with (byte item0, byte item1) {
+	public static ByteDeque with(byte item0, byte item1) {
 		ByteDeque deque = new ByteDeque(2);
 		deque.add(item0, item1);
 		return deque;
@@ -2693,12 +2754,13 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
 	 * @return a new ByteDeque that holds the given items
 	 */
-	public static ByteDeque with (byte item0, byte item1, byte item2) {
+	public static ByteDeque with(byte item0, byte item1, byte item2) {
 		ByteDeque deque = new ByteDeque(3);
 		deque.add(item0, item1, item2);
 		return deque;
@@ -2706,13 +2768,14 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
 	 * @param item3 a byte item
 	 * @return a new ByteDeque that holds the given items
 	 */
-	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3) {
+	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3) {
 		ByteDeque deque = new ByteDeque(4);
 		deque.add(item0, item1, item2, item3);
 		return deque;
@@ -2720,6 +2783,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
@@ -2727,7 +2791,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param item4 a byte item
 	 * @return a new ByteDeque that holds the given items
 	 */
-	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3, byte item4) {
+	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3, byte item4) {
 		ByteDeque deque = new ByteDeque(5);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4);
@@ -2736,6 +2800,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
@@ -2744,7 +2809,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param item5 a byte item
 	 * @return a new ByteDeque that holds the given items
 	 */
-	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
+	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
 		ByteDeque deque = new ByteDeque(6);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5);
@@ -2753,6 +2818,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
@@ -2762,7 +2828,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param item6 a byte item
 	 * @return a new ByteDeque that holds the given items
 	 */
-	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
+	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
 		ByteDeque deque = new ByteDeque(7);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6);
@@ -2771,6 +2837,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Creates a new ByteDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
@@ -2781,7 +2848,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @param item7 a byte item
 	 * @return a new ByteDeque that holds the given items
 	 */
-	public static ByteDeque with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
+	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
 		ByteDeque deque = new ByteDeque(8);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6, item7);
@@ -2792,10 +2859,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Creates a new ByteDeque that will hold the items in the given array or varargs.
 	 * This overload will only be used when a byte array is supplied, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs either 0 or more byte items, or an array of byte
 	 * @return a new ByteDeque that holds the given byte items
 	 */
-	public static ByteDeque with (byte... varargs) {
+	public static ByteDeque with(byte... varargs) {
 		return new ByteDeque(varargs);
 	}
 }

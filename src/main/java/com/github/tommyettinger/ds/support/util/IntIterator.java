@@ -42,7 +42,7 @@ public interface IntIterator extends Iterator<Integer> {
 	 * @return the next {@code int} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	int nextInt ();
+	int nextInt();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -58,8 +58,10 @@ public interface IntIterator extends Iterator<Integer> {
 	 *         action.accept(nextInt());
 	 * }</pre>
 	 */
-	default void forEachRemaining (IntConsumer action) {
-		while (hasNext()) {action.accept(nextInt());}
+	default void forEachRemaining(IntConsumer action) {
+		while (hasNext()) {
+			action.accept(nextInt());
+		}
 	}
 
 	/**
@@ -69,7 +71,7 @@ public interface IntIterator extends Iterator<Integer> {
 	 * {@link #nextInt()}, and returns that boxed result.
 	 */
 	@Override
-	default Integer next () {
+	default Integer next() {
 		return nextInt();
 	}
 }

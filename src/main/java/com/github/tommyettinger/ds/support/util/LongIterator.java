@@ -42,7 +42,7 @@ public interface LongIterator extends Iterator<Long> {
 	 * @return the next {@code long} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	long nextLong ();
+	long nextLong();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -58,8 +58,10 @@ public interface LongIterator extends Iterator<Long> {
 	 *         action.accept(nextLong());
 	 * }</pre>
 	 */
-	default void forEachRemaining (LongConsumer action) {
-		while (hasNext()) {action.accept(nextLong());}
+	default void forEachRemaining(LongConsumer action) {
+		while (hasNext()) {
+			action.accept(nextLong());
+		}
 	}
 
 	/**
@@ -69,7 +71,7 @@ public interface LongIterator extends Iterator<Long> {
 	 * {@link #nextLong()}, and returns that boxed result.
 	 */
 	@Override
-	default Long next () {
+	default Long next() {
 		return nextLong();
 	}
 }

@@ -34,14 +34,14 @@ public class LongBag extends LongList {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public LongBag () {
+	public LongBag() {
 		super();
 	}
 
@@ -50,7 +50,7 @@ public class LongBag extends LongList {
 	 *
 	 * @param capacity
 	 */
-	public LongBag (int capacity) {
+	public LongBag(int capacity) {
 		super(capacity);
 	}
 
@@ -60,7 +60,7 @@ public class LongBag extends LongList {
 	 *
 	 * @param list another LongList or LongBag
 	 */
-	public LongBag (LongList list) {
+	public LongBag(LongList list) {
 		super(list);
 	}
 
@@ -70,7 +70,7 @@ public class LongBag extends LongList {
 	 *
 	 * @param array a non-null long array to add to this bag
 	 */
-	public LongBag (long[] array) {
+	public LongBag(long[] array) {
 		super(array);
 	}
 
@@ -78,11 +78,11 @@ public class LongBag extends LongList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null long array to add to this bag
+	 * @param array      a non-null long array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public LongBag (long[] array, int startIndex, int count) {
+	public LongBag(long[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
@@ -91,7 +91,7 @@ public class LongBag extends LongList {
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public LongBag (OfLong coll) {
+	public LongBag(OfLong coll) {
 		super(coll);
 	}
 
@@ -100,7 +100,7 @@ public class LongBag extends LongList {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public LongBag (LongIterator coll) {
+	public LongBag(LongIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -110,7 +110,7 @@ public class LongBag extends LongList {
 	 *
 	 * @param other another Ordered.OfLong
 	 */
-	public LongBag (Ordered.OfLong other) {
+	public LongBag(Ordered.OfLong other) {
 		super(other);
 	}
 
@@ -122,20 +122,25 @@ public class LongBag extends LongList {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public LongBag (Ordered.OfLong other, int offset, int count) {
+	public LongBag(Ordered.OfLong other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
-	 * @param index ignored
+	 *
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, long element) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, long element) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		long[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = element;
 		++size;
 	}
@@ -149,8 +154,10 @@ public class LongBag extends LongList {
 	 * @return the removed item
 	 */
 	@Override
-	public long removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public long removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		long[] items = this.items;
 		long value = items[index];
 		size--;
@@ -168,10 +175,14 @@ public class LongBag extends LongList {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
@@ -179,13 +190,13 @@ public class LongBag extends LongList {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		long[] items = this.items;
 		long h = size;
 		for (int i = 0, n = size; i < n; i++) {
 			h += items[i];
 		}
-		return (int)(h ^ h >>> 32);
+		return (int) (h ^ h >>> 32);
 	}
 
 	/**
@@ -195,16 +206,17 @@ public class LongBag extends LongList {
 	 *
 	 * @return a new bag containing nothing
 	 */
-	public static LongBag with () {
+	public static LongBag with() {
 		return new LongBag(0);
 	}
 
 	/**
 	 * Creates a new LongBag that holds only the given item, but can be resized.
+	 *
 	 * @param item a long item
 	 * @return a new LongBag that holds the given item
 	 */
-	public static LongBag with (long item) {
+	public static LongBag with(long item) {
 		LongBag bag = new LongBag(1);
 		bag.add(item);
 		return bag;
@@ -212,11 +224,12 @@ public class LongBag extends LongList {
 
 	/**
 	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long item0, long item1) {
+	public static LongBag with(long item0, long item1) {
 		LongBag bag = new LongBag(2);
 		bag.add(item0);
 		bag.add(item1);
@@ -225,12 +238,13 @@ public class LongBag extends LongList {
 
 	/**
 	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
 	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long item0, long item1, long item2) {
+	public static LongBag with(long item0, long item1, long item2) {
 		LongBag bag = new LongBag(3);
 		bag.add(item0);
 		bag.add(item1);
@@ -240,13 +254,14 @@ public class LongBag extends LongList {
 
 	/**
 	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
 	 * @param item3 a long item
 	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long item0, long item1, long item2, long item3) {
+	public static LongBag with(long item0, long item1, long item2, long item3) {
 		LongBag bag = new LongBag(4);
 		bag.add(item0);
 		bag.add(item1);
@@ -257,6 +272,7 @@ public class LongBag extends LongList {
 
 	/**
 	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
@@ -264,7 +280,7 @@ public class LongBag extends LongList {
 	 * @param item4 a long item
 	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long item0, long item1, long item2, long item3, long item4) {
+	public static LongBag with(long item0, long item1, long item2, long item3, long item4) {
 		LongBag bag = new LongBag(5);
 		bag.add(item0);
 		bag.add(item1);
@@ -276,6 +292,7 @@ public class LongBag extends LongList {
 
 	/**
 	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
@@ -284,7 +301,7 @@ public class LongBag extends LongList {
 	 * @param item5 a long item
 	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long item0, long item1, long item2, long item3, long item4, long item5) {
+	public static LongBag with(long item0, long item1, long item2, long item3, long item4, long item5) {
 		LongBag bag = new LongBag(6);
 		bag.add(item0);
 		bag.add(item1);
@@ -297,6 +314,7 @@ public class LongBag extends LongList {
 
 	/**
 	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
@@ -306,7 +324,7 @@ public class LongBag extends LongList {
 	 * @param item6 a long item
 	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
+	public static LongBag with(long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
 		LongBag bag = new LongBag(7);
 		bag.add(item0);
 		bag.add(item1);
@@ -320,6 +338,7 @@ public class LongBag extends LongList {
 
 	/**
 	 * Creates a new LongBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a long item
 	 * @param item1 a long item
 	 * @param item2 a long item
@@ -329,7 +348,7 @@ public class LongBag extends LongList {
 	 * @param item6 a long item
 	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
+	public static LongBag with(long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
 		LongBag bag = new LongBag(8);
 		bag.add(item0);
 		bag.add(item1);
@@ -347,10 +366,11 @@ public class LongBag extends LongList {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a long varargs or long array; remember that varargs allocate
 	 * @return a new LongBag that holds the given items
 	 */
-	public static LongBag with (long... varargs) {
+	public static LongBag with(long... varargs) {
 		return new LongBag(varargs);
 	}
 }

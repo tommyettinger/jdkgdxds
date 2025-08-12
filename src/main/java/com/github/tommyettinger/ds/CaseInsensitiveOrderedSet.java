@@ -137,7 +137,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public CaseInsensitiveOrderedSet () {
+	public CaseInsensitiveOrderedSet() {
 		super();
 	}
 
@@ -147,7 +147,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public CaseInsensitiveOrderedSet (int initialCapacity) {
+	public CaseInsensitiveOrderedSet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -158,7 +158,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public CaseInsensitiveOrderedSet (int initialCapacity, float loadFactor) {
+	public CaseInsensitiveOrderedSet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -167,7 +167,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public CaseInsensitiveOrderedSet (Iterator<? extends CharSequence> coll) {
+	public CaseInsensitiveOrderedSet(Iterator<? extends CharSequence> coll) {
 		this();
 		addAll(coll);
 	}
@@ -177,7 +177,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 *
 	 * @param set an ObjectSet or one of its subclasses
 	 */
-	public CaseInsensitiveOrderedSet (ObjectSet<? extends CharSequence> set) {
+	public CaseInsensitiveOrderedSet(ObjectSet<? extends CharSequence> set) {
 		this(set.size(), set.loadFactor);
 		addAll(set);
 	}
@@ -187,7 +187,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 *
 	 * @param coll a Collection implementation, such as an ObjectList
 	 */
-	public CaseInsensitiveOrderedSet (Collection<? extends CharSequence> coll) {
+	public CaseInsensitiveOrderedSet(Collection<? extends CharSequence> coll) {
 		super(coll.size());
 		addAll(coll);
 
@@ -200,7 +200,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public CaseInsensitiveOrderedSet (CharSequence[] array, int offset, int length) {
+	public CaseInsensitiveOrderedSet(CharSequence[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
@@ -210,7 +210,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public CaseInsensitiveOrderedSet (CharSequence[] array) {
+	public CaseInsensitiveOrderedSet(CharSequence[] array) {
 		this(array.length);
 		addAll(array);
 	}
@@ -220,7 +220,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 *
 	 * @param set another CaseInsensitiveOrderedSet
 	 */
-	public CaseInsensitiveOrderedSet (CaseInsensitiveOrderedSet set) {
+	public CaseInsensitiveOrderedSet(CaseInsensitiveOrderedSet set) {
 		super(set.size, set.loadFactor);
 		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
@@ -234,15 +234,15 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public CaseInsensitiveOrderedSet (Ordered<CharSequence> other, int offset, int count) {
+	public CaseInsensitiveOrderedSet(Ordered<CharSequence> other, int offset, int count) {
 		this(count);
 		addAll(0, other, offset, count);
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		if (item instanceof CharSequence)
-			return Utilities.hashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
+			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
 		return super.place(item);
 	}
 
@@ -269,20 +269,22 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
-			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
+			return Utilities.equalsIgnoreCase((CharSequence) left, (CharSequence) right);
 		}
 		return false;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		ObjectList<@Nullable CharSequence> order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
 			@Nullable CharSequence key = order.get(i);
-			if (key != null) {h ^= Utilities.hashCodeIgnoreCase(key);}
+			if (key != null) {
+				h ^= Utilities.hashCodeIgnoreCase(key);
+			}
 		}
 		return h;
 	}
@@ -292,7 +294,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 		return super.equals(o);
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		super.resize(newSize);
 	}
 
@@ -303,16 +305,17 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 *
 	 * @return a new set containing nothing
 	 */
-	public static CaseInsensitiveOrderedSet with () {
+	public static CaseInsensitiveOrderedSet with() {
 		return new CaseInsensitiveOrderedSet(0);
 	}
 
 	/**
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given item, but can be resized.
+	 *
 	 * @param item one CharSequence item
 	 * @return a new CaseInsensitiveOrderedSet that holds the given item
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence item) {
+	public static CaseInsensitiveOrderedSet with(CharSequence item) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(1);
 		set.add(item);
 		return set;
@@ -320,11 +323,12 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @return a new CaseInsensitiveOrderedSet that holds the given items
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1) {
+	public static CaseInsensitiveOrderedSet with(CharSequence item0, CharSequence item1) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(2);
 		set.add(item0, item1);
 		return set;
@@ -332,12 +336,13 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
 	 * @return a new CaseInsensitiveOrderedSet that holds the given items
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2) {
+	public static CaseInsensitiveOrderedSet with(CharSequence item0, CharSequence item1, CharSequence item2) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(3);
 		set.add(item0, item1, item2);
 		return set;
@@ -345,13 +350,14 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
 	 * @param item3 a CharSequence item
 	 * @return a new CaseInsensitiveOrderedSet that holds the given items
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3) {
+	public static CaseInsensitiveOrderedSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -359,6 +365,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
@@ -366,7 +373,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param item4 a CharSequence item
 	 * @return a new CaseInsensitiveOrderedSet that holds the given items
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4) {
+	public static CaseInsensitiveOrderedSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -375,6 +382,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
@@ -383,7 +391,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param item5 a CharSequence item
 	 * @return a new CaseInsensitiveOrderedSet that holds the given items
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5) {
+	public static CaseInsensitiveOrderedSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -392,6 +400,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
@@ -401,7 +410,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param item6 a CharSequence item
 	 * @return a new CaseInsensitiveOrderedSet that holds the given items
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6) {
+	public static CaseInsensitiveOrderedSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -410,6 +419,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
@@ -419,7 +429,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param item6 a CharSequence item
 	 * @return a new CaseInsensitiveOrderedSet that holds the given items
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6, CharSequence item7) {
+	public static CaseInsensitiveOrderedSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6, CharSequence item7) {
 		CaseInsensitiveOrderedSet set = new CaseInsensitiveOrderedSet(8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -430,10 +440,11 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * Creates a new CaseInsensitiveOrderedSet that holds only the given items, but can be resized.
 	 * This overload will only be used when varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a CharSequence varargs or CharSequence array; remember that varargs allocate
 	 * @return a new CaseInsensitiveOrderedSet that holds the given items
 	 */
-	public static CaseInsensitiveOrderedSet with (CharSequence... varargs) {
+	public static CaseInsensitiveOrderedSet with(CharSequence... varargs) {
 		return new CaseInsensitiveOrderedSet(varargs);
 	}
 }

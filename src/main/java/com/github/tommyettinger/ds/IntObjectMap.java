@@ -26,6 +26,7 @@ import com.github.tommyettinger.function.IntToObjFunction;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -67,7 +68,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	protected int[] keyTable;
 	protected @Nullable V[] valueTable;
 	protected boolean hasZeroValue;
-	@Nullable protected V zeroValue;
+	@Nullable
+	protected V zeroValue;
 
 	/**
 	 * Between 0f (exclusive) and 1f (inclusive, if you're careful), this determines how full the backing tables
@@ -107,19 +109,26 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable protected transient Entries<V> entries1;
-	@Nullable protected transient Entries<V> entries2;
-	@Nullable protected transient Values<V> values1;
-	@Nullable protected transient Values<V> values2;
-	@Nullable protected transient Keys<V> keys1;
-	@Nullable protected transient Keys<V> keys2;
+	@Nullable
+	protected transient Entries<V> entries1;
+	@Nullable
+	protected transient Entries<V> entries2;
+	@Nullable
+	protected transient Values<V> values1;
+	@Nullable
+	protected transient Values<V> values2;
+	@Nullable
+	protected transient Keys<V> keys1;
+	@Nullable
+	protected transient Keys<V> keys2;
 
-	@Nullable public V defaultValue = null;
+	@Nullable
+	public V defaultValue = null;
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public IntObjectMap () {
+	public IntObjectMap() {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
@@ -128,7 +137,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public IntObjectMap (int initialCapacity) {
+	public IntObjectMap(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -139,17 +148,19 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public IntObjectMap (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public IntObjectMap(int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
+		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 		keyTable = new int[tableSize];
-		valueTable = (V[])new Object[tableSize];
+		valueTable = (V[]) new Object[tableSize];
 	}
 
 	/**
@@ -158,8 +169,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param map the map to copy
 	 */
-	public IntObjectMap (IntObjectMap<? extends V> map) {
-		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
+	public IntObjectMap(IntObjectMap<? extends V> map) {
+		this((int) (map.keyTable.length * map.loadFactor), map.loadFactor);
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -176,7 +187,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public IntObjectMap (int[] keys, V[] values) {
+	public IntObjectMap(int[] keys, V[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -188,7 +199,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public IntObjectMap (PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
+	public IntObjectMap(PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -199,7 +210,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public void putAll (PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
+	public void putAll(PrimitiveCollection.OfInt keys, Collection<? extends V> values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
 		IntIterator ki = keys.iterator();
@@ -215,7 +226,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param item any int; it is usually mixed or masked here
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (int item) {
+	protected int place(int item) {
 		return BitConversion.imul(item, hashMultiplier) >>> shift;
 	}
 
@@ -224,7 +235,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * While this can be overridden to compare for equality differently than {@code ==} between ints, that
 	 * isn't recommended because this has to treat zero keys differently, and it finds those with {@code ==}.
 	 */
-	protected int locateKey (int key) {
+	protected int locateKey(int key) {
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -241,10 +252,14 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
 	@Nullable
-	public V put (int key, @Nullable V value) {
+	public V put(int key, @Nullable V value) {
 		if (key == 0) {
 			V oldValue = defaultValue;
-			if (hasZeroValue) {oldValue = zeroValue;} else {size++;}
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+			} else {
+				size++;
+			}
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -258,7 +273,9 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -266,10 +283,14 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
 	@Nullable
-	public V putOrDefault (int key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(int key, @Nullable V value, @Nullable V defaultValue) {
 		if (key == 0) {
 			V oldValue = defaultValue;
-			if (hasZeroValue) {oldValue = zeroValue;} else {size++;}
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+			} else {
+				size++;
+			}
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -283,7 +304,9 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -293,10 +316,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (IntObjectMap<? extends V> map) {
+	public void putAll(IntObjectMap<? extends V> map) {
 		ensureCapacity(map.size);
 		if (map.hasZeroValue) {
-			if (!hasZeroValue) {size++;}
+			if (!hasZeroValue) {
+				size++;
+			}
 			hasZeroValue = true;
 			zeroValue = map.zeroValue;
 		}
@@ -305,7 +330,9 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		int key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != 0) {put(key, valueTable[i]);}
+			if (key != 0) {
+				put(key, valueTable[i]);
+			}
 		}
 	}
 
@@ -315,7 +342,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public void putAll (int[] keys, V[] values) {
+	public void putAll(int[] keys, V[] values) {
 		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
 	}
 
@@ -326,7 +353,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
-	public void putAll (int[] keys, V[] values, int length) {
+	public void putAll(int[] keys, V[] values, int length) {
 		putAll(keys, 0, values, 0, length);
 	}
 
@@ -339,7 +366,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param valueOffset the first index in values to insert
 	 * @param length      how many items from keys and values to insert, at-most
 	 */
-	public void putAll (int[] keys, int keyOffset, V[] values, int valueOffset, int length) {
+	public void putAll(int[] keys, int keyOffset, V[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
 		ensureCapacity(length);
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
@@ -350,7 +377,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	protected void putResize (int key, @Nullable V value) {
+	protected void putResize(int key, @Nullable V value) {
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
@@ -367,8 +394,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param key any {@code int}
 	 */
 	@Nullable
-	public V get (int key) {
-		if (key == 0) {return hasZeroValue ? zeroValue : defaultValue;}
+	public V get(int key) {
+		if (key == 0) {
+			return hasZeroValue ? zeroValue : defaultValue;
+		}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -383,8 +412,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
 	@Nullable
-	public V getOrDefault (int key, @Nullable V defaultValue) {
-		if (key == 0) {return hasZeroValue ? zeroValue : defaultValue;}
+	public V getOrDefault(int key, @Nullable V defaultValue) {
+		if (key == 0) {
+			return hasZeroValue ? zeroValue : defaultValue;
+		}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -395,7 +426,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 	}
 
-	public @Nullable V remove (int key) {
+	public @Nullable V remove(int key) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				hasZeroValue = false;
@@ -414,9 +445,9 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 		int mask = this.mask, last, slot;
 		size--;
-		for (;;) {
+		for (; ; ) {
 			pos = ((last = pos) + 1) & mask;
-			for (;;) {
+			for (; ; ) {
 				if ((key = keyTable[pos]) == 0) {
 					keyTable[last] = 0;
 					valueTable[last] = null;
@@ -434,7 +465,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	/**
 	 * Returns true if the map has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -445,14 +476,14 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @return the number of key-value mappings in this map
 	 */
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	/**
 	 * Returns true if the map is empty.
 	 */
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -463,7 +494,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @return the current default value
 	 */
 	@Nullable
-	public V getDefaultValue () {
+	public V getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -474,7 +505,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (@Nullable V defaultValue) {
+	public void setDefaultValue(@Nullable V defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -483,16 +514,20 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * nothing is done. If the map contains more items than the specified capacity, the next highest power of two capacity is used
 	 * instead.
 	 */
-	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
+	public void shrink(int maximumCapacity) {
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) {resize(tableSize);}
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
 	 * Clears the map and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
 			clear();
@@ -504,8 +539,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		resize(tableSize);
 	}
 
-	public void clear () {
-		if (size == 0) {return;}
+	public void clear() {
+		if (size == 0) {
+			return;
+		}
 		hasZeroValue = false;
 		zeroValue = null;
 		size = 0;
@@ -517,20 +554,24 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 */
-	public boolean containsValue (@Nullable Object value) {
+	public boolean containsValue(@Nullable Object value) {
 		if (hasZeroValue) {
 			return Objects.equals(zeroValue, value);
 		}
 		V[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && Objects.equals(valueTable[i], value)) {return true;}
+			if (keyTable[i] != 0 && Objects.equals(valueTable[i], value)) {
+				return true;
+			}
 		}
 		return false;
 	}
 
-	public boolean containsKey (int key) {
-		if (key == 0) {return hasZeroValue;}
+	public boolean containsKey(int key) {
+		if (key == 0) {
+			return hasZeroValue;
+		}
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			int other = keyTable[i];
@@ -545,16 +586,21 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Returns a key that maps to the specified value, or {@code defaultKey} if value is not in the map.
 	 * Note, this traverses the entire map and compares
 	 * every value, which may be an expensive operation.
-	 * @param value the value to search for
+	 *
+	 * @param value      the value to search for
 	 * @param defaultKey the key to return when value cannot be found
 	 * @return a key that maps to value, if present, or defaultKey if value cannot be found
 	 */
-	public int findKey (@Nullable V value, int defaultKey) {
-		if (hasZeroValue && Objects.equals(zeroValue, value)) {return 0;}
+	public int findKey(@Nullable V value, int defaultKey) {
+		if (hasZeroValue && Objects.equals(zeroValue, value)) {
+			return 0;
+		}
 		V[] valueTable = this.valueTable;
 		int[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && Objects.equals(valueTable[i], value)) {return keyTable[i];}
+			if (keyTable[i] != 0 && Objects.equals(valueTable[i], value)) {
+				return keyTable[i];
+			}
 		}
 
 		return defaultKey;
@@ -564,14 +610,16 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
+		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
@@ -579,12 +627,14 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		V[] oldValueTable = valueTable;
 
 		keyTable = new int[newSize];
-		valueTable = (V[])new Object[newSize];
+		valueTable = (V[]) new Object[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				int key = oldKeyTable[i];
-				if (key != 0) {putResize(key, oldValueTable[i]);}
+				if (key != 0) {
+					putResize(key, oldValueTable[i]);
+				}
 			}
 		}
 	}
@@ -615,18 +665,21 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be
 	 * entered. This length is equal to the length of the array used to store all values, and empty space for values,
 	 * here. This is also called the capacity.
+	 *
 	 * @return the length of the internal array that holds all keys
 	 */
 	public int getTableSize() {
 		return keyTable.length;
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return loadFactor;
 	}
 
-	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public void setLoadFactor(float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -635,7 +688,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = hasZeroValue && zeroValue != null ? zeroValue.hashCode() ^ size : size;
 		int[] keyTable = this.keyTable;
 		@Nullable V[] valueTable = this.valueTable;
@@ -653,12 +706,20 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof IntObjectMap)) {return false;}
-		IntObjectMap other = (IntObjectMap)obj;
-		if (other.size != size) {return false;}
-		if (other.hasZeroValue != hasZeroValue || !Objects.equals(other.zeroValue, zeroValue)) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof IntObjectMap)) {
+			return false;
+		}
+		IntObjectMap other = (IntObjectMap) obj;
+		if (other.size != size) {
+			return false;
+		}
+		if (other.hasZeroValue != hasZeroValue || !Objects.equals(other.zeroValue, zeroValue)) {
+			return false;
+		}
 		int[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -666,9 +727,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			if (key != 0) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.getOrDefault(key, neverIdentical) != null) {return false;}
+					if (other.getOrDefault(key, neverIdentical) != null) {
+						return false;
+					}
 				} else {
-					if (!value.equals(other.get(key))) {return false;}
+					if (!value.equals(other.get(key))) {
+						return false;
+					}
 				}
 			}
 		}
@@ -676,7 +741,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -687,11 +752,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator) {
+	public String toString(String entrySeparator) {
 		return toString(entrySeparator, false);
 	}
 
-	public String toString (String entrySeparator, boolean braces) {
+	public String toString(String entrySeparator, boolean braces) {
 		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
 	}
 
@@ -703,18 +768,19 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the keyAppender.
 	 *
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and an int, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
-		IntAppender keyAppender, Appender<V> valueAppender){
+	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
+						   IntAppender keyAppender, Appender<V> valueAppender) {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
+
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, IntAppender.DEFAULT, StringBuilder::append);
 	}
 
@@ -726,37 +792,45 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the keyAppender.
 	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and an int, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		IntAppender keyAppender, Appender<V> valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+								  IntAppender keyAppender, Appender<V> valueAppender) {
+		if (size == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
 		if (hasZeroValue) {
 			keyAppender.apply(sb, 0).append(keyValueSeparator);
 			valueAppender.apply(sb, zeroValue);
-			if(zeroValue == this)
+			if (zeroValue == this)
 				sb.append("(this)");
 			else
 				valueAppender.apply(sb, zeroValue);
 
-			if (size > 1) {sb.append(entrySeparator);}
+			if (size > 1) {
+				sb.append(entrySeparator);
+			}
 		}
 		int[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0) {continue;}
+			if (key == 0) {
+				continue;
+			}
 			keyAppender.apply(sb, key).append(keyValueSeparator);
 			V value = valueTable[i];
-			if(value == this)
+			if (value == this)
 				sb.append("(this)");
 			else
 				valueAppender.apply(sb, value);
@@ -764,17 +838,21 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 		while (i-- > 0) {
 			int key = keyTable[i];
-			if (key == 0) {continue;}
+			if (key == 0) {
+				continue;
+			}
 			sb.append(entrySeparator);
 			keyAppender.apply(sb, key).append(keyValueSeparator);
 			V value = valueTable[i];
-			if(value == this)
+			if (value == this)
 				sb.append("(this)");
 			else
 				valueAppender.apply(sb, value);
 
 		}
-		if (braces) {sb.append('}');}
+		if (braces) {
+			sb.append('}');
+		}
 		return sb;
 	}
 
@@ -787,7 +865,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (IntObjBiConsumer<? super V> action) {
+	public void forEach(IntObjBiConsumer<? super V> action) {
 		for (Entry<V> entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
@@ -801,7 +879,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (IntObjToObjBiFunction<? super V, ? extends V> function) {
+	public void replaceAll(IntObjToObjBiFunction<? super V, ? extends V> function) {
 		for (Entry<V> entry : entrySet()) {
 			entry.setValue(function.apply(entry.getKey(), entry.getValue()));
 		}
@@ -818,7 +896,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		int[] keyTable = this.keyTable;
 		V[] valTable = this.valueTable;
 		newSize = Math.max(0, newSize);
@@ -845,7 +923,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator<V> iterator () {
+	public @NonNull EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -868,7 +946,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public Keys<V> keySet () {
+	public Keys<V> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys<V>(this);
 			keys2 = new Keys<V>(this);
@@ -891,7 +969,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @return a {@link Collection} containing V values
 	 */
-	public Values<V> values () {
+	public Values<V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values<V>(this);
 			values2 = new Values<V>(this);
@@ -915,7 +993,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
-	public Entries<V> entrySet () {
+	public Entries<V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<V>(this);
 			entries2 = new Entries<V>(this);
@@ -934,23 +1012,24 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 	public static class Entry<V> {
 		public int key;
-		@Nullable public V value;
+		@Nullable
+		public V value;
 
-		public Entry () {
+		public Entry() {
 		}
 
-		public Entry (int key, @Nullable V value) {
+		public Entry(int key, @Nullable V value) {
 			this.key = key;
 			this.value = value;
 		}
 
-		public Entry (Entry<V> entry) {
+		public Entry(Entry<V> entry) {
 			this.key = entry.key;
 			this.value = entry.value;
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return key + "=" + value;
 		}
 
@@ -962,7 +1041,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 *                               required to, throw this exception if the entry has been
 		 *                               removed from the backing map.
 		 */
-		public int getKey () {
+		public int getKey() {
 			return key;
 		}
 
@@ -974,7 +1053,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * @return the value corresponding to this entry
 		 */
 		@Nullable
-		public V getValue () {
+		public V getValue() {
 			return value;
 		}
 
@@ -999,25 +1078,31 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 *                                       removed from the backing map.
 		 */
 		@Nullable
-		public V setValue (@Nullable V value) {
+		public V setValue(@Nullable V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals (@Nullable Object o) {
-			if (this == o) {return true;}
-			if (o == null || getClass() != o.getClass()) {return false;}
+		public boolean equals(@Nullable Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
 
-			Entry entry = (Entry)o;
+			Entry entry = (Entry) o;
 
-			if (key != entry.key) {return false;}
+			if (key != entry.key) {
+				return false;
+			}
 			return Objects.equals(value, entry.value);
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			return value == null ? key : key ^ value.hashCode();
 		}
 	}
@@ -1031,18 +1116,22 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		protected int nextIndex, currentIndex;
 		protected boolean valid = true;
 
-		public MapIterator (IntObjectMap<V> map) {
+		public MapIterator(IntObjectMap<V> map) {
 			this.map = map;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (map.hasZeroValue) {hasNext = true;} else {findNextIndex();}
+			if (map.hasZeroValue) {
+				hasNext = true;
+			} else {
+				findNextIndex();
+			}
 		}
 
-		protected void findNextIndex () {
+		protected void findNextIndex() {
 			int[] keyTable = map.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != 0) {
@@ -1060,11 +1149,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 *
 		 * @return {@code true} if the iteration has more elements
 		 */
-		public boolean hasNext () {
+		public boolean hasNext() {
 			return hasNext;
 		}
 
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
 			if (i == INDEX_ZERO && map.hasZeroValue) {
 				map.hasZeroValue = false;
@@ -1088,7 +1177,9 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 				}
 				keyTable[i] = 0;
 				valueTable[i] = null;
-				if (i != currentIndex) {--nextIndex;}
+				if (i != currentIndex) {
+					--nextIndex;
+				}
 			}
 			currentIndex = INDEX_ILLEGAL;
 			map.size--;
@@ -1098,14 +1189,18 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 	public static class KeyIterator<V> extends MapIterator<V> implements IntIterator {
 
-		public KeyIterator (IntObjectMap<V> map) {
+		public KeyIterator(IntObjectMap<V> map) {
 			super(map);
 		}
 
 		@Override
-		public int nextInt () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public int nextInt() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			int key = nextIndex == INDEX_ZERO ? 0 : map.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -1115,21 +1210,25 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		/**
 		 * Returns a new IntList containing the remaining keys.
 		 */
-		public IntList toList () {
+		public IntList toList() {
 			IntList list = new IntList(map.size);
-			while (hasNext) {list.add(nextInt());}
+			while (hasNext) {
+				list.add(nextInt());
+			}
 			return list;
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 	}
 
 	public static class ValueIterator<V> extends MapIterator<V> implements Iterator<V> {
-		public ValueIterator (IntObjectMap<V> map) {
+		public ValueIterator(IntObjectMap<V> map) {
 			super(map);
 		}
 
@@ -1141,9 +1240,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 */
 		@Override
 		@Nullable
-		public V next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public V next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			V value = nextIndex == INDEX_ZERO ? map.zeroValue : map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -1151,8 +1254,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 	}
@@ -1160,12 +1265,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public static class EntryIterator<V> extends MapIterator<V> implements Iterable<Entry<V>>, Iterator<Entry<V>> {
 		protected Entry<V> entry = new Entry<>();
 
-		public EntryIterator (IntObjectMap<V> map) {
+		public EntryIterator(IntObjectMap<V> map) {
 			super(map);
 		}
 
 		@Override
-		public @NonNull EntryIterator<V> iterator () {
+		public @NonNull EntryIterator<V> iterator() {
 			return this;
 		}
 
@@ -1173,9 +1278,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * Note the same entry instance is returned each time this method is called.
 		 */
 		@Override
-		public Entry<V> next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public Entry<V> next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			int[] keyTable = map.keyTable;
 			if (nextIndex == INDEX_ZERO) {
 				entry.key = 0;
@@ -1190,8 +1299,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 	}
@@ -1199,7 +1310,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public static class Entries<V> extends AbstractSet<Entry<V>> implements EnhancedCollection<Entry<V>> {
 		protected EntryIterator<V> iter;
 
-		public Entries (IntObjectMap<V> map) {
+		public Entries(IntObjectMap<V> map) {
 			iter = new EntryIterator<>(map);
 		}
 
@@ -1209,17 +1320,17 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator<V> iterator () {
+		public @NonNull EntryIterator<V> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1231,7 +1342,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
@@ -1239,7 +1350,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1247,11 +1358,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<Entry<V>> toList () {
+		public ObjectList<Entry<V>> toList() {
 			ObjectList<Entry<V>> list = new ObjectList<>(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(new Entry<>(iter.next()));}
+			while (iter.hasNext) {
+				list.add(new Entry<>(iter.next()));
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1261,13 +1374,16 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public Collection<Entry<V>> appendInto(Collection<Entry<V>> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(new Entry<>(iter.next()));}
+			while (iter.hasNext) {
+				coll.add(new Entry<>(iter.next()));
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1277,6 +1393,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Map.
 		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 *
 		 * @param coll any modifiable Map; may have items appended into it
 		 * @return the given map
 		 */
@@ -1298,22 +1415,22 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		protected ValueIterator<V> iter;
 
 		@Override
-		public boolean add (@Nullable V item) {
+		public boolean add(@Nullable V item) {
 			throw new UnsupportedOperationException("IntObjectMap.Values is read-only");
 		}
 
 		@Override
-		public boolean remove (@Nullable Object item) {
+		public boolean remove(@Nullable Object item) {
 			throw new UnsupportedOperationException("IntObjectMap.Values is read-only");
 		}
 
 		@Override
-		public boolean contains (@Nullable Object item) {
+		public boolean contains(@Nullable Object item) {
 			return iter.map.containsValue(item);
 		}
 
 		@Override
-		public void clear () {
+		public void clear() {
 			throw new UnsupportedOperationException("IntObjectMap.Values is read-only");
 		}
 
@@ -1323,21 +1440,21 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull ValueIterator<V> iterator () {
+		public @NonNull ValueIterator<V> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
-		public Values (IntObjectMap<V> map) {
+		public Values(IntObjectMap<V> map) {
 			iter = new ValueIterator<>(map);
 		}
 
@@ -1345,7 +1462,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1353,11 +1470,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<V> toList () {
+		public ObjectList<V> toList() {
 			ObjectList<V> list = new ObjectList<>(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.next());}
+			while (iter.hasNext) {
+				list.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1367,13 +1486,16 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public Collection<V> appendInto(Collection<V> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.next());}
+			while (iter.hasNext) {
+				coll.add(iter.next());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1385,47 +1507,49 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public static class Keys<V> implements PrimitiveSet.SetOfInt {
 		protected KeyIterator<V> iter;
 
-		public Keys (IntObjectMap<V> map) {
+		public Keys(IntObjectMap<V> map) {
 			iter = new KeyIterator<>(map);
 		}
 
 		@Override
-		public boolean add (int item) {
+		public boolean add(int item) {
 			throw new UnsupportedOperationException("IntObjectMap.Keys is read-only");
 		}
 
 		@Override
-		public boolean remove (int item) {
+		public boolean remove(int item) {
 			throw new UnsupportedOperationException("IntObjectMap.Keys is read-only");
 		}
 
 		@Override
-		public boolean contains (int item) {
+		public boolean contains(int item) {
 			return iter.map.containsKey(item);
 		}
 
 		@Override
-		public IntIterator iterator () {
+		public IntIterator iterator() {
 			return iter;
 		}
 
 		@Override
-		public void clear () {
+		public void clear() {
 			throw new UnsupportedOperationException("IntObjectMap.Keys is read-only");
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
 			int hc = 1;
-			while (iter.hasNext) {hc += iter.nextInt();}
+			while (iter.hasNext) {
+				hc += iter.nextInt();
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1436,7 +1560,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1444,11 +1568,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public IntList toList () {
+		public IntList toList() {
 			IntList list = new IntList(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.nextInt());}
+			while (iter.hasNext) {
+				list.add(iter.nextInt());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1458,13 +1584,16 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfInt appendInto(PrimitiveCollection.OfInt coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.nextInt());}
+			while (iter.hasNext) {
+				coll.add(iter.nextInt());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1473,7 +1602,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
-		public boolean equals (Object other) {
+		public boolean equals(Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			boolean eq = SetOfInt.super.equalContents(other);
@@ -1484,14 +1613,14 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
 	}
 
 	@Nullable
-	public V putIfAbsent (int key, V value) {
+	public V putIfAbsent(int key, V value) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				return zeroValue;
@@ -1505,7 +1634,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		return put(key, value);
 	}
 
-	public boolean replace (int key, V oldValue, V newValue) {
+	public boolean replace(int key, V oldValue, V newValue) {
 		V curValue = get(key);
 		if (!Objects.equals(curValue, oldValue) || !containsKey(key)) {
 			return false;
@@ -1515,7 +1644,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	@Nullable
-	public V replace (int key, V value) {
+	public V replace(int key, V value) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				V oldValue = zeroValue;
@@ -1533,7 +1662,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		return defaultValue;
 	}
 
-	public V computeIfAbsent (int key, IntToObjFunction<? extends V> mappingFunction) {
+	public V computeIfAbsent(int key, IntToObjFunction<? extends V> mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			V newValue = mappingFunction.apply(key);
@@ -1543,7 +1672,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 			return valueTable[i];
 	}
 
-	public boolean remove (int key, Object value) {
+	public boolean remove(int key, Object value) {
 		int i = locateKey(key);
 		if (i >= 0 && Objects.equals(valueTable[i], value)) {
 			remove(key);
@@ -1553,7 +1682,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	@Nullable
-	public V merge (int key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public V merge(int key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
 		if (next == null)
@@ -1567,15 +1696,16 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Just like Map's merge() default method, but this doesn't use Java 8 APIs (so it should work on RoboVM), and this
 	 * won't remove entries if the remappingFunction returns null (in that case, it will call {@code put(key, null)}).
 	 * This also uses a functional interface from Funderby instead of the JDK, for RoboVM support.
-	 * @param key key with which the resulting value is to be associated
-	 * @param value the value to be merged with the existing value
-	 *        associated with the key or, if no existing value
-	 *        is associated with the key, to be associated with the key
+	 *
+	 * @param key               key with which the resulting value is to be associated
+	 * @param value             the value to be merged with the existing value
+	 *                          associated with the key or, if no existing value
+	 *                          is associated with the key, to be associated with the key
 	 * @param remappingFunction given a V from this and the V {@code value}, this should return what V to use
 	 * @return the value now associated with key
 	 */
 	@Nullable
-	public V combine (int key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public V combine(int key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
 		put(key, next);
@@ -1586,10 +1716,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Simply calls {@link #combine(int, Object, ObjObjToObjBiFunction)} on this map using every
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
-	 * @param other a non-null Map (or subclass) with compatible key and value types
+	 *
+	 * @param other             a non-null Map (or subclass) with compatible key and value types
 	 * @param remappingFunction given a V value from this and a value from other, this should return what V to use
 	 */
-	public void combine (IntObjectMap<? extends V> other, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+	public void combine(IntObjectMap<? extends V> other, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		for (IntObjectMap.Entry<? extends V> e : other.entrySet()) {
 			combine(e.getKey(), e.getValue(), remappingFunction);
 		}
@@ -1600,10 +1731,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> IntObjectMap<V> with () {
+	public static <V> IntObjectMap<V> with() {
 		return new IntObjectMap<>(0);
 	}
 
@@ -1618,7 +1749,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> IntObjectMap<V> with (Number key0, V value0) {
+	public static <V> IntObjectMap<V> with(Number key0, V value0) {
 		IntObjectMap<V> map = new IntObjectMap<>(1);
 		map.put(key0.intValue(), value0);
 		return map;
@@ -1637,7 +1768,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectMap<V> with (Number key0, V value0, Number key1, V value1) {
+	public static <V> IntObjectMap<V> with(Number key0, V value0, Number key1, V value1) {
 		IntObjectMap<V> map = new IntObjectMap<>(2);
 		map.put(key0.intValue(), value0);
 		map.put(key1.intValue(), value1);
@@ -1659,7 +1790,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectMap<V> with (Number key0, V value0, Number key1, V value1, Number key2, V value2) {
+	public static <V> IntObjectMap<V> with(Number key0, V value0, Number key1, V value1, Number key2, V value2) {
 		IntObjectMap<V> map = new IntObjectMap<>(3);
 		map.put(key0.intValue(), value0);
 		map.put(key1.intValue(), value1);
@@ -1684,7 +1815,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectMap<V> with (Number key0, V value0, Number key1, V value1, Number key2, V value2, Number key3, V value3) {
+	public static <V> IntObjectMap<V> with(Number key0, V value0, Number key1, V value1, Number key2, V value2, Number key3, V value3) {
 		IntObjectMap<V> map = new IntObjectMap<>(4);
 		map.put(key0.intValue(), value0);
 		map.put(key1.intValue(), value1);
@@ -1709,12 +1840,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	public static <V> IntObjectMap<V> with (Number key0, V value0, Object... rest) {
+	public static <V> IntObjectMap<V> with(Number key0, V value0, Object... rest) {
 		IntObjectMap<V> map = new IntObjectMap<>(1 + (rest.length >>> 1));
 		map.put(key0.intValue(), value0);
 		map.putPairs(rest);
 		return map;
 	}
+
 	/**
 	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
 	 * another key, another value, and so on until another pair cannot be drawn.  All keys must be some type of boxed
@@ -1730,11 +1862,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void putPairs(Object... pairs) {
-		if(pairs != null) {
+		if (pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
 				try {
-					if(pairs[i-1] != null)
-						put(((Number)pairs[i - 1]).intValue(), (V)pairs[i]);
+					if (pairs[i - 1] != null)
+						put(((Number) pairs[i - 1]).intValue(), (V) pairs[i]);
 				} catch (ClassCastException ignored) {
 				}
 			}
@@ -1750,7 +1882,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
+	 *
+	 * @param str         a String containing BASE10 chars
 	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public void putLegible(String str, PartialParser<V> valueParser) {
@@ -1766,9 +1899,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
+	 *
+	 * @param str            a String containing BASE10 chars
 	 * @param entrySeparator the String separating every key-value pair
-	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param valueParser    a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public void putLegible(String str, String entrySeparator, PartialParser<V> valueParser) {
 		putLegible(str, entrySeparator, "=", valueParser, 0, -1);
@@ -1780,10 +1914,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
-	 * @param entrySeparator the String separating every key-value pair
+	 *
+	 * @param str               a String containing BASE10 chars
+	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<V> valueParser) {
 		putLegible(str, entrySeparator, keyValueSeparator, valueParser, 0, -1);
@@ -1795,35 +1930,36 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
-	 * @param entrySeparator the String separating every key-value pair
+	 *
+	 * @param str               a String containing BASE10 chars
+	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
-	 * @param offset the first position to read BASE10 chars from in {@code str}
-	 * @param length how many chars to read; -1 is treated as maximum length
+	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param offset            the first position to read BASE10 chars from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<V> valueParser, int offset, int length) {
 		int sl, el, kvl;
-		if(str == null || entrySeparator == null || keyValueSeparator == null || valueParser == null
-				|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
-				|| offset < 0 || offset > sl - 1) return;
+		if (str == null || entrySeparator == null || keyValueSeparator == null || valueParser == null
+			|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
+			|| offset < 0 || offset > sl - 1) return;
 		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
-		int end = str.indexOf(keyValueSeparator, offset+1);
+		int end = str.indexOf(keyValueSeparator, offset + 1);
 		int k = 0;
 		boolean incomplete = false;
 		while (end != -1 && end + kvl < lim) {
 			k = Base.BASE10.readInt(str, offset, end);
 			offset = end + kvl;
-			end = str.indexOf(entrySeparator, offset+1);
-			if(end != -1 && end + el < lim){
+			end = str.indexOf(entrySeparator, offset + 1);
+			if (end != -1 && end + el < lim) {
 				put(k, valueParser.parse(str, offset, end));
 				offset = end + el;
-				end = str.indexOf(keyValueSeparator, offset+1);
+				end = str.indexOf(keyValueSeparator, offset + 1);
 			} else {
 				incomplete = true;
 			}
 		}
-		if(incomplete && offset < lim){
+		if (incomplete && offset < lim) {
 			put(k, valueParser.parse(str, offset, lim));
 		}
 	}
@@ -1833,10 +1969,10 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
 	 *
-	 * @param <V>    the type of values
+	 * @param <V> the type of values
 	 * @return a new map containing nothing
 	 */
-	public static <V> IntObjectMap<V> withPrimitive () {
+	public static <V> IntObjectMap<V> withPrimitive() {
 		return new IntObjectMap<>(0);
 	}
 
@@ -1851,7 +1987,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <V> IntObjectMap<V> withPrimitive (int key0, V value0) {
+	public static <V> IntObjectMap<V> withPrimitive(int key0, V value0) {
 		IntObjectMap<V> map = new IntObjectMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -1870,7 +2006,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectMap<V> withPrimitive (int key0, V value0, int key1, V value1) {
+	public static <V> IntObjectMap<V> withPrimitive(int key0, V value0, int key1, V value1) {
 		IntObjectMap<V> map = new IntObjectMap<>(2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1892,7 +2028,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectMap<V> withPrimitive (int key0, V value0, int key1, V value1, int key2, V value2) {
+	public static <V> IntObjectMap<V> withPrimitive(int key0, V value0, int key1, V value1, int key2, V value2) {
 		IntObjectMap<V> map = new IntObjectMap<>(3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1917,7 +2053,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static <V> IntObjectMap<V> withPrimitive (int key0, V value0, int key1, V value1, int key2, V value2, int key3, V value3) {
+	public static <V> IntObjectMap<V> withPrimitive(int key0, V value0, int key1, V value1, int key2, V value2, int key3, V value3) {
 		IntObjectMap<V> map = new IntObjectMap<>(4);
 		map.put(key0, value0);
 		map.put(key1, value1);

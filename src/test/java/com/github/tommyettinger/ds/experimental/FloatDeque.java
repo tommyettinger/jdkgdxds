@@ -80,8 +80,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	protected int tail = 0;
 
-	@Nullable protected transient FloatDequeIterator descendingIterator1;
-	@Nullable protected transient FloatDequeIterator descendingIterator2;
+	@Nullable
+	protected transient FloatDequeIterator descendingIterator1;
+	@Nullable
+	protected transient FloatDequeIterator descendingIterator2;
 
 	/**
 	 * Creates a new FloatDeque which can hold 16 values without needing to resize the backing array.
@@ -93,6 +95,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	/**
 	 * Creates a new FloatDeque which can hold the specified number of values without needing to resize the backing
 	 * array.
+	 *
 	 * @param initialSize how large the backing array should be, without any padding
 	 */
 	public FloatDeque(int initialSize) {
@@ -157,6 +160,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	/**
 	 * Creates a new FloatDeque using {@code count} items from {@code a}, starting at {@code offset}.
 	 * If {@code count} is 0 or less, this will create an empty FloatDeque with capacity 1.
+	 *
 	 * @param a      an array of float
 	 * @param offset where in {@code a} to start using items
 	 * @param count  how many items to use from {@code a}
@@ -183,9 +187,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * Gets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
+	 *
 	 * @return the current default value
 	 */
-	public float getDefaultValue () {
+	public float getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -193,9 +198,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * Sets the default value, which is the value returned when nothing can be obtained from this deque and an exception
 	 * is not meant to be thrown, such as when calling peek() on an empty deque. Unless changed, the default value is
 	 * usually {@code null}.
+	 *
 	 * @param defaultValue any float this can return instead of throwing an Exception, or {@code null}
 	 */
-	public void setDefaultValue (float defaultValue) {
+	public void setDefaultValue(float defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -204,14 +210,14 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param value can be null
 	 */
-	public void addLast (float value) {
+	public void addLast(float value) {
 		float[] items = this.items;
 
 		if (size == items.length)
 			items = resize(items.length << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(++size == 1) tail = head;
+		if (++size == 1) tail = head;
 		items[tail] = value;
 	}
 
@@ -222,7 +228,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			items = resize(size + 2 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -236,7 +242,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			items = resize(size + 3 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -252,7 +258,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			items = resize(size + 4 << 1);
 
 		if (++tail == items.length) tail = 0;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[tail] = value1;
 		if (++tail == items.length) tail = 0;
 		items[tail] = value2;
@@ -269,7 +275,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param value can be null
 	 * @see #addLast(float)
 	 */
-	public void addFirst (float value) {
+	public void addFirst(float value) {
 		float[] items = this.items;
 
 		if (size == items.length)
@@ -280,10 +286,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		items[head] = value;
 
 		this.head = head;
-		if(++size == 1) tail = head;
+		if (++size == 1) tail = head;
 	}
 
-	public void addFirst (float value1, float value2) {
+	public void addFirst(float value1, float value2) {
 		float[] items = this.items;
 
 		if (size + 2 > items.length)
@@ -292,7 +298,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value2;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value1;
@@ -301,7 +307,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		this.head = head;
 	}
 
-	public void addFirst (float value1, float value2, float value3) {
+	public void addFirst(float value1, float value2, float value3) {
 		float[] items = this.items;
 
 		if (size + 3 > items.length)
@@ -309,7 +315,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value3;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value2;
@@ -320,7 +326,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		this.head = head;
 	}
 
-	public void addFirst (float value1, float value2, float value3, float value4) {
+	public void addFirst(float value1, float value2, float value3, float value4) {
 		float[] items = this.items;
 
 		if (size + 4 > items.length)
@@ -328,7 +334,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
-		if(size == 0) tail = head;
+		if (size == 0) tail = head;
 		items[head] = value4;
 		if (--head == -1) head = items.length - 1;
 		items[head] = value3;
@@ -348,8 +354,8 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	public void trimToSize() {
 		if (size < items.length) {
-			if(head <= tail) {
-				items = Arrays.copyOfRange(items, head, tail+1);
+			if (head <= tail) {
+				items = Arrays.copyOfRange(items, head, tail + 1);
 			} else {
 				float[] next = new float[size];
 				System.arraycopy(items, head, next, 0, items.length - head);
@@ -373,7 +379,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return the backing array this will use after this call
 	 */
-	public float[] ensureCapacity (int additional) {
+	public float[] ensureCapacity(int additional) {
 		final int needed = size + additional;
 		if (items.length < needed) {
 			resize(needed);
@@ -389,8 +395,8 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return the new backing array, as a direct reference
 	 */
-	public float[] resize (int newSize) {
-		if(newSize < size)
+	public float[] resize(int newSize) {
+		if (newSize < size)
 			newSize = size;
 		final float[] items = this.items;
 		final int head = this.head;
@@ -420,7 +426,8 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * resize the backing array to achieve this goal. If possible, this will keep the same backing array and modify
 	 * it in-place. The "gap" is not assigned null, and may contain old/duplicate references; calling code <em>must</em>
 	 * overwrite the entire gap with additional values to ensure GC correctness.
-	 * @param index the 0-based index in the iteration order where the gap will be present
+	 *
+	 * @param index   the 0-based index in the iteration order where the gap will be present
 	 * @param gapSize the number of items that will need filling in the gap, and can be filled without issues.
 	 * @return the position in the array where the gap will begin, which is unrelated to the index
 	 */
@@ -436,7 +443,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			this.head = 0;
 			this.tail = gapSize - 1;
 			if (items.length < gapSize) {
-                this.items = new float[gapSize];
+				this.items = new float[gapSize];
 			}
 			return 0;
 		} else if (size == 1) {
@@ -490,7 +497,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 				return index;
 			} else {
 				if (head + index <= this.items.length) {
-					if(head - gapSize >= 0) {
+					if (head - gapSize >= 0) {
 						System.arraycopy(this.items, head, this.items, head - gapSize, index);
 						this.head -= gapSize;
 						return this.head + index;
@@ -555,7 +562,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return removed float
 	 * @throws NoSuchElementException when the deque is empty
 	 */
-	public float removeFirst () {
+	public float removeFirst() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("FloatDeque is empty.");
@@ -569,7 +576,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		return result;
 	}
@@ -581,7 +588,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #removeFirst()
 	 */
-	public float removeLast () {
+	public float removeLast() {
 		if (size == 0) {
 			throw new NoSuchElementException("FloatDeque is empty.");
 		}
@@ -595,7 +602,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		} else {
 			--tail;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		this.tail = tail;
 
@@ -618,7 +625,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerFirst (float t) {
+	public boolean offerFirst(float t) {
 		addFirst(t);
 		return true;
 	}
@@ -639,7 +646,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @throws IllegalArgumentException if some property of the specified
 	 *                                  element prevents it from being added to this deque
 	 */
-	public boolean offerLast (float t) {
+	public boolean offerLast(float t) {
 		addLast(t);
 		return true;
 	}
@@ -649,10 +656,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
 	 * {@code null} unless it has been changed with {@link #setDefaultValue(float)}.
 	 *
-	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
+	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 */
-	public float pollFirst () {
+	public float pollFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -666,7 +673,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		if (head == items.length) {
 			head = 0;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		return result;
 	}
@@ -676,10 +683,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * or returns {@link #getDefaultValue() defaultValue} if this deque is empty. The default value is usually
 	 * {@code null} unless it has been changed with {@link #setDefaultValue(float)}.
 	 *
-	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
+	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 */
-	public float pollLast () {
+	public float pollLast() {
 		if (size == 0) {
 			return defaultValue;
 		}
@@ -693,7 +700,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		} else {
 			--tail;
 		}
-		if(--size <= 1) tail = head;
+		if (--size <= 1) tail = head;
 
 		this.tail = tail;
 
@@ -709,7 +716,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return the head of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public float getFirst () {
+	public float getFirst() {
 		return first();
 	}
 
@@ -721,7 +728,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return the tail of this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public float getLast () {
+	public float getLast() {
 		return last();
 	}
 
@@ -731,7 +738,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public float peekFirst () {
+	public float peekFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -745,7 +752,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public float peekLast () {
+	public float peekLast() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
@@ -764,7 +771,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeFirstOccurrence (float o) {
+	public boolean removeFirstOccurrence(float o) {
 		return removeValue(o);
 	}
 
@@ -779,7 +786,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean removeLastOccurrence (float o) {
+	public boolean removeLastOccurrence(float o) {
 		return removeLastValue(o);
 	}
 
@@ -797,7 +804,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param t the element to add
 	 * @return {@code true} (as specified by {@link Collection#add})
 	 */
-	public boolean add (float t) {
+	public boolean add(float t) {
 		addLast(t);
 		return true;
 	}
@@ -822,13 +829,14 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * Unlike {@link #offerFirst(float)} and {@link #offerLast(float)}, this does not run in expected constant time unless
 	 * the index is less than or equal to 0 (where it acts like offerFirst()) or greater than or equal to {@link #size()}
 	 * (where it acts like offerLast()).
+	 *
 	 * @param index the index in the deque's insertion order to insert the item
-	 * @param item a float item to insert; may be null
+	 * @param item  a float item to insert; may be null
 	 */
-	public void insert (int index, float item) {
-		if(index <= 0)
+	public void insert(int index, float item) {
+		if (index <= 0)
 			addFirst(item);
-		else if(index >= size)
+		else if (index >= size)
 			addLast(item);
 		else {
 			float[] items = this.items;
@@ -838,11 +846,11 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 				items = this.items;
 			}
 
-			if(head <= tail) {
+			if (head <= tail) {
 				index += head;
-				if(index >= items.length) index -= items.length;
+				if (index >= items.length) index -= items.length;
 				int after = index + 1;
-				if(after >= items.length) after = 0;
+				if (after >= items.length) after = 0;
 
 				System.arraycopy(items, index, items, after, head + size - index - 1);
 				items[index] = item;
@@ -856,8 +864,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 					System.arraycopy(items, head, items, head - 1, index);
 					items[head - 1 + index] = item;
 					head--;
-				}
-				else {
+				} else {
 					// forward shift
 					index = head + index - items.length;
 					System.arraycopy(items, index, items, index + 1, tail - index + 1);
@@ -882,7 +889,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param t the element to add
 	 * @return {@code true} if the element was added to this deque, else {@code false}
 	 */
-	public boolean offer (float t) {
+	public boolean offer(float t) {
 		addLast(t);
 		return true;
 	}
@@ -898,7 +905,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public float remove () {
+	public float remove() {
 		return removeFirst();
 	}
 
@@ -912,7 +919,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return the first element of this deque, or {@link #getDefaultValue() defaultValue} if
 	 * this deque is empty
 	 */
-	public float poll () {
+	public float poll() {
 		return pollFirst();
 	}
 
@@ -927,7 +934,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return the head of the queue represented by this deque
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public float element () {
+	public float element() {
 		return first();
 	}
 
@@ -941,7 +948,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return the head of the queue represented by this deque, or
 	 * {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
-	public float peek () {
+	public float peek() {
 		return peekFirst();
 	}
 
@@ -960,13 +967,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAll (OfFloat c) {
+	public boolean addAll(OfFloat c) {
 		final int cs = c.size();
-		if(cs == 0) return false;
+		if (cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		if(c == this) {
-			if(head <= tail) {
+		if (c == this) {
+			if (head <= tail) {
 				if (tail + 1 < items.length)
 					System.arraycopy(items, head, items, tail + 1, Math.min(size, items.length - tail - 1));
 				if (items.length - tail - 1 < size)
@@ -985,26 +992,28 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * An alias for {@link #addAll(OfFloat)}, this adds every item in {@code c} to this in order at the end.
+	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast (OfFloat c) {
+	public boolean addAllLast(OfFloat c) {
 		return addAll(c);
 	}
 
 	/**
 	 * Adds every item in {@code c} to this in order at the start. The iteration order of {@code c} will be preserved
 	 * for the added items.
+	 *
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst (OfFloat c) {
+	public boolean addAllFirst(OfFloat c) {
 		final int cs = c.size();
-		if(cs == 0) return false;
+		if (cs == 0) return false;
 		int oldSize = size;
 		ensureCapacity(Math.max(cs, oldSize));
-		if(c == this) {
-			if(head <= tail) {
+		if (c == this) {
+			if (head <= tail) {
 				if (head >= oldSize)
 					System.arraycopy(items, head, items, head - oldSize, oldSize);
 				else if (head > 0) {
@@ -1018,14 +1027,14 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 				System.arraycopy(items, 0, items, items.length - oldSize, tail + 1);
 			}
 			head -= oldSize;
-			if(head < 0) head += items.length;
+			if (head < 0) head += items.length;
 			size += oldSize;
 		} else {
 			int i = ensureGap(0, cs);
 			FloatIterator it = c.iterator();
 			while (it.hasNext()) {
 				items[i++] = it.nextFloat();
-				if(i == items.length) i = 0;
+				if (i == items.length) i = 0;
 			}
 			size += cs;
 		}
@@ -1045,7 +1054,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param index index at which to insert the first element from the
 	 *              specified collection
-	 * @param c collection containing elements to be added to this list
+	 * @param c     collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
 	public boolean insertAll(int index, OfFloat c) {
@@ -1054,16 +1063,16 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	public boolean addAll(int index, OfFloat c) {
 		int oldSize = size;
-		if(index <= 0)
+		if (index <= 0)
 			addAllFirst(c);
-		else if(index >= oldSize)
+		else if (index >= oldSize)
 			addAll(c);
 		else {
 			final int cs = c.size();
-			if(c.isEmpty()) return false;
+			if (c.isEmpty()) return false;
 			int place = ensureGap(index, cs);
 			float[] items = this.items;
-			if(c == this){
+			if (c == this) {
 				System.arraycopy(items, head, items, place, place - head);
 				System.arraycopy(items, place + cs, items, place + place - head, tail + 1 - place - cs);
 			} else {
@@ -1080,83 +1089,90 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Exactly like {@link #addAll(OfFloat)}, but takes an array instead of a PrimitiveCollection.OfFloat.
-	 * @see #addAll(OfFloat)
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(OfFloat)
 	 */
-	public boolean addAll (float[] array) {
+	public boolean addAll(float[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #addAll(float[])}, but only uses at most {@code length} items from {@code array}, starting at {@code offset}.
-	 * @see #addAll(float[])
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(float[])
 	 */
-	public boolean addAll (float[] array, int offset, int length) {
+	public boolean addAll(float[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(size, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * An alias for {@link #addAll(float[])}.
-	 * @see #addAll(float[])
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(float[])
 	 */
-	public boolean addAllLast (float[] array) {
+	public boolean addAllLast(float[] array) {
 		return addAll(array, 0, array.length);
 	}
 
 	/**
 	 * An alias for {@link #addAll(float[], int, int)}.
-	 * @see #addAll(float[], int, int)
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(float[], int, int)
 	 */
-	public boolean addAllLast (float[] array, int offset, int length) {
+	public boolean addAllLast(float[] array, int offset, int length) {
 		return addAll(array, offset, length);
 	}
 
 	/**
 	 * Exactly like {@link #addAllFirst(OfFloat)}, but takes an array instead of a PrimitiveCollection.OfFloat.
-	 * @see #addAllFirst(OfFloat)
+	 *
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(OfFloat)
 	 */
-	public boolean addAllFirst (float[] array) {
+	public boolean addAllFirst(float[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
 
 	/**
 	 * Like {@link #addAllFirst(float[])}, but only uses at most {@code length} items from {@code array}, starting at
 	 * {@code offset}. The order of {@code array} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(float[])
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(float[])
 	 */
-	public boolean addAllFirst (float[] array, int offset, int length) {
+	public boolean addAllFirst(float[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(0, cs);
 		System.arraycopy(array, offset, this.items, place, cs);
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, float[])}.
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1167,8 +1183,9 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Alias for {@link #addAll(int, float[], int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1181,10 +1198,11 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * Like {@link #addAll(int, OfFloat)}, but takes an array instead of a PrimitiveCollection.OfFloat and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(float[])
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code array}
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(float[])
 	 */
 	public boolean addAll(int index, float[] array) {
 		return addAll(index, array, 0, array.length);
@@ -1195,48 +1213,51 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(float[])
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param array the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param array  the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(float[])
 	 */
 	public boolean addAll(int index, float[] array, int offset, int length) {
 		int oldSize = size;
-		if(index <= 0)
+		if (index <= 0)
 			addAllFirst(array, offset, length);
-		else if(index >= oldSize)
+		else if (index >= oldSize)
 			addAll(array, offset, length);
 		else {
 			final int cs = Math.min(array.length - offset, length);
-			if(cs <= 0) return false;
+			if (cs <= 0) return false;
 			int place = ensureGap(index, cs);
 			System.arraycopy(array, offset, this.items, place, cs);
 			size += cs;
-        }
+		}
 		return oldSize != size;
 	}
 
 	/**
 	 * Exactly like {@link #addAll(OfFloat)}, but takes an Ordered.OfFloat instead of a PrimitiveCollection.OfFloat.
-	 * @see #addAll(OfFloat)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(OfFloat)
 	 */
-	public boolean addAll (Ordered.OfFloat ord) {
+	public boolean addAll(Ordered.OfFloat ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
 	 * Like {@link #addAll(float[])}, but only uses at most {@code length} items from {@code ord}, starting at {@code offset}.
-	 * @see #addAll(float[])
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(float[])
 	 */
-	public boolean addAll (Ordered.OfFloat ord, int offset, int length) {
+	public boolean addAll(Ordered.OfFloat ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
@@ -1244,10 +1265,11 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * Like {@link #addAll(int, OfFloat)}, but takes an ord instead of a PrimitiveCollection.OfFloat and inserts it
 	 * so the first item will be at the given {@code index}.
 	 * The order of {@code ord} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfFloat)
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 * @param ord   the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfFloat)
 	 */
 	public boolean addAll(int index, Ordered.OfFloat ord) {
 		return addAll(index, ord, 0, ord.size());
@@ -1258,75 +1280,81 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * {@code offset} from that array, using {@code length} items, and inserts them
 	 * so the item at the given offset will be at the given {@code index}.
 	 * The order of {@code array} will be preserved, starting at the given index in this deque.
-	 * @see #addAll(Ordered.OfFloat)
-	 * @param index the index in this deque's iteration order to place the first item in {@code array}
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code array}
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in array to add
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfFloat)
 	 */
-	public boolean addAll (int index, Ordered.OfFloat ord, int offset, int length) {
+	public boolean addAll(int index, Ordered.OfFloat ord, int offset, int length) {
 		final int cs = Math.min(ord.size() - offset, length);
-		if(cs <= 0) return false;
+		if (cs <= 0) return false;
 		int place = ensureGap(index, cs);
 		FloatList er = ord.order();
 		for (int i = offset, n = offset + cs; i < n; i++) {
 			items[place++] = er.get(i);
-			if(place == items.length) place = 0;
+			if (place == items.length) place = 0;
 		}
 		size += cs;
-        return true;
+		return true;
 	}
 
 	/**
 	 * An alias for {@link #addAll(Ordered.OfFloat)}.
-	 * @see #addAll(Ordered.OfFloat)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfFloat)
 	 */
-	public boolean addAllLast (Ordered.OfFloat ord) {
+	public boolean addAllLast(Ordered.OfFloat ord) {
 		return addAll(size, ord, 0, ord.size());
 	}
 
 	/**
 	 * An alias for {@link #addAll(Ordered.OfFloat, int, int)}.
-	 * @see #addAll(Ordered.OfFloat, int, int)
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAll(Ordered.OfFloat, int, int)
 	 */
-	public boolean addAllLast (Ordered.OfFloat ord, int offset, int length) {
+	public boolean addAllLast(Ordered.OfFloat ord, int offset, int length) {
 		return addAll(size, ord, offset, length);
 	}
 
 	/**
 	 * Exactly like {@link #addAllFirst(OfFloat)}, but takes an ord instead of a PrimitiveCollection.OfFloat.
-	 * @see #addAllFirst(OfFloat)
+	 *
 	 * @param ord the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(OfFloat)
 	 */
-	public boolean addAllFirst (Ordered.OfFloat ord) {
+	public boolean addAllFirst(Ordered.OfFloat ord) {
 		return addAll(0, ord, 0, ord.size());
 	}
 
 	/**
 	 * Like {@link #addAllFirst(Ordered.OfFloat)}, but only uses at most {@code length} items from {@code ord}, starting at
 	 * {@code offset}. The order of {@code ord} will be preserved, starting at the head of the deque.
-	 * @see #addAllFirst(Ordered.OfFloat)
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
+	 * @see #addAllFirst(Ordered.OfFloat)
 	 */
-	public boolean addAllFirst (Ordered.OfFloat ord, int offset, int length) {
+	public boolean addAllFirst(Ordered.OfFloat ord, int offset, int length) {
 		return addAll(0, ord, offset, length);
 	}
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfFloat)}.
+	 *
 	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 * @param ord   the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
 	public boolean insertAll(int index, Ordered.OfFloat ord) {
@@ -1335,8 +1363,9 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Alias for {@link #addAll(int, Ordered.OfFloat, int, int)}.
-	 * @param index the index in this deque's iteration order to place the first item in {@code ord}
-	 * @param ord the elements to be inserted into this deque
+	 *
+	 * @param index  the index in this deque's iteration order to place the first item in {@code ord}
+	 * @param ord    the elements to be inserted into this deque
 	 * @param offset the index of the first item in ord to add
 	 * @param length how many items, at most, to add from ord into this
 	 * @return {@code true} if this deque changed as a result of the call
@@ -1353,7 +1382,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @param t the element to push
 	 */
-	public void push (float t) {
+	public void push(float t) {
 		addFirst(t);
 	}
 
@@ -1367,7 +1396,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * of the stack represented by this deque)
 	 * @throws NoSuchElementException if this deque is empty
 	 */
-	public float pop () {
+	public float pop() {
 		return removeFirst();
 	}
 
@@ -1384,7 +1413,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param o element to be removed from this deque, if present
 	 * @return {@code true} if an element was removed as a result of this call
 	 */
-	public boolean remove (float o) {
+	public boolean remove(float o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -1396,7 +1425,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param o element whose presence in this deque is to be tested
 	 * @return {@code true} if this deque contains the specified element
 	 */
-	public boolean contains (float o) {
+	public boolean contains(float o) {
 		return indexOf(o, 0) != -1;
 	}
 
@@ -1410,7 +1439,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return the number of elements in this deque
 	 */
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -1429,7 +1458,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code float}, containing all the elements in this collection
 	 */
-	public float @NonNull [] toArray () {
+	public float @NonNull [] toArray() {
 		float[] next = new float[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -1463,35 +1492,37 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Alias for {@link #truncate(int)}.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncateLast (int newSize) {
+	public void truncateLast(int newSize) {
 		truncate(newSize);
 	}
 
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing items from the tail end.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
-		if(newSize <= 0) {
+	public void truncate(int newSize) {
+		if (newSize <= 0) {
 			clear();
 			return;
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail) {
+			if (head <= tail) {
 				// only removing from tail, near the end, toward head, near the start
 				tail -= oldSize - newSize;
 				size = newSize;
-			} else if(head + newSize < items.length) {
+			} else if (head + newSize < items.length) {
 				// tail is near the start, but we have to remove elements through the start and into the back
 				tail = head + newSize;
 				size = newSize;
 			} else {
 				// tail is near the start, but we only have to remove some elements between tail and the start
-                tail -= (oldSize - newSize);
+				tail -= (oldSize - newSize);
 				size = newSize;
 			}
 		}
@@ -1500,19 +1531,20 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	/**
 	 * Reduces the size of the deque to the specified size by bulk-removing from the head.
 	 * If the deque is already smaller than the specified size, no action is taken.
+	 *
 	 * @param newSize the size this deque should have after this call completes, if smaller than the current size
 	 */
-	public void truncateFirst (int newSize) {
-		if(newSize <= 0) {
+	public void truncateFirst(int newSize) {
+		if (newSize <= 0) {
 			clear();
 			return;
 		}
 		int oldSize = size;
 		if (oldSize > newSize) {
-			if(head <= tail || head + oldSize - newSize < items.length) {
+			if (head <= tail || head + oldSize - newSize < items.length) {
 				// only removing from head to head + newSize, which is contiguous
 				head += oldSize - newSize;
-				if(head >= items.length) head -= items.length;
+				if (head >= items.length) head -= items.length;
 				size = newSize;
 			} else {
 				// tail is near the start, and we are removing from head to the end and then part near start
@@ -1536,34 +1568,34 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * actually sometimes needs for this in user code.
 	 *
 	 * @param fromIndex index of first element to be removed (inclusive)
-	 * @param toIndex index after last element to be removed (exclusive)
+	 * @param toIndex   index after last element to be removed (exclusive)
 	 */
 	public void removeRange(int fromIndex, int toIndex) {
-		if(fromIndex <= 0){
+		if (fromIndex <= 0) {
 			truncateFirst(size - toIndex);
 			return;
 		}
-		if(toIndex >= size) {
+		if (toIndex >= size) {
 			truncate(fromIndex);
 			return;
 		}
 		if (fromIndex < toIndex) {
 			int removedCount = toIndex - fromIndex;
-			if(head <= tail) {
+			if (head <= tail) {
 				// tail is near the end, head is near the start
 				int tailMinusTo = tail + 1 - (head + toIndex);
-				if(tailMinusTo < 0) tailMinusTo += items.length;
+				if (tailMinusTo < 0) tailMinusTo += items.length;
 				System.arraycopy(items, head + toIndex, items, head + fromIndex, tailMinusTo);
 				tail -= removedCount;
 				size -= removedCount;
-			} else if(head + toIndex < items.length) {
+			} else if (head + toIndex < items.length) {
 				// head is at the end, and tail wraps around, but we are only removing items between head and end
 				int headPlusFrom = head + fromIndex;
-				if(headPlusFrom >= items.length) headPlusFrom -= items.length;
+				if (headPlusFrom >= items.length) headPlusFrom -= items.length;
 				System.arraycopy(items, head, items, headPlusFrom, removedCount);
 				head += removedCount;
 				size -= removedCount;
-			} else if(head + toIndex - items.length - removedCount >= 0) {
+			} else if (head + toIndex - items.length - removedCount >= 0) {
 				// head is at the end, and tail wraps around, but we are only removing items between start and tail
 				System.arraycopy(items, head + toIndex - items.length, items, head + fromIndex - items.length, tail + 1 - (head + toIndex - items.length));
 				tail -= removedCount;
@@ -1585,7 +1617,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param value the float to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int indexOf (float value) {
+	public int indexOf(float value) {
 		return indexOf(value, 0);
 	}
 
@@ -1594,11 +1626,11 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param value the float to look for
+	 * @param value     the float to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int indexOf (float value, int fromIndex) {
+	public int indexOf(float value, int fromIndex) {
 		if (size == 0)
 			return -1;
 		float[] items = this.items;
@@ -1628,7 +1660,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param value the float to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int lastIndexOf (float value) {
+	public int lastIndexOf(float value) {
 		return lastIndexOf(value, size - 1);
 	}
 
@@ -1638,11 +1670,11 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * point, so if you chain calls to indexOf(), the subsequent fromIndex should be smaller than the last-returned
 	 * index.
 	 *
-	 * @param value the float to look for
+	 * @param value     the float to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int lastIndexOf (float value, int fromIndex) {
+	public int lastIndexOf(float value, int fromIndex) {
 		if (size == 0)
 			return -1;
 		float[] items = this.items;
@@ -1688,6 +1720,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Gets an iterator over this deque that starts at the given index.
+	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return a reused iterator starting at the given index
 	 */
@@ -1714,7 +1747,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param value the float to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeValue (float value) {
+	public boolean removeValue(float value) {
 		int index = indexOf(value, 0);
 		if (index == -1)
 			return false;
@@ -1728,7 +1761,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param value the float to remove
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeLastValue (float value) {
+	public boolean removeLastValue(float value) {
 		int index = lastIndexOf(value);
 		if (index == -1)
 			return false;
@@ -1759,13 +1792,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
@@ -1824,13 +1857,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else if (index >= items.length) { // index is between 0 and tail.
 			index -= items.length;
 			value = items[index];
 			System.arraycopy(items, index + 1, items, index, tail - index);
 			this.tail--;
-			if(this.tail == -1) this.tail = items.length - 1;
+			if (this.tail == -1) this.tail = items.length - 1;
 		} else { // index is between head and values.length.
 			value = items[index];
 			System.arraycopy(items, head, items, head + 1, index - head);
@@ -1856,7 +1889,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	@Override
 	public boolean retainAll(OfFloat other) {
 		// Gets the deque to be internally the same as a FloatList, if not already.
-		if(head != 0) trimToSize();
+		if (head != 0) trimToSize();
 		// That allows us to use the FloatList retainAll() verbatim.
 		return super.retainAll(other);
 	}
@@ -1864,14 +1897,14 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	/**
 	 * Returns true if the deque has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
 	/**
 	 * Returns true if the deque is empty.
 	 */
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -1882,7 +1915,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @see #peekFirst() peeking won't throw an exception, and will return the FloatDeque's default value if empty
 	 * @see #removeFirst()
 	 */
-	public float first () {
+	public float first() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("FloatDeque is empty.");
@@ -1896,7 +1929,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #peekLast() peeking won't throw an exception, and will return the FloatDeque's default value if empty
 	 */
-	public float last () {
+	public float last() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("FloatDeque is empty.");
@@ -1917,7 +1950,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return the element at the specified position in this deque
 	 * @throws NoSuchElementException if the deque is empty
 	 */
-	public float get (int index) {
+	public float get(int index) {
 		if (index <= 0)
 			return getFirst();
 		if (index >= size - 1)
@@ -1943,7 +1976,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param index index of the element to return
 	 * @return the element at the specified position in this deque
 	 */
-	public float peekAt (int index) {
+	public float peekAt(int index) {
 		if (index <= 0)
 			return peekFirst();
 		if (index >= size - 1)
@@ -1964,10 +1997,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * {@link #getDefaultValue() the default value}.
 	 *
 	 * @param index index of the element to replace
-	 * @param item element to be stored at the specified position
+	 * @param item  element to be stored at the specified position
 	 * @return the element previously at the specified position
 	 */
-	public float assign (int index, float item) {
+	public float assign(int index, float item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return defaultValue;
@@ -1996,7 +2029,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param index index of the element to replace
 	 * @param item  element to be stored at the specified position
 	 */
-	public void set (int index, float item) {
+	public void set(int index, float item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return;
@@ -2026,7 +2059,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	@Override
 	public FloatList plus(float value) {
 		final float[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] += value;
 			}
@@ -2054,7 +2087,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	@Override
 	public FloatList times(float value) {
 		final float[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] *= value;
 			}
@@ -2082,7 +2115,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	@Override
 	public FloatList minus(float value) {
 		final float[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] -= value;
 			}
@@ -2110,7 +2143,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	@Override
 	public FloatList div(float value) {
 		final float[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] /= value;
 			}
@@ -2138,7 +2171,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	@Override
 	public FloatList rem(float value) {
 		final float[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] %= value;
 			}
@@ -2156,7 +2189,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	@Override
 	public void replaceAll(FloatToFloatFunction operator) {
 		final float[] items = this.items;
-		if(head <= tail){
+		if (head <= tail) {
 			for (int i = head; i <= tail; i++) {
 				items[i] = operator.applyAsFloat(items[i]);
 			}
@@ -2173,13 +2206,14 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.
+	 *
 	 * @param index the first index to duplicate
 	 * @param count how many items to duplicate
 	 */
 	@Override
 	public boolean duplicateRange(int index, int count) {
 		int place = ensureGap(index + count, count);
-		if(place >= head + index + count){
+		if (place >= head + index + count) {
 			System.arraycopy(items, head + index, items, place, count);
 		} else {
 			System.arraycopy(items, 0, items, count - place, place);
@@ -2192,7 +2226,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	/**
 	 * Removes all values from this deque. This operates in O(1) time.
 	 */
-	public void clear () {
+	public void clear() {
 		if (size == 0)
 			return;
 		this.head = 0;
@@ -2206,7 +2240,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
 	 * iteration, use {@link FloatDequeIterator#FloatDequeIterator(FloatDeque)}.
 	 */
-	public FloatListIterator iterator () {
+	public FloatListIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new FloatDequeIterator(this);
 			iterator2 = new FloatDequeIterator(this);
@@ -2233,7 +2267,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public FloatListIterator descendingIterator () {
+	public FloatListIterator descendingIterator() {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new FloatDequeIterator(this, true);
 			descendingIterator2 = new FloatDequeIterator(this, true);
@@ -2261,7 +2295,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public FloatListIterator descendingIterator (int index) {
+	public FloatListIterator descendingIterator(int index) {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new FloatDequeIterator(this, index, true);
 			descendingIterator2 = new FloatDequeIterator(this, index, true);
@@ -2280,13 +2314,14 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Delegates to {@link #toString(String, boolean)} with a delimiter of {@code ", "} and square brackets enabled.
+	 *
 	 * @return the square-bracketed String representation of this FloatDeque, with items separated by ", "
 	 */
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
-	public int hashCode () {
+	public int hashCode() {
 		final int size = this.size;
 		final float[] items = this.items;
 		final int backingLength = items.length;
@@ -2315,6 +2350,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * This uses the {@link OfFloat#iterator()} of both this and {@code o},
 	 * so if either is in the
 	 * middle of a concurrent iteration that modifies the collection, this may fail.
+	 *
 	 * @param o object to be compared for equality with this collection
 	 * @return true if this is equal to o, or false otherwise
 	 */
@@ -2325,7 +2361,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			return false;
 
 		FloatIterator e1 = iterator();
-		FloatIterator e2 = ((FloatList)o).iterator();
+		FloatIterator e2 = ((FloatList) o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
 			float o1 = e1.nextFloat();
 			float o2 = e2.nextFloat();
@@ -2343,7 +2379,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			return false;
 
 		FloatIterator e1 = iterator();
-		FloatIterator e2 = ((FloatList)o).iterator();
+		FloatIterator e2 = ((FloatList) o).iterator();
 		while (e1.hasNext() && e2.hasNext()) {
 			float o1 = e1.nextFloat();
 			float o2 = e2.nextFloat();
@@ -2359,7 +2395,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param first  the first position, must not be negative and must be less than {@link #size()}
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
-	public void swap (int first, int second) {
+	public void swap(int first, int second) {
 		if (first < 0)
 			throw new IndexOutOfBoundsException("first index can't be < 0: " + first);
 		if (first >= size)
@@ -2368,7 +2404,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 			throw new IndexOutOfBoundsException("second index can't be < 0: " + second);
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
-		if(first == second) return;
+		if (first == second) return;
 		final float[] items = this.items;
 
 		int f = head + first;
@@ -2387,7 +2423,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	/**
 	 * Reverses this FloatDeque in-place.
 	 */
-	public void reverse () {
+	public void reverse() {
 		final float[] items = this.items;
 		int f, s, len = items.length;
 		float fv;
@@ -2404,10 +2440,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		}
 	}
 
-	public void shuffle (Random rng) {
+	public void shuffle(Random rng) {
 		for (int i = size() - 1; i > 0; i--) {
 			int r = rng.nextInt(i + 1);
-			if(r != i)
+			if (r != i)
 				set(i, assign(r, get(i)));
 		}
 	}
@@ -2416,7 +2452,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * Attempts to sort this deque in-place using its natural ordering, which requires float to
 	 * implement {@link Comparable} of float.
 	 */
-	public void sort () {
+	public void sort() {
 		sort(null);
 	}
 
@@ -2432,9 +2468,9 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param comparator the Comparator to use for float items; may be null to use the natural
 	 *                   order of float items when float implements Comparable of float
 	 */
-	public void sort (@Nullable FloatComparator comparator) {
+	public void sort(@Nullable FloatComparator comparator) {
 		if (head <= tail) {
-			FloatComparators.sort(items, head, tail+1, comparator);
+			FloatComparators.sort(items, head, tail + 1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			FloatComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
@@ -2455,10 +2491,11 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Gets a randomly selected item from this FloatDeque. Throws a {@link NoSuchElementException} if empty.
+	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public float random (Random random) {
+	public float random(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("FloatDeque is empty.");
 		}
@@ -2467,10 +2504,11 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public float peekRandom (Random random) {
+	public float peekRandom(Random random) {
 		return peekAt(random.nextInt(size));
 	}
 
@@ -2485,6 +2523,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		public FloatDequeIterator(FloatDeque deque) {
 			this(deque, false);
 		}
+
 		public FloatDequeIterator(FloatDeque deque, boolean descendingOrder) {
 			super(deque);
 			direction = descendingOrder ? -1 : 1;
@@ -2502,11 +2541,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public float nextFloat () {
-			if (!hasNext()) {throw new NoSuchElementException();}
+		public float nextFloat() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
 			latest = index;
 			index += direction;
-            return list.get(latest);
+			return list.get(latest);
 		}
 
 		/**
@@ -2517,8 +2558,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 * @return {@code true} if the iteration has more elements
 		 */
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return direction == 1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2531,8 +2574,10 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 * @return {@code true} if the list iterator has more elements when
 		 * traversing the list in the reverse direction
 		 */
-		public boolean hasPrevious () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasPrevious() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return direction == -1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2548,10 +2593,12 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 * @throws NoSuchElementException if the iteration has no previous
 		 *                                element
 		 */
-		public float previous () {
-			if (!hasPrevious()) {throw new NoSuchElementException();}
+		public float previous() {
+			if (!hasPrevious()) {
+				throw new NoSuchElementException();
+			}
 			latest = index -= direction;
-            return list.get(latest);
+			return list.get(latest);
 
 		}
 
@@ -2564,7 +2611,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 * subsequent call to {@code next}, or list size if the list
 		 * iterator is at the end of the list
 		 */
-		public int nextIndex () {
+		public int nextIndex() {
 			return index;
 		}
 
@@ -2577,7 +2624,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 * subsequent call to {@code previous}, or -1 if the list
 		 * iterator is at the beginning of the list
 		 */
-		public int previousIndex () {
+		public int previousIndex() {
 			return index - 1;
 		}
 
@@ -2596,9 +2643,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void remove () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void remove() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.removeAt(latest);
 			index = latest;
 			latest = -1;
@@ -2624,9 +2675,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 *                                       {@code add} have been called after the last call to
 		 *                                       {@code next} or {@code previous}
 		 */
-		public void set (float t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (latest == -1 || latest >= list.size()) {throw new NoSuchElementException();}
+		public void set(float t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (latest == -1 || latest >= list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.set(latest, t);
 		}
 
@@ -2650,20 +2705,24 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 * @throws IllegalArgumentException      if some aspect of this element
 		 *                                       prevents it from being added to this list
 		 */
-		public void add (float t) {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
-			if (index > list.size()) {throw new NoSuchElementException();}
+		public void add(float t) {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
+			if (index > list.size()) {
+				throw new NoSuchElementException();
+			}
 			list.insert(index, t);
 			index += direction;
 			latest = -1;
 		}
 
-		public void reset () {
+		public void reset() {
 			index = list.size() - 1 & direction >> 31;
 			latest = -1;
 		}
 
-		public void reset (int index) {
+		public void reset(int index) {
 			if (index < 0 || index >= list.size())
 				throw new IndexOutOfBoundsException("FloatDequeIterator does not satisfy index >= 0 && index < deque.size()");
 			this.index = index;
@@ -2675,7 +2734,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 *
 		 * @return a FloatIterator; really this same FloatDequeIterator.
 		 */
-		public FloatDequeIterator iterator () {
+		public FloatDequeIterator iterator() {
 			return this;
 		}
 	}
@@ -2687,16 +2746,17 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *
 	 * @return a new deque containing nothing
 	 */
-	public static FloatDeque with () {
+	public static FloatDeque with() {
 		return new FloatDeque(1);
 	}
 
 	/**
 	 * Creates a new FloatDeque that holds only the given item, but can be resized.
+	 *
 	 * @param item one float item
 	 * @return a new FloatDeque that holds the given item
 	 */
-	public static FloatDeque with (float item) {
+	public static FloatDeque with(float item) {
 		FloatDeque deque = new FloatDeque(1);
 		deque.add(item);
 		return deque;
@@ -2704,11 +2764,12 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @return a new FloatDeque that holds the given items
 	 */
-	public static FloatDeque with (float item0, float item1) {
+	public static FloatDeque with(float item0, float item1) {
 		FloatDeque deque = new FloatDeque(2);
 		deque.add(item0, item1);
 		return deque;
@@ -2716,12 +2777,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
 	 * @return a new FloatDeque that holds the given items
 	 */
-	public static FloatDeque with (float item0, float item1, float item2) {
+	public static FloatDeque with(float item0, float item1, float item2) {
 		FloatDeque deque = new FloatDeque(3);
 		deque.add(item0, item1, item2);
 		return deque;
@@ -2729,13 +2791,14 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
 	 * @param item3 a float item
 	 * @return a new FloatDeque that holds the given items
 	 */
-	public static FloatDeque with (float item0, float item1, float item2, float item3) {
+	public static FloatDeque with(float item0, float item1, float item2, float item3) {
 		FloatDeque deque = new FloatDeque(4);
 		deque.add(item0, item1, item2, item3);
 		return deque;
@@ -2743,6 +2806,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -2750,7 +2814,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param item4 a float item
 	 * @return a new FloatDeque that holds the given items
 	 */
-	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4) {
+	public static FloatDeque with(float item0, float item1, float item2, float item3, float item4) {
 		FloatDeque deque = new FloatDeque(5);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4);
@@ -2759,6 +2823,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -2767,7 +2832,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param item5 a float item
 	 * @return a new FloatDeque that holds the given items
 	 */
-	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5) {
+	public static FloatDeque with(float item0, float item1, float item2, float item3, float item4, float item5) {
 		FloatDeque deque = new FloatDeque(6);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5);
@@ -2776,6 +2841,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -2785,7 +2851,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param item6 a float item
 	 * @return a new FloatDeque that holds the given items
 	 */
-	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
+	public static FloatDeque with(float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
 		FloatDeque deque = new FloatDeque(7);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6);
@@ -2794,6 +2860,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Creates a new FloatDeque that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a float item
 	 * @param item1 a float item
 	 * @param item2 a float item
@@ -2804,7 +2871,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param item7 a float item
 	 * @return a new FloatDeque that holds the given items
 	 */
-	public static FloatDeque with (float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
+	public static FloatDeque with(float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
 		FloatDeque deque = new FloatDeque(8);
 		deque.add(item0, item1, item2, item3);
 		deque.add(item4, item5, item6, item7);
@@ -2815,10 +2882,11 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * Creates a new FloatDeque that will hold the items in the given array or varargs.
 	 * This overload will only be used when a float array is supplied, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs either 0 or more float items, or an array of float
 	 * @return a new FloatDeque that holds the given float items
 	 */
-	public static FloatDeque with (float... varargs) {
+	public static FloatDeque with(float... varargs) {
 		return new FloatDeque(varargs);
 	}
 }

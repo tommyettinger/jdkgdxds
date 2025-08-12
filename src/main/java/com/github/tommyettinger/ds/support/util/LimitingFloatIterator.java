@@ -25,39 +25,39 @@ package com.github.tommyettinger.ds.support.util;
  * change the Iterator with {@link #set(FloatIterator)}.
  */
 public class LimitingFloatIterator implements FloatIterator {
-    public FloatIterator iterator;
-    protected int limit = 1;
-    protected int remaining = 1;
+	public FloatIterator iterator;
+	protected int limit = 1;
+	protected int remaining = 1;
 
-    public LimitingFloatIterator() {
-    }
+	public LimitingFloatIterator() {
+	}
 
-    public LimitingFloatIterator(final FloatIterator iterator, int limit) {
-        set(iterator, limit);
-    }
+	public LimitingFloatIterator(final FloatIterator iterator, int limit) {
+		set(iterator, limit);
+	}
 
-    public void set (final FloatIterator iterator, int limit) {
-        this.iterator = iterator;
-        this.remaining = this.limit = Math.max(0, limit);
-    }
+	public void set(final FloatIterator iterator, int limit) {
+		this.iterator = iterator;
+		this.remaining = this.limit = Math.max(0, limit);
+	}
 
-    public void set (final FloatIterator iterator) {
-        set(iterator, limit);
-    }
+	public void set(final FloatIterator iterator) {
+		set(iterator, limit);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return (iterator.hasNext() && remaining > 0);
-    }
+	@Override
+	public boolean hasNext() {
+		return (iterator.hasNext() && remaining > 0);
+	}
 
-    @Override
-    public float nextFloat () {
-        remaining--;
-        return iterator.next();
-    }
+	@Override
+	public float nextFloat() {
+		remaining--;
+		return iterator.next();
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

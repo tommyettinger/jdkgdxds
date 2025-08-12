@@ -39,7 +39,7 @@ public interface FloatIterator extends Iterator<Float> {
 	 * @return the next {@code float} element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	float nextFloat ();
+	float nextFloat();
 
 	/**
 	 * Performs the given action for each remaining element until all elements
@@ -55,8 +55,10 @@ public interface FloatIterator extends Iterator<Float> {
 	 *         action.accept(nextFloat());
 	 * }</pre>
 	 */
-	default void forEachRemaining (FloatConsumer action) {
-		while (hasNext()) {action.accept(nextFloat());}
+	default void forEachRemaining(FloatConsumer action) {
+		while (hasNext()) {
+			action.accept(nextFloat());
+		}
 	}
 
 	/**
@@ -66,7 +68,7 @@ public interface FloatIterator extends Iterator<Float> {
 	 * {@link #nextFloat()}, and returns that boxed result.
 	 */
 	@Override
-	default Float next () {
+	default Float next() {
 		return nextFloat();
 	}
 }

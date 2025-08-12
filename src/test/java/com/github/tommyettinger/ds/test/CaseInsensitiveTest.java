@@ -61,12 +61,12 @@ public class CaseInsensitiveTest {
 	 * This checks one case that was known to have a mismatch.
 	 */
 	@Test
-	public void testMissingInMap () {
+	public void testMissingInMap() {
 		CaseInsensitiveMap<String> map = new CaseInsensitiveMap<>(
 			new String[]{"foo", "bar", "baz"},
 			new String[]{"foo", "bar", "baz"}
-			);
-		for(Map.Entry<CharSequence, String> ent : map){
+		);
+		for (Map.Entry<CharSequence, String> ent : map) {
 			Assert.assertEquals(ent.getKey(), ent.getValue());
 		}
 	}
@@ -76,12 +76,12 @@ public class CaseInsensitiveTest {
 	 * This checks one case that was known to have a mismatch.
 	 */
 	@Test
-	public void testOrderedMap () {
+	public void testOrderedMap() {
 		CaseInsensitiveOrderedMap<String> map = new CaseInsensitiveOrderedMap<>(
 			new String[]{"foo", "bar", "baz"},
 			new String[]{"foo", "bar", "baz"}
-			);
-		for(Map.Entry<CharSequence, String> ent : map){
+		);
+		for (Map.Entry<CharSequence, String> ent : map) {
 			Assert.assertEquals(ent.getKey(), ent.getValue());
 		}
 		FilteredStringOrderedMap<String> fil = new FilteredStringOrderedMap<>(
@@ -89,7 +89,7 @@ public class CaseInsensitiveTest {
 			new String[]{"foo42", "bar666", "baz9001"},
 			new String[]{"foo", "bar", "baz"}
 		);
-		for(Map.Entry<String, String> ent : fil){
+		for (Map.Entry<String, String> ent : fil) {
 			Assert.assertTrue(fil.equate(ent.getKey(), ent.getValue()));
 		}
 		CaseInsensitiveOrderedMap<ObjectList<String>> synonyms = CaseInsensitiveOrderedMap.with(

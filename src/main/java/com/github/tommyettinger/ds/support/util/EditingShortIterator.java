@@ -30,38 +30,38 @@ import java.util.NoSuchElementException;
  * and can also just change the Iterator with {@link #set(ShortIterator)}.
  */
 public class EditingShortIterator implements ShortIterator {
-    public ShortIterator iterator;
-    public ShortToShortFunction editor;
+	public ShortIterator iterator;
+	public ShortToShortFunction editor;
 
-    public EditingShortIterator() {
-    }
+	public EditingShortIterator() {
+	}
 
-    public EditingShortIterator(final ShortIterator iterator, final ShortToShortFunction editor) {
-        set(iterator, editor);
-    }
+	public EditingShortIterator(final ShortIterator iterator, final ShortToShortFunction editor) {
+		set(iterator, editor);
+	}
 
-    public void set (final ShortIterator iterator, final ShortToShortFunction editor) {
-        this.iterator = iterator;
-        this.editor = editor;
-    }
+	public void set(final ShortIterator iterator, final ShortToShortFunction editor) {
+		this.iterator = iterator;
+		this.editor = editor;
+	}
 
-    public void set (final ShortIterator iterator) {
-        set(iterator, editor);
-    }
+	public void set(final ShortIterator iterator) {
+		set(iterator, editor);
+	}
 
-    @Override
-    public boolean hasNext () {
-        return iterator.hasNext();
-    }
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
 
-    @Override
-    public short nextShort () {
-        if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
-        return editor.applyAsShort(iterator.nextShort());
-    }
+	@Override
+	public short nextShort() {
+		if (!hasNext()) throw new NoSuchElementException("No elements remaining.");
+		return editor.applyAsShort(iterator.nextShort());
+	}
 
-    @Override
-    public void remove () {
-        iterator.remove();
-    }
+	@Override
+	public void remove() {
+		iterator.remove();
+	}
 }

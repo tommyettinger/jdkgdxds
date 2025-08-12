@@ -35,14 +35,14 @@ public class DoubleBag extends DoubleList {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public DoubleBag () {
+	public DoubleBag() {
 		super();
 	}
 
@@ -51,7 +51,7 @@ public class DoubleBag extends DoubleList {
 	 *
 	 * @param capacity
 	 */
-	public DoubleBag (int capacity) {
+	public DoubleBag(int capacity) {
 		super(capacity);
 	}
 
@@ -61,7 +61,7 @@ public class DoubleBag extends DoubleList {
 	 *
 	 * @param list another DoubleList or DoubleBag
 	 */
-	public DoubleBag (DoubleList list) {
+	public DoubleBag(DoubleList list) {
 		super(list);
 	}
 
@@ -71,7 +71,7 @@ public class DoubleBag extends DoubleList {
 	 *
 	 * @param array a non-null double array to add to this bag
 	 */
-	public DoubleBag (double[] array) {
+	public DoubleBag(double[] array) {
 		super(array);
 	}
 
@@ -79,11 +79,11 @@ public class DoubleBag extends DoubleList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null double array to add to this bag
+	 * @param array      a non-null double array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public DoubleBag (double[] array, int startIndex, int count) {
+	public DoubleBag(double[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
@@ -92,7 +92,7 @@ public class DoubleBag extends DoubleList {
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public DoubleBag (OfDouble coll) {
+	public DoubleBag(OfDouble coll) {
 		super(coll);
 	}
 
@@ -101,7 +101,7 @@ public class DoubleBag extends DoubleList {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public DoubleBag (DoubleIterator coll) {
+	public DoubleBag(DoubleIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -111,7 +111,7 @@ public class DoubleBag extends DoubleList {
 	 *
 	 * @param other another Ordered.OfDouble
 	 */
-	public DoubleBag (Ordered.OfDouble other) {
+	public DoubleBag(Ordered.OfDouble other) {
 		super(other);
 	}
 
@@ -123,20 +123,25 @@ public class DoubleBag extends DoubleList {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public DoubleBag (Ordered.OfDouble other, int offset, int count) {
+	public DoubleBag(Ordered.OfDouble other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
-	 * @param index ignored
+	 *
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, double element) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, double element) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		double[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = element;
 		++size;
 	}
@@ -150,8 +155,10 @@ public class DoubleBag extends DoubleList {
 	 * @return the removed item
 	 */
 	@Override
-	public double removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public double removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		double[] items = this.items;
 		double value = items[index];
 		size--;
@@ -169,10 +176,14 @@ public class DoubleBag extends DoubleList {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
@@ -180,7 +191,7 @@ public class DoubleBag extends DoubleList {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		double[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -196,17 +207,18 @@ public class DoubleBag extends DoubleList {
 	 *
 	 * @return a new bag containing nothing
 	 */
-	public static DoubleBag with () {
+	public static DoubleBag with() {
 		return new DoubleBag(0);
 	}
 
 	/**
 	 * Creates a new DoubleBag that holds only the given item, but can be resized.
+	 *
 	 * @param item a double item
 	 * @return a new DoubleBag that holds the given item
 	 */
 
-	public static DoubleBag with (double item) {
+	public static DoubleBag with(double item) {
 		DoubleBag bag = new DoubleBag(1);
 		bag.add(item);
 		return bag;
@@ -214,11 +226,12 @@ public class DoubleBag extends DoubleList {
 
 	/**
 	 * Creates a new DoubleBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @return a new DoubleBag that holds the given items
 	 */
-	public static DoubleBag with (double item0, double item1) {
+	public static DoubleBag with(double item0, double item1) {
 		DoubleBag bag = new DoubleBag(2);
 		bag.add(item0);
 		bag.add(item1);
@@ -227,12 +240,13 @@ public class DoubleBag extends DoubleList {
 
 	/**
 	 * Creates a new DoubleBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
 	 * @return a new DoubleBag that holds the given items
 	 */
-	public static DoubleBag with (double item0, double item1, double item2) {
+	public static DoubleBag with(double item0, double item1, double item2) {
 		DoubleBag bag = new DoubleBag(3);
 		bag.add(item0);
 		bag.add(item1);
@@ -242,13 +256,14 @@ public class DoubleBag extends DoubleList {
 
 	/**
 	 * Creates a new DoubleBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
 	 * @param item3 a double item
 	 * @return a new DoubleBag that holds the given items
 	 */
-	public static DoubleBag with (double item0, double item1, double item2, double item3) {
+	public static DoubleBag with(double item0, double item1, double item2, double item3) {
 		DoubleBag bag = new DoubleBag(4);
 		bag.add(item0);
 		bag.add(item1);
@@ -259,6 +274,7 @@ public class DoubleBag extends DoubleList {
 
 	/**
 	 * Creates a new DoubleBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -266,7 +282,7 @@ public class DoubleBag extends DoubleList {
 	 * @param item4 a double item
 	 * @return a new DoubleBag that holds the given items
 	 */
-	public static DoubleBag with (double item0, double item1, double item2, double item3, double item4) {
+	public static DoubleBag with(double item0, double item1, double item2, double item3, double item4) {
 		DoubleBag bag = new DoubleBag(5);
 		bag.add(item0);
 		bag.add(item1);
@@ -278,6 +294,7 @@ public class DoubleBag extends DoubleList {
 
 	/**
 	 * Creates a new DoubleBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -286,7 +303,7 @@ public class DoubleBag extends DoubleList {
 	 * @param item5 a double item
 	 * @return a new DoubleBag that holds the given items
 	 */
-	public static DoubleBag with (double item0, double item1, double item2, double item3, double item4, double item5) {
+	public static DoubleBag with(double item0, double item1, double item2, double item3, double item4, double item5) {
 		DoubleBag bag = new DoubleBag(6);
 		bag.add(item0);
 		bag.add(item1);
@@ -299,6 +316,7 @@ public class DoubleBag extends DoubleList {
 
 	/**
 	 * Creates a new DoubleBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -308,7 +326,7 @@ public class DoubleBag extends DoubleList {
 	 * @param item6 a double item
 	 * @return a new DoubleBag that holds the given items
 	 */
-	public static DoubleBag with (double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
+	public static DoubleBag with(double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
 		DoubleBag bag = new DoubleBag(7);
 		bag.add(item0);
 		bag.add(item1);
@@ -322,6 +340,7 @@ public class DoubleBag extends DoubleList {
 
 	/**
 	 * Creates a new DoubleBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a double item
 	 * @param item1 a double item
 	 * @param item2 a double item
@@ -331,7 +350,7 @@ public class DoubleBag extends DoubleList {
 	 * @param item6 a double item
 	 * @return a new DoubleBag that holds the given items
 	 */
-	public static DoubleBag with (double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
+	public static DoubleBag with(double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
 		DoubleBag bag = new DoubleBag(8);
 		bag.add(item0);
 		bag.add(item1);
@@ -349,10 +368,11 @@ public class DoubleBag extends DoubleList {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a double varargs or double array; remember that varargs allocate
 	 * @return a new DoubleBag that holds the given items
 	 */
-	public static DoubleBag with (double... varargs) {
+	public static DoubleBag with(double... varargs) {
 		return new DoubleBag(varargs);
 	}
 }

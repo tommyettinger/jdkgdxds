@@ -241,7 +241,11 @@ public class LegibleTest {
 		LongObjectMap<DoubleList> data = new LongObjectMap<>(LongList.with(longs), lists), loaded = new LongObjectMap<>(size);
 		String legible = data.toString(";;", false);
 		loaded.putLegible(legible, ";;", (text, start, end) ->
-		{ DoubleList list = new DoubleList(); list.addLegible(text, ", ", start + 1, end - start - 2); return list; } );
+		{
+			DoubleList list = new DoubleList();
+			list.addLegible(text, ", ", start + 1, end - start - 2);
+			return list;
+		});
 		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
 	}
 
@@ -280,7 +284,7 @@ public class LegibleTest {
 		}
 		IntObjectMap<DoubleList> data = new IntObjectMap<>(IntList.with(ints), lists), loaded = new IntObjectMap<>(size);
 		String legible = data.toString(";;", false);
-		loaded.putLegible(legible, ";;",PartialParser.doubleCollectionParser(DoubleList::new, ", ", true));
+		loaded.putLegible(legible, ";;", PartialParser.doubleCollectionParser(DoubleList::new, ", ", true));
 		Assert.assertEquals("Maps were not equal! legible was: " + legible, data, loaded);
 	}
 

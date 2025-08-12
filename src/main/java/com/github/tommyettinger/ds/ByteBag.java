@@ -34,14 +34,14 @@ public class ByteBag extends ByteList {
 	 * @return false
 	 */
 	@Override
-	public boolean keepsOrder () {
+	public boolean keepsOrder() {
 		return false;
 	}
 
 	/**
 	 * Creates an ordered bag with a capacity of 10.
 	 */
-	public ByteBag () {
+	public ByteBag() {
 		super();
 	}
 
@@ -50,7 +50,7 @@ public class ByteBag extends ByteList {
 	 *
 	 * @param capacity
 	 */
-	public ByteBag (int capacity) {
+	public ByteBag(int capacity) {
 		super(capacity);
 	}
 
@@ -60,7 +60,7 @@ public class ByteBag extends ByteList {
 	 *
 	 * @param list another ByteList or ByteBag
 	 */
-	public ByteBag (ByteList list) {
+	public ByteBag(ByteList list) {
 		super(list);
 	}
 
@@ -70,7 +70,7 @@ public class ByteBag extends ByteList {
 	 *
 	 * @param array a non-null byte array to add to this bag
 	 */
-	public ByteBag (byte[] array) {
+	public ByteBag(byte[] array) {
 		super(array);
 	}
 
@@ -78,11 +78,11 @@ public class ByteBag extends ByteList {
 	 * Creates a new bag containing the elements in the specified array. The capacity is set to the number of elements, so any
 	 * subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a non-null byte array to add to this bag
+	 * @param array      a non-null byte array to add to this bag
 	 * @param startIndex the first index in {@code array} to use
-	 * @param count how many items to use from {@code array}
+	 * @param count      how many items to use from {@code array}
 	 */
-	public ByteBag (byte[] array, int startIndex, int count) {
+	public ByteBag(byte[] array, int startIndex, int count) {
 		super(array, startIndex, count);
 	}
 
@@ -91,7 +91,7 @@ public class ByteBag extends ByteList {
 	 *
 	 * @param coll a primitive collection that will have its contents added to this
 	 */
-	public ByteBag (OfByte coll) {
+	public ByteBag(OfByte coll) {
 		super(coll);
 	}
 
@@ -100,7 +100,7 @@ public class ByteBag extends ByteList {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public ByteBag (ByteIterator coll) {
+	public ByteBag(ByteIterator coll) {
 		this();
 		addAll(coll);
 	}
@@ -110,7 +110,7 @@ public class ByteBag extends ByteList {
 	 *
 	 * @param other another Ordered.OfByte
 	 */
-	public ByteBag (Ordered.OfByte other) {
+	public ByteBag(Ordered.OfByte other) {
 		super(other);
 	}
 
@@ -122,20 +122,25 @@ public class ByteBag extends ByteList {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public ByteBag (Ordered.OfByte other, int offset, int count) {
+	public ByteBag(Ordered.OfByte other, int offset, int count) {
 		super(other, offset, count);
 	}
 
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
-	 * @param index ignored
+	 *
+	 * @param index   ignored
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert (int index, byte element) {
-		if (index > size) {throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);}
+	public void insert(int index, byte element) {
+		if (index > size) {
+			throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + size);
+		}
 		byte[] items = this.items;
-		if (size == items.length) {items = resize(Math.max(8, (int)(size * 1.75f)));}
+		if (size == items.length) {
+			items = resize(Math.max(8, (int) (size * 1.75f)));
+		}
 		items[size] = element;
 		++size;
 	}
@@ -149,8 +154,10 @@ public class ByteBag extends ByteList {
 	 * @return the removed item
 	 */
 	@Override
-	public byte removeAt (int index) {
-		if (index >= size) {throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);}
+	public byte removeAt(int index) {
+		if (index >= size) {
+			throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+		}
 		byte[] items = this.items;
 		byte value = items[index];
 		size--;
@@ -168,10 +175,14 @@ public class ByteBag extends ByteList {
 	 * @param end   the last index (after what should be removed), exclusive
 	 */
 	@Override
-	public void removeRange (int start, int end) {
+	public void removeRange(int start, int end) {
 		int n = size;
-		if (end > n) {throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);}
-		if (start > end) {throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);}
+		if (end > n) {
+			throw new IndexOutOfBoundsException("end can't be > size: " + end + " > " + size);
+		}
+		if (start > end) {
+			throw new IndexOutOfBoundsException("start can't be > end: " + start + " > " + end);
+		}
 		int count = end - start, lastIndex = n - count;
 		int i = Math.max(lastIndex, end);
 		System.arraycopy(items, i, items, start, n - i);
@@ -179,7 +190,7 @@ public class ByteBag extends ByteList {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		byte[] items = this.items;
 		int h = size;
 		for (int i = 0, n = size; i < n; i++) {
@@ -195,17 +206,18 @@ public class ByteBag extends ByteList {
 	 *
 	 * @return a new bag containing nothing
 	 */
-	public static ByteBag with () {
+	public static ByteBag with() {
 		return new ByteBag(0);
 	}
 
 	/**
 	 * Creates a new ByteBag that holds only the given item, but can be resized.
+	 *
 	 * @param item a byte item
 	 * @return a new ByteBag that holds the given item
 	 */
 
-	public static ByteBag with (byte item) {
+	public static ByteBag with(byte item) {
 		ByteBag bag = new ByteBag(1);
 		bag.add(item);
 		return bag;
@@ -213,11 +225,12 @@ public class ByteBag extends ByteList {
 
 	/**
 	 * Creates a new ByteBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @return a new ByteBag that holds the given items
 	 */
-	public static ByteBag with (byte item0, byte item1) {
+	public static ByteBag with(byte item0, byte item1) {
 		ByteBag bag = new ByteBag(2);
 		bag.add(item0);
 		bag.add(item1);
@@ -226,12 +239,13 @@ public class ByteBag extends ByteList {
 
 	/**
 	 * Creates a new ByteBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
 	 * @return a new ByteBag that holds the given items
 	 */
-	public static ByteBag with (byte item0, byte item1, byte item2) {
+	public static ByteBag with(byte item0, byte item1, byte item2) {
 		ByteBag bag = new ByteBag(3);
 		bag.add(item0);
 		bag.add(item1);
@@ -241,13 +255,14 @@ public class ByteBag extends ByteList {
 
 	/**
 	 * Creates a new ByteBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
 	 * @param item3 a byte item
 	 * @return a new ByteBag that holds the given items
 	 */
-	public static ByteBag with (byte item0, byte item1, byte item2, byte item3) {
+	public static ByteBag with(byte item0, byte item1, byte item2, byte item3) {
 		ByteBag bag = new ByteBag(4);
 		bag.add(item0);
 		bag.add(item1);
@@ -258,6 +273,7 @@ public class ByteBag extends ByteList {
 
 	/**
 	 * Creates a new ByteBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
@@ -265,7 +281,7 @@ public class ByteBag extends ByteList {
 	 * @param item4 a byte item
 	 * @return a new ByteBag that holds the given items
 	 */
-	public static ByteBag with (byte item0, byte item1, byte item2, byte item3, byte item4) {
+	public static ByteBag with(byte item0, byte item1, byte item2, byte item3, byte item4) {
 		ByteBag bag = new ByteBag(5);
 		bag.add(item0);
 		bag.add(item1);
@@ -277,6 +293,7 @@ public class ByteBag extends ByteList {
 
 	/**
 	 * Creates a new ByteBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
@@ -285,7 +302,7 @@ public class ByteBag extends ByteList {
 	 * @param item5 a byte item
 	 * @return a new ByteBag that holds the given items
 	 */
-	public static ByteBag with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
+	public static ByteBag with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
 		ByteBag bag = new ByteBag(6);
 		bag.add(item0);
 		bag.add(item1);
@@ -298,6 +315,7 @@ public class ByteBag extends ByteList {
 
 	/**
 	 * Creates a new ByteBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
@@ -307,7 +325,7 @@ public class ByteBag extends ByteList {
 	 * @param item6 a byte item
 	 * @return a new ByteBag that holds the given items
 	 */
-	public static ByteBag with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
+	public static ByteBag with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
 		ByteBag bag = new ByteBag(7);
 		bag.add(item0);
 		bag.add(item1);
@@ -321,6 +339,7 @@ public class ByteBag extends ByteList {
 
 	/**
 	 * Creates a new ByteBag that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a byte item
 	 * @param item1 a byte item
 	 * @param item2 a byte item
@@ -330,7 +349,7 @@ public class ByteBag extends ByteList {
 	 * @param item6 a byte item
 	 * @return a new ByteBag that holds the given items
 	 */
-	public static ByteBag with (byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
+	public static ByteBag with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
 		ByteBag bag = new ByteBag(8);
 		bag.add(item0);
 		bag.add(item1);
@@ -348,10 +367,11 @@ public class ByteBag extends ByteList {
 	 * This overload will only be used when an array is supplied and the type of the
 	 * items requested is the component type of the array, or if varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a byte varargs or byte array; remember that varargs allocate
 	 * @return a new ByteBag that holds the given items
 	 */
-	public static ByteBag with (byte... varargs) {
+	public static ByteBag with(byte... varargs) {
 		return new ByteBag(varargs);
 	}
 }

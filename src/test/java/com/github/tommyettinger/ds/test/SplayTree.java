@@ -25,10 +25,9 @@ import java.util.NoSuchElementException;
  * Largely based on the implementation by Danny Sleator ( sleator@cs.cmu.edu ), available
  * <a href="http://www.link.cs.cmu.edu/splay/">here</a> (public domain).
  *
+ * @param <T> must be {@link Comparable} (for now)
  * @author <a href="http://www.cpdomina.net">Pedro Oliveira</a>
  * @author Originally written by Danny Sleator ( sleator@cs.cmu.edu )
- *
- * @param <T> must be {@link Comparable} (for now)
  */
 public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
@@ -49,6 +48,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Build an empty Splay Tree
+	 *
 	 * @param <T>
 	 * @return
 	 */
@@ -58,6 +58,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Build a Splay Tree with the given element.
+	 *
 	 * @param <T>
 	 * @param element
 	 * @return
@@ -70,6 +71,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Build a Splay Tree with the given array or vararg of elements.
+	 *
 	 * @param <T>
 	 * @param elements
 	 * @return
@@ -77,7 +79,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 	@SafeVarargs
 	public static <T extends Comparable<T>> SplayTree<T> with(T... elements) {
 		SplayTree<T> tree = new SplayTree<T>();
-		for(T element: elements) {
+		for (T element : elements) {
 			tree.insert(element);
 		}
 		return tree;
@@ -85,6 +87,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Insert the given element into the tree.
+	 *
 	 * @param element The element to insert
 	 * @return False if element already present, true otherwise
 	 */
@@ -116,6 +119,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Remove the given element from the tree.
+	 *
 	 * @param element The element to remove.
 	 * @return False if element not present, true otherwise
 	 */
@@ -140,42 +144,46 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Find the smallest element in the tree.
+	 *
 	 * @return
 	 */
 	public T findMin() {
 		BinaryNode x = root;
-		if(root == null) return null;
-		while(x.left != null) x = x.left;
+		if (root == null) return null;
+		while (x.left != null) x = x.left;
 		splay(x.key);
 		return x.key;
 	}
 
 	/**
 	 * Find the largest element in the tree.
+	 *
 	 * @return
 	 */
 	public T findMax() {
 		BinaryNode x = root;
-		if(root == null) return null;
-		while(x.right != null) x = x.right;
+		if (root == null) return null;
+		while (x.right != null) x = x.right;
 		splay(x.key);
 		return x.key;
 	}
 
 	/**
 	 * Find an item in the tree.
+	 *
 	 * @param element The element to find
 	 * @return
 	 */
 	public T find(T element) {
 		if (root == null) return null;
 		splay(element);
-		if(root.key.compareTo(element) != 0) return null;
+		if (root.key.compareTo(element) != 0) return null;
 		return root.key;
 	}
 
 	/**
 	 * Check if the tree contains the given element.
+	 *
 	 * @param element
 	 * @return True if present, false otherwise
 	 */
@@ -185,6 +193,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Test if the tree is logically empty.
+	 *
 	 * @return True if empty, false otherwise.
 	 */
 	public boolean isEmpty() {
@@ -200,8 +209,9 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Internal method to perform a top-down splay.
-	 * If the element is in the tree, then the {@link BinaryNode} containing that element becomes the root. 
+	 * If the element is in the tree, then the {@link BinaryNode} containing that element becomes the root.
 	 * Otherwise, the root will be the ceiling or floor {@link BinaryNode} of the given element.
+	 *
 	 * @param element will not be modified, but this tree will be internally rearranged to try to make its root match element
 	 */
 	protected void splay(T element) {
@@ -209,7 +219,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 		l = r = aux;
 		t = root;
 		aux.left = aux.right = null;
-		while(true) {
+		while (true) {
 			final int comp = element.compareTo(t.key);
 			if (comp < 0) {
 				if (t.left == null) break;
@@ -249,7 +259,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * {@link SplayTree} internal node
-	 * 
+	 *
 	 * @author Pedro Oliveira
 	 *
 	 */
@@ -267,6 +277,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	/**
 	 * Stack-based {@link SplayTree} iterator
+	 *
 	 * @author Pedro Oliveira
 	 *
 	 */
@@ -285,7 +296,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 		public T next() {
 			BinaryNode node = nodes.pop();
-			if(node != null) {
+			if (node != null) {
 				pushLeft(node.right);
 				return node.key;
 			}
@@ -307,7 +318,7 @@ public class SplayTree<T extends Comparable<T>> implements Iterable<T> {
 
 	public static void main(String[] args) {
 		SplayTree<String> tree = SplayTree.with(IteratorTest.strings);
-		for(String s : tree) {
+		for (String s : tree) {
 			System.out.print(s + ", ");
 		}
 	}

@@ -35,10 +35,10 @@ public interface ByteComparator extends Comparator<Byte> {
 	 * is less than, equal to, or greater than the second.
 	 * @see Comparator
 	 */
-	int compare (byte k1, byte k2);
+	int compare(byte k1, byte k2);
 
 	@Override
-	default ByteComparator reversed () {
+	default ByteComparator reversed() {
 		return ByteComparators.oppositeComparator(this);
 	}
 
@@ -51,7 +51,7 @@ public interface ByteComparator extends Comparator<Byte> {
 	 */
 	@Deprecated
 	@Override
-	default int compare (Byte ok1, Byte ok2) {
+	default int compare(Byte ok1, Byte ok2) {
 		return compare(ok1.byteValue(), ok2.byteValue());
 	}
 
@@ -61,7 +61,7 @@ public interface ByteComparator extends Comparator<Byte> {
 	 *
 	 * @see Comparator#thenComparing(Comparator)
 	 */
-	default ByteComparator thenComparing (ByteComparator second) {
+	default ByteComparator thenComparing(ByteComparator second) {
 		return (k1, k2) -> {
 			int comp = compare(k1, k2);
 			return comp == 0 ? second.compare(k1, k2) : comp;
@@ -69,8 +69,10 @@ public interface ByteComparator extends Comparator<Byte> {
 	}
 
 	@Override
-	default Comparator<Byte> thenComparing (Comparator<? super Byte> second) {
-		if (second instanceof ByteComparator) {return thenComparing((ByteComparator)second);}
+	default Comparator<Byte> thenComparing(Comparator<? super Byte> second) {
+		if (second instanceof ByteComparator) {
+			return thenComparing((ByteComparator) second);
+		}
 		return Comparator.super.thenComparing(second);
 	}
 }

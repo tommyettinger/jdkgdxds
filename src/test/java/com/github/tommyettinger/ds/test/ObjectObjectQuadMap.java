@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.ds.Utilities;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -95,23 +96,30 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * hash.
 	 */
 	protected int mask;
-	@Nullable protected transient Entries<K, V> entries1;
-	@Nullable protected transient Entries<K, V> entries2;
-	@Nullable protected transient Values<K, V> values1;
-	@Nullable protected transient Values<K, V> values2;
-	@Nullable protected transient Keys<K, V> keys1;
-	@Nullable protected transient Keys<K, V> keys2;
+	@Nullable
+	protected transient Entries<K, V> entries1;
+	@Nullable
+	protected transient Entries<K, V> entries2;
+	@Nullable
+	protected transient Values<K, V> values1;
+	@Nullable
+	protected transient Values<K, V> values2;
+	@Nullable
+	protected transient Keys<K, V> keys1;
+	@Nullable
+	protected transient Keys<K, V> keys2;
 
 	/**
 	 * Returned by {@link #get(Object)} when no value exists for the given key, as well as some other methods to indicate that
 	 * no value in the Map could be returned.
 	 */
-	@Nullable public V defaultValue = null;
+	@Nullable
+	public V defaultValue = null;
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public ObjectObjectQuadMap () {
+	public ObjectObjectQuadMap() {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
@@ -120,7 +128,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public ObjectObjectQuadMap (int initialCapacity) {
+	public ObjectObjectQuadMap(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -131,17 +139,19 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public ObjectObjectQuadMap (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public ObjectObjectQuadMap(int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
+		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
-		keyTable = (K[])new Object[tableSize];
-		valueTable = (V[])new Object[tableSize];
+		keyTable = (K[]) new Object[tableSize];
+		valueTable = (V[]) new Object[tableSize];
 	}
 
 	/**
@@ -149,7 +159,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @param map an ObjectObjectQuadMap to copy
 	 */
-	public ObjectObjectQuadMap (ObjectObjectQuadMap<? extends K, ? extends V> map) {
+	public ObjectObjectQuadMap(ObjectObjectQuadMap<? extends K, ? extends V> map) {
 		this.loadFactor = map.loadFactor;
 		this.threshold = map.threshold;
 		this.mask = map.mask;
@@ -166,7 +176,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @param map a Map to copy; ObjectObjectQuadMap or its subclasses will be faster
 	 */
-	public ObjectObjectQuadMap (Map<? extends K, ? extends V> map) {
+	public ObjectObjectQuadMap(Map<? extends K, ? extends V> map) {
 		this(map.size());
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
@@ -180,7 +190,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public ObjectObjectQuadMap (K[] keys, V[] values) {
+	public ObjectObjectQuadMap(K[] keys, V[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -192,7 +202,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public ObjectObjectQuadMap (Collection<? extends K> keys, Collection<? extends V> values) {
+	public ObjectObjectQuadMap(Collection<? extends K> keys, Collection<? extends V> values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -203,7 +213,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param keys   a Collection of keys
 	 * @param values a Collection of values
 	 */
-	public void putAll (Collection<? extends K> keys, Collection<? extends V> values) {
+	public void putAll(Collection<? extends K> keys, Collection<? extends V> values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
 		K key;
@@ -249,7 +259,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (Object item) {
+	protected int place(Object item) {
 		return (item.hashCode() * hashMultiplier & mask);
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -266,7 +276,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		return left.equals(right);
 	}
 
@@ -277,7 +287,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param key a non-null K key
 	 * @return a negative index if the key was not found, or the non-negative index of the existing key if found
 	 */
-	protected int locateKey (Object key) {
+	protected int locateKey(Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
@@ -293,7 +303,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 */
 	@Override
 	@Nullable
-	public V put (K key, @Nullable V value) {
+	public V put(K key, @Nullable V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -303,12 +313,14 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
 	@Nullable
-	public V putOrDefault (K key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(K key, @Nullable V value, @Nullable V defaultValue) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -318,7 +330,9 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -328,14 +342,16 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (ObjectObjectQuadMap<? extends K, ? extends V> map) {
+	public void putAll(ObjectObjectQuadMap<? extends K, ? extends V> map) {
 		ensureCapacity(map.size);
 		K[] keyTable = map.keyTable;
 		V[] valueTable = map.valueTable;
 		K key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != null) {put(key, valueTable[i]);}
+			if (key != null) {
+				put(key, valueTable[i]);
+			}
 		}
 	}
 
@@ -345,7 +361,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public void putAll (K[] keys, V[] values) {
+	public void putAll(K[] keys, V[] values) {
 		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
 	}
 
@@ -356,7 +372,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
-	public void putAll (K[] keys, V[] values, int length) {
+	public void putAll(K[] keys, V[] values, int length) {
 		putAll(keys, 0, values, 0, length);
 	}
 
@@ -369,20 +385,22 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param valueOffset the first index in values to insert
 	 * @param length      how many items from keys and values to insert, at-most
 	 */
-	public void putAll (K[] keys, int keyOffset, V[] values, int valueOffset, int length) {
+	public void putAll(K[] keys, int keyOffset, V[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
 		ensureCapacity(length);
 		K key;
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
 			key = keys[k];
-			if (key != null) {put(key, values[v]);}
+			if (key != null) {
+				put(key, values[v]);
+			}
 		}
 	}
 
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	protected void putResize (K key, @Nullable V value) {
+	protected void putResize(K key, @Nullable V value) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			if (keyTable[i] == null) {
@@ -403,7 +421,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 */
 	@Override
 	@Nullable
-	public V get (Object key) {
+	public V get(Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
@@ -419,7 +437,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 */
 	@Override
 	@Nullable
-	public V getOrDefault (Object key, @Nullable V defaultValue) {
+	public V getOrDefault(Object key, @Nullable V defaultValue) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
@@ -432,9 +450,11 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 
 	@Override
 	@Nullable
-	public V remove (Object key) {
+	public V remove(Object key) {
 		int i = locateKey(key);
-		if (i < 0) {return defaultValue;}
+		if (i < 0) {
+			return defaultValue;
+		}
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		K rem;
@@ -478,15 +498,17 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *                                       the specified map prevents it from being stored in this map
 	 */
 	@Override
-	public void putAll (Map<? extends K, ? extends V> m) {
+	public void putAll(Map<? extends K, ? extends V> m) {
 		ensureCapacity(m.size());
-		for (Map.Entry<? extends K, ? extends V> kv : m.entrySet()) {put(kv.getKey(), kv.getValue());}
+		for (Map.Entry<? extends K, ? extends V> kv : m.entrySet()) {
+			put(kv.getKey(), kv.getValue());
+		}
 	}
 
 	/**
 	 * Returns true if the map has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -498,7 +520,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @return the number of key-value mappings in this map
 	 */
 	@Override
-	public int size () {
+	public int size() {
 		return size;
 	}
 
@@ -506,7 +528,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * Returns true if the map is empty.
 	 */
 	@Override
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -517,7 +539,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @return the current default value
 	 */
 	@Nullable
-	public V getDefaultValue () {
+	public V getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -528,7 +550,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (@Nullable V defaultValue) {
+	public void setDefaultValue(@Nullable V defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -537,16 +559,20 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * nothing is done. If the map contains more items than the specified capacity, the next highest power of two capacity is used
 	 * instead.
 	 */
-	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
+	public void shrink(int maximumCapacity) {
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) {resize(tableSize);}
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
 	 * Clears the map and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
 			clear();
@@ -557,8 +583,10 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	}
 
 	@Override
-	public void clear () {
-		if (size == 0) {return;}
+	public void clear() {
+		if (size == 0) {
+			return;
+		}
 		size = 0;
 		Arrays.fill(keyTable, null);
 		Arrays.fill(valueTable, null);
@@ -571,21 +599,33 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
 	 *                 {@link #equals(Object)}.
 	 */
-	public boolean containsValue (@Nullable Object value, boolean identity) {
+	public boolean containsValue(@Nullable Object value, boolean identity) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
 			K[] keyTable = this.keyTable;
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (keyTable[i] != null && valueTable[i] == null) {return true;}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (keyTable[i] != null && valueTable[i] == null) {
+					return true;
+				}
+			}
 		} else if (identity) {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (valueTable[i] == value) {return true;}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (valueTable[i] == value) {
+					return true;
+				}
+			}
 		} else {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (value.equals(valueTable[i])) {return true;}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (value.equals(valueTable[i])) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
 
 	@Override
-	public boolean containsKey (Object key) {
+	public boolean containsKey(Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
@@ -615,7 +655,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *                              (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean containsValue (Object value) {
+	public boolean containsValue(Object value) {
 		return containsValue(value, false);
 	}
 
@@ -627,15 +667,27 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *                 {@link #equals(Object)}.
 	 */
 	@Nullable
-	public K findKey (@Nullable Object value, boolean identity) {
+	public K findKey(@Nullable Object value, boolean identity) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
 			K[] keyTable = this.keyTable;
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (keyTable[i] != null && valueTable[i] == null) {return keyTable[i];}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (keyTable[i] != null && valueTable[i] == null) {
+					return keyTable[i];
+				}
+			}
 		} else if (identity) {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (valueTable[i] == value) {return keyTable[i];}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (valueTable[i] == value) {
+					return keyTable[i];
+				}
+			}
 		} else {
-			for (int i = valueTable.length - 1; i >= 0; i--) {if (value.equals(valueTable[i])) {return keyTable[i];}}
+			for (int i = valueTable.length - 1; i >= 0; i--) {
+				if (value.equals(valueTable[i])) {
+					return keyTable[i];
+				}
+			}
 		}
 		return null;
 	}
@@ -646,14 +698,16 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @param additionalCapacity how many additional items this should be able to hold without resizing (probably)
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
+		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 
@@ -664,8 +718,8 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
 
-		keyTable = (K[])new Object[newSize];
-		valueTable = (V[])new Object[newSize];
+		keyTable = (K[]) new Object[newSize];
+		valueTable = (V[]) new Object[newSize];
 
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
@@ -677,12 +731,14 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		}
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return loadFactor;
 	}
 
-	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public void setLoadFactor(float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -691,7 +747,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
@@ -700,18 +756,26 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 			if (key != null) {
 				h ^= key.hashCode();
 				V value = valueTable[i];
-				if (value != null) {h ^= value.hashCode();}
+				if (value != null) {
+					h ^= value.hashCode();
+				}
 			}
 		}
 		return h;
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof ObjectObjectQuadMap)) {return false;}
-		ObjectObjectQuadMap other = (ObjectObjectQuadMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof ObjectObjectQuadMap)) {
+			return false;
+		}
+		ObjectObjectQuadMap other = (ObjectObjectQuadMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -719,9 +783,13 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 			if (key != null) {
 				V value = valueTable[i];
 				if (value == null) {
-					if (other.getOrDefault(key, neverIdentical) != null) {return false;}
+					if (other.getOrDefault(key, neverIdentical) != null) {
+						return false;
+					}
 				} else {
-					if (!value.equals(other.get(key))) {return false;}
+					if (!value.equals(other.get(key))) {
+						return false;
+					}
 				}
 			}
 		}
@@ -731,39 +799,53 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	/**
 	 * Uses == for comparison of each value.
 	 */
-	public boolean equalsIdentity (@Nullable Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof ObjectObjectQuadMap)) {return false;}
-		ObjectObjectQuadMap other = (ObjectObjectQuadMap)obj;
-		if (other.size != size) {return false;}
+	public boolean equalsIdentity(@Nullable Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof ObjectObjectQuadMap)) {
+			return false;
+		}
+		ObjectObjectQuadMap other = (ObjectObjectQuadMap) obj;
+		if (other.size != size) {
+			return false;
+		}
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
-			if (key != null && valueTable[i] != other.getOrDefault(key, neverIdentical)) {return false;}
+			if (key != null && valueTable[i] != other.getOrDefault(key, neverIdentical)) {
+				return false;
+			}
 		}
 		return true;
 	}
 
-	public String toString (String separator) {
+	public String toString(String separator) {
 		return toString(separator, false);
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
-	protected String toString (String separator, boolean braces) {
-		if (size == 0) {return braces ? "{}" : "";}
+	protected String toString(String separator, boolean braces) {
+		if (size == 0) {
+			return braces ? "{}" : "";
+		}
 		StringBuilder buffer = new StringBuilder(32);
-		if (braces) {buffer.append('{');}
+		if (braces) {
+			buffer.append('{');
+		}
 		K[] keyTable = this.keyTable;
 		V[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			K key = keyTable[i];
-			if (key == null) {continue;}
+			if (key == null) {
+				continue;
+			}
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
 			V value = valueTable[i];
@@ -772,14 +854,18 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		}
 		while (i-- > 0) {
 			K key = keyTable[i];
-			if (key == null) {continue;}
+			if (key == null) {
+				continue;
+			}
 			buffer.append(separator);
 			buffer.append(key == this ? "(this)" : key);
 			buffer.append('=');
 			V value = valueTable[i];
 			buffer.append(value == this ? "(this)" : value);
 		}
-		if (braces) {buffer.append('}');}
+		if (braces) {
+			buffer.append('}');
+		}
 		return buffer.toString();
 	}
 
@@ -790,7 +876,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		K[] keyTable = this.keyTable;
 		V[] valTable = this.valueTable;
 		for (int i = 0; i < keyTable.length && size > newSize; i++) {
@@ -803,7 +889,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	}
 
 	@Override
-	public V replace (K key, V value) {
+	public V replace(K key, V value) {
 		int i = locateKey(key);
 		if (i >= 0) {
 			V oldValue = valueTable[i];
@@ -822,7 +908,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public Iterator<Map.Entry<K, V>> iterator () {
+	public Iterator<Map.Entry<K, V>> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -846,7 +932,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public Keys<K, V> keySet () {
+	public Keys<K, V> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys<>(this);
 			keys2 = new Keys<>(this);
@@ -870,7 +956,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public Values<K, V> values () {
+	public Values<K, V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -895,7 +981,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public Entries<K, V> entrySet () {
+	public Entries<K, V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -913,12 +999,14 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	}
 
 	public static class Entry<K, V> implements Map.Entry<K, V> {
-		@Nullable public K key;
-		@Nullable public V value;
+		@Nullable
+		public K key;
+		@Nullable
+		public V value;
 
 		@Override
 		@Nullable
-		public String toString () {
+		public String toString() {
 			return key + "=" + value;
 		}
 
@@ -931,7 +1019,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		 *                               removed from the backing map.
 		 */
 		@Override
-		public K getKey () {
+		public K getKey() {
 			Objects.requireNonNull(key);
 			return key;
 		}
@@ -948,7 +1036,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		 */
 		@Override
 		@Nullable
-		public V getValue () {
+		public V getValue() {
 			return value;
 		}
 
@@ -974,25 +1062,31 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		 */
 		@Override
 		@Nullable
-		public V setValue (V value) {
+		public V setValue(V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals (@Nullable Object o) {
-			if (this == o) {return true;}
-			if (o == null || getClass() != o.getClass()) {return false;}
+		public boolean equals(@Nullable Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
 
-			Entry<?, ?> entry = (Entry<?, ?>)o;
+			Entry<?, ?> entry = (Entry<?, ?>) o;
 
-			if (!Objects.equals(key, entry.key)) {return false;}
+			if (!Objects.equals(key, entry.key)) {
+				return false;
+			}
 			return Objects.equals(value, entry.value);
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int result = key != null ? key.hashCode() : 0;
 			result = 31 * result + (value != null ? value.hashCode() : 0);
 			return result;
@@ -1006,18 +1100,18 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		protected int nextIndex, currentIndex;
 		protected boolean valid = true;
 
-		public MapIterator (ObjectObjectQuadMap<K, V> map) {
+		public MapIterator(ObjectObjectQuadMap<K, V> map) {
 			this.map = map;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = -1;
 			nextIndex = -1;
 			findNextIndex();
 		}
 
-		void findNextIndex () {
+		void findNextIndex() {
 			K[] keyTable = map.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != null) {
@@ -1029,9 +1123,11 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		}
 
 		@Override
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
-			if (i < 0) {throw new IllegalStateException("next must be called before remove.");}
+			if (i < 0) {
+				throw new IllegalStateException("next must be called before remove.");
+			}
 			K[] keyTable = map.keyTable;
 			V[] valueTable = map.valueTable;
 			int mask = map.mask, next = i + 1 & mask;
@@ -1048,7 +1144,9 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 			keyTable[i] = null;
 			valueTable[i] = null;
 			map.size--;
-			if (i != currentIndex) {--nextIndex;}
+			if (i != currentIndex) {
+				--nextIndex;
+			}
 			currentIndex = -1;
 		}
 	}
@@ -1057,18 +1155,22 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		protected Entry<K, V> entry = new Entry<>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 
-		public Entries (ObjectObjectQuadMap<K, V> map) {
+		public Entries(ObjectObjectQuadMap<K, V> map) {
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
-				public Iterator<Map.Entry<K, V>> iterator () {
+				public Iterator<Map.Entry<K, V>> iterator() {
 					return this;
 				}
 
 				/** Note the same entry instance is returned each time this method is called. */
 				@Override
-				public Map.Entry<K, V> next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public Map.Entry<K, V> next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					K[] keyTable = map.keyTable;
 					entry.key = keyTable[nextIndex];
 					entry.value = map.valueTable[nextIndex];
@@ -1078,15 +1180,17 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 			};
 		}
 
 		@Override
-		public boolean contains (Object o) {
+		public boolean contains(Object o) {
 			return iter.map.containsKey(o);
 		}
 
@@ -1096,12 +1200,12 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<Map.Entry<K, V>> iterator () {
+		public Iterator<Map.Entry<K, V>> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 	}
@@ -1109,23 +1213,29 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	public static class Values<K, V> extends AbstractCollection<V> {
 		protected MapIterator<K, V, V> iter;
 
-		public Values (ObjectObjectQuadMap<K, V> map) {
+		public Values(ObjectObjectQuadMap<K, V> map) {
 			iter = new MapIterator<K, V, V>(map) {
 				@Override
-				public Iterator<V> iterator () {
+				public Iterator<V> iterator() {
 					return this;
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 
 				@Override
-				public V next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public V next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					V value = map.valueTable[nextIndex];
 					currentIndex = nextIndex;
 					findNextIndex();
@@ -1141,12 +1251,12 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<V> iterator () {
+		public Iterator<V> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
@@ -1155,23 +1265,29 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	public static class Keys<K, V> extends AbstractSet<K> {
 		protected MapIterator<K, V, K> iter;
 
-		public Keys (ObjectObjectQuadMap<K, V> map) {
+		public Keys(ObjectObjectQuadMap<K, V> map) {
 			iter = new MapIterator<K, V, K>(map) {
 				@Override
-				public Iterator<K> iterator () {
+				public Iterator<K> iterator() {
 					return this;
 				}
 
 				@Override
-				public boolean hasNext () {
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public boolean hasNext() {
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					return hasNext;
 				}
 
 				@Override
-				public K next () {
-					if (!hasNext) {throw new NoSuchElementException();}
-					if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+				public K next() {
+					if (!hasNext) {
+						throw new NoSuchElementException();
+					}
+					if (!valid) {
+						throw new RuntimeException("#iterator() cannot be used nested.");
+					}
 					K key = map.keyTable[nextIndex];
 					currentIndex = nextIndex;
 					findNextIndex();
@@ -1181,7 +1297,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		}
 
 		@Override
-		public boolean contains (Object o) {
+		public boolean contains(Object o) {
 			return iter.map.containsKey(o);
 		}
 
@@ -1191,17 +1307,17 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<K> iterator () {
+		public Iterator<K> iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int h = 0;
 			iter.reset();
 			while (iter.hasNext()) {
@@ -1224,7 +1340,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static <K, V> ObjectObjectQuadMap<K, V> with (K key0, V value0) {
+	public static <K, V> ObjectObjectQuadMap<K, V> with(K key0, V value0) {
 		ObjectObjectQuadMap<K, V> map = new ObjectObjectQuadMap<>(1);
 		map.put(key0, value0);
 		return map;
@@ -1247,12 +1363,12 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @return a new map containing the given keys and values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> ObjectObjectQuadMap<K, V> with (K key0, V value0, Object... rest) {
+	public static <K, V> ObjectObjectQuadMap<K, V> with(K key0, V value0, Object... rest) {
 		ObjectObjectQuadMap<K, V> map = new ObjectObjectQuadMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);
 		for (int i = 1; i < rest.length; i += 2) {
 			try {
-				map.put((K)rest[i - 1], (V)rest[i]);
+				map.put((K) rest[i - 1], (V) rest[i]);
 			} catch (ClassCastException ignored) {
 			}
 		}

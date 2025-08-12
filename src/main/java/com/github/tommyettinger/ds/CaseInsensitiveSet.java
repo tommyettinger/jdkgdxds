@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -49,7 +50,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public CaseInsensitiveSet () {
+	public CaseInsensitiveSet() {
 		super();
 	}
 
@@ -59,7 +60,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public CaseInsensitiveSet (int initialCapacity) {
+	public CaseInsensitiveSet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -70,7 +71,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public CaseInsensitiveSet (int initialCapacity, float loadFactor) {
+	public CaseInsensitiveSet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -79,7 +80,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public CaseInsensitiveSet (Iterator<? extends CharSequence> coll) {
+	public CaseInsensitiveSet(Iterator<? extends CharSequence> coll) {
 		this();
 		addAll(coll);
 	}
@@ -89,7 +90,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 *
 	 * @param set an ObjectSet or one of its subclasses
 	 */
-	public CaseInsensitiveSet (ObjectSet<? extends CharSequence> set) {
+	public CaseInsensitiveSet(ObjectSet<? extends CharSequence> set) {
 		this(set.size(), set.loadFactor);
 		hashMultiplier = set.hashMultiplier;
 		addAll(set);
@@ -100,7 +101,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 *
 	 * @param coll a Collection implementation, such as an ObjectList
 	 */
-	public CaseInsensitiveSet (Collection<? extends CharSequence> coll) {
+	public CaseInsensitiveSet(Collection<? extends CharSequence> coll) {
 		super(coll.size());
 		addAll(coll);
 
@@ -113,7 +114,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * @param offset the first index in array to draw an item from
 	 * @param length how many items to take from array; bounds-checking is the responsibility of the using code
 	 */
-	public CaseInsensitiveSet (CharSequence[] array, int offset, int length) {
+	public CaseInsensitiveSet(CharSequence[] array, int offset, int length) {
 		this(length);
 		addAll(array, offset, length);
 	}
@@ -123,7 +124,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 *
 	 * @param array an array that will be used in full, except for duplicate items
 	 */
-	public CaseInsensitiveSet (CharSequence[] array) {
+	public CaseInsensitiveSet(CharSequence[] array) {
 		this(array.length);
 		addAll(array);
 	}
@@ -133,39 +134,41 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 *
 	 * @param set another CaseInsensitiveSet
 	 */
-	public CaseInsensitiveSet (CaseInsensitiveSet set) {
+	public CaseInsensitiveSet(CaseInsensitiveSet set) {
 		super(set.size, set.loadFactor);
 		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 
 	@Override
-	protected int place (@NonNull Object item) {
+	protected int place(@NonNull Object item) {
 		if (item instanceof CharSequence)
-			return Utilities.hashCodeIgnoreCase((CharSequence)item, hashMultiplier) & mask;
+			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate (Object left, @Nullable Object right) {
+	protected boolean equate(Object left, @Nullable Object right) {
 		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
-			return Utilities.equalsIgnoreCase((CharSequence)left, (CharSequence)right);
+			return Utilities.equalsIgnoreCase((CharSequence) left, (CharSequence) right);
 		}
 		return false;
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		int h = size;
 		@Nullable CharSequence[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			@Nullable CharSequence key = keyTable[i];
-			if (key != null) {h ^= Utilities.hashCodeIgnoreCase(key);}
+			if (key != null) {
+				h ^= Utilities.hashCodeIgnoreCase(key);
+			}
 		}
 		return h;
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		super.resize(newSize);
 	}
 
@@ -176,16 +179,17 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 *
 	 * @return a new set containing nothing
 	 */
-	public static CaseInsensitiveSet with () {
+	public static CaseInsensitiveSet with() {
 		return new CaseInsensitiveSet(0);
 	}
 
 	/**
 	 * Creates a new CaseInsensitiveSet that holds only the given item, but can be resized.
+	 *
 	 * @param item one CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given item
 	 */
-	public static CaseInsensitiveSet with (CharSequence item) {
+	public static CaseInsensitiveSet with(CharSequence item) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(1);
 		set.add(item);
 		return set;
@@ -193,11 +197,12 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
-	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1) {
+	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(2);
 		set.add(item0, item1);
 		return set;
@@ -205,12 +210,13 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
-	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2) {
+	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(3);
 		set.add(item0, item1, item2);
 		return set;
@@ -218,13 +224,14 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
 	 * @param item3 a CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
-	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3) {
+	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(4);
 		set.add(item0, item1, item2, item3);
 		return set;
@@ -232,6 +239,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
@@ -239,7 +247,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * @param item4 a CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
-	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4) {
+	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(5);
 		set.add(item0, item1, item2, item3);
 		set.add(item4);
@@ -248,6 +256,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
@@ -256,7 +265,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * @param item5 a CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
-	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5) {
+	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(6);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5);
@@ -265,6 +274,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
@@ -274,7 +284,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * @param item6 a CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
-	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6) {
+	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(7);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6);
@@ -283,6 +293,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 
 	/**
 	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
+	 *
 	 * @param item0 a CharSequence item
 	 * @param item1 a CharSequence item
 	 * @param item2 a CharSequence item
@@ -292,7 +303,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * @param item6 a CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
-	public static CaseInsensitiveSet with (CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6, CharSequence item7) {
+	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6, CharSequence item7) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(8);
 		set.add(item0, item1, item2, item3);
 		set.add(item4, item5, item6, item7);
@@ -303,10 +314,11 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * Creates a new CaseInsensitiveSet that holds only the given items, but can be resized.
 	 * This overload will only be used when varargs are used and
 	 * there are 9 or more arguments.
+	 *
 	 * @param varargs a CharSequence varargs or CharSequence array; remember that varargs allocate
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
-	public static CaseInsensitiveSet with (CharSequence... varargs) {
+	public static CaseInsensitiveSet with(CharSequence... varargs) {
 		return new CaseInsensitiveSet(varargs);
 	}
 }

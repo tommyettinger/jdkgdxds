@@ -29,6 +29,7 @@ import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
@@ -106,19 +107,25 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable protected transient Entries entries1;
-	@Nullable protected transient Entries entries2;
-	@Nullable protected transient Values values1;
-	@Nullable protected transient Values values2;
-	@Nullable protected transient Keys keys1;
-	@Nullable protected transient Keys keys2;
+	@Nullable
+	protected transient Entries entries1;
+	@Nullable
+	protected transient Entries entries2;
+	@Nullable
+	protected transient Values values1;
+	@Nullable
+	protected transient Values values2;
+	@Nullable
+	protected transient Keys keys1;
+	@Nullable
+	protected transient Keys keys2;
 
 	public float defaultValue = 0;
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
-	public LongFloatMap () {
+	public LongFloatMap() {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
 	}
 
@@ -127,7 +134,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 */
-	public LongFloatMap (int initialCapacity) {
+	public LongFloatMap(int initialCapacity) {
 		this(initialCapacity, Utilities.getDefaultLoadFactor());
 	}
 
@@ -138,12 +145,14 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param initialCapacity If not a power of two, it is increased to the next nearest power of two.
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
-	public LongFloatMap (int initialCapacity, float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public LongFloatMap(int initialCapacity, float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 
 		int tableSize = tableSize(initialCapacity, loadFactor);
-		threshold = (int)(tableSize * loadFactor);
+		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
@@ -156,8 +165,8 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param map the map to copy
 	 */
-	public LongFloatMap (LongFloatMap map) {
-		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
+	public LongFloatMap(LongFloatMap map) {
+		this((int) (map.keyTable.length * map.loadFactor), map.loadFactor);
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -174,7 +183,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public LongFloatMap (long[] keys, float[] values) {
+	public LongFloatMap(long[] keys, float[] values) {
 		this(Math.min(keys.length, values.length));
 		putAll(keys, values);
 	}
@@ -186,7 +195,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public LongFloatMap (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfFloat values) {
+	public LongFloatMap(PrimitiveCollection.OfLong keys, PrimitiveCollection.OfFloat values) {
 		this(Math.min(keys.size(), values.size()));
 		putAll(keys, values);
 	}
@@ -197,7 +206,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param keys   a PrimitiveCollection of keys
 	 * @param values a PrimitiveCollection of values
 	 */
-	public void putAll (PrimitiveCollection.OfLong keys, PrimitiveCollection.OfFloat values) {
+	public void putAll(PrimitiveCollection.OfLong keys, PrimitiveCollection.OfFloat values) {
 		int length = Math.min(keys.size(), values.size());
 		ensureCapacity(length);
 		LongIterator ki = keys.iterator();
@@ -213,8 +222,8 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param item any long; it is usually mixed or masked here
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place (long item) {
-		return (int)(hashMultiplier * (item ^ item << 32) >>> shift);
+	protected int place(long item) {
+		return (int) (hashMultiplier * (item ^ item << 32) >>> shift);
 	}
 
 	/**
@@ -224,7 +233,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * If you want to treat equality between longs differently for some reason, you would also need to override
 	 * {@link #containsKey(long)} and {@link #get(long)}, at the very least.
 	 */
-	protected int locateKey (long key) {
+	protected int locateKey(long key) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
@@ -240,10 +249,14 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
-	public float put (long key, float value) {
+	public float put(long key, float value) {
 		if (key == 0) {
 			float oldValue = defaultValue;
-			if (hasZeroValue) {oldValue = zeroValue;} else {size++;}
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+			} else {
+				size++;
+			}
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -257,17 +270,23 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
 	/**
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
-	public float putOrDefault (long key, float value, float defaultValue) {
+	public float putOrDefault(long key, float value, float defaultValue) {
 		if (key == 0) {
 			float oldValue = defaultValue;
-			if (hasZeroValue) {oldValue = zeroValue;} else {size++;}
+			if (hasZeroValue) {
+				oldValue = zeroValue;
+			} else {
+				size++;
+			}
 			hasZeroValue = true;
 			zeroValue = value;
 			return oldValue;
@@ -281,7 +300,9 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = value;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
@@ -291,10 +312,12 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll (LongFloatMap map) {
+	public void putAll(LongFloatMap map) {
 		ensureCapacity(map.size);
 		if (map.hasZeroValue) {
-			if (!hasZeroValue) {size++;}
+			if (!hasZeroValue) {
+				size++;
+			}
 			hasZeroValue = true;
 			zeroValue = map.zeroValue;
 		}
@@ -303,7 +326,9 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		long key;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			key = keyTable[i];
-			if (key != 0) {put(key, valueTable[i]);}
+			if (key != 0) {
+				put(key, valueTable[i]);
+			}
 		}
 	}
 
@@ -313,7 +338,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public void putAll (long[] keys, float[] values) {
+	public void putAll(long[] keys, float[] values) {
 		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
 	}
 
@@ -324,7 +349,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
-	public void putAll (long[] keys, float[] values, int length) {
+	public void putAll(long[] keys, float[] values, int length) {
 		putAll(keys, 0, values, 0, length);
 	}
 
@@ -337,7 +362,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param valueOffset the first index in values to insert
 	 * @param length      how many items from keys and values to insert, at-most
 	 */
-	public void putAll (long[] keys, int keyOffset, float[] values, int valueOffset, int length) {
+	public void putAll(long[] keys, int keyOffset, float[] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
 		ensureCapacity(length);
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
@@ -348,7 +373,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	protected void putResize (long key, float value) {
+	protected void putResize(long key, float value) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
@@ -364,8 +389,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param key any {@code long}
 	 */
-	public float get (long key) {
-		if (key == 0) {return hasZeroValue ? zeroValue : defaultValue;}
+	public float get(long key) {
+		if (key == 0) {
+			return hasZeroValue ? zeroValue : defaultValue;
+		}
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
@@ -379,8 +406,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	public float getOrDefault (long key, float defaultValue) {
-		if (key == 0) {return hasZeroValue ? zeroValue : defaultValue;}
+	public float getOrDefault(long key, float defaultValue) {
+		if (key == 0) {
+			return hasZeroValue ? zeroValue : defaultValue;
+		}
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
@@ -395,7 +424,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
 	 * put into the map and defaultValue is returned.
 	 */
-	public float getAndIncrement (long key, float defaultValue, float increment) {
+	public float getAndIncrement(long key, float defaultValue, float increment) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				float old = zeroValue;
@@ -416,11 +445,13 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		i = ~i; // Empty space was found.
 		keyTable[i] = key;
 		valueTable[i] = defaultValue + increment;
-		if (++size >= threshold) {resize(keyTable.length << 1);}
+		if (++size >= threshold) {
+			resize(keyTable.length << 1);
+		}
 		return defaultValue;
 	}
 
-	public float remove (long key) {
+	public float remove(long key) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				hasZeroValue = false;
@@ -437,9 +468,9 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 
 		int mask = this.mask, last, slot;
 		size--;
-		for (;;) {
+		for (; ; ) {
 			pos = ((last = pos) + 1) & mask;
-			for (;;) {
+			for (; ; ) {
 				if ((key = keyTable[pos]) == 0) {
 					keyTable[last] = 0;
 					return oldValue;
@@ -456,7 +487,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	/**
 	 * Returns true if the map has one or more items.
 	 */
-	public boolean notEmpty () {
+	public boolean notEmpty() {
 		return size != 0;
 	}
 
@@ -467,14 +498,14 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @return the number of key-value mappings in this map
 	 */
-	public int size () {
+	public int size() {
 		return size;
 	}
 
 	/**
 	 * Returns true if the map is empty.
 	 */
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return size == 0;
 	}
 
@@ -484,7 +515,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @return the current default value
 	 */
-	public float getDefaultValue () {
+	public float getDefaultValue() {
 		return defaultValue;
 	}
 
@@ -495,7 +526,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param defaultValue may be any float; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue (float defaultValue) {
+	public void setDefaultValue(float defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -504,16 +535,20 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * nothing is done. If the map contains more items than the specified capacity, the next highest power of two capacity is used
 	 * instead.
 	 */
-	public void shrink (int maximumCapacity) {
-		if (maximumCapacity < 0) {throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);}
+	public void shrink(int maximumCapacity) {
+		if (maximumCapacity < 0) {
+			throw new IllegalArgumentException("maximumCapacity must be >= 0: " + maximumCapacity);
+		}
 		int tableSize = tableSize(Math.max(maximumCapacity, size), loadFactor);
-		if (keyTable.length > tableSize) {resize(tableSize);}
+		if (keyTable.length > tableSize) {
+			resize(tableSize);
+		}
 	}
 
 	/**
 	 * Clears the map and reduces the size of the backing arrays to be the specified capacity / loadFactor, if they are larger.
 	 */
-	public void clear (int maximumCapacity) {
+	public void clear(int maximumCapacity) {
 		int tableSize = tableSize(maximumCapacity, loadFactor);
 		if (keyTable.length <= tableSize) {
 			clear();
@@ -524,15 +559,19 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		resize(tableSize);
 	}
 
-	public void clear () {
-		if (size == 0) {return;}
+	public void clear() {
+		if (size == 0) {
+			return;
+		}
 		hasZeroValue = false;
 		size = 0;
 		Arrays.fill(keyTable, 0);
 	}
 
-	public boolean containsKey (long key) {
-		if (key == 0) {return hasZeroValue;}
+	public boolean containsKey(long key) {
+		if (key == 0) {
+			return hasZeroValue;
+		}
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			long other = keyTable[i];
@@ -550,8 +589,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value the float value to check for; will be compared by exact bits, not float equality
 	 * @return true if this map contains the given value, false otherwise
 	 */
-	public boolean containsValue (float value) {
-		if (hasZeroValue && Utilities.isEqual(zeroValue, value)) {return true;}
+	public boolean containsValue(float value) {
+		if (hasZeroValue && Utilities.isEqual(zeroValue, value)) {
+			return true;
+		}
 		float[] valueTable = this.valueTable;
 		long[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
@@ -570,12 +611,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param tolerance how much the given value is permitted to differ from a value in this while being considered equal
 	 * @return true if this map contains the given value, false otherwise
 	 */
-	public boolean containsValue (float value, float tolerance) {
-		if (hasZeroValue && Utilities.isEqual(zeroValue, value, tolerance)) {return true;}
+	public boolean containsValue(float value, float tolerance) {
+		if (hasZeroValue && Utilities.isEqual(zeroValue, value, tolerance)) {
+			return true;
+		}
 		float[] valueTable = this.valueTable;
 		long[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value, tolerance)) {return true;}
+			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value, tolerance)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -588,12 +633,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param defaultKey if the given value is not found, this will be returned
 	 * @return the key associated with the given value, if it was found, or defaultKey otherwise
 	 */
-	public long findKey (float value, long defaultKey) {
-		if (hasZeroValue && Utilities.isEqual(zeroValue, value)) {return 0;}
+	public long findKey(float value, long defaultKey) {
+		if (hasZeroValue && Utilities.isEqual(zeroValue, value)) {
+			return 0;
+		}
 		float[] valueTable = this.valueTable;
 		long[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value)) {return keyTable[i];}
+			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value)) {
+				return keyTable[i];
+			}
 		}
 		return defaultKey;
 	}
@@ -607,12 +656,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param tolerance  how much the given value is permitted to differ from a value in this while being considered equal
 	 * @return the key associated with the given value, if it was found, or defaultKey otherwise
 	 */
-	public long findKey (float value, long defaultKey, float tolerance) {
-		if (hasZeroValue && Utilities.isEqual(zeroValue, value, tolerance)) {return 0;}
+	public long findKey(float value, long defaultKey, float tolerance) {
+		if (hasZeroValue && Utilities.isEqual(zeroValue, value, tolerance)) {
+			return 0;
+		}
 		float[] valueTable = this.valueTable;
 		long[] keyTable = this.keyTable;
 		for (int i = valueTable.length - 1; i >= 0; i--) {
-			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value, tolerance)) {return keyTable[i];}
+			if (keyTable[i] != 0 && Utilities.isEqual(valueTable[i], value, tolerance)) {
+				return keyTable[i];
+			}
 		}
 		return defaultKey;
 	}
@@ -621,14 +674,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * Increases the size of the backing array to accommodate the specified number of additional items / loadFactor. Useful before
 	 * adding many items to avoid multiple backing array resizes.
 	 */
-	public void ensureCapacity (int additionalCapacity) {
+	public void ensureCapacity(int additionalCapacity) {
 		int tableSize = tableSize(size + additionalCapacity, loadFactor);
-		if (keyTable.length < tableSize) {resize(tableSize);}
+		if (keyTable.length < tableSize) {
+			resize(tableSize);
+		}
 	}
 
-	protected void resize (int newSize) {
+	protected void resize(int newSize) {
 		int oldCapacity = keyTable.length;
-		threshold = (int)(newSize * loadFactor);
+		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
@@ -641,7 +696,9 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		if (size > 0) {
 			for (int i = 0; i < oldCapacity; i++) {
 				long key = oldKeyTable[i];
-				if (key != 0) {putResize(key, oldValueTable[i]);}
+				if (key != 0) {
+					putResize(key, oldValueTable[i]);
+				}
 			}
 		}
 	}
@@ -672,18 +729,21 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * Gets the length of the internal array used to store all keys, as well as empty space awaiting more items to be
 	 * entered. This length is equal to the length of the array used to store all values, and empty space for values,
 	 * here. This is also called the capacity.
+	 *
 	 * @return the length of the internal array that holds all keys
 	 */
 	public int getTableSize() {
 		return keyTable.length;
 	}
 
-	public float getLoadFactor () {
+	public float getLoadFactor() {
 		return loadFactor;
 	}
 
-	public void setLoadFactor (float loadFactor) {
-		if (loadFactor <= 0f || loadFactor > 1f) {throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);}
+	public void setLoadFactor(float loadFactor) {
+		if (loadFactor <= 0f || loadFactor > 1f) {
+			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
+		}
 		this.loadFactor = loadFactor;
 		int tableSize = tableSize(size, loadFactor);
 		if (tableSize - 1 != mask) {
@@ -692,7 +752,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	}
 
 	@Override
-	public int hashCode () {
+	public int hashCode() {
 		long h = hasZeroValue ? BitConversion.floatToRawIntBits(zeroValue) * 0x9E3779B97F4A7C15L + size : size;
 		long[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
@@ -703,16 +763,24 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 				h += BitConversion.floatToRawIntBits(valueTable[i]) * 0x9E3779B97F4A7C15L;
 			}
 		}
-		return (int)(h ^ h >>> 32);
+		return (int) (h ^ h >>> 32);
 	}
 
 	@Override
-	public boolean equals (Object obj) {
-		if (obj == this) {return true;}
-		if (!(obj instanceof LongFloatMap)) {return false;}
-		LongFloatMap other = (LongFloatMap)obj;
-		if (other.size != size) {return false;}
-		if (other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue) {return false;}
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof LongFloatMap)) {
+			return false;
+		}
+		LongFloatMap other = (LongFloatMap) obj;
+		if (other.size != size) {
+			return false;
+		}
+		if (other.hasZeroValue != hasZeroValue || other.zeroValue != zeroValue) {
+			return false;
+		}
 		long[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
@@ -729,7 +797,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	}
 
 	@Override
-	public String toString () {
+	public String toString() {
 		return toString(", ", true);
 	}
 
@@ -740,13 +808,14 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param entrySeparator how to separate entries, such as {@code ", "}
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator) {
+	public String toString(String entrySeparator) {
 		return toString(entrySeparator, false);
 	}
 
-	public String toString (String entrySeparator, boolean braces) {
+	public String toString(String entrySeparator, boolean braces) {
 		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
 	}
+
 	/**
 	 * Makes a String from the contents of this LongFloatMap, but uses the given {@link LongAppender} and
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
@@ -759,18 +828,19 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 	 * @return a new String representing this map
 	 */
-	public String toString (String entrySeparator, String keyValueSeparator, boolean braces,
-		LongAppender keyAppender, FloatAppender valueAppender){
+	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
+						   LongAppender keyAppender, FloatAppender valueAppender) {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, boolean braces) {
+
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, LongAppender.DEFAULT, FloatAppender.DEFAULT);
 	}
 
@@ -786,41 +856,53 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *
-	 * @param sb a StringBuilder that this can append to
-	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
-	 * @param braces true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender a function that takes a StringBuilder and a long, and returns the modified StringBuilder
-	 * @param valueAppender a function that takes a StringBuilder and a float, and returns the modified StringBuilder
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and a float, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendTo (StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
-		LongAppender keyAppender, FloatAppender valueAppender) {
-		if (size == 0) {return braces ? sb.append("{}") : sb;}
-		if (braces) {sb.append('{');}
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+								  LongAppender keyAppender, FloatAppender valueAppender) {
+		if (size == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
 		if (hasZeroValue) {
 			keyAppender.apply(sb, 0L).append(keyValueSeparator);
 			valueAppender.apply(sb, zeroValue);
-			if (size > 1) {sb.append(entrySeparator);}
+			if (size > 1) {
+				sb.append(entrySeparator);
+			}
 		}
 		long[] keyTable = this.keyTable;
 		float[] valueTable = this.valueTable;
 		int i = keyTable.length;
 		while (i-- > 0) {
 			long key = keyTable[i];
-			if (key == 0) {continue;}
+			if (key == 0) {
+				continue;
+			}
 			keyAppender.apply(sb, key).append(keyValueSeparator);
 			valueAppender.apply(sb, valueTable[i]);
 			break;
 		}
 		while (i-- > 0) {
 			long key = keyTable[i];
-			if (key == 0) {continue;}
+			if (key == 0) {
+				continue;
+			}
 			sb.append(entrySeparator);
 			keyAppender.apply(sb, key).append(keyValueSeparator);
 			valueAppender.apply(sb, valueTable[i]);
 		}
-		if (braces) {sb.append('}');}
+		if (braces) {
+			sb.append('}');
+		}
 		return sb;
 	}
 
@@ -833,7 +915,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param action The action to be performed for each entry
 	 */
-	public void forEach (LongFloatBiConsumer action) {
+	public void forEach(LongFloatBiConsumer action) {
 		for (Entry entry : entrySet()) {
 			action.accept(entry.getKey(), entry.getValue());
 		}
@@ -847,7 +929,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param function the function to apply to each entry
 	 */
-	public void replaceAll (LongFloatToFloatBiFunction function) {
+	public void replaceAll(LongFloatToFloatBiFunction function) {
 		for (Entry entry : entrySet()) {
 			entry.setValue(function.applyAsFloat(entry.getKey(), entry.getValue()));
 		}
@@ -864,7 +946,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @param newSize the target size to try to reach by removing items, if smaller than the current size
 	 */
-	public void truncate (int newSize) {
+	public void truncate(int newSize) {
 		long[] keyTable = this.keyTable;
 		newSize = Math.max(0, newSize);
 		for (int i = keyTable.length - 1; i >= 0 && size > newSize; i--) {
@@ -888,7 +970,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator iterator () {
+	public @NonNull EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -911,7 +993,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public Keys keySet () {
+	public Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys(this);
 			keys2 = new Keys(this);
@@ -934,7 +1016,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @return a {@link PrimitiveCollection.OfFloat} containing float values
 	 */
-	public Values values () {
+	public Values values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values(this);
 			values2 = new Values(this);
@@ -958,7 +1040,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
-	public Entries entrySet () {
+	public Entries entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries(this);
 			entries2 = new Entries(this);
@@ -979,21 +1061,21 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		public long key;
 		public float value;
 
-		public Entry () {
+		public Entry() {
 		}
 
-		public Entry (long key, float value) {
+		public Entry(long key, float value) {
 			this.key = key;
 			this.value = value;
 		}
 
-		public Entry (Entry entry) {
+		public Entry(Entry entry) {
 			this.key = entry.key;
 			this.value = entry.value;
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return key + "=" + value;
 		}
 
@@ -1005,7 +1087,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 *                               required to, throw this exception if the entry has been
 		 *                               removed from the backing map.
 		 */
-		public long getKey () {
+		public long getKey() {
 			return key;
 		}
 
@@ -1016,7 +1098,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		public float getValue () {
+		public float getValue() {
 			return value;
 		}
 
@@ -1040,26 +1122,32 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 *                                       required to, throw this exception if the entry has been
 		 *                                       removed from the backing map.
 		 */
-		public float setValue (float value) {
+		public float setValue(float value) {
 			float old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals (@Nullable Object o) {
-			if (this == o) {return true;}
-			if (o == null || getClass() != o.getClass()) {return false;}
+		public boolean equals(@Nullable Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
 
-			Entry entry = (Entry)o;
+			Entry entry = (Entry) o;
 
-			if (key != entry.key) {return false;}
+			if (key != entry.key) {
+				return false;
+			}
 			return value == entry.value;
 		}
 
 		@Override
-		public int hashCode () {
-			return (int)(key ^ key >>> 32) + BitConversion.floatToRawIntBits(value);
+		public int hashCode() {
+			return (int) (key ^ key >>> 32) + BitConversion.floatToRawIntBits(value);
 		}
 	}
 
@@ -1072,18 +1160,22 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		protected int nextIndex, currentIndex;
 		protected boolean valid = true;
 
-		public MapIterator (LongFloatMap map) {
+		public MapIterator(LongFloatMap map) {
 			this.map = map;
 			reset();
 		}
 
-		public void reset () {
+		public void reset() {
 			currentIndex = INDEX_ILLEGAL;
 			nextIndex = INDEX_ZERO;
-			if (map.hasZeroValue) {hasNext = true;} else {findNextIndex();}
+			if (map.hasZeroValue) {
+				hasNext = true;
+			} else {
+				findNextIndex();
+			}
 		}
 
-		void findNextIndex () {
+		void findNextIndex() {
 			long[] keyTable = map.keyTable;
 			for (int n = keyTable.length; ++nextIndex < n; ) {
 				if (keyTable[nextIndex] != 0) {
@@ -1101,11 +1193,11 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 *
 		 * @return {@code true} if the iteration has more elements
 		 */
-		public boolean hasNext () {
+		public boolean hasNext() {
 			return hasNext;
 		}
 
-		public void remove () {
+		public void remove() {
 			int i = currentIndex;
 			if (i == INDEX_ZERO && map.hasZeroValue) {
 				map.hasZeroValue = false;
@@ -1127,7 +1219,9 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 					next = next + 1 & mask;
 				}
 				keyTable[i] = 0;
-				if (i != currentIndex) {--nextIndex;}
+				if (i != currentIndex) {
+					--nextIndex;
+				}
 			}
 			currentIndex = INDEX_ILLEGAL;
 			map.size--;
@@ -1136,14 +1230,18 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	}
 
 	public static class KeyIterator extends MapIterator implements LongIterator {
-		public KeyIterator (LongFloatMap map) {
+		public KeyIterator(LongFloatMap map) {
 			super(map);
 		}
 
 		@Override
-		public long nextLong () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public long nextLong() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			long key = nextIndex == INDEX_ZERO ? 0 : map.keyTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -1153,21 +1251,25 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		/**
 		 * Returns a new LongList containing the remaining keys.
 		 */
-		public LongList toList () {
+		public LongList toList() {
 			LongList list = new LongList(map.size);
-			while (hasNext) {list.add(nextLong());}
+			while (hasNext) {
+				list.add(nextLong());
+			}
 			return list;
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 	}
 
 	public static class ValueIterator extends MapIterator implements FloatIterator {
-		public ValueIterator (LongFloatMap map) {
+		public ValueIterator(LongFloatMap map) {
 			super(map);
 		}
 
@@ -1178,9 +1280,13 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		public float nextFloat () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public float nextFloat() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			float value = nextIndex == INDEX_ZERO ? map.zeroValue : map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -1188,8 +1294,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 	}
@@ -1197,12 +1305,12 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		protected Entry entry = new Entry();
 
-		public EntryIterator (LongFloatMap map) {
+		public EntryIterator(LongFloatMap map) {
 			super(map);
 		}
 
 		@Override
-		public @NonNull EntryIterator iterator () {
+		public @NonNull EntryIterator iterator() {
 			return this;
 		}
 
@@ -1210,9 +1318,13 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * Note the same entry instance is returned each time this method is called.
 		 */
 		@Override
-		public Entry next () {
-			if (!hasNext) {throw new NoSuchElementException();}
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public Entry next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			long[] keyTable = map.keyTable;
 			if (nextIndex == INDEX_ZERO) {
 				entry.key = 0;
@@ -1227,8 +1339,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 
 		@Override
-		public boolean hasNext () {
-			if (!valid) {throw new RuntimeException("#iterator() cannot be used nested.");}
+		public boolean hasNext() {
+			if (!valid) {
+				throw new RuntimeException("#iterator() cannot be used nested.");
+			}
 			return hasNext;
 		}
 	}
@@ -1236,7 +1350,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
 		protected EntryIterator iter;
 
-		public Entries (LongFloatMap map) {
+		public Entries(LongFloatMap map) {
 			iter = new EntryIterator(map);
 		}
 
@@ -1246,17 +1360,17 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator iterator () {
+		public @NonNull EntryIterator iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1268,7 +1382,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 
@@ -1276,7 +1390,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1284,11 +1398,13 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<Entry> toList () {
+		public ObjectList<Entry> toList() {
 			ObjectList<Entry> list = new ObjectList<>(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(new Entry(iter.next()));}
+			while (iter.hasNext) {
+				list.add(new Entry(iter.next()));
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1298,13 +1414,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public Collection<Entry> appendInto(Collection<Entry> coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(new Entry(iter.next()));}
+			while (iter.hasNext) {
+				coll.add(new Entry(iter.next()));
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1314,6 +1433,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Map.
 		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 *
 		 * @param coll any modifiable Map; may have items appended into it
 		 * @return the given map
 		 */
@@ -1335,22 +1455,22 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		protected ValueIterator iter;
 
 		@Override
-		public boolean add (float item) {
+		public boolean add(float item) {
 			throw new UnsupportedOperationException("LongFloatMap.Values is read-only");
 		}
 
 		@Override
-		public boolean remove (float item) {
+		public boolean remove(float item) {
 			throw new UnsupportedOperationException("LongFloatMap.Values is read-only");
 		}
 
 		@Override
-		public boolean contains (float item) {
+		public boolean contains(float item) {
 			return iter.map.containsValue(item);
 		}
 
 		@Override
-		public void clear () {
+		public void clear() {
 			throw new UnsupportedOperationException("LongFloatMap.Values is read-only");
 		}
 
@@ -1360,16 +1480,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public FloatIterator iterator () {
+		public FloatIterator iterator() {
 			return iter;
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
-		public Values (LongFloatMap map) {
+		public Values(LongFloatMap map) {
 			iter = new ValueIterator(map);
 		}
 
@@ -1377,7 +1497,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1385,11 +1505,13 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public FloatList toList () {
+		public FloatList toList() {
 			FloatList list = new FloatList(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.nextFloat());}
+			while (iter.hasNext) {
+				list.add(iter.nextFloat());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1399,13 +1521,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfFloat appendInto(PrimitiveCollection.OfFloat coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.nextFloat());}
+			while (iter.hasNext) {
+				coll.add(iter.nextFloat());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1413,7 +1538,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 	}
@@ -1421,58 +1546,60 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	public static class Keys implements PrimitiveSet.SetOfLong {
 		protected KeyIterator iter;
 
-		public Keys (LongFloatMap map) {
+		public Keys(LongFloatMap map) {
 			iter = new KeyIterator(map);
 		}
 
 		@Override
-		public boolean add (long item) {
+		public boolean add(long item) {
 			throw new UnsupportedOperationException("LongFloatMap.Keys is read-only");
 		}
 
 		@Override
-		public boolean remove (long item) {
+		public boolean remove(long item) {
 			throw new UnsupportedOperationException("LongFloatMap.Keys is read-only");
 		}
 
 		@Override
-		public boolean contains (long item) {
+		public boolean contains(long item) {
 			return iter.map.containsKey(item);
 		}
 
 		@Override
-		public LongIterator iterator () {
+		public LongIterator iterator() {
 			return iter;
 		}
 
 		@Override
-		public void clear () {
+		public void clear() {
 			throw new UnsupportedOperationException("LongFloatMap.Keys is read-only");
 		}
 
 		@Override
-		public int size () {
+		public int size() {
 			return iter.map.size;
 		}
 
 		@Override
-		public int hashCode () {
+		public int hashCode() {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
 			long hc = 1;
-			while (iter.hasNext) {hc += iter.nextLong();}
+			while (iter.hasNext) {
+				hc += iter.nextLong();
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return (int)(hc ^ hc >>> 32);
+			return (int) (hc ^ hc >>> 32);
 		}
 
 		/**
 		 * The iterator is reused by this data structure, and you can reset it
 		 * back to the start of the iteration order using this.
 		 */
-		public void resetIterator () {
+		public void resetIterator() {
 			iter.reset();
 		}
 
@@ -1480,11 +1607,13 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public LongList toList () {
+		public LongList toList() {
 			LongList list = new LongList(iter.map.size);
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {list.add(iter.nextLong());}
+			while (iter.hasNext) {
+				list.add(iter.nextLong());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1494,13 +1623,16 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		/**
 		 * Append the remaining items that this can iterate through into the given Collection.
 		 * Does not change the position of this iterator.
+		 *
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
-			while (iter.hasNext) {coll.add(iter.nextLong());}
+			while (iter.hasNext) {
+				coll.add(iter.nextLong());
+			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
@@ -1509,7 +1641,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 
 		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
-		public boolean equals (Object other) {
+		public boolean equals(Object other) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			boolean eq = SetOfLong.super.equalContents(other);
@@ -1520,12 +1652,12 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 
 		@Override
-		public String toString () {
+		public String toString() {
 			return toString(", ", true);
 		}
 	}
 
-	public float putIfAbsent (long key, float value) {
+	public float putIfAbsent(long key, float value) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				return zeroValue;
@@ -1539,7 +1671,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		return put(key, value);
 	}
 
-	public boolean replace (long key, float oldValue, float newValue) {
+	public boolean replace(long key, float oldValue, float newValue) {
 		float curValue = get(key);
 		if (curValue != oldValue || !containsKey(key)) {
 			return false;
@@ -1548,7 +1680,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		return true;
 	}
 
-	public float replace (long key, float value) {
+	public float replace(long key, float value) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				float oldValue = zeroValue;
@@ -1566,7 +1698,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		return defaultValue;
 	}
 
-	public float computeIfAbsent (long key, LongToFloatFunction mappingFunction) {
+	public float computeIfAbsent(long key, LongToFloatFunction mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
 			float newValue = mappingFunction.applyAsFloat(key);
@@ -1576,7 +1708,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 			return valueTable[i];
 	}
 
-	public boolean remove (long key, float value) {
+	public boolean remove(long key, float value) {
 		int i = locateKey(key);
 		if (i >= 0 && valueTable[i] == value) {
 			remove(key);
@@ -1590,14 +1722,15 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * this uses primitive values, and this won't remove entries if the remappingFunction returns null (because
 	 * that isn't possible with primitive types).
 	 * This uses a functional interface from Funderby.
-	 * @param key key with which the resulting value is to be associated
-	 * @param value the value to be merged with the existing value
-	 *        associated with the key or, if no existing value
-	 *        is associated with the key, to be associated with the key
+	 *
+	 * @param key               key with which the resulting value is to be associated
+	 * @param value             the value to be merged with the existing value
+	 *                          associated with the key or, if no existing value
+	 *                          is associated with the key, to be associated with the key
 	 * @param remappingFunction given a float from this and the float {@code value}, this should return what float to use
 	 * @return the value now associated with key
 	 */
-	public float combine (long key, float value, FloatFloatToFloatBiFunction remappingFunction) {
+	public float combine(long key, float value, FloatFloatToFloatBiFunction remappingFunction) {
 		int i = locateKey(key);
 		float next = (i < 0) ? value : remappingFunction.applyAsFloat(valueTable[i], value);
 		put(key, next);
@@ -1608,10 +1741,11 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * Simply calls {@link #combine(long, float, FloatFloatToFloatBiFunction)} on this map using every
 	 * key-value pair in {@code other}. If {@code other} isn't empty, calling this will probably modify
 	 * this map, though this depends on the {@code remappingFunction}.
-	 * @param other a non-null LongFloatMap (or subclass) with a compatible key type
+	 *
+	 * @param other             a non-null LongFloatMap (or subclass) with a compatible key type
 	 * @param remappingFunction given a float value from this and a value from other, this should return what float to use
 	 */
-	public void combine (LongFloatMap other, FloatFloatToFloatBiFunction remappingFunction) {
+	public void combine(LongFloatMap other, FloatFloatToFloatBiFunction remappingFunction) {
 		for (LongFloatMap.Entry e : other.entrySet()) {
 			combine(e.key, e.value, remappingFunction);
 		}
@@ -1624,7 +1758,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static LongFloatMap with () {
+	public static LongFloatMap with() {
 		return new LongFloatMap(0);
 	}
 
@@ -1639,7 +1773,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value0 the first and only value; will be converted to primitive float
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static LongFloatMap with (Number key0, Number value0) {
+	public static LongFloatMap with(Number key0, Number value0) {
 		LongFloatMap map = new LongFloatMap(1);
 		map.put(key0.longValue(), value0.floatValue());
 		return map;
@@ -1658,7 +1792,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value1 a Number for a value; will be converted to primitive float
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongFloatMap with (Number key0, Number value0, Number key1, Number value1) {
+	public static LongFloatMap with(Number key0, Number value0, Number key1, Number value1) {
 		LongFloatMap map = new LongFloatMap(2);
 		map.put(key0.longValue(), value0.floatValue());
 		map.put(key1.longValue(), value1.floatValue());
@@ -1680,7 +1814,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value2 a Number for a value; will be converted to primitive float
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongFloatMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+	public static LongFloatMap with(Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
 		LongFloatMap map = new LongFloatMap(3);
 		map.put(key0.longValue(), value0.floatValue());
 		map.put(key1.longValue(), value1.floatValue());
@@ -1705,7 +1839,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value3 a Number for a value; will be converted to primitive float
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongFloatMap with (Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+	public static LongFloatMap with(Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
 		LongFloatMap map = new LongFloatMap(4);
 		map.put(key0.longValue(), value0.floatValue());
 		map.put(key1.longValue(), value1.floatValue());
@@ -1729,7 +1863,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param rest   an array or varargs of Number elements
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongFloatMap with (Number key0, Number value0, Number... rest) {
+	public static LongFloatMap with(Number key0, Number value0, Number... rest) {
 		LongFloatMap map = new LongFloatMap(1 + (rest.length >>> 1));
 		map.put(key0.longValue(), value0.floatValue());
 		map.putPairs(rest);
@@ -1750,10 +1884,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param pairs an array or varargs of Number elements
 	 */
 	public void putPairs(Number... pairs) {
-		if(pairs != null) {
+		if (pairs != null) {
 			for (int i = 1; i < pairs.length; i += 2) {
 				try {
-					if(pairs[i-1] != null && pairs[i] != null)
+					if (pairs[i - 1] != null && pairs[i] != null)
 						put(pairs[i - 1].longValue(), pairs[i].floatValue());
 				} catch (ClassCastException ignored) {
 				}
@@ -1770,6 +1904,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
+	 *
 	 * @param str a String containing BASE10 chars
 	 */
 	public void putLegible(String str) {
@@ -1785,7 +1920,8 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
+	 *
+	 * @param str            a String containing BASE10 chars
 	 * @param entrySeparator the String separating every key-value pair
 	 */
 	public void putLegible(String str, String entrySeparator) {
@@ -1798,8 +1934,9 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
-	 * @param entrySeparator the String separating every key-value pair
+	 *
+	 * @param str               a String containing BASE10 chars
+	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator) {
@@ -1812,34 +1949,35 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
-	 * @param str a String containing BASE10 chars
-	 * @param entrySeparator the String separating every key-value pair
+	 *
+	 * @param str               a String containing BASE10 chars
+	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param offset the first position to read BASE10 chars from in {@code str}
-	 * @param length how many chars to read; -1 is treated as maximum length
+	 * @param offset            the first position to read BASE10 chars from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
 	public void putLegible(String str, String entrySeparator, String keyValueSeparator, int offset, int length) {
 		int sl, el, kvl;
-		if(str == null || entrySeparator == null || keyValueSeparator == null
-				|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
-				|| offset < 0 || offset > sl - 1) return;
+		if (str == null || entrySeparator == null || keyValueSeparator == null
+			|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
+			|| offset < 0 || offset > sl - 1) return;
 		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
-		int end = str.indexOf(keyValueSeparator, offset+1);
+		int end = str.indexOf(keyValueSeparator, offset + 1);
 		long k = 0;
 		boolean incomplete = false;
 		while (end != -1 && end + kvl < lim) {
 			k = Base.BASE10.readLong(str, offset, end);
 			offset = end + kvl;
-			end = str.indexOf(entrySeparator, offset+1);
-			if(end != -1 && end + el < lim){
+			end = str.indexOf(entrySeparator, offset + 1);
+			if (end != -1 && end + el < lim) {
 				put(k, Base.BASE10.readFloat(str, offset, end));
 				offset = end + el;
-				end = str.indexOf(keyValueSeparator, offset+1);
+				end = str.indexOf(keyValueSeparator, offset + 1);
 			} else {
 				incomplete = true;
 			}
 		}
-		if(incomplete && offset < lim){
+		if (incomplete && offset < lim) {
 			put(k, Base.BASE10.readFloat(str, offset, lim));
 		}
 	}
@@ -1851,7 +1989,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 *
 	 * @return a new map containing nothing
 	 */
-	public static LongFloatMap withPrimitive () {
+	public static LongFloatMap withPrimitive() {
 		return new LongFloatMap(0);
 	}
 
@@ -1865,7 +2003,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value0 the first and only value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
-	public static LongFloatMap withPrimitive (long key0, float value0) {
+	public static LongFloatMap withPrimitive(long key0, float value0) {
 		LongFloatMap map = new LongFloatMap(1);
 		map.put(key0, value0);
 		return map;
@@ -1883,7 +2021,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value1 a float value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongFloatMap withPrimitive (long key0, float value0, long key1, float value1) {
+	public static LongFloatMap withPrimitive(long key0, float value0, long key1, float value1) {
 		LongFloatMap map = new LongFloatMap(2);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1904,7 +2042,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value2 a float value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongFloatMap withPrimitive (long key0, float value0, long key1, float value1, long key2, float value2) {
+	public static LongFloatMap withPrimitive(long key0, float value0, long key1, float value1, long key2, float value2) {
 		LongFloatMap map = new LongFloatMap(3);
 		map.put(key0, value0);
 		map.put(key1, value1);
@@ -1928,7 +2066,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param value3 a float value
 	 * @return a new map containing the given key-value pairs
 	 */
-	public static LongFloatMap withPrimitive (long key0, float value0, long key1, float value1, long key2, float value2, long key3, float value3) {
+	public static LongFloatMap withPrimitive(long key0, float value0, long key1, float value1, long key2, float value2, long key3, float value3) {
 		LongFloatMap map = new LongFloatMap(4);
 		map.put(key0, value0);
 		map.put(key1, value1);
