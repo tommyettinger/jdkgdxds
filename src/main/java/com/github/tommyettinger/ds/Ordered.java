@@ -918,7 +918,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 	}
 
-	interface OfChar extends Arrangeable {
+	interface OfChar extends Arrangeable, CharSequence {
 		/**
 		 * Gets the CharList of char items that this data structure holds, in the order it uses for iteration.
 		 * This should usually return a direct reference to an CharList used inside this object, so changes
@@ -1039,7 +1039,57 @@ public interface Ordered<T> extends Arrangeable {
 			if(o instanceof CharDeque) return OrderType.DEQUE;
 			return OrderType.LIST;
 		}
-	}
+
+        /**
+         * Compatibility alias for {@link #size()}.
+         * Here for compatibility with CharSequence.
+         *
+         * @return how many items are contained in this data structure
+         */
+        @Override
+        default int length() {
+            return size();
+        }
+
+        /**
+         * Equivalent to calling {@link CharList#get(int)} on {@link #order()}.
+         * Here for compatibility with CharSequence.
+         *
+         * @param index   the index of the {@code char} value to be returned
+         * @return the char at the given index in the ordering
+         */
+        @Override
+        default char charAt(int index) {
+            return order().get(index);
+        }
+
+        /**
+         * Returns true if this data structure has no items (its {@link #size()} is 0), or false otherwise.
+         * Here for compatibility with CharSequence.
+         *
+         * @return true if this data structure has no items, or false otherwise.
+         */
+        @SuppressWarnings("Since15")
+        default boolean isEmpty() {
+            return size() == 0;
+        }
+
+        /**
+         * Creates a new sub-list (not a view) of the given range of this data structure.
+         * Here for compatibility with CharSequence.
+         * <br>
+         * This is typically overridden to return the same type as this data structure, though this is not required.
+         *
+         * @param start   the start index, inclusive
+         * @param end     the end index, exclusive
+         *
+         * @return a new sub-list of this data structure, which is also a CharSequence
+         */
+        @Override
+        default CharList subSequence(int start, int end){
+            return order().subSequence(start, end);
+        }
+    }
 
 	interface OfBoolean extends Arrangeable {
 		/**
