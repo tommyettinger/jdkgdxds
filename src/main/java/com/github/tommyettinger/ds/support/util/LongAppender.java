@@ -17,23 +17,35 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjLongToObjBiFunction;
 
 /**
- * A convenience wrapper around an {@link ObjLongToObjBiFunction} that takes and returns a StringBuilder, as well as taking a {@code long}.
+ * A functional interface that takes and returns an object that is a CharSequence and is Appendable, appending
+ * a {@code long} item to it.
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, long)}.
  */
-public interface LongAppender extends ObjLongToObjBiFunction<StringBuilder, StringBuilder> {
+public interface LongAppender {
+	/**
+	 * Appends {@code item} to {@code sb} and returns {@code sb} for chaining.
+	 *
+	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param item the item to append
+	 * @return {@code first}, after modification
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	<S extends CharSequence & Appendable> S apply(S sb, long item);
+
 	/**
 	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
 	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
-	 * {@link StringBuilder#append(long)} when you want to use that as a LongAppender.
+	 * {@link StringBuilder#append(long)} when you want to use that as an LongAppender.
+	 * This actually calls {@link Base#appendSigned(CharSequence, long)} on {@link Base#BASE10}, and works with more
+	 * than StringBuilder.
 	 */
-	LongAppender DEFAULT = StringBuilder::append;
+	LongAppender DEFAULT = Base.BASE10::appendSigned;
 
 	/**
-	 * An alternative LongAppender constant that appends ten {@link Base#BASE90} digits for every long input.
-	 * The ten ASCII chars are not expected to be human-readable.
+	 * An alternative LongAppender constant that appends five {@link Base#BASE90} digits for every long input.
+	 * The five ASCII chars are not expected to be human-readable.
 	 * <br>
 	 * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
 	 * this lambda would be present at a call-site.

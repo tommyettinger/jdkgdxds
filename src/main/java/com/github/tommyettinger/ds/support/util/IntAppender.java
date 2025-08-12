@@ -17,10 +17,10 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjIntToObjBiFunction;
 
 /**
- * A convenience wrapper around an {@link ObjIntToObjBiFunction} that takes and returns a StringBuilder, as well as taking an {@code int}.
+ * A functional interface that takes and returns an object that is a CharSequence and is Appendable, appending
+ * an {@code int} item to it.
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, int)}.
  */
 public interface IntAppender {
