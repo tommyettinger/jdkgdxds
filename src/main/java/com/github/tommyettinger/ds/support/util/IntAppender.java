@@ -23,13 +23,23 @@ import com.github.tommyettinger.function.ObjIntToObjBiFunction;
  * A convenience wrapper around an {@link ObjIntToObjBiFunction} that takes and returns a StringBuilder, as well as taking an {@code int}.
  * This is often a method reference to a method in {@link Base}, such as {@link Base#appendSigned(CharSequence, int)}.
  */
-public interface IntAppender extends ObjIntToObjBiFunction<StringBuilder, StringBuilder> {
+public interface IntAppender {
+	/**
+	 * Appends {@code item} to {@code sb} and returns {@code sb} for chaining.
+	 *
+	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param item the item to append
+	 * @return {@code first}, after modification
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	<S extends CharSequence & Appendable> S apply(S sb, int item);
+
 	/**
 	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
 	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
 	 * {@link StringBuilder#append(int)} when you want to use that as an IntAppender.
 	 */
-	IntAppender DEFAULT = StringBuilder::append;
+	IntAppender DEFAULT = Base.BASE10::appendSigned;
 
 	/**
 	 * An alternative IntAppender constant that appends five {@link Base#BASE90} digits for every int input.
