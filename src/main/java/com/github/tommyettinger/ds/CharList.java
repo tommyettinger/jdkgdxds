@@ -925,6 +925,37 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
+	 * Adds {@code count} repetitions of {@code padWith} to the start (left) of this list.
+	 * @param count how many repetitions of {@code padWith} to add
+	 * @param padWith the item to pad with
+	 * @return this, for chaining
+	 */
+	public CharList padLeft(int count, char padWith) {
+		if(count > 0) {
+			ensureCapacity(count);
+			System.arraycopy(items, 0, items, count, size);
+			Arrays.fill(items, 0, count, padWith);
+			size += count;
+		}
+		return this;
+	}
+
+	/**
+	 * Adds {@code count} repetitions of {@code padWith} to the end (right) of this list.
+	 * @param count how many repetitions of {@code padWith} to add
+	 * @param padWith the item to pad with
+	 * @return this, for chaining
+	 */
+	public CharList padRight(int count, char padWith) {
+		if(count > 0) {
+			ensureCapacity(count);
+			Arrays.fill(items, size, size + count, padWith);
+			size += count;
+		}
+		return this;
+	}
+
+	/**
 	 * A {@link CharIterator}, plus {@link ListIterator} methods, over the elements of a CharList.
 	 * Use {@link #nextChar()} in preference to {@link #next()} to avoid allocating Character objects.
 	 */
