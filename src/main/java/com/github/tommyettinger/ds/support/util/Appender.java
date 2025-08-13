@@ -19,10 +19,34 @@ package com.github.tommyettinger.ds.support.util;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 
+import java.io.IOException;
+import java.util.Objects;
+
 /**
- * A convenience wrapper around an {@link ObjObjToObjBiFunction} that takes and returns a StringBuilder, as well as taking a generic object.
+ * A functional interface that takes and returns an object that is a CharSequence and is Appendable, appending
+ * a {@code T} item to it.
  * This is not typically a method reference to anything in {@link Base}, which is different from other Appender types. This will frequently
  * use a lambda.
+ * @param <T> the type of items that can be appended by this functional interface
  */
-public interface Appender<T> extends ObjObjToObjBiFunction<StringBuilder, T, StringBuilder> {
+public interface Appender<T> {
+	/**
+	 * Appends {@code item} to {@code sb} and returns {@code sb} for chaining.
+	 *
+	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param item the item to append
+	 * @return {@code first}, after modification
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	<S extends CharSequence & Appendable> S apply(S sb, T item);
+
+	static <S extends CharSequence & Appendable, T> S append(S sb, T item) {
+		try {
+			sb.append(Objects.toString(item));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return sb;
+	}
+
 }
