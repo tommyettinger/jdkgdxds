@@ -746,7 +746,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	/**
 	 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link IntAppender}
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@link IntAppender#DEFAULT} as an appender.
 	 *
 	 * @param sb        a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}

@@ -765,8 +765,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(CharSequence, int)} and {@link Base#appendUnsigned(CharSequence, int)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the keyAppender.
+	 * the default String representation, you can use {@link IntAppender#DEFAULT} as a keyAppender or
+	 * {@code Appender::append} as a valueAppender.
 	 *
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -781,7 +781,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendTo(sb, entrySeparator, "=", braces, IntAppender.DEFAULT, StringBuilder::append);
+		return appendTo(sb, entrySeparator, "=", braces, IntAppender.DEFAULT, Appender::append);
 	}
 
 	/**
@@ -789,8 +789,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(CharSequence, int)} and {@link Base#appendUnsigned(CharSequence, int)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the keyAppender.
+	 * the default String representation, you can use {@link IntAppender#DEFAULT} as a keyAppender or
+	 * {@code Appender::append} as a valueAppender.
 	 *
 	 * @param sb                a StringBuilder that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
