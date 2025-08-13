@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -393,7 +394,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * item, separating items with the given {@code itemSeparator}, and wrapping the result in square brackets if
 	 * {@code brackets} is true.
 	 * <br>
-	 * Delegates to {@link #appendTo(StringBuilder, String, boolean)}.
+	 * Delegates to {@link #appendTo(CharSequence, String, boolean)}.
 	 *
 	 * @param itemSeparator how to separate items, such as {@code ", "}
 	 * @param brackets      true to wrap the result in square brackets, or false to leave the items unadorned
@@ -406,14 +407,14 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	/**
 	 * Makes a String from the contents of this EnhancedCollection, but uses the given {@link Appender}
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 * <br>
-	 * Be advised that {@code StringBuilder::append} will
+	 * Be advised that {@code Appender::append} will
 	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
 	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
-	 * {@code public static final Appender<String> STRING_APPENDER = StringBuilder::append;}
+	 * {@code public static final Appender<String> STRING_APPENDER = Appender::append;}
 	 * <br>
-	 * Delegates to {@link #appendTo(StringBuilder, String, boolean, Appender)}.
+	 * Delegates to {@link #appendTo(CharSequence, String, boolean, Appender)}.
 	 *
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets  true to wrap the output in square brackets, or false to omit them
@@ -426,33 +427,33 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this EnhancedCollection, using {@code StringBuilder::append} to
+	 * Appends to a StringBuilder from the contents of this EnhancedCollection, using {@code Appender::append} to
 	 * append each item's String representation, separating items with {@code separator}, and optionally wrapping the
 	 * output in square brackets if {@code brackets} is true.
 	 * <br>
-	 * Be advised that {@code StringBuilder::append} will
+	 * Be advised that {@code Appender::append} will
 	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
 	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
-	 * {@code public static final Appender<String> STRING_APPENDER = StringBuilder::append;}
+	 * {@code public static final Appender<String> STRING_APPENDER = Appender::append;}
 	 * <br>
-	 * Delegates to {@link #appendTo(StringBuilder, String, boolean, Appender)}.
+	 * Delegates to {@link #appendTo(CharSequence, String, boolean, Appender)}.
 	 *
 	 * @param sb        a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets  true to wrap the output in square brackets, or false to omit them
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
 	 */
-	default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets) {
-		return appendTo(sb, separator, brackets, StringBuilder::append);
+	default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
+		return appendTo(sb, separator, brackets, Appender::append);
 	}
 
 	/**
 	 * Appends to a StringBuilder from the contents of this EnhancedCollection, but uses the given {@link Appender}
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append}, but be advised that it will
+	 * the default String representation, you can use {@code Appender::append}, but be advised that it will
 	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
 	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
-	 * {@code public static final Appender<String> STRING_APPENDER = StringBuilder::append;}
+	 * {@code public static final Appender<String> STRING_APPENDER = Appender::append;}
 	 *
 	 * @param sb        a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
@@ -460,30 +461,35 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param appender  a function that takes a StringBuilder and a T, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
 	 */
-	default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets, Appender<T> appender) {
-		if (isEmpty()) {
-			return brackets ? sb.append("[]") : sb;
-		}
-		if (brackets) {
-			sb.append('[');
-		}
-		Iterator<T> it = iterator();
-		if (it.hasNext()) {
-			while (true) {
-				T next = it.next();
-				if (next == this) sb.append("(this)");
-				else appender.apply(sb, next);
-				if (it.hasNext()) sb.append(separator);
-				else break;
+	default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, Appender<T> appender) {
+		try {
+			if (isEmpty()) {
+				if (brackets) sb.append("[]");
+				return sb;
 			}
+			if (brackets) {
+				sb.append('[');
+			}
+			Iterator<T> it = iterator();
+			if (it.hasNext()) {
+				while (true) {
+					T next = it.next();
+					if (next == this) sb.append("(this)");
+					else appender.apply(sb, next);
+					if (it.hasNext()) sb.append(separator);
+					else break;
+				}
+			}
+			if (brackets) sb.append(']');
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		if (brackets) sb.append(']');
 		return sb;
 	}
 
 	/**
 	 * Adds items to this EnhancedCollection drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}.
+	 * {@link #appendTo(CharSequence, String, boolean)}.
 	 * A PartialParser will be used to parse items from sections of {@code str}. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
@@ -498,7 +504,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 
 	/**
 	 * Adds items to this EnhancedCollection drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}.
+	 * {@link #appendTo(CharSequence, String, boolean)}.
 	 * A PartialParser will be used to parse items from sections of {@code str}. Any brackets inside the given range
 	 * of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
