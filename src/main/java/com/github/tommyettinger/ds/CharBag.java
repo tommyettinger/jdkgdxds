@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.CharIterator;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -199,20 +200,28 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	}
 
 	@Override
-	public CharBag append(CharSequence csq) {
-		final int len = csq.length();
-		ensureCapacity(len);
-		for (int i = 0; i < len; i++) {
-			add(csq.charAt(i));
+	public CharBag append(@Nullable CharSequence csq) {
+		if(csq == null) {
+			add('n', 'u', 'l', 'l');
+		} else {
+			final int len = csq.length();
+			ensureCapacity(len);
+			for (int i = 0; i < len; i++) {
+				add(csq.charAt(i));
+			}
 		}
 		return this;
 	}
 
 	@Override
-	public CharBag append(CharSequence csq, int start, int end) {
-		ensureCapacity(end - start);
-		for (int i = start; i < end; i++) {
-			add(csq.charAt(i));
+	public CharBag append(@Nullable CharSequence csq, int start, int end) {
+		if(csq == null) {
+			add('n', 'u', 'l', 'l');
+		} else {
+			ensureCapacity(end - start);
+			for (int i = start; i < end; i++) {
+				add(csq.charAt(i));
+			}
 		}
 		return this;
 	}
@@ -238,7 +247,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * <br>
 	 * Note that because the order of a bag is unreliable, this could conceivably pad to any point
 	 * in the order, but this does actually move all elements to the right and prepend padWith count times.
-	 * 
+	 *
 	 * @param count how many repetitions of {@code padWith} to add
 	 * @param padWith the item to pad with
 	 * @return this, for chaining

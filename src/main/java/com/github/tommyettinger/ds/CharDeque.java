@@ -1914,20 +1914,28 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public CharDeque append(CharSequence csq) {
-		final int len = csq.length();
-		ensureCapacity(len);
-		for (int i = 0; i < len; i++) {
-			add(csq.charAt(i));
+	public CharDeque append(@Nullable CharSequence csq) {
+		if(csq == null) {
+			add('n', 'u', 'l', 'l');
+		} else {
+			final int len = csq.length();
+			ensureCapacity(len);
+			for (int i = 0; i < len; i++) {
+				add(csq.charAt(i));
+			}
 		}
 		return this;
 	}
 
 	@Override
-	public CharDeque append(CharSequence csq, int start, int end) {
-		ensureCapacity(end - start);
-		for (int i = start; i < end; i++) {
-			add(csq.charAt(i));
+	public CharDeque append(@Nullable CharSequence csq, int start, int end) {
+		if(csq == null) {
+			add('n', 'u', 'l', 'l');
+		} else {
+			ensureCapacity(end - start);
+			for (int i = start; i < end; i++) {
+				add(csq.charAt(i));
+			}
 		}
 		return this;
 	}
