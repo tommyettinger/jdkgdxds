@@ -821,10 +821,11 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendFriendly(CharSequence, float)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 * the default String representation, you can use {@link LongAppender#DEFAULT} or {@link FloatAppender#DEFAULT}
+	 * as an appender. To write values so that they can be read back as Java source code, use
+	 * {@link LongAppender#READABLE} or {@link FloatAppender#READABLE} for each appender.
 	 * <br>
-	 * Using {@code Base::appendReadable}, if you separate keys
+	 * Using {@code READABLE} appenders, if you separate keys
 	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *
@@ -849,10 +850,11 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendFriendly(CharSequence, float)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 * the default String representation, you can use {@link LongAppender#DEFAULT} or {@link FloatAppender#DEFAULT}
+	 * as an appender. To write values so that they can be read back as Java source code, use
+	 * {@link LongAppender#READABLE} or {@link FloatAppender#READABLE} for each appender.
 	 * <br>
-	 * Using {@code Base::appendReadable}, if you separate keys
+	 * Using {@code READABLE} appenders, if you separate keys
 	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *

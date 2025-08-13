@@ -739,7 +739,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendUnsigned(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, int)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write values
+	 * the default String representation, you can use {@code Appender::append} as an appender. To write values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
 	 * <br>
 	 * Using {@code Base::appendReadable}, if you separate keys
