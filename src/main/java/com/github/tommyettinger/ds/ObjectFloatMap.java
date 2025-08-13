@@ -768,8 +768,8 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendFriendly(CharSequence, float)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
+	 * the default String representation, you can use {@code Appender::append} for keyAppender. To write numeric values
+	 * so that they can be read back as Java source code, use {@link FloatAppender#READABLE} for the valueAppender.
 	 *
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -784,7 +784,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendTo(sb, entrySeparator, "=", braces, StringBuilder::append, FloatAppender.DEFAULT);
+		return appendTo(sb, entrySeparator, "=", braces, Appender::append, FloatAppender.DEFAULT);
 	}
 
 	/**
@@ -792,7 +792,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendFriendly(CharSequence, float)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
+	 * the default String representation, you can use {@code Appender::append} as an appender. To write numeric values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
 	 *
 	 * @param sb                a StringBuilder that this can append to

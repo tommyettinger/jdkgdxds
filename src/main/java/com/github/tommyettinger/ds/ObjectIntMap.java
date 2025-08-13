@@ -727,7 +727,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendUnsigned(CharSequence, int)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
+	 * the default String representation, you can use {@code Appender::append} as an appender. To write numeric values
 	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
 	 *
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
@@ -743,7 +743,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendTo(sb, entrySeparator, "=", braces, StringBuilder::append, IntAppender.DEFAULT);
+		return appendTo(sb, entrySeparator, "=", braces, Appender::append, IntAppender.DEFAULT);
 	}
 
 	/**
@@ -751,8 +751,8 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendUnsigned(CharSequence, int)} . To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for the valueAppender.
+	 * the default String representation, you can use {@code Appender::append} as an appender. To write numeric values
+	 * so that they can be read back as Java source code, use {@link IntAppender#READABLE} for the valueAppender.
 	 *
 	 * @param sb                a StringBuilder that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}

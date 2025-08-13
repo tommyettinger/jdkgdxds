@@ -871,7 +871,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * Makes a String from the contents of this NumberedSet, but uses the given {@link Appender}
 	 * to convert all set items to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
 	 * @param entrySeparator how to separate set items, such as {@code ", "}
 	 * @param braces         true to wrap the output in curly braces, or false to omit them
@@ -883,14 +883,14 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
-		return map.keys.appendTo(sb, entrySeparator, braces, StringBuilder::append);
+		return map.keys.appendTo(sb, entrySeparator, braces, Appender::append);
 	}
 
 	/**
 	 * Appends to a StringBuilder from the contents of this NumberedSet, but uses the given {@link Appender}
 	 * to convert all keys to a customizable representation and append them
 	 * to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
 	 * @param sb            a StringBuilder that this can append to
 	 * @param itemSeparator how to separate set items, such as {@code ", "}

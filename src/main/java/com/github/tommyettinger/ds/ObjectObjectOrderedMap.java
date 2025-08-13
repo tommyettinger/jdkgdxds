@@ -689,7 +689,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * Appends to a StringBuilder from the contents of this ObjectObjectOrderedMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
 	 * @param sb                a StringBuilder that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}

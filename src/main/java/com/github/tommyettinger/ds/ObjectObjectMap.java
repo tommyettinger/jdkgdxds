@@ -878,7 +878,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * Makes a String from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -893,14 +893,14 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendTo(sb, entrySeparator, "=", braces, StringBuilder::append, StringBuilder::append);
+		return appendTo(sb, entrySeparator, "=", braces, Appender::append, Appender::append);
 	}
 
 	/**
 	 * Appends to a StringBuilder from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
 	 * @param sb                a StringBuilder that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
