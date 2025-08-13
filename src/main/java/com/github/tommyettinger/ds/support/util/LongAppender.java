@@ -51,4 +51,9 @@ public interface LongAppender {
 	 * this lambda would be present at a call-site.
 	 */
 	LongAppender DENSE = Base.BASE90::appendUnsigned;
+
+	/**
+	 * Appends long constants as they would be read in Java sources, in base 10 with a trailing {@code 'L'}.
+	 */
+	LongAppender READABLE = Base::appendReadable;
 }

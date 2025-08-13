@@ -49,4 +49,11 @@ public interface IntAppender {
 	 * this lambda would be present at a call-site.
 	 */
 	IntAppender DENSE = Base.BASE90::appendUnsigned;
+
+
+	/**
+	 * Appends int constants as they would be read in Java sources, in base 10, signed.
+	 */
+	IntAppender READABLE = Base::appendReadable;
+
 }

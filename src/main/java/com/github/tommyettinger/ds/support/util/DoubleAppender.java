@@ -56,4 +56,10 @@ public interface DoubleAppender {
 	static <S extends CharSequence & Appendable> S appendDense(S sb, double item) {
 		return Base.BASE90.appendUnsigned(sb, BitConversion.doubleToRawLongBits(item));
 	}
+
+	/**
+	 * Appends double constants as they would be read in Java sources, in base 10 using either decimal or scientific
+	 * format (depending on scale).
+	 */
+	DoubleAppender READABLE = Base::appendReadable;
 }

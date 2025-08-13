@@ -61,4 +61,9 @@ public interface CharAppender {
 		return sb;
 	}
 
+	/**
+	 * Appends char constants as they would be read in Java sources, in single quotes, with backslash escapes if
+	 * necessary.
+	 */
+	CharAppender READABLE = Base::appendReadable;
 }

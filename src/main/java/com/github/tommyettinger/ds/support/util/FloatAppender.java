@@ -56,4 +56,9 @@ public interface FloatAppender {
 	static <S extends CharSequence & Appendable> S appendDense(S sb, float item) {
 		return Base.BASE90.appendUnsigned(sb, BitConversion.floatToRawIntBits(item));
 	}
+
+	/**
+	 * Appends float constants as they would be read in Java sources, in base 10 with a trailing {@code 'f'}.
+	 */
+	FloatAppender READABLE = Base::appendReadable;
 }

@@ -71,4 +71,10 @@ public interface BooleanAppender {
 		}
 		return sb;
 	}
+
+	/**
+	 * Appends boolean constants as they would be read in Java sources, as either {@code true} or {@code false}.
+	 */
+	BooleanAppender READABLE = BooleanAppender::append;
+
 }
