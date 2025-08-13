@@ -2392,6 +2392,36 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
+	 * Adds {@code count} repetitions of {@code padWith} to the start (left) of this list.
+	 * @param count how many repetitions of {@code padWith} to add
+	 * @param padWith the item to pad with
+	 * @return this, for chaining
+	 */
+	public CharDeque padLeft(int count, char padWith) {
+		if(count > 0) {
+			int gap = ensureGap(0, count);
+			Arrays.fill(items, gap, gap + count, padWith);
+			size += count;
+		}
+		return this;
+	}
+
+	/**
+	 * Adds {@code count} repetitions of {@code padWith} to the end (right) of this list.
+	 * @param count how many repetitions of {@code padWith} to add
+	 * @param padWith the item to pad with
+	 * @return this, for chaining
+	 */
+	public CharDeque padRight(int count, char padWith) {
+		if(count > 0) {
+			int gap = ensureGap(size, count);
+			Arrays.fill(items, gap, gap + count, padWith);
+			size += count;
+		}
+		return this;
+	}
+
+	/**
 	 * A {@link CharIterator} over the elements of a CharDeque.
 	 */
 	public static class CharDequeIterator extends CharListIterator implements CharIterator {

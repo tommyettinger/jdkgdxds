@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -230,6 +231,41 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 			h += items[i];
 		}
 		return h ^ h >>> 16;
+	}
+
+	/**
+	 * Adds {@code count} repetitions of {@code padWith} to the start (left) of this list.
+	 * <br>
+	 * Note that because the order of a bag is unreliable, this could conceivably pad to any point
+	 * in the order, but this does actually move all elements to the right and prepend padWith count times.
+	 * 
+	 * @param count how many repetitions of {@code padWith} to add
+	 * @param padWith the item to pad with
+	 * @return this, for chaining
+	 */
+	public CharBag padLeft(int count, char padWith) {
+		if(count > 0) {
+			ensureCapacity(count);
+			System.arraycopy(items, 0, items, count, size);
+			Arrays.fill(items, 0, count, padWith);
+			size += count;
+		}
+		return this;
+	}
+
+	/**
+	 * Adds {@code count} repetitions of {@code padWith} to the end (right) of this list.
+	 * @param count how many repetitions of {@code padWith} to add
+	 * @param padWith the item to pad with
+	 * @return this, for chaining
+	 */
+	public CharBag padRight(int count, char padWith) {
+		if(count > 0) {
+			ensureCapacity(count);
+			Arrays.fill(items, size, size + count, padWith);
+			size += count;
+		}
+		return this;
 	}
 
 	/**
