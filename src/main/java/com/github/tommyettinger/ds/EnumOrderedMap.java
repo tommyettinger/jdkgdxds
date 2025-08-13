@@ -739,7 +739,8 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * Appends to a StringBuilder from the contents of this EnumOrderedMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default toString representation, you can use {@code Appender::append} as an appender, or to use the readable
+	 * Enum {@link Enum#name()}, use {@link Appender#ENUM_NAME_APPENDER}.
 	 *
 	 * @param sb                a StringBuilder that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}

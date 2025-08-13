@@ -29,6 +29,7 @@ import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -610,7 +611,9 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * Makes a String from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default toString representation, you can use {@code Appender::append} as an appender, or to use the readable
+	 * Enum {@link Enum#name()}, use {@link Appender#ENUM_NAME_APPENDER}. Use {@link FloatAppender#DEFAULT} or
+	 * {@link FloatAppender#READABLE} for human-readable or source-code-readable results, respectively.
 	 *
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -625,14 +628,16 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	}
 
 	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendTo(sb, entrySeparator, "=", braces, (builder, e) -> builder.append(e.name()), FloatAppender.DEFAULT);
+		return appendTo(sb, entrySeparator, "=", braces, Appender.ENUM_NAME_APPENDER, FloatAppender.DEFAULT);
 	}
 
 	/**
 	 * Appends to a StringBuilder from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default toString representation, you can use {@code Appender::append} as an appender, or to use the readable
+	 * Enum {@link Enum#name()}, use {@link Appender#ENUM_NAME_APPENDER}. Use {@link FloatAppender#DEFAULT} or
+	 * {@link FloatAppender#READABLE} for human-readable or source-code-readable results, respectively.
 	 *
 	 * @param sb                a StringBuilder that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}

@@ -767,7 +767,8 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * Makes a String from the contents of this EnumMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default toString representation, you can use {@code Appender::append} as an appender, or to use the readable
+	 * Enum {@link Enum#name()}, use {@link Appender#ENUM_NAME_APPENDER}.
 	 *
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
@@ -782,14 +783,14 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
-		return appendTo(sb, entrySeparator, "=", braces, (builder, e) -> builder.append(e.name()), StringBuilder::append);
+		return appendTo(sb, entrySeparator, "=", braces, Appender.ENUM_NAME_APPENDER, Appender::append);
 	}
 
 	/**
 	 * Appends to a StringBuilder from the contents of this EnumMap, but uses the given {@link Appender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender.
+	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
 	 * @param sb                a StringBuilder that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}

@@ -49,4 +49,19 @@ public interface Appender<T> {
 		return sb;
 	}
 
+	/**
+	 * Used in enum-keyed maps and sets to write an Enum constant's name, rather than its toString result.
+	 */
+	Appender<Enum<?>> ENUM_NAME_APPENDER = Appender::appendEnumName;
+
+	static <S extends CharSequence & Appendable> S appendEnumName(S sb, Enum<?> item) {
+		try {
+			sb.append(item == null ? "null" : item.name());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return sb;
+
+	}
+
 }

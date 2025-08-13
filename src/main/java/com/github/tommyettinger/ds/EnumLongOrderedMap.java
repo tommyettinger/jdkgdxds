@@ -730,8 +730,9 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendUnsigned(CharSequence, long)}. To use
-	 * the default String representation, you can use {@code StringBuilder::append} as an appender. To write numeric values
-	 * so that they can be read back as Java source code, use {@code Base::appendReadable} for each appender.
+	 * the default toString representation, you can use {@code Appender::append} as an appender, or to use the readable
+	 * Enum {@link Enum#name()}, use {@link Appender#ENUM_NAME_APPENDER}. Use {@link LongAppender#DEFAULT} or
+	 * {@link LongAppender#READABLE} for human-readable or source-code-readable results, respectively.
 	 *
 	 * @param sb                a StringBuilder that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
