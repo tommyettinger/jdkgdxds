@@ -1611,11 +1611,11 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
 	 *
-	 * @param value the char to look for
+	 * @param search the char to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int indexOf(char value) {
-		return indexOf(value, 0);
+	public int indexOf(char search) {
+		return indexOf(search, 0);
 	}
 
 	/**
@@ -1623,11 +1623,11 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param value     the char to look for
+	 * @param search     the char to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int indexOf(char value, int fromIndex) {
+	public int indexOf(char search, int fromIndex) {
 		if (size == 0)
 			return -1;
 		char[] items = this.items;
@@ -1638,15 +1638,80 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 		if (head <= tail) {
 			for (; i <= tail; i++)
-				if (items[i] == value)
+				if (items[i] == search)
 					return i - head;
 		} else {
 			for (int n = items.length; i < n; i++)
-				if (items[i] == value)
+				if (items[i] == search)
 					return i - head;
 			for (i = 0; i <= tail; i++)
-				if (items[i] == value)
+				if (items[i] == search)
 					return i + items.length - head;
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
+	 *
+	 * @param search the CharSequence to look for
+	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
+	 */
+	public int indexOf(CharSequence search) {
+		return indexOf(search, 0);
+	}
+
+	/**
+	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
+	 * This returns {@code fromIndex} if {@code value} is present at that point,
+	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
+	 *
+	 * @param search     the CharSequence to look for
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
+	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
+	 */
+	public int indexOf(CharSequence search, int fromIndex) {
+		if (search == null) throw new IllegalArgumentException("search cannot be null.");
+		if (size == 0) return -1;
+		int searchLen = search.length();
+		if (searchLen == 1) return indexOf(search.charAt(0), fromIndex);
+		if (searchLen == 0) return fromIndex;
+		if (searchLen > size) return -1;
+		char[] items = this.items;
+		final int head = this.head, tail = this.tail;
+		int i = head + Math.min(Math.max(fromIndex, 0), size - searchLen);
+		if (i >= items.length)
+			i -= items.length;
+
+		if (head <= tail) {
+			for (int st = tail - searchLen; i <= st; i++) {
+				boolean found = true;
+				for (int j = 0; j < searchLen && found; j++)
+					found = search.charAt(j) == items[i + j];
+				if (found) return i - head;
+			}
+		} else {
+			int ist = tail - searchLen, st = ist;
+			int n = items.length;
+			if(ist < 0) n = st + items.length;
+			for (; i < n; i++) {
+				boolean found = true;
+				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
+					if(c >= items.length) c -= items.length;
+					found = search.charAt(j) == items[c];
+				}
+				if (found) return i - head;
+			}
+			if(ist >= 0) {
+				for (i = 0; i <= st; i++) {
+					boolean found = true;
+					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
+						if (c >= items.length) c -= items.length;
+						found = search.charAt(j) == items[c];
+					}
+					if (found) return i + items.length - head;
+				}
+			}
 		}
 		return -1;
 	}
@@ -1654,11 +1719,11 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
 	 *
-	 * @param value the char to look for
+	 * @param search the char to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int lastIndexOf(char value) {
-		return lastIndexOf(value, size - 1);
+	public int lastIndexOf(char search) {
+		return lastIndexOf(search, size - 1);
 	}
 
 	/**
