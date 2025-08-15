@@ -493,7 +493,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
 	public int lastIndexOf (CharSequence search) {
-		return lastIndexOf(search, 0);
+		return lastIndexOf(search, size - 1);
 	}
 
 	/**

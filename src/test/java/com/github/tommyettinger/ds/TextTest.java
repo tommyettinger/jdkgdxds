@@ -59,8 +59,8 @@ public class TextTest {
 
 	@Test
 	public void testCharLists() {
-		subTest(new CharList(23));
-//		subTest(new CharBag(23));
-		subTest(new CharDeque(23));
+		subTest(new CharList(25));
+//		subTest(new CharBag(25)); // doesn't work because of insert() behavior
+		subTest(new CharDeque(25));
 	}
 }

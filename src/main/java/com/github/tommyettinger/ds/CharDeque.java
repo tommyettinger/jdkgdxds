@@ -1763,6 +1763,74 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		return -1;
 	}
 
+	/**
+	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
+	 *
+	 * @param search the CharSequence to look for
+	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
+	 */
+	public int lastIndexOf(CharSequence search) {
+		return lastIndexOf(search, size - 1);
+	}
+
+	/**
+	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
+	 * This returns {@code fromIndex} if {@code value} is present at that point,
+	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
+	 *
+	 * @param search     the CharSequence to look for
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
+	 * @return An index of last occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
+	 */
+	public int lastIndexOf(CharSequence search, int fromIndex) {
+		if (search == null) throw new IllegalArgumentException("search cannot be null.");
+		if (size == 0) return -1;
+		int searchLen = search.length();
+		if (searchLen == 1) return lastIndexOf(search.charAt(0), fromIndex);
+		if (searchLen == 0) return fromIndex;
+		if (searchLen > size) return -1;
+		char[] items = this.items;
+		if(items.length == 0) return -1; // probably not necessary...
+		final int head = this.head, tail = this.tail;
+		int i = head + fromIndex + Math.min(Math.max(fromIndex, 0), size - searchLen);
+		while (i >= items.length)
+			i -= items.length;
+
+		if (head <= tail) {
+			for (; i >= head; i--) {
+				boolean found = true;
+				for (int j = 0; j < searchLen && found; j++)
+					found = search.charAt(j) == items[i + j];
+				if (found) return i - head;
+			}
+		} else {
+			int st = tail - searchLen;
+			int n = items.length;
+			if(st < 0)
+				n = st + items.length;
+			else {
+				for (i = st; i >= 0; i--) {
+					boolean found = true;
+					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
+						if (c >= items.length) c -= items.length;
+						found = search.charAt(j) == items[c];
+					}
+					if (found) return i + items.length - head;
+				}
+			}
+
+			for (i = items.length - 1; i >= head; i--) {
+				boolean found = true;
+				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
+					if(c >= items.length) c -= items.length;
+					found = search.charAt(j) == items[c];
+				}
+				if (found) return i - head;
+			}
+		}
+		return -1;
+	}
+
 	public CharListIterator listIterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new CharDequeIterator(this);
