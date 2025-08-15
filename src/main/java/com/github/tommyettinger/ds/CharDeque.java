@@ -1691,9 +1691,9 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 				if (found) return i - head;
 			}
 		} else {
-			int ist = tail - searchLen, st = ist;
+			int st = tail - searchLen;
 			int n = items.length;
-			if(ist < 0) n = st + items.length;
+			if(st < 0) n = st + items.length;
 			for (; i < n; i++) {
 				boolean found = true;
 				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
@@ -1702,7 +1702,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 				}
 				if (found) return i - head;
 			}
-			if(ist >= 0) {
+			if(st >= 0) {
 				for (i = 0; i <= st; i++) {
 					boolean found = true;
 					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
