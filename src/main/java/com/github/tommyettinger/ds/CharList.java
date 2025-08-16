@@ -1102,7 +1102,8 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Checks if this is equal to another CharSequence, but runs all chars in both the given text and this through
 	 * {@link Casing#caseUp(char)} before comparing (making the comparison case-insensitive for almost all scripts in
-	 * use today, except some cases for Georgian).
+	 * use today, except some situations for Georgian).
+	 *
 	 * @param csq any other CharSequence, such as a String, StringBuilder, or CharList
 	 * @return true if the chars in this are equivalent to those in {@code csq} if compared as case-insensitive
 	 */

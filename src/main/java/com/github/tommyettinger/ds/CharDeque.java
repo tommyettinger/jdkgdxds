@@ -2630,32 +2630,51 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Using {@code ==} between each item in order, compares for equality with
-	 * other subtypes of {@link CharList}.
-	 * If {@code o} is not a CharList
-	 * (and is also not somehow reference-equivalent to this collection), this returns false.
-	 * This uses the {@link OfChar#iterator()} of both this and {@code o},
-	 * so if either is in the
-	 * middle of a concurrent iteration that modifies the collection, this may fail.
+	 * Compares this with any other CharSequence for equality of length, contents, and order.
 	 *
-	 * @param o object to be compared for equality with this collection
-	 * @return true if this is equal to o, or false otherwise
+	 * @param object the object to be compared for equality with this collection
+	 * @return true if this is equal to object, or false otherwise
 	 */
-	public boolean equals(Object o) {
-		if (o == this)
+	public boolean equals(Object object) {
+		if (object == this)
 			return true;
-		if (!((o instanceof CharList)))
+		if (!(object instanceof CharSequence)) {
 			return false;
-
-		CharIterator e1 = iterator();
-		CharIterator e2 = ((CharList) o).iterator();
-		while (e1.hasNext() && e2.hasNext()) {
-			char o1 = e1.nextChar();
-			char o2 = e2.nextChar();
-			if (o1 != o2)
-				return false;
 		}
-		return !(e1.hasNext() || e2.hasNext());
+		CharSequence csq = (CharSequence) object;
+		int n = size;
+		if (n != csq.length()) {
+			return false;
+		}
+		for (int i = 0; i < n; i++) {
+			if (charAt(i) != csq.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Checks if this is equal to another CharSequence, but runs all chars in both the given text and this through
+	 * {@link Casing#caseUp(char)} before comparing (making the comparison case-insensitive for almost all scripts in
+	 * use today, except some situations for Georgian).
+	 *
+	 * @param csq any other CharSequence, such as a String, StringBuilder, or CharList
+	 * @return true if the chars in this are equivalent to those in {@code csq} if compared as case-insensitive
+	 */
+	public boolean equalsIgnoreCase(CharSequence csq) {
+		if (csq == this)
+			return true;
+		int n = size;
+		if (n != csq.length()) {
+			return false;
+		}
+		for (int i = 0; i < n; i++) {
+			if (Casing.caseUp(charAt(i)) != Casing.caseUp(csq.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
