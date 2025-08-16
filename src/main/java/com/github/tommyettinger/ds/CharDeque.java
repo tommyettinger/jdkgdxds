@@ -1653,6 +1653,55 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
+	 * This compares the given CharSequence as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search the char to look for
+	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
+	 */
+	public int indexOfIgnoreCase(char search) {
+		return indexOfIgnoreCase(search, 0);
+	}
+
+	/**
+	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
+	 * This returns {@code fromIndex} if {@code value} is present at that point,
+	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
+	 * This compares the given CharSequence as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search     the char to look for
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
+	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
+	 */
+	public int indexOfIgnoreCase(char search, int fromIndex) {
+		if (size == 0)
+			return -1;
+		char[] items = this.items;
+		final int head = this.head, tail = this.tail;
+		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
+		if (i >= items.length)
+			i -= items.length;
+
+		final char upperSearch = Casing.caseUp(search);
+		if (head <= tail) {
+			for (; i <= tail; i++) {
+				if (Casing.caseUp(items[i]) == upperSearch)
+					return i - head;
+			}
+		} else {
+			for (int n = items.length; i < n; i++)
+				if (Casing.caseUp(items[i]) == upperSearch)
+					return i - head;
+			for (i = 0; i <= tail; i++)
+				if (Casing.caseUp(items[i]) == upperSearch)
+					return i + items.length - head;
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
 	 *
 	 * @param search the CharSequence to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
@@ -1708,6 +1757,75 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
 						if (c >= items.length) c -= items.length;
 						found = search.charAt(j) == items[c];
+					}
+					if (found) return i + items.length - head;
+				}
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
+	 * This compares the given CharSequence as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search the CharSequence to look for
+	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
+	 */
+	public int indexOfIgnoreCase(CharSequence search) {
+		return indexOfIgnoreCase(search, 0);
+	}
+
+	/**
+	 * Returns the index of the first occurrence of value in the deque, or -1 if no such value exists.
+	 * This returns {@code fromIndex} if {@code value} is present at that point,
+	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
+	 * This compares the given CharSequence as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search     the CharSequence to look for
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
+	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
+	 */
+	public int indexOfIgnoreCase(CharSequence search, int fromIndex) {
+		if (search == null) throw new IllegalArgumentException("search cannot be null.");
+		if (size == 0) return -1;
+		int searchLen = search.length();
+		if (searchLen == 1) return indexOfIgnoreCase(search.charAt(0), fromIndex);
+		if (searchLen == 0) return fromIndex;
+		if (searchLen > size) return -1;
+		char[] items = this.items;
+		final int head = this.head, tail = this.tail;
+		int i = head + Math.min(Math.max(fromIndex, 0), size - searchLen);
+		if (i >= items.length)
+			i -= items.length;
+
+		if (head <= tail) {
+			for (int st = tail - searchLen; i <= st; i++) {
+				boolean found = true;
+				for (int j = 0; j < searchLen && found; j++)
+					found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[i + j]);
+				if (found) return i - head;
+			}
+		} else {
+			int st = tail - searchLen;
+			int n = items.length;
+			if(st < 0) n = st + items.length;
+			for (; i < n; i++) {
+				boolean found = true;
+				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
+					if(c >= items.length) c -= items.length;
+					found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[c]);
+				}
+				if (found) return i - head;
+			}
+			if(st >= 0) {
+				for (i = 0; i <= st; i++) {
+					boolean found = true;
+					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
+						if (c >= items.length) c -= items.length;
+						found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[c]);
 					}
 					if (found) return i + items.length - head;
 				}
