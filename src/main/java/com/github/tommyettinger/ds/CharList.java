@@ -419,6 +419,36 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
+	 * Returns the first index in this list that contains {@code search}, or -1 if it is not present.
+	 * This compares the given char as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search a char to search for
+	 * @return the first index of the given char, or -1 if it is not present
+	 */
+	public int indexOfIgnoreCase(char search) {
+		return indexOfIgnoreCase(search, 0);
+	}
+
+	/**
+	 * Tries to return the first index {@code search} appears at in this list, starting at {@code fromIndex};
+	 * if {@code search} is not present, this returns -1. This compares the given char as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search the char to search for
+	 * @param fromIndex the initial index in this list to start searching (inclusive)
+	 * @return the index {@code search} was found at, or -1 if it was not found
+	 */
+	public int indexOfIgnoreCase (char search, int fromIndex) {
+		if (fromIndex < 0 || fromIndex >= size) return -1;
+		char[] items = this.items;
+		final char upperSearch = Casing.caseUp(search);
+		for (int i = fromIndex, n = size; i < n; i++)
+			if (Casing.caseUp(items[i]) == upperSearch) return i;
+		return -1;
+	}
+
+	/**
 	 * Tries to return the first index {@code search} appears at in this list, starting at index 0;
 	 * if {@code search} is not present, this returns -1.
 	 *
@@ -453,6 +483,48 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 			boolean found = true;
 			for (int j = 0; j < searchLen && found; j++)
 				found = search.charAt(j) == items[i + j];
+			if (found) return i;
+		}
+		return -1;
+	}
+
+	/**
+	 * Tries to return the first index {@code search} appears at in this list, starting at index 0;
+	 * if {@code search} is not present, this returns -1. This compares the given CharSequence as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search the CharSequence (such as a String or another CharList) to search for
+	 * @return the index {@code search} was found at, or -1 if it was not found
+	 */
+	public int indexOfIgnoreCase (CharSequence search) {
+		return indexOfIgnoreCase(search, 0);
+	}
+
+	/**
+	 * Tries to return the first index {@code search} appears at in this list, starting at {@code fromIndex};
+	 * if {@code search} is not present, this returns -1. This compares the given CharSequence as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 * <br>
+	 * Mostly copied from libGDX, like the rest of this class, but from the latest version instead of a
+	 * much-older version.
+	 *
+	 * @param search the CharSequence (such as a String or another CharList) to search for
+	 * @param fromIndex the initial index in this list to start searching (inclusive)
+	 * @return the index {@code search} was found at, or -1 if it was not found
+	 */
+	public int indexOfIgnoreCase (CharSequence search, int fromIndex) {
+		if (search == null) throw new IllegalArgumentException("search cannot be null.");
+		if (fromIndex < 0 || fromIndex >= size) return -1;
+		int searchLen = search.length();
+		if (searchLen == 1) return indexOfIgnoreCase(search.charAt(0), fromIndex);
+		if (searchLen == 0) return fromIndex;
+		if (searchLen > size) return -1;
+		char[] items = this.items;
+		int searchableSize = size - searchLen + 1;
+		for (int i = fromIndex; i < searchableSize; i++) {
+			boolean found = true;
+			for (int j = 0; j < searchLen && found; j++)
+				found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[i + j]);
 			if (found) return i;
 		}
 		return -1;
