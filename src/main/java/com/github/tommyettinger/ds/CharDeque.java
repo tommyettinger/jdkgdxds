@@ -1567,6 +1567,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param fromIndex index of first element to be removed (inclusive)
 	 * @param toIndex   index after last element to be removed (exclusive)
 	 */
+	@Override
 	public void removeRange(int fromIndex, int toIndex) {
 		if (fromIndex <= 0) {
 			truncateFirst(size - toIndex);
@@ -1614,6 +1615,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param search the char to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
+	@Override
 	public int indexOf(char search) {
 		return indexOf(search, 0);
 	}
@@ -1627,6 +1629,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
+	@Override
 	public int indexOf(char search, int fromIndex) {
 		if (size == 0)
 			return -1;
@@ -1659,6 +1662,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param search the char to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
+	@Override
 	public int indexOfIgnoreCase(char search) {
 		return indexOfIgnoreCase(search, 0);
 	}
@@ -1674,6 +1678,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
+	@Override
 	public int indexOfIgnoreCase(char search, int fromIndex) {
 		if (size == 0)
 			return -1;
@@ -1706,6 +1711,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param search the CharSequence to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
+	@Override
 	public int indexOf(CharSequence search) {
 		return indexOf(search, 0);
 	}
@@ -1719,6 +1725,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
+	@Override
 	public int indexOf(CharSequence search, int fromIndex) {
 		if (search == null) throw new IllegalArgumentException("search cannot be null.");
 		if (size == 0) return -1;
@@ -1773,6 +1780,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param search the CharSequence to look for
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
+	@Override
 	public int indexOfIgnoreCase(CharSequence search) {
 		return indexOfIgnoreCase(search, 0);
 	}
@@ -1788,6 +1796,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
+	@Override
 	public int indexOfIgnoreCase(CharSequence search, int fromIndex) {
 		if (search == null) throw new IllegalArgumentException("search cannot be null.");
 		if (size == 0) return -1;
@@ -1840,21 +1849,23 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param search the char to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
+	@Override
 	public int lastIndexOf(char search) {
 		return lastIndexOf(search, size - 1);
 	}
 
 	/**
-	 * Returns the index of last occurrence of {@code value} in the deque, starting from {@code fromIndex} and going
-	 * backwards, or -1 if no such value exists. This returns {@code fromIndex} if {@code value} is present at that
+	 * Returns the index of last occurrence of {@code search} in the deque, starting from {@code fromIndex} and going
+	 * backwards, or -1 if no such value exists. This returns {@code fromIndex} if {@code search} is present at that
 	 * point, so if you chain calls to indexOf(), the subsequent fromIndex should be smaller than the last-returned
 	 * index.
 	 *
-	 * @param value     the char to look for
+	 * @param search    the char to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int lastIndexOf(char value, int fromIndex) {
+	@Override
+	public int lastIndexOf(char search, int fromIndex) {
 		if (size == 0)
 			return -1;
 		char[] items = this.items;
@@ -1868,14 +1879,14 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 		if (head <= tail) {
 			for (; i >= head; i--)
-				if (items[i] == value)
+				if (items[i] == search)
 					return i - head;
 		} else {
 			for (; i >= 0; i--)
-				if (items[i] == value)
+				if (items[i] == search)
 					return i + items.length - head;
 			for (i = items.length - 1; i >= head; i--)
-				if (items[i] == value)
+				if (items[i] == search)
 					return i - head;
 		}
 		return -1;
@@ -1887,6 +1898,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param search the CharSequence to look for
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
+	@Override
 	public int lastIndexOf(CharSequence search) {
 		return lastIndexOf(search, size - 1);
 	}
@@ -1900,6 +1912,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
+	@Override
 	public int lastIndexOf(CharSequence search, int fromIndex) {
 		if (search == null) throw new IllegalArgumentException("search cannot be null.");
 		if (size == 0) return -1;
@@ -1923,10 +1936,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 			}
 		} else {
 			int st = tail - searchLen;
-			int n = items.length;
-			if(st < 0)
-				n = st + items.length;
-			else {
+			if (st >= 0) {
 				for (i = st; i >= 0; i--) {
 					boolean found = true;
 					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
@@ -1936,12 +1946,133 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 					if (found) return i + items.length - head;
 				}
 			}
-
 			for (i = items.length - 1; i >= head; i--) {
 				boolean found = true;
 				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
 					if(c >= items.length) c -= items.length;
 					found = search.charAt(j) == items[c];
+				}
+				if (found) return i - head;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
+	 * This compares the given char as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search the char to look for
+	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
+	 */
+	@Override
+	public int lastIndexOfIgnoreCase(char search) {
+		return lastIndexOfIgnoreCase(search, size - 1);
+	}
+
+	/**
+	 * Returns the index of last occurrence of {@code search} in the deque, starting from {@code fromIndex} and going
+	 * backwards, or -1 if no such value exists. This returns {@code fromIndex} if {@code search} is present at that
+	 * point, so if you chain calls to indexOf(), the subsequent fromIndex should be smaller than the last-returned
+	 * index. This compares the given char as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search    the char to look for
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
+	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
+	 */
+	@Override
+	public int lastIndexOfIgnoreCase(char search, int fromIndex) {
+		if (size == 0)
+			return -1;
+		char[] items = this.items;
+		final int head = this.head, tail = this.tail;
+		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
+		if (i >= items.length)
+			i -= items.length;
+		else if (i < 0)
+			i += items.length;
+
+		final char upperSearch = Casing.caseUp(search);
+		if (head <= tail) {
+			for (; i >= head; i--)
+				if (Casing.caseUp(items[i]) == upperSearch)
+					return i - head;
+		} else {
+			for (; i >= 0; i--)
+				if (Casing.caseUp(items[i]) == upperSearch)
+					return i + items.length - head;
+			for (i = items.length - 1; i >= head; i--)
+				if (Casing.caseUp(items[i]) == upperSearch)
+					return i - head;
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
+	 * This compares the given CharSequence as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search the CharSequence to look for
+	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
+	 */
+	@Override
+	public int lastIndexOfIgnoreCase(CharSequence search) {
+		return lastIndexOfIgnoreCase(search, size - 1);
+	}
+
+	/**
+	 * Returns the index of the last occurrence of value in the deque, or -1 if no such value exists.
+	 * This returns {@code fromIndex} if {@code value} is present at that point,
+	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
+	 * This compares the given CharSequence as if both it and
+	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
+	 *
+	 * @param search     the CharSequence to look for
+	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
+	 * @return An index of last occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
+	 */
+	@Override
+	public int lastIndexOfIgnoreCase(CharSequence search, int fromIndex) {
+		if (search == null) throw new IllegalArgumentException("search cannot be null.");
+		if (size == 0) return -1;
+		int searchLen = search.length();
+		if (searchLen == 1) return lastIndexOfIgnoreCase(search.charAt(0), fromIndex);
+		if (searchLen == 0) return fromIndex;
+		if (searchLen > size) return -1;
+		char[] items = this.items;
+		if(items.length == 0) return -1; // probably not necessary...
+		final int head = this.head, tail = this.tail;
+		int i = head + fromIndex + Math.min(Math.max(fromIndex, 0), size - searchLen);
+		while (i >= items.length)
+			i -= items.length;
+
+		if (head <= tail) {
+			for (; i >= head; i--) {
+				boolean found = true;
+				for (int j = 0; j < searchLen && found; j++)
+					found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[i + j]);
+				if (found) return i - head;
+			}
+		} else {
+			int st = tail - searchLen;
+			if (st >= 0) {
+				for (i = st; i >= 0; i--) {
+					boolean found = true;
+					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
+						if (c >= items.length) c -= items.length;
+						found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[c]);
+					}
+					if (found) return i + items.length - head;
+				}
+			}
+			for (i = items.length - 1; i >= head; i--) {
+				boolean found = true;
+				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
+					if(c >= items.length) c -= items.length;
+					found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[c]);
 				}
 				if (found) return i - head;
 			}
