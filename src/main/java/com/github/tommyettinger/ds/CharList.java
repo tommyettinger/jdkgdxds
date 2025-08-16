@@ -1082,17 +1082,41 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		if (object == this) {
 			return true;
 		}
-		if (!(object instanceof CharList)) {
+		if (!(object instanceof CharSequence)) {
 			return false;
 		}
-		CharList list = (CharList) object;
+		CharSequence csq = (CharSequence) object;
 		int n = size;
-		if (n != list.size()) {
+		if (n != csq.length()) {
 			return false;
 		}
-		char[] items1 = this.items, items2 = list.items;
+		char[] items1 = this.items;
 		for (int i = 0; i < n; i++) {
-			if (items1[i] != items2[i]) {
+			if (items1[i] != csq.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Checks if this is equal to another CharSequence, but runs all chars in both the given text and this through
+	 * {@link Casing#caseUp(char)} before comparing (making the comparison case-insensitive for almost all scripts in
+	 * use today, except some cases for Georgian).
+	 * @param csq any other CharSequence, such as a String, StringBuilder, or CharList
+	 * @return true if the chars in this are equivalent to those in {@code csq} if compared as case-insensitive
+	 */
+	public boolean equalsIgnoreCase(CharSequence csq) {
+		if (csq == this) {
+			return true;
+		}
+		int n = size;
+		if (n != csq.length()) {
+			return false;
+		}
+		char[] items1 = this.items;
+		for (int i = 0; i < n; i++) {
+			if (Casing.caseUp(items1[i]) != Casing.caseUp(csq.charAt(i))) {
 				return false;
 			}
 		}
