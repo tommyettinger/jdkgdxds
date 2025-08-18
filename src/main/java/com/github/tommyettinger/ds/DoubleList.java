@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 import com.github.tommyettinger.ds.support.util.DoubleIterator;
@@ -698,6 +699,126 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		for (int i = 0, n = size; i < n; i++) {
 			items[i] = operator.applyAsDouble(items[i]);
 		}
+	}
+
+	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirst(double find, double replace) {
+		if (find != replace) {
+			double[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if (items[i] == find) {
+					items[i] = replace;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found or in the case that find and replace are the same.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	public int replaceAll(double find, double replace) {
+		int replacements = 0;
+		if (find != replace) {
+			double[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if (items[i] == find) {
+					items[i] = replace;
+					++replacements;
+				}
+			}
+		}
+		return replacements;
+	}
+
+	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * Takes a {@code tolerance} to permit some doubleing-point imprecision in the search.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirst(double find, double replace, double tolerance) {
+		if (find != replace) {
+			double[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if (MathTools.isEqual(items[i], find, tolerance)) {
+					items[i] = replace;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found or in the case that find and replace are the same. Takes a {@code tolerance} to permit some
+	 * doubleing-point imprecision in the search.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @param tolerance how much an item can be different from {@code find} and still be replaced
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	public int replaceAll(double find, double replace, double tolerance) {
+		int replacements = 0;
+		if (find != replace) {
+			double[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if (MathTools.isEqual(items[i], find, tolerance)) {
+					items[i] = replace;
+					++replacements;
+				}
+			}
+		}
+		return replacements;
+	}
+
+	/**
+	 * Replaces the first occurrence of {@code NaN} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace.
+	 * @param replace the item to replace {@code NaN} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirstNaN(double replace) {
+		double[] items = this.items;
+		for (int i = 0, n = size; i < n; i++) {
+			if (Double.isNaN(items[i])) {
+				items[i] = replace;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code NaN} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found.
+	 * @param replace the item to replace {@code NaN} with, if possible
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	public int replaceAllNaN(double replace) {
+		int replacements = 0;
+		double[] items = this.items;
+		for (int i = 0, n = size; i < n; i++) {
+			if (Double.isNaN(items[i])) {
+				items[i] = replace;
+				++replacements;
+			}
+		}
+		return replacements;
 	}
 
 	/**
