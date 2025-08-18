@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
@@ -2199,6 +2200,80 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		}
 	}
 
+	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * This compares items with {@code ==}, so an item must be identical to {@code find} to be replaced, except in the
+	 * cases of {@code 0f == -0f} and {@code Float.NaN != anyFloat}.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	@Override
+	public boolean replaceFirst(float find, float replace) {
+		if (find != replace) {
+			float[] items = this.items;
+			if (head <= tail) {
+				for (int i = head, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+			} else {
+				for (int i = head, n = items.length; i < n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+				for (int i = 0, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found or in the case that find and replace are the same.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	@Override
+	public int replaceAll(float find, float replace) {
+		int replacements = 0;
+		if (find != replace) {
+			float[] items = this.items;
+			if (head <= tail) {
+				for (int i = head, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+			} else {
+				for (int i = head, n = items.length; i < n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+				for (int i = 0, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+			}
+		}
+		return replacements;
+	}
 	/**
 	 * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
 	 * indices before the insertion, and the previous values will be pushed to after the duplicated range.

@@ -2207,9 +2207,9 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 */
 	@Override
 	public boolean replaceFirst(int find, int replace) {
-		if(find != replace) {
+		if (find != replace) {
 			int[] items = this.items;
-			if(head <= tail) {
+			if (head <= tail) {
 				for (int i = head, n = tail; i <= n; i++) {
 					if (items[i] == find) {
 						items[i] = replace;
@@ -2244,9 +2244,9 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	@Override
 	public int replaceAll(int find, int replace) {
 		int replacements = 0;
-		if(find != replace) {
+		if (find != replace) {
 			int[] items = this.items;
-			if(head <= tail) {
+			if (head <= tail) {
 				for (int i = head, n = tail; i <= n; i++) {
 					if (items[i] == find) {
 						items[i] = replace;

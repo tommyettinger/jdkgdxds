@@ -2207,9 +2207,9 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 */
 	@Override
 	public boolean replaceFirst(long find, long replace) {
-		if(find != replace) {
+		if (find != replace) {
 			long[] items = this.items;
-			if(head <= tail) {
+			if (head <= tail) {
 				for (int i = head, n = tail; i <= n; i++) {
 					if (items[i] == find) {
 						items[i] = replace;
@@ -2244,9 +2244,9 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public int replaceAll(long find, long replace) {
 		int replacements = 0;
-		if(find != replace) {
+		if (find != replace) {
 			long[] items = this.items;
-			if(head <= tail) {
+			if (head <= tail) {
 				for (int i = head, n = tail; i <= n; i++) {
 					if (items[i] == find) {
 						items[i] = replace;

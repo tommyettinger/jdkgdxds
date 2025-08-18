@@ -706,10 +706,10 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * @return true if this changed, or false otherwise
 	 */
 	public boolean replaceFirst(int find, int replace) {
-		if(find != replace) {
+		if (find != replace) {
 			int[] items = this.items;
 			for (int i = 0, n = size; i < n; i++) {
-				if(items[i] == find) {
+				if (items[i] == find) {
 					items[i] = replace;
 					return true;
 				}
@@ -727,10 +727,10 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public int replaceAll(int find, int replace) {
 		int replacements = 0;
-		if(find != replace) {
+		if (find != replace) {
 			int[] items = this.items;
 			for (int i = 0, n = size; i < n; i++) {
-				if(items[i] == find) {
+				if (items[i] == find) {
 					items[i] = replace;
 					++replacements;
 				}

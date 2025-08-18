@@ -706,10 +706,10 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * @return true if this changed, or false otherwise
 	 */
 	public boolean replaceFirst(long find, long replace) {
-		if(find != replace) {
+		if (find != replace) {
 			long[] items = this.items;
 			for (int i = 0, n = size; i < n; i++) {
-				if(items[i] == find) {
+				if (items[i] == find) {
 					items[i] = replace;
 					return true;
 				}
@@ -727,10 +727,10 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public int replaceAll(long find, long replace) {
 		int replacements = 0;
-		if(find != replace) {
+		if (find != replace) {
 			long[] items = this.items;
 			for (int i = 0, n = size; i < n; i++) {
-				if(items[i] == find) {
+				if (items[i] == find) {
 					items[i] = replace;
 					++replacements;
 				}
