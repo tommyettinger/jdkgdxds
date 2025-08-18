@@ -699,6 +699,47 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirst(int find, int replace) {
+		if(find != replace) {
+			int[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if(items[i] == find) {
+					items[i] = replace;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found or in the case that find and replace are the same.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	public int replaceAll(int find, int replace) {
+		int replacements = 0;
+		if(find != replace) {
+			int[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if(items[i] == find) {
+					items[i] = replace;
+					++replacements;
+				}
+			}
+		}
+		return replacements;
+	}
+
+	/**
 	 * Removes and returns the last item.
 	 *
 	 * @return the last item, removed from this
