@@ -699,6 +699,26 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirst(long find, long replace) {
+		if(find != replace) {
+			long[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if(items[i] == find) {
+					items[i] = replace;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Removes and returns the last item.
 	 *
 	 * @return the last item, removed from this
