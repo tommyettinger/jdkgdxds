@@ -2197,6 +2197,40 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
             }
         }
     }
+	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirst(long find, long replace) {
+		if(find != replace) {
+			long[] items = this.items;
+			if(head <= tail) {
+				for (int i = head, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+			} else {
+				for (int i = head, n = items.length; i < n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+				for (int i = 0, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 
     /**
      * Inserts the specified number of items at the specified index. The new items will have values equal to the values at those
