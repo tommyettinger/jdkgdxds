@@ -2553,6 +2553,154 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	}
 
 	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * This compares T items by {@link Object#equals(Object)}, unless an item is null.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirst(@Nullable T find, @Nullable T replace) {
+		if(find == null) return replaceFirstIdentity(null, replace);
+		if (!find.equals(replace)) {
+			@Nullable T[] items = this.items;
+			if (head <= tail) {
+				for (int i = head, n = tail; i <= n; i++) {
+					if (find.equals(items[i])) {
+						items[i] = replace;
+						return true;
+					}
+				}
+			} else {
+				for (int i = head, n = items.length; i < n; i++) {
+					if (find.equals(items[i])) {
+						items[i] = replace;
+						return true;
+					}
+				}
+				for (int i = 0, n = tail; i <= n; i++) {
+					if (find.equals(items[i])) {
+						items[i] = replace;
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found or in the case that find and replace are the same.
+	 * This compares T items by {@link Object#equals(Object)}, unless an item is null.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	public int replaceAll(@Nullable T find, @Nullable T replace) {
+		if(find == null) return replaceAllIdentity(null, replace);
+		int replacements = 0;
+		if (!find.equals(replace)) {
+			@Nullable T[] items = this.items;
+			if (head <= tail) {
+				for (int i = head, n = tail; i <= n; i++) {
+					if (find.equals(items[i])) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+			} else {
+				for (int i = head, n = items.length; i < n; i++) {
+					if (find.equals(items[i])) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+				for (int i = 0, n = tail; i <= n; i++) {
+					if (find.equals(items[i])) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+			}
+		}
+		return replacements;
+	}
+
+	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * This compares T items by identity, not with {@link Object#equals(Object)} !
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirstIdentity(@Nullable T find, @Nullable T replace) {
+		if (find != replace) {
+			@Nullable T[] items = this.items;
+			if (head <= tail) {
+				for (int i = head, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+			} else {
+				for (int i = head, n = items.length; i < n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+				for (int i = 0, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found or in the case that find and replace are the same.
+	 * This compares T items by identity, not with {@link Object#equals(Object)} !
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	public int replaceAllIdentity(@Nullable T find, @Nullable T replace) {
+		int replacements = 0;
+		if (find != replace) {
+			@Nullable T[] items = this.items;
+			if (head <= tail) {
+				for (int i = head, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+			} else {
+				for (int i = head, n = items.length; i < n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+				for (int i = 0, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+			}
+		}
+		return replacements;
+	}
+
+	/**
 	 * Returns an iterator for the items in the deque. Remove is supported.
 	 * <br>
 	 * Reuses one of two iterators for this deque. For nested or multithreaded
