@@ -744,6 +744,86 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		}
 		return replacements;
 	}
+
+	/**
+	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
+	 * Takes a {@code tolerance} to permit some floating-point imprecision in the search.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirst(float find, float replace, float tolerance) {
+		if (find != replace) {
+			float[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if (MathTools.isEqual(items[i], find, tolerance)) {
+					items[i] = replace;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found or in the case that find and replace are the same. Takes a {@code tolerance} to permit some
+	 * floating-point imprecision in the search.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @param tolerance how much an item can be different from {@code find} and still be replaced
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	public int replaceAll(float find, float replace, float tolerance) {
+		int replacements = 0;
+		if (find != replace) {
+			float[] items = this.items;
+			for (int i = 0, n = size; i < n; i++) {
+				if (MathTools.isEqual(items[i], find, tolerance)) {
+					items[i] = replace;
+					++replacements;
+				}
+			}
+		}
+		return replacements;
+	}
+
+	/**
+	 * Replaces the first occurrence of {@code NaN} with {@code replace}. Returns true if it performed the replacement,
+	 * or false if there was nothing to replace.
+	 * @param replace the item to replace {@code NaN} with, if possible
+	 * @return true if this changed, or false otherwise
+	 */
+	public boolean replaceFirstNaN(float replace) {
+		float[] items = this.items;
+		for (int i = 0, n = size; i < n; i++) {
+			if (Float.isNaN(items[i])) {
+				items[i] = replace;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code NaN} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found.
+	 * @param replace the item to replace {@code NaN} with, if possible
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	public int replaceAllNaN(float replace) {
+		int replacements = 0;
+		float[] items = this.items;
+		for (int i = 0, n = size; i < n; i++) {
+			if (Float.isNaN(items[i])) {
+				items[i] = replace;
+				++replacements;
+			}
+		}
+		return replacements;
+	}
+
 	/**
 	 * Removes and returns the last item.
 	 *
