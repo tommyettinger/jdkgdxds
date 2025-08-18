@@ -2197,6 +2197,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
             }
         }
     }
+
 	/**
 	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
 	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
@@ -2204,6 +2205,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
+	@Override
 	public boolean replaceFirst(long find, long replace) {
 		if(find != replace) {
 			long[] items = this.items;
@@ -2230,6 +2232,43 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
+	 * if nothing was found or in the case that find and replace are the same.
+	 * @param find the item to search for
+	 * @param replace the item to replace {@code find} with, if possible
+	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
+	 */
+	@Override
+	public int replaceAll(long find, long replace) {
+		int replacements = 0;
+		if(find != replace) {
+			long[] items = this.items;
+			if(head <= tail) {
+				for (int i = head, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+			} else {
+				for (int i = head, n = items.length; i < n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+				for (int i = 0, n = tail; i <= n; i++) {
+					if (items[i] == find) {
+						items[i] = replace;
+						++replacements;
+					}
+				}
+			}
+		}
+		return replacements;
 	}
 
     /**
