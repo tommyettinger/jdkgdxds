@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 

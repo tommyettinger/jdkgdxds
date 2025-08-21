@@ -1249,6 +1249,34 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
+	 * Compares this CharList with an arbitrary CharSequence type, returning the lexicographical comparison of the two
+	 * as if Java 11's {@code CharSequence.compare()} was called on this and {@code other}. This does not need Java 11.
+	 * <br>
+	 * The name here is different from {@link #compareTo(CharList)} because this does not satisfy an important
+	 * constraint of the {@link Comparable} interface (while this has a compareWith method that can take a CharSequence,
+	 * an arbitrary CharSequence cannot be compared to this type with compareTo() or compareWith() ).
+	 *
+	 * @param other any other CharSequence; if null, the comparison will return {@link Integer#MAX_VALUE}
+	 * @return a positive number, zero, or a negative number if this is lexicographically greater than, equal to, or
+	 * less than other, respectively
+	 */
+	public int compareWith(@Nullable CharSequence other) {
+		if (other == null) return Integer.MAX_VALUE;
+		final int tLen = size(), oLen = other.length();
+		if (tLen == oLen) {
+			for (int i = 0; i < oLen; i++) {
+				int diff = get(i) - other.charAt(i);
+				if (diff != 0) {
+					return diff;
+				}
+			}
+			return 0;
+		} else {
+			return tLen - oLen;
+		}
+	}
+
+	/**
 	 * A {@link CharIterator}, plus {@link ListIterator} methods, over the elements of a CharList.
 	 * Use {@link #nextChar()} in preference to {@link #next()} to avoid allocating Character objects.
 	 */
