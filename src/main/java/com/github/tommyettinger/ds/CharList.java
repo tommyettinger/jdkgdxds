@@ -36,7 +36,8 @@ import java.util.Random;
  * @author Tommy Ettinger
  * @see CharBag CharBag is an unordered variant on CharList.
  */
-public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, CharSequence, Appendable {
+public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, CharSequence, Appendable,
+	Comparable<CharList> {
 	/**
 	 * Returns true if this implementation retains order, which it does.
 	 *
@@ -1228,6 +1229,23 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 			size += count;
 		}
 		return this;
+	}
+
+	@Override
+	public int compareTo(CharList o) {
+		if (o == null) return Integer.MAX_VALUE;
+		final int tLen = size(), oLen = o.length();
+		if (tLen == oLen) {
+			for (int i = 0; i < oLen; i++) {
+				int diff = get(i) - o.charAt(i);
+				if (diff != 0) {
+					return diff;
+				}
+			}
+			return 0;
+		} else {
+			return tLen - oLen;
+		}
 	}
 
 	/**
