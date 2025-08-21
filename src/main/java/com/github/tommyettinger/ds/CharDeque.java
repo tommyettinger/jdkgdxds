@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
@@ -23,7 +24,6 @@ import com.github.tommyettinger.function.CharToCharFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -2326,6 +2326,54 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	public CharDeque append(char c) {
 		add(c);
 		return this;
+	}
+
+	/**
+	 * Appends a literal newline (Unicode character u000A).
+	 * @return this, for chaining.
+	 */
+	public CharDeque appendLine() {
+		return append('\n');
+	}
+
+	/**
+	 * Appends the base-10 signed textual form of the given number, without allocating.
+	 * This uses {@link Base#appendSigned(CharSequence, int)}.
+	 * @param number the int to append
+	 * @return this, for chaining
+	 */
+	public CharDeque append(int number) {
+		return Base.BASE10.appendSigned(this, number);
+	}
+
+	/**
+	 * Appends the base-10 signed textual form of the given number, without allocating.
+	 * This uses {@link Base#appendSigned(CharSequence, long)}. This does not append a trailing {@code 'L'}.
+	 * @param number the long to append
+	 * @return this, for chaining
+	 */
+	public CharDeque append(long number) {
+		return Base.BASE10.appendSigned(this, number);
+	}
+
+	/**
+	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
+	 * This uses {@link Base#appendGeneral(CharSequence, float)}. This does not append a trailing {@code 'f'}.
+	 * @param number the float to append
+	 * @return this, for chaining
+	 */
+	public CharDeque append(float number) {
+		return Base.BASE10.appendGeneral(this, number);
+	}
+
+	/**
+	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
+	 * This uses {@link Base#appendGeneral(CharSequence, double)}.
+	 * @param number the double to append
+	 * @return this, for chaining
+	 */
+	public CharDeque append(double number) {
+		return Base.BASE10.appendGeneral(this, number);
 	}
 
 	/**

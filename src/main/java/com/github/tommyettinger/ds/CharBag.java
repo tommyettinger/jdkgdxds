@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -229,6 +230,54 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	public CharBag append(char c) {
 		add(c);
 		return this;
+	}
+
+	/**
+	 * Appends a literal newline (Unicode character u000A).
+	 * @return this, for chaining.
+	 */
+	public CharBag appendLine() {
+		return append('\n');
+	}
+
+	/**
+	 * Appends the base-10 signed textual form of the given number, without allocating.
+	 * This uses {@link Base#appendSigned(CharSequence, int)}.
+	 * @param number the int to append
+	 * @return this, for chaining
+	 */
+	public CharBag append(int number) {
+		return Base.BASE10.appendSigned(this, number);
+	}
+
+	/**
+	 * Appends the base-10 signed textual form of the given number, without allocating.
+	 * This uses {@link Base#appendSigned(CharSequence, long)}. This does not append a trailing {@code 'L'}.
+	 * @param number the long to append
+	 * @return this, for chaining
+	 */
+	public CharBag append(long number) {
+		return Base.BASE10.appendSigned(this, number);
+	}
+
+	/**
+	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
+	 * This uses {@link Base#appendGeneral(CharSequence, float)}. This does not append a trailing {@code 'f'}.
+	 * @param number the float to append
+	 * @return this, for chaining
+	 */
+	public CharBag append(float number) {
+		return Base.BASE10.appendGeneral(this, number);
+	}
+
+	/**
+	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
+	 * This uses {@link Base#appendGeneral(CharSequence, double)}.
+	 * @param number the double to append
+	 * @return this, for chaining
+	 */
+	public CharBag append(double number) {
+		return Base.BASE10.appendGeneral(this, number);
 	}
 
 	@Override
