@@ -279,6 +279,16 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	public CharBag append(double number) {
 		return Base.BASE10.appendGeneral(this, number);
 	}
+	/**
+	 * Appends either the four chars {@code 't', 'r', 'u', 'e'} if {@code value} is true, or the five chars
+	 * {@code 'f', 'a', 'l', 's', 'e'} if it is false.
+	 * @param value either true or false
+	 * @return this, for chaining
+	 */
+	public CharBag append(boolean value) {
+		super.append(value);
+		return this;
+	}
 
 	@Override
 	public int hashCode() {

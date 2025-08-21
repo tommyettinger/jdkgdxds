@@ -2377,6 +2377,38 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
+	 * Appends either the four chars {@code 't', 'r', 'u', 'e'} if {@code value} is true, or the five chars
+	 * {@code 'f', 'a', 'l', 's', 'e'} if it is false.
+	 * @param value either true or false
+	 * @return this, for chaining
+	 */
+	public CharDeque append(boolean value) {
+		if(value) {
+			add('t', 'r', 'u', 'e');
+		} else {
+			char[] items = this.items;
+
+			if (size + 5 > items.length)
+				items = resize(size + 5 << 1);
+
+			if (++tail == items.length) tail = 0;
+			if (size == 0) tail = head;
+			items[tail] = 'f';
+			if (++tail == items.length) tail = 0;
+			items[tail] = 'a';
+			if (++tail == items.length) tail = 0;
+			items[tail] = 'l';
+			if (++tail == items.length) tail = 0;
+			items[tail] = 's';
+			if (++tail == items.length) tail = 0;
+			items[tail] = 'e';
+			size += 5;
+		}
+		return this;
+	}
+
+
+	/**
 	 * Returns the first (head) item in the deque (without removing it).
 	 *
 	 * @throws NoSuchElementException when the deque is empty

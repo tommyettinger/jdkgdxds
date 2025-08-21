@@ -1268,6 +1268,30 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
+	 * Appends either the four chars {@code 't', 'r', 'u', 'e'} if {@code value} is true, or the five chars
+	 * {@code 'f', 'a', 'l', 's', 'e'} if it is false.
+	 * @param value either true or false
+	 * @return this, for chaining
+	 */
+	public CharList append(boolean value) {
+		if(value) {
+			add('t', 'r', 'u', 'e');
+		} else {
+			char[] items = this.items;
+			if (size + 4 >= items.length) {
+				items = resize(Math.max(10, (int) ((size + 4) * 1.75f)));
+			}
+			items[size] = 'f';
+			items[size + 1] = 'a';
+			items[size + 2] = 'l';
+			items[size + 3] = 's';
+			items[size + 4] = 'e';
+			size += 5;
+		}
+		return this;
+	}
+
+	/**
 	 * Adds {@code count} repetitions of {@code padWith} to the start (left) of this list.
 	 * @param count how many repetitions of {@code padWith} to add
 	 * @param padWith the item to pad with
