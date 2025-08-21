@@ -376,6 +376,24 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
+	 * Simply calls {@link #indexOf(CharSequence)} and checks that it doesn't return {@code -1}.
+	 * @param csq a CharSequence, such as a String or another CharList
+	 * @return true if this CharList contains the chars in {@code csq} consecutively and in order
+	 */
+	public boolean contains(CharSequence csq) {
+		return indexOf(csq) != -1;
+	}
+
+	/**
+	 * Simply calls {@link #indexOfIgnoreCase(CharSequence)} and checks that it doesn't return {@code -1}.
+	 * @param csq a CharSequence, such as a String or another CharList
+	 * @return true if this CharList contains the chars in {@code csq} consecutively and in order, ignoring case
+	 */
+	public boolean containsIgnoreCase(CharSequence csq) {
+		return indexOfIgnoreCase(csq) != -1;
+	}
+
+	/**
 	 * Returns true if this CharList contains, at least once, every item in {@code other}; otherwise returns false.
 	 *
 	 * @param other an CharList
