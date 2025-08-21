@@ -129,6 +129,22 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 		super(other, offset, count);
 	}
 
+	public CharBag(CharSequence other) {
+		this(other.length());
+		append(other);
+	}
+
+	/**
+	 * Creates a new CharBag from part of another CharSequence; start is inclusive and end is exclusive.
+	 * @param other a CharSequence to use part of, such as a String or a CharList
+	 * @param start first index in {@code other} to use, inclusive
+	 * @param end last index in {@code other} to use, exclusive
+	 */
+	public CharBag(CharSequence other, int start, int end) {
+		this(end - start);
+		append(other, start, end);
+	}
+
 	/**
 	 * This always adds {@code element} to the end of this bag's ordering.
 	 *

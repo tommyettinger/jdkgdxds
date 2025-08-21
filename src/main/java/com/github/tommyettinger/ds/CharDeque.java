@@ -175,6 +175,22 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		this(other, 0, other.size());
 	}
 
+	public CharDeque(CharSequence other) {
+		this(other.length());
+		append(other);
+	}
+
+	/**
+	 * Creates a new CharDeque from part of another CharSequence; start is inclusive and end is exclusive.
+	 * @param other a CharSequence to use part of, such as a String or a CharList
+	 * @param start first index in {@code other} to use, inclusive
+	 * @param end last index in {@code other} to use, exclusive
+	 */
+	public CharDeque(CharSequence other, int start, int end) {
+		this(end - start);
+		append(other, start, end);
+	}
+
 	@Override
 	public CharDeque order() {
 		return this;

@@ -176,6 +176,22 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		addAll(0, other, offset, count);
 	}
 
+	public CharList(CharSequence other) {
+		this(other.length());
+		append(other);
+	}
+
+	/**
+	 * Creates a new CharList from part of another CharSequence; start is inclusive and end is exclusive.
+	 * @param other a CharSequence to use part of, such as a String or a CharList
+	 * @param start first index in {@code other} to use, inclusive
+	 * @param end last index in {@code other} to use, exclusive
+	 */
+	public CharList(CharSequence other, int start, int end) {
+		this(end - start);
+		append(other, start, end);
+	}
+
 	// Newly-added
 	@Override
 	public int size() {
