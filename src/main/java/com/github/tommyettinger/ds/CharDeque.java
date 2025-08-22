@@ -2304,11 +2304,51 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		return size == 0;
 	}
 
+	/**
+	 * Gets a new CharDeque from the given subrange, clamping start and end so that this will not throw any Exception.
+	 * @param start the start index, inclusive; clamped
+	 * @param end   the end index, exclusive; clamped
+	 * @return a new CharDeque copied from the given subrange bounds
+	 */
 	@Override
 	public CharDeque subSequence(int start, int end) {
-		final CharDeque next = new CharDeque(end - start);
-		next.addAll(this, start, end - start);
+		final int count = Math.min(Math.max(end - start, 0), size);
+		final CharDeque next = new CharDeque(count);
+		next.addAll(this, Math.max(Math.min(start, size - 1), 0), count);
 		return next;
+	}
+
+	/**
+	 * Creates a new String by copying the given subrange of this CharDeque.
+	 *
+	 * @param start the start index, inclusive
+	 * @param end   the end index, exclusive
+	 * @return a new String copying the given subrange of this CharDeque
+	 */
+	public String substring(int start, int end) {
+		return String.valueOf(subSequence(start, end));
+	}
+
+	/**
+	 * Creates a new String by copying the given subrange of this CharDeque, from index 0 (inclusive) to {@code length}
+	 * (exclusive).
+	 *
+	 * @param length how many chars to use from the start onward
+	 * @return a new String copying the given subrange of this CharDeque
+	 */
+	public String leftString(int length) {
+		return String.valueOf(subSequence(0, length));
+	}
+
+	/**
+	 * Creates a new String by copying the given subrange of this CharDeque, from index {@code size() - length}
+	 * (inclusive) to {@code size()} (exclusive).
+	 *
+	 * @param length how many chars to use from the start onward
+	 * @return a new String copying the given subrange of this CharDeque
+	 */
+	public String rightString(int length) {
+		return String.valueOf(subSequence(size - length, size));
 	}
 
 	@Override
@@ -2348,7 +2388,18 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * Appends a literal newline (Unicode character u000A).
 	 * @return this, for chaining.
 	 */
+	@Override
 	public CharDeque appendLine() {
+		return append('\n');
+	}
+
+	/**
+	 * Appends a literal newline (Unicode character u000A).
+	 * This is identical to {@link #appendLine()} but is faster to type or recommend.
+	 * @return this, for chaining.
+	 */
+	@Override
+	public CharDeque line() {
 		return append('\n');
 	}
 
@@ -2358,6 +2409,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param number the int to append
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharDeque append(int number) {
 		return Base.BASE10.appendSigned(this, number);
 	}
@@ -2368,6 +2420,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param number the long to append
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharDeque append(long number) {
 		return Base.BASE10.appendSigned(this, number);
 	}
@@ -2378,6 +2431,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param number the float to append
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharDeque append(float number) {
 		return Base.BASE10.appendGeneral(this, number);
 	}
@@ -2388,6 +2442,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param number the double to append
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharDeque append(double number) {
 		return Base.BASE10.appendGeneral(this, number);
 	}
@@ -2398,6 +2453,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param value either true or false
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharDeque append(boolean value) {
 		if(value) {
 			add('t', 'r', 'u', 'e');
