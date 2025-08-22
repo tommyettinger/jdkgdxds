@@ -913,15 +913,48 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Creates a new CharList by copying the given subrange of this CharList.
-	 *
-	 * @param start the start index, inclusive
-	 * @param end   the end index, exclusive
-	 * @return a new CharList copying the given subrange of this CharList
+	 * Gets a new CharList from the given subrange, clamping start and end so they will not throw any Exception.
+	 * @param start the start index, inclusive; clamped
+	 * @param end   the end index, exclusive; clamped
+	 * @return a new CharList copied from the given subrange bounds
 	 */
 	@Override
 	public CharList subSequence(int start, int end) {
-		return new CharList(items, start, end - start);
+		return new CharList(items, Math.max(Math.min(start, size - 1), 0), Math.min(Math.max(end - start, 0), size));
+	}
+
+	/**
+	 * Creates a new String by copying the given subrange of this CharList. Clamps start and end so that this will never
+	 * throw an Exception.
+	 *
+	 * @param start the start index, inclusive
+	 * @param end   the end index, exclusive
+	 * @return a new String copying the given subrange of this CharList
+	 */
+	public String substring(int start, int end) {
+		return String.valueOf(items, Math.max(Math.min(start, size - 1), 0), Math.min(Math.max(end - start, 0), size));
+	}
+
+	/**
+	 * Creates a new String by copying the given subrange of this CharList, from index 0 (inclusive) to {@code length}
+	 * (exclusive).
+	 *
+	 * @param length how many chars to use from the start onward
+	 * @return a new String copying the given subrange of this CharList
+	 */
+	public String leftString(int length) {
+		return String.valueOf(items, 0, Math.min(Math.max(length, 0), size));
+	}
+
+	/**
+	 * Creates a new String by copying the given subrange of this CharList, from index {@code size() - length}
+	 * (inclusive) to {@code size()} (exclusive).
+	 *
+	 * @param length how many chars to use from the start onward
+	 * @return a new String copying the given subrange of this CharList
+	 */
+	public String rightString(int length) {
+		return String.valueOf(items, Math.max(Math.min(size - length, size - 1), 0), Math.min(Math.max(length, 0), size));
 	}
 
 	/**
@@ -1240,6 +1273,15 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return this, for chaining.
 	 */
 	public CharList appendLine() {
+		return append('\n');
+	}
+
+	/**
+	 * Appends a literal newline (Unicode character u000A).
+	 * This is identical to {@link #appendLine()} but is faster to type or recommend.
+	 * @return this, for chaining.
+	 */
+	public CharList line() {
 		return append('\n');
 	}
 
