@@ -208,11 +208,15 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 		size = n - count;
 	}
 
+	/**
+	 * Gets a new CharBag from the given subrange, clamping start and end so that this will not throw any Exception.
+	 * @param start the start index, inclusive; clamped
+	 * @param end   the end index, exclusive; clamped
+	 * @return a new CharBag copied from the given subrange bounds
+	 */
 	@Override
 	public CharBag subSequence(int start, int end) {
-		final CharBag next = new CharBag(end - start);
-		next.addAll(this, start, end - start);
-		return next;
+		return new CharBag(items, Math.max(Math.min(start, size - 1), 0), Math.min(Math.max(end - start, 0), size));
 	}
 
 	@Override
@@ -252,7 +256,18 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * Appends a literal newline (Unicode character u000A).
 	 * @return this, for chaining.
 	 */
+	@Override
 	public CharBag appendLine() {
+		return append('\n');
+	}
+
+	/**
+	 * Appends a literal newline (Unicode character u000A).
+	 * This is identical to {@link #appendLine()} but is faster to type or recommend.
+	 * @return this, for chaining.
+	 */
+	@Override
+	public CharBag line() {
 		return append('\n');
 	}
 
@@ -262,6 +277,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param number the int to append
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharBag append(int number) {
 		return Base.BASE10.appendSigned(this, number);
 	}
@@ -272,6 +288,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param number the long to append
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharBag append(long number) {
 		return Base.BASE10.appendSigned(this, number);
 	}
@@ -282,6 +299,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param number the float to append
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharBag append(float number) {
 		return Base.BASE10.appendGeneral(this, number);
 	}
@@ -292,6 +310,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param number the double to append
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharBag append(double number) {
 		return Base.BASE10.appendGeneral(this, number);
 	}
@@ -301,6 +320,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * @param value either true or false
 	 * @return this, for chaining
 	 */
+	@Override
 	public CharBag append(boolean value) {
 		super.append(value);
 		return this;
