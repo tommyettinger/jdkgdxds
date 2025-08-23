@@ -862,6 +862,9 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		return newItems;
 	}
 
+	/**
+	 * Sorts this entire collection using {@link Arrays#sort(byte[], int, int)} in ascending order.
+	 */
 	public void sort() {
 		Arrays.sort(items, 0, size);
 	}
@@ -874,12 +877,12 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>),
+	 * but it does not allocate additional memory; as a result, it can be used as a generic sorting algorithm.
 	 *
 	 * @param c the comparator to determine the order of the ByteList
 	 */
-	public void sort(@Nullable final ByteComparator c) {
+	public void sort(final @Nullable ByteComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -888,17 +891,35 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
+	 * Uses {@link Arrays#sort(byte[], int, int)} to sort a (clamped) subrange of this collection in ascending order.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 */
+	public void sort(int from, int to) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		Arrays.sort(items, from, to);
+	}
+
+	/**
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort, or {@link Arrays#sort(byte[], int, int)} if {@code c} is null.
 	 * This purely uses {@link ByteComparators#sort(byte[], int, int, ByteComparator)}, and you
-	 * can see its docs for more information.
+	 * can see its docs for more information. This clamps {@code from} and {@code to} to the valid range.
 	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the ByteList
 	 */
-	public void sort(final int from, final int to, final ByteComparator c) {
-		ByteComparators.sort(items, from, to, c);
+	public void sort(int from, int to, final @Nullable ByteComparator c) {
+		if (c == null) {
+			sort(from, to);
+		} else {
+			from = Math.max(Math.min(from, size - 1), 0);
+			to = Math.max(Math.min(to, size), from);
+			ByteComparators.sort(items, from, to, c);
+		}
 	}
 
 	@Override

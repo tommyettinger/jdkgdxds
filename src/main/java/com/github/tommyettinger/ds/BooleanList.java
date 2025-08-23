@@ -769,8 +769,8 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but
+	 * it does not allocate additional memory; as a result, it can be used as a generic sorting algorithm.
 	 *
 	 * @param c the comparator to determine the order of the BooleanList
 	 */
