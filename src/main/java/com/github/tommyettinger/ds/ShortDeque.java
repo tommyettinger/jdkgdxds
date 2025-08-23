@@ -2544,7 +2544,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Throws a {@link NoSuchElementException} if empty.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
-	 * @return a randomly selected item from this deque, or the default value if empty
+	 * @return a randomly selected item from this deque
 	 */
 	public short getRandom(Random random) {
 		if (size <= 0) {

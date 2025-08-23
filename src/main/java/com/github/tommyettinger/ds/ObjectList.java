@@ -1053,17 +1053,15 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 
 	/**
 	 * Returns a {@code T} item from anywhere in this ObjectList, chosen pseudo-randomly using {@code random}.
-	 * If this ObjectList is empty, throws an {@link IllegalStateException}.
+	 * If this ObjectList is empty, returns {@code null}.
 	 *
 	 * @param random a {@link Random} or a subclass
 	 * @return a pseudo-randomly selected item from this ObjectLists
 	 */
 	@Override
-	public T random(Random random) {
+	public @Nullable T random(Random random) {
 		final int n = size();
-		if (n == 0) {
-			throw new IllegalStateException("ObjectList is empty.");
-		}
+		if (n == 0) return null;
 		return get(random.nextInt(n));
 	}
 

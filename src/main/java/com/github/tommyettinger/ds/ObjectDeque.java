@@ -3021,7 +3021,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * Gets a randomly selected item from this ObjectDeque. Throws a {@link NoSuchElementException} if empty.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
-	 * @return a randomly selected item from this deque, or the default value if empty
+	 * @return a randomly selected item from this deque
 	 */
 	@Nullable
 	public T getRandom(Random random) {
@@ -3032,7 +3032,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	}
 
 	/**
-	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 * Returns a {@code T} item from anywhere in this ObjectDeque, chosen pseudo-randomly using {@code random}.
+	 * If this ObjectDeque is empty, returns {@link #getDefaultValue()}.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty

@@ -2512,7 +2512,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 * Throws a {@link NoSuchElementException} if empty.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
-	 * @return a randomly selected item from this deque, or the default value if empty
+	 * @return a randomly selected item from this deque
 	 */
 	public boolean getRandom(Random random) {
 		if (size <= 0) {

@@ -1098,7 +1098,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Returns a random item from the list, or zero if the list is empty.
+	 * Returns a random item from the list, or zero if the list is empty, using the given random number generator.
 	 *
 	 * @param random a {@link Random} or a subclass, such as any from juniper
 	 * @return a randomly selected item from this, or {@code 0} if this is empty
