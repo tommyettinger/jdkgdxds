@@ -2540,7 +2540,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 */
 	@Override
 	public void sort(@Nullable ByteComparator comparator) {
-		if(comparator == null) {
+		if (comparator == null) {
 			sort();
 		} else if (head <= tail) {
 			ByteComparators.sort(items, head, tail + 1, comparator);
@@ -2556,7 +2556,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	public void sort(int from, int to, @Nullable ByteComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
-		if(comparator == null) {
+		if (comparator == null) {
 			sort(from, to);
 		} else if (head + to <= items.length) {
 			ByteComparators.sort(items, head + from, head + to, comparator);

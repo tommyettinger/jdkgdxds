@@ -2889,11 +2889,31 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Attempts to sort this deque in-place using its natural ordering, which requires char to
-	 * implement {@link Comparable} of char.
+	 * Sorts this deque in-place using {@link Arrays#sort(char[], int, int)} in ascending order.
 	 */
+	@Override
 	public void sort() {
-		sort(null);
+		sort(0, size);
+	}
+
+	/**
+	 * Uses {@link Arrays#sort(char[], int, int)} to sort a (clamped) subrange of this deque.
+	 *
+	 * @param from first index to use, inclusive
+	 * @param to   last index to use, exclusive
+	 */
+	@Override
+	public void sort(int from, int to) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (head + to <= items.length) {
+			Arrays.sort(items, head + from, head + to);
+		} else if (head + from >= items.length) {
+			Arrays.sort(items, head + from - items.length, head + to - items.length);
+		} else {
+			trimToSize(); // rearranges items so it is linear starting at 0
+			Arrays.sort(items, from, to);
+		}
 	}
 
 	/**
@@ -2908,8 +2928,11 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @param comparator the Comparator to use for char items; may be null to use the natural
 	 *                   order of char items when char implements Comparable of char
 	 */
+	@Override
 	public void sort(@Nullable CharComparator comparator) {
-		if (head <= tail) {
+		if (comparator == null) {
+			sort();
+		} else if (head <= tail) {
 			CharComparators.sort(items, head, tail + 1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
@@ -2920,9 +2943,15 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void sort(int from, int to, CharComparator comparator) {
-		if (head <= tail) {
+	public void sort(int from, int to, @Nullable CharComparator comparator) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (comparator == null) {
+			sort(from, to);
+		} else if (head + to <= items.length) {
 			CharComparators.sort(items, head + from, head + to, comparator);
+		} else if (head + from >= items.length) {
+			CharComparators.sort(items, head + from - items.length, head + to - items.length, comparator);
 		} else {
 			trimToSize(); // rearranges items so it is linear starting at 0
 			CharComparators.sort(items, from, to, comparator);

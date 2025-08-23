@@ -870,6 +870,18 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
+	 * Uses {@link Arrays#sort(byte[], int, int)} to sort a (clamped) subrange of this collection in ascending order.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 */
+	public void sort(int from, int to) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		Arrays.sort(items, from, to);
+	}
+
+	/**
 	 * Sorts all elements according to the order induced by the specified
 	 * comparator using {@link ByteComparators#sort(byte[], int, int, ByteComparator)}.
 	 * If {@code c} is null, this instead delegates to {@link #sort()},
@@ -888,18 +900,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		} else {
 			sort(0, size, c);
 		}
-	}
-
-	/**
-	 * Uses {@link Arrays#sort(byte[], int, int)} to sort a (clamped) subrange of this collection in ascending order.
-	 *
-	 * @param from the index of the first element (inclusive) to be sorted
-	 * @param to   the index of the last element (exclusive) to be sorted
-	 */
-	public void sort(int from, int to) {
-		from = Math.max(Math.min(from, size - 1), 0);
-		to = Math.max(Math.min(to, size), from);
-		Arrays.sort(items, from, to);
 	}
 
 	/**
