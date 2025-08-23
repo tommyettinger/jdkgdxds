@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparator;
@@ -86,6 +87,17 @@ public interface Ordered<T> extends Arrangeable {
 	}
 
 	/**
+	 * Returns a random T value from this Ordered, where T is typically the key type for Maps and the
+	 * item type for Lists and Sets, or null if the list is empty.
+	 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+	 *
+	 * @return a randomly selected item from this, or {@code null} if this is empty
+	 */
+	default @Nullable T random() {
+		return random(ArrayTools.RANDOM);
+	}
+
+	/**
 	 * Gets a random T value from this Ordered, where T is typically the key type for Maps and the
 	 * item type for Lists and Sets, using the given random number generator.
 	 * <br>
@@ -94,7 +106,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * @param rng any {@link Random} class
 	 * @return a random T value from this Ordered
 	 */
-	default T random(Random rng) {
+	default @Nullable T random(Random rng) {
 		return order().random(rng);
 	}
 
@@ -214,6 +226,16 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void reverse() {
 			order().reverse();
+		}
+
+		/**
+		 * Returns a random item from the list, or zero if the list is empty.
+		 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+		 *
+		 * @return a randomly selected item from this, or {@code 0} if this is empty
+		 */
+		default int random() {
+			return random(ArrayTools.RANDOM);
 		}
 
 		/**
@@ -343,6 +365,16 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
+		 * Returns a random item from the list, or zero if the list is empty.
+		 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+		 *
+		 * @return a randomly selected item from this, or {@code 0} if this is empty
+		 */
+		default long random() {
+			return random(ArrayTools.RANDOM);
+		}
+
+		/**
 		 * Gets a random long value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
@@ -466,6 +498,16 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void reverse() {
 			order().reverse();
+		}
+
+		/**
+		 * Returns a random item from the list, or zero if the list is empty.
+		 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+		 *
+		 * @return a randomly selected item from this, or {@code 0} if this is empty
+		 */
+		default float random() {
+			return random(ArrayTools.RANDOM);
 		}
 
 		/**
@@ -595,6 +637,16 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
+		 * Returns a random item from the list, or zero if the list is empty.
+		 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+		 *
+		 * @return a randomly selected item from this, or {@code 0} if this is empty
+		 */
+		default double random() {
+			return random(ArrayTools.RANDOM);
+		}
+
+		/**
 		 * Gets a random double value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
@@ -715,6 +767,16 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void reverse() {
 			order().reverse();
+		}
+
+		/**
+		 * Returns a random item from the list, or zero if the list is empty.
+		 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+		 *
+		 * @return a randomly selected item from this, or {@code 0} if this is empty
+		 */
+		default short random() {
+			return random(ArrayTools.RANDOM);
 		}
 
 		/**
@@ -841,6 +903,16 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
+		 * Returns a random item from the list, or zero if the list is empty.
+		 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+		 *
+		 * @return a randomly selected item from this, or {@code 0} if this is empty
+		 */
+		default byte random() {
+			return random(ArrayTools.RANDOM);
+		}
+
+		/**
 		 * Gets a random byte value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
@@ -961,6 +1033,16 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void reverse() {
 			order().reverse();
+		}
+
+		/**
+		 * Returns a random item from the list, or zero if the list is empty.
+		 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+		 *
+		 * @return a randomly selected item from this, or {@code 0} if this is empty
+		 */
+		default char random() {
+			return random(ArrayTools.RANDOM);
 		}
 
 		/**
@@ -1133,6 +1215,16 @@ public interface Ordered<T> extends Arrangeable {
 		@Override
 		default void reverse() {
 			order().reverse();
+		}
+
+		/**
+		 * Returns a random item from the list, or false if the list is empty.
+		 * Uses {@link ArrayTools#RANDOM} as its random number generator, which is randomly seeded.
+		 *
+		 * @return a randomly selected item from this, or {@code false} if this is empty
+		 */
+		default boolean random() {
+			return random(ArrayTools.RANDOM);
 		}
 
 		/**
