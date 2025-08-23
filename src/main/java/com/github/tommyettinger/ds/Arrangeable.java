@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
 
 import java.util.Collection;
@@ -36,6 +37,14 @@ public interface Arrangeable {
 	 * @param second the second position, must not be negative and must be less than {@link #size()}
 	 */
 	void swap(int first, int second);
+
+	/**
+	 * Pseudo-randomly shuffles the order of this Arrangeable in-place, using {@link ArrayTools#RANDOM} as the unseeded
+	 * random number generator.
+ 	 */
+	default void shuffle() {
+		shuffle(ArrayTools.RANDOM);
+	}
 
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place.
