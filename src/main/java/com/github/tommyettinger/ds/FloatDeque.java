@@ -2702,12 +2702,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Gets a randomly selected item from this FloatDeque. Throws a {@link NoSuchElementException} if empty.
+	 * Gets a randomly selected item from this FloatDeque, using the given random number generator.
+	 * Throws a {@link NoSuchElementException} if empty.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public float random(Random random) {
+	public float getRandom(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("FloatDeque is empty.");
 		}
@@ -2715,12 +2716,12 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 * Gets a randomly selected item from this FloatDeque, using the given random number generator.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public float peekRandom(Random random) {
+	public float random(Random random) {
 		return peekAt(random.nextInt(size));
 	}
 

@@ -2540,12 +2540,13 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Gets a randomly selected item from this ByteDeque. Throws a {@link NoSuchElementException} if empty.
+	 * Gets a randomly selected item from this ByteDeque, using the given random number generator.
+	 * Throws a {@link NoSuchElementException} if empty.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public byte random(Random random) {
+	public byte getRandom(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ByteDeque is empty.");
 		}
@@ -2553,12 +2554,12 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 * Gets a randomly selected item from this ByteDeque, using the given random number generator.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public byte peekRandom(Random random) {
+	public byte random(Random random) {
 		return peekAt(random.nextInt(size));
 	}
 

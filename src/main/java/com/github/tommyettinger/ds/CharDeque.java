@@ -2930,12 +2930,13 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Gets a randomly selected item from this CharDeque. Throws a {@link NoSuchElementException} if empty.
+	 * Gets a randomly selected item from this CharDeque, using the given random number generator.
+	 * Throws a {@link NoSuchElementException} if empty.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public char random(Random random) {
+	public char getRandom(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("CharDeque is empty.");
 		}
@@ -2943,12 +2944,12 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
-	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 * Gets a randomly selected item from this CharDeque, using the given random number generator.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public char peekRandom(Random random) {
+	public char random(Random random) {
 		return peekAt(random.nextInt(size));
 	}
 

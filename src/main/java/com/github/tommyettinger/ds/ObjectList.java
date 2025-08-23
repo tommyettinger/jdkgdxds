@@ -653,7 +653,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	/**
 	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
 	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
-	 * This compares T items by identity, not with {@link Object#equals(Object)} !
+	 * This compares T items by identity, not with {@link Object#equals(Object)} ! This may be useful to replace
+	 * occurrences of {@code null} by a given {@code replace} value.
 	 * @param find the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
@@ -673,7 +674,9 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	/**
 	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
 	 * if nothing was found or in the case that find and replace are the same.
-	 * This compares T items by identity, not with {@link Object#equals(Object)} !
+	 * This compares T items by identity, not with {@link Object#equals(Object)} ! This may be useful to replace
+	 * an occurrence of {@code null} by a given {@code replace} value.
+	 *
 	 * @param find the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced

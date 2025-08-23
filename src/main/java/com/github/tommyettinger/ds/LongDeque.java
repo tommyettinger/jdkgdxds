@@ -2539,28 +2539,29 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
         }
     }
 
-    /**
-     * Gets a randomly selected item from this LongDeque. Throws a {@link NoSuchElementException} if empty.
-     *
-     * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
-     * @return a randomly selected item from this deque, or the default value if empty
-     */
-    public long random(Random random) {
-        if (size <= 0) {
-            throw new NoSuchElementException("LongDeque is empty.");
-        }
-        return get(random.nextInt(size));
-    }
+	/**
+	 * Gets a randomly selected item from this LongDeque, using the given random number generator.
+	 * Throws a {@link NoSuchElementException} if empty.
+	 *
+	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
+	 * @return a randomly selected item from this deque, or the default value if empty
+	 */
+	public long getRandom(Random random) {
+		if (size <= 0) {
+			throw new NoSuchElementException("LongDeque is empty.");
+		}
+		return get(random.nextInt(size));
+	}
 
-    /**
-     * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
-     *
-     * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
-     * @return a randomly selected item from this deque, or the default value if empty
-     */
-    public long peekRandom(Random random) {
-        return peekAt(random.nextInt(size));
-    }
+	/**
+	 * Gets a randomly selected item from this LongDeque, using the given random number generator.
+	 *
+	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
+	 * @return a randomly selected item from this deque, or the default value if empty
+	 */
+	public long random(Random random) {
+		return peekAt(random.nextInt(size));
+	}
 
     /**
      * A {@link LongIterator} over the elements of a LongDeque.

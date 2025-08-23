@@ -2508,12 +2508,13 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	}
 
 	/**
-	 * Gets a randomly selected item from this BooleanDeque. Throws a {@link NoSuchElementException} if empty.
+	 * Gets a randomly selected item from this BooleanDeque, using the given random number generator.
+	 * Throws a {@link NoSuchElementException} if empty.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public boolean random(Random random) {
+	public boolean getRandom(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("BooleanDeque is empty.");
 		}
@@ -2521,12 +2522,12 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	}
 
 	/**
-	 * Like {@link #random(Random)}, but returns {@link #getDefaultValue() the default value} if empty.
+	 * Gets a randomly selected item from this BooleanDeque, using the given random number generator.
 	 *
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	public boolean peekRandom(Random random) {
+	public boolean random(Random random) {
 		return peekAt(random.nextInt(size));
 	}
 

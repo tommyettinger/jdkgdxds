@@ -87,7 +87,7 @@ public interface Ordered<T> extends Arrangeable {
 
 	/**
 	 * Gets a random T value from this Ordered, where T is typically the key type for Maps and the
-	 * item type for Lists and Sets.
+	 * item type for Lists and Sets, using the given random number generator.
 	 * <br>
 	 * This should throw an {@link IllegalStateException} if the Ordered is empty.
 	 *
@@ -217,7 +217,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random int value from this Ordered.
+		 * Gets a random int value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
@@ -343,7 +343,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random long value from this Ordered.
+		 * Gets a random long value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
@@ -469,7 +469,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random float value from this Ordered.
+		 * Gets a random float value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
@@ -595,7 +595,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random double value from this Ordered.
+		 * Gets a random double value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
@@ -718,7 +718,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random short value from this Ordered.
+		 * Gets a random short value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
@@ -841,7 +841,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random byte value from this Ordered.
+		 * Gets a random byte value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return 0 if the Ordered is empty.
 		 *
@@ -964,7 +964,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random char value from this Ordered.
+		 * Gets a random char value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return {@code (char)(0)} if the Ordered is empty.
 		 *
@@ -1136,7 +1136,7 @@ public interface Ordered<T> extends Arrangeable {
 		}
 
 		/**
-		 * Gets a random boolean value from this Ordered.
+		 * Gets a random boolean value from this Ordered, using the given random number generator.
 		 * <br>
 		 * This should return false if the Ordered is empty.
 		 *
