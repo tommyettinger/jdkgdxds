@@ -2549,7 +2549,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			ShortComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
-			tail += items.length - head;
+			tail = (size > 0) ? size - 1 : 0;
 			head = 0;
 		}
 	}

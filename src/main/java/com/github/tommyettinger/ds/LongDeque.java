@@ -2547,7 +2547,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			LongComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
-			tail += items.length - head;
+			tail = (size > 0) ? size - 1 : 0;
 			head = 0;
 		}
 	}

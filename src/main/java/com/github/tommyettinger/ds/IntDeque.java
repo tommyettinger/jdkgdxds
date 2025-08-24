@@ -2547,7 +2547,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			IntComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
-			tail += items.length - head;
+			tail = (size > 0) ? size - 1 : 0;
 			head = 0;
 		}
 	}

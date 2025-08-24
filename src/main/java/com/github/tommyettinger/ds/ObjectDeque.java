@@ -2989,7 +2989,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			Utilities.clear(items, size, items.length - size);
 			ObjectComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
 			head = 0;
-			tail = size - 1;
+			tail = (size > 0) ? size - 1 : 0;
 		}
 	}
 
@@ -3036,7 +3036,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			Utilities.clear(items, size, items.length - size);
 			Arrays.sort(items, 0, tail + 1 + items.length - head);
 			head = 0;
-			tail = size - 1;
+			tail = (size > 0) ? size - 1 : 0;
 		}
 	}
 
@@ -3060,7 +3060,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			Utilities.clear(items, size, items.length - size);
 			Arrays.sort(items, 0, tail + 1 + items.length - head, comparator);
 			head = 0;
-			tail = size - 1;
+			tail = (size > 0) ? size - 1 : 0;
 		}
 	}
 

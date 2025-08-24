@@ -2710,7 +2710,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			DoubleComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
-			tail += items.length - head;
+			tail = (size > 0) ? size - 1 : 0;
 			head = 0;
 		}
 	}
