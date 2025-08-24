@@ -2498,46 +2498,75 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
         }
     }
 
-    /**
-     * Attempts to sort this deque in-place using its natural ordering, which requires long to
-     * implement {@link Comparable} of long.
-     */
-    public void sort() {
-        sort(null);
-    }
+	/**
+	 * Sorts this deque in-place using {@link Arrays#sort(long[], int, int)} in ascending order.
+	 */
+	@Override
+	public void sort() {
+		sort(0, size);
+	}
 
-    /**
-     * Sorts this deque in-place using {@link LongComparators#sort(long[], int, int, LongComparator)}.
-     * This should operate in O(n log(n)) time or less when the internals of the deque are
-     * continuous (the head is before the tail in the array). If the internals are not
-     * continuous, this takes an additional O(n) step (where n is less than the size of
-     * the deque) to rearrange the internals before sorting. You can pass null as the value
-     * for {@code comparator}, which will make this
-     * use the natural ordering for long.
-     *
-     * @param comparator the Comparator to use for long items; may be null to use the natural
-     *                   order of long items when long implements Comparable of long
-     */
-    public void sort(@Nullable LongComparator comparator) {
-        if (head <= tail) {
-            LongComparators.sort(items, head, tail + 1, comparator);
-        } else {
-            System.arraycopy(items, head, items, tail + 1, items.length - head);
-            LongComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
-            tail += items.length - head;
-            head = 0;
-        }
-    }
+	/**
+	 * Uses {@link Arrays#sort(long[], int, int)} to sort a (clamped) subrange of this deque.
+	 *
+	 * @param from first index to use, inclusive
+	 * @param to   last index to use, exclusive
+	 */
+	@Override
+	public void sort(int from, int to) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (head + to <= items.length) {
+			Arrays.sort(items, head + from, head + to);
+		} else if (head + from >= items.length) {
+			Arrays.sort(items, head + from - items.length, head + to - items.length);
+		} else {
+			trimToSize(); // rearranges items so it is linear starting at 0
+			Arrays.sort(items, from, to);
+		}
+	}
 
-    @Override
-    public void sort(int from, int to, LongComparator comparator) {
-        if (head <= tail) {
-            LongComparators.sort(items, head + from, head + to, comparator);
-        } else {
-            trimToSize(); // rearranges items so it is linear starting at 0
-            LongComparators.sort(items, from, to, comparator);
-        }
-    }
+	/**
+	 * Sorts this deque in-place using {@link LongComparators#sort(long[], int, int, LongComparator)}.
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting. You can pass null as the value
+	 * for {@code comparator}, which will make this
+	 * use the natural ordering for long.
+	 *
+	 * @param comparator the Comparator to use for long items; may be null to use the natural
+	 *                   order of long items when long implements Comparable of long
+	 */
+	@Override
+	public void sort(@Nullable LongComparator comparator) {
+		if (comparator == null) {
+			sort();
+		} else if (head <= tail) {
+			LongComparators.sort(items, head, tail + 1, comparator);
+		} else {
+			System.arraycopy(items, head, items, tail + 1, items.length - head);
+			LongComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
+			tail += items.length - head;
+			head = 0;
+		}
+	}
+
+	@Override
+	public void sort(int from, int to, @Nullable LongComparator comparator) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (comparator == null) {
+			sort(from, to);
+		} else if (head + to <= items.length) {
+			LongComparators.sort(items, head + from, head + to, comparator);
+		} else if (head + from >= items.length) {
+			LongComparators.sort(items, head + from - items.length, head + to - items.length, comparator);
+		} else {
+			trimToSize(); // rearranges items so it is linear starting at 0
+			LongComparators.sort(items, from, to, comparator);
+		}
+	}
 
 	/**
 	 * Gets a randomly selected item from this LongDeque, using the given random number generator.
