@@ -2941,10 +2941,31 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 
 	/**
 	 * Attempts to sort this deque in-place using its natural ordering, which requires T to
-	 * implement {@link Comparable} of T.
+	 * implement {@link Comparable} of T. Uses {@link ObjectComparators#sort(Object[], int, int, Comparator)}.
 	 */
 	public void sort() {
 		sort(null);
+	}
+
+	/**
+	 * Uses {@link ObjectComparators#sort(Object[], int, int, Comparator)}  to sort a (clamped) subrange of this deque.
+	 * Sorts using the natural ordering of T, which requires T to implement {@link Comparable} of T.
+	 * This only sorts between indices {@code from} (inclusive) and {@code to} (exclusive).
+	 *
+	 * @param from first index to use, inclusive
+	 * @param to   last index to use, exclusive
+	 */
+	public void sort(int from, int to) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (head + to <= items.length) {
+			ObjectComparators.sort(items, head + from, head + to, null);
+		} else if (head + from >= items.length) {
+			ObjectComparators.sort(items, head + from - items.length, head + to - items.length, null);
+		} else {
+			trimToSize(); // rearranges items so it is linear starting at 0
+			ObjectComparators.sort(items, from, to, null);
+		}
 	}
 
 	/**
@@ -2965,17 +2986,18 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			ObjectComparators.sort(items, head, tail + 1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
+			Utilities.clear(items, size, items.length - size);
 			ObjectComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
-			tail += items.length - head;
 			head = 0;
+			tail = size - 1;
 		}
 	}
 
 	/**
 	 * Sorts this deque in-place using {@link ObjectComparators#sort(Object[], int, int, Comparator)}.
 	 * This only sorts between indices {@code from} (inclusive) and {@code to} (exclusive).
-	 * This should operate in O(n log(n)) time or less when the internals of the deque are
-	 * continuous (the head is before the tail in the array). If the internals are not
+	 * This should operate in O(n log(n)) time or less when the subrange of the deque is
+	 * continuous ({@code from} is before {@code to} in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
 	 * the deque) to rearrange the internals before sorting. You can pass null as the value
 	 * for {@code comparator} if T implements {@link Comparable} of T, which will make this
@@ -2985,16 +3007,41 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                   order of T items when T implements Comparable of T
 	 */
 	public void sort(int from, int to, @Nullable Comparator<? super T> comparator) {
-		if (head <= tail) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (head + to <= items.length) {
 			ObjectComparators.sort(items, head + from, head + to, comparator);
+		} else if (head + from >= items.length) {
+			ObjectComparators.sort(items, head + from - items.length, head + to - items.length, comparator);
 		} else {
-			resize(items.length);
+			trimToSize(); // rearranges items so it is linear starting at 0
 			ObjectComparators.sort(items, from, to, comparator);
 		}
 	}
 
 	/**
-	 * Sorts this deque in-place using {@link Arrays#sort(Object[], int, int, Comparator)}.
+	 * Sorts this deque using {@link Arrays#sort(Object[], int, int)}.
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting.
+	 * This requires T to implement {@link Comparable} of T, and this will
+	 * use the natural ordering for T.
+	 */
+	public void sortJDK() {
+		if (head <= tail) {
+			Arrays.sort(items, head, tail + 1);
+		} else {
+			System.arraycopy(items, head, items, tail + 1, items.length - head);
+			Utilities.clear(items, size, items.length - size);
+			Arrays.sort(items, 0, tail + 1 + items.length - head);
+			head = 0;
+			tail = size - 1;
+		}
+	}
+
+	/**
+	 * Sorts this deque using {@link Arrays#sort(Object[], int, int, Comparator)}.
 	 * This should operate in O(n log(n)) time or less when the internals of the deque are
 	 * continuous (the head is before the tail in the array). If the internals are not
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
@@ -3010,11 +3057,65 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			Arrays.sort(items, head, tail + 1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
+			Utilities.clear(items, size, items.length - size);
 			Arrays.sort(items, 0, tail + 1 + items.length - head, comparator);
-			tail += items.length - head;
 			head = 0;
+			tail = size - 1;
 		}
-//		modCount += size; // I don't think this is "structural"
+	}
+
+	/**
+	 * Uses {@link Arrays#sort(Object[], int, int)} to sort a (clamped) subrange of this deque.
+	 * This only sorts between indices {@code from} (inclusive) and {@code to} (exclusive).
+	 * This should operate in O(n log(n)) time or less when the subrange of the deque is
+	 * continuous ({@code from} is before {@code to} in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting. You can pass null as the value
+	 * for {@code comparator} if T implements {@link Comparable} of T, which will make this
+	 * use the natural ordering for T.
+	 *
+	 * @param from first index to use, inclusive
+	 * @param to   last index to use, exclusive
+	 */
+	public void sortJDK(int from, int to) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (head + to <= items.length) {
+			Arrays.sort(items, head + from, head + to);
+		} else if (head + from >= items.length) {
+			Arrays.sort(items, head + from - items.length, head + to - items.length);
+		} else {
+			trimToSize();
+			Arrays.sort(items, from, to);
+		}
+	}
+
+	/**
+	 * Uses {@link Arrays#sort(Object[], int, int, Comparator)} to sort a (clamped) subrange of this deque.
+	 * This only sorts between indices {@code from} (inclusive) and {@code to} (exclusive).
+	 * This should operate in O(n log(n)) time or less when the subrange of the deque is
+	 * continuous ({@code from} is before {@code to} in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting. You can pass null as the value
+	 * for {@code comparator} if T implements {@link Comparable} of T, which will make this
+	 * use the natural ordering for T.
+	 *
+	 * @param from first index to use, inclusive
+	 * @param to   last index to use, exclusive
+	 * @param comparator the Comparator to use for T items; may be null to use the natural
+	 *                   order of T items when T implements Comparable of T
+	 */
+	public void sortJDK(int from, int to, @Nullable Comparator<? super T> comparator) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (head + to <= items.length) {
+			Arrays.sort(items, head + from, head + to, comparator);
+		} else if (head + from >= items.length) {
+			Arrays.sort(items, head + from - items.length, head + to - items.length, comparator);
+		} else {
+			trimToSize();
+			Arrays.sort(items, from, to, comparator);
+		}
 	}
 
 	/**
