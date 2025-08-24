@@ -1083,16 +1083,56 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	/**
 	 * Sorts this ObjectList based on the natural order of its elements; {@code T} must implement {@link Comparable}
 	 * for this to succeed.
+	 * <br>
+	 * This uses {@link ObjectComparators#sort(List, Comparator)}, which is slower than the approach used by the JDK
+	 * in {@link java.util.Arrays#sort(Object[], int, int)}, but ArrayList doesn't expose its internal array to its
+	 * subclasses, so we need to use a different technique. You can potentially use {@link ObjectDeque}, which also
+	 * implements {@link List}, and its {@link ObjectDeque#sortJDK()} method if TimSort is significantly faster for
+	 * your use-case, such as if you have truly massive lists.
 	 */
 	public void sort() {
 		ObjectComparators.sort(this, null);
 	}
 
 	/**
+	 * Sorts a subrange of this ObjectList based on the natural order of its elements; {@code T} must implement
+	 * {@link Comparable} for this to succeed.
+	 * <br>
+	 * This uses {@link ObjectComparators#sort(List, int, int, Comparator)}, which is slower than the approach used by
+	 * the JDK in {@link java.util.Arrays#sort(Object[], int, int)}, but ArrayList doesn't expose its
+	 * internal array to its subclasses, so we need to use a different technique.
+	 * You can potentially use {@link ObjectDeque}, which also implements {@link List}, and its
+	 * {@link ObjectDeque#sortJDK(int, int)} method if TimSort is significantly faster for
+	 * your use-case, such as if you have truly massive lists.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 */
+	public void sort(int from, int to) {
+		final int size = size();
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		ObjectComparators.sort(this, from, to, null);
+	}
+
+	/**
 	 * Sorts this ObjectList using the given Comparator. If the Comparator is null, then this sorts based on the
 	 * natural order of its elements, and {@code T} must implement {@link Comparable}.
 	 * <br>
-	 * This is implemented explicitly and not annotated with Override because of Android limitations.
+	 * This uses {@link ObjectComparators#sort(List, Comparator)}, which is slower than the approach used by
+	 * the JDK in {@link java.util.Arrays#sort(Object[], int, int, Comparator)}, but ArrayList doesn't expose its
+	 * internal array to its subclasses, so we need to use a different technique.
+	 * You can potentially use {@link ObjectDeque}, which also implements {@link List}, and its
+	 * {@link ObjectDeque#sortJDK(Comparator)} method if TimSort is significantly faster for
+	 * your use-case, such as if you have truly massive lists.
+	 * <br>
+	 * This is implemented explicitly and not annotated with Override because of Android limitations. RoboVM also has
+	 * limits here; when using RoboVM, {@link List} does not have any {@code sort()} methods, so Override wouldn't make
+	 * sense there either (except that Override annotations are ignored on RoboVM). These methods should be safe to call
+	 * directly, even if they aren't as fast as the TimSort-based version in Java 8 onward in ArrayList's sort()
+	 * methods, but {@link Collections#sort(List, Comparator)} should be used cautiously when the List parameter is an
+	 * ObjectList. You should make sure to test that sorting, especially sorting Lists, works on every platform you
+	 * intend to target.
 	 *
 	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 */
@@ -1101,29 +1141,33 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	}
 
 	/**
-	 * Sorts this ObjectList based on the natural order of its elements; {@code T} must implement {@link Comparable}
-	 * for this to succeed.
+	 * Sorts a subrange of this ObjectList using the given Comparator. If the Comparator is null, then this sorts based
+	 * on the natural order of its elements, and {@code T} must implement {@link Comparable}.
 	 * <br>
-	 * This uses the TimSort implementation in {@link java.util.Arrays}, instead of the in-place mergesort used by
-	 * {@link #sort()}. TimSort tends to be faster for many inputs, but uses more memory. Future JDK versions may
-	 * change how {@link ArrayList#sort(Comparator)} works, which would change this as well.
-	 */
-	public void sortJDK() {
-		super.sort(null);
-	}
-
-	/**
-	 * Sorts this ObjectList using the given Comparator. If the Comparator is null, then this sorts based on the
-	 * natural order of its elements, and {@code T} must implement {@link Comparable}.
+	 * This uses {@link ObjectComparators#sort(List, int, int, Comparator)}, which is slower than the approach used by
+	 * the JDK in {@link java.util.Arrays#sort(Object[], int, int, Comparator)}, but ArrayList doesn't expose its
+	 * internal array to its subclasses, so we need to use a different technique.
+	 * You can potentially use {@link ObjectDeque}, which also implements {@link List}, and its
+	 * {@link ObjectDeque#sortJDK(int, int, Comparator)} method if TimSort is significantly faster for
+	 * your use-case, such as if you have truly massive lists.
 	 * <br>
-	 * This uses the TimSort implementation in {@link java.util.Arrays}, instead of the in-place mergesort used by
-	 * {@link #sort()}. TimSort tends to be faster for many inputs, but uses more memory. Future JDK versions may
-	 * change how {@link ArrayList#sort(Comparator)} works, which would change this as well.
+	 * This is implemented explicitly and not annotated with Override because of Android limitations. RoboVM also has
+	 * limits here; when using RoboVM, {@link List} does not have any {@code sort()} methods, so Override wouldn't make
+	 * sense there either (except that Override annotations are ignored on RoboVM). These methods should be safe to call
+	 * directly, even if they aren't as fast as the TimSort-based version in Java 8 onward in ArrayList's sort()
+	 * methods, but {@link Collections#sort(List, Comparator)} should be used cautiously when the List parameter is an
+	 * ObjectList. You should make sure to test that sorting, especially sorting Lists, works on every platform you
+	 * intend to target.
 	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 */
-	public void sortJDK(@Nullable Comparator<? super T> c) {
-		super.sort(c);
+	public void sort(int from, int to, @Nullable Comparator<? super T> c) {
+		final int size = size();
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		ObjectComparators.sort(this, from, to, c);
 	}
 
 	/**
