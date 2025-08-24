@@ -35,11 +35,19 @@ public interface Appender<T> {
 	 *
 	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
 	 * @param item the item to append
-	 * @return {@code first}, after modification
+	 * @return {@code sb}, after modification
 	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	<S extends CharSequence & Appendable> S apply(S sb, T item);
 
+	/**
+	 * Commonly used as a method reference where a generic Appender is needed.
+	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param item the item to append
+	 * @return {@code sb}, after modification
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 * @param <T> the type of {@code item}, which will be run through {@link Objects#toString(Object)} to get a String representation
+	 */
 	static <S extends CharSequence & Appendable, T> S append(S sb, T item) {
 		try {
 			sb.append(Objects.toString(item));

@@ -1,3 +1,21 @@
+[1.12.0]
+- [BREAKING] "Appender" functional interfaces in `com.github.tommyettinger.ds.support.util` now can't be StringBuilder method references, but can take more than StringBuilder as their first parameter (this is a change throughout the ecosystem in this update). Any type that is both a CharSequence an Appendable can work, such as StringBuffer and CharBuffer as well as CharList and CharDeque here.
+- [BREAKING] You should usually use `Appender::append` instead of `StringBuilder::append` when you need a generic `Appender`.
+- Dependency on digital updated to 0.9.1; this affects the signatures of various appending methods, which now can take more than just StringBuilder.
+- CharList, CharBag, and CharDeque now implement CharSequence and Appendable, allowing them to be used with more appending methods.
+- CharList, CharBag, and CharDeque, which are all `CharList` types, now implement `Comparable<CharList>` as well. They can't be Comparable to an arbitrary CharSequence, or to String, because Comparable requires the other way to work as well, and a String can't be compared to a non-String directly.
+- The new compareWith() method on CharList and subtypes allows comparing a CharList to an arbitrary CharSequence, like `CharSequence.compare()` in Java 11 and later.
+- A LOT of methods have been added to CharList, CharBag, and CharDeque, mostly to get close to feature parity with libGDX 1.13.6 CharArray, which replaced libGDX' custom StringBuilder class.
+- New String-related methods for the Char-collections include substring(), leftString, rightString(), and constructors.
+- Various new methods have case-insensitive versions as well, such as compareWith(), indexOf, lastIndexOf(), an contains(), which all can take `CharSequence`s.
+- ObjectList.sortJDK() should now work on RoboVM... by not calling List.sort(), which doesn't exist in the paleolithic API era RoboVM uses. It has to use ObjectComparators and its non-allocating in-place mrge sort, which is slower.
+- ObjectDeque.sortJDK() is new and works everywhere by using Arrays.sort() on its items array. It uses TimSort, which is generally faster than ObjectComparators, but allocates some memory and may affect the GC.
+- Sorting in general has improved for all lists and deques.
+- There is a `sort(int, int)` that uses ascending order for a subrange now for all lists.
+- Sorting subranges of deques doesn't need to rearrange the deque internally (which is O(n)) if the subrange is continuous in the items array.
+- List, Bag, and Deque types have replaceFirst() and replaceALl() methods now.
+- Float and double-based lists/bags/deques have variants on replaceFirst() and replaceAll() that can replace within a given tolerance or replace NaN specifically.
+
 [1.11.0]
 - [BREAKING] The constructors in any and all Ordered types that took a `boolean useDequeOrder`, if present, now take an `OrderType` enum, which allows specifying the default LIST ordering, the optimized-removal-and-insertion-at-ends DEQUE ordering, or now the unreliable-but-fast-deletion BAG ordering.
 - OrderType is new, and all Ordered types can have their order type queried with `getOrderType()` . This is not stored in the types except by the specific subclass that their `order()` returns.

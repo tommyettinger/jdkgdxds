@@ -1171,6 +1171,60 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	}
 
 	/**
+	 * Currently calls {@link #sort()} because this can't access
+	 * {@link java.util.Arrays#sort(Object[], int, int)} without the parent ArrayList's items array.
+	 * You can use {@link ObjectDeque}, which has a working {@link ObjectDeque#sortJDK()}, or you
+	 * can just use {@link #sort()}, which is likely slower but doesn't allocate.
+	 *
+	 * @see #sort() Use sort() or use an ObjectDeque and its sortJDK().
+	 */
+	public void sortJDK() {
+		sort();
+	}
+
+	/**
+	 * Currently calls {@link #sort(int, int)} because this can't access
+	 * {@link java.util.Arrays#sort(Object[], int, int)} without the parent ArrayList's items array.
+	 * You can use {@link ObjectDeque}, which has a working {@link ObjectDeque#sortJDK(int, int)}, or you
+	 * can just use {@link #sort(int, int)}, which is likely slower but doesn't allocate.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 * @see #sort(int, int) Use sort() or use an ObjectDeque and its sortJDK().
+	 */
+	public void sortJDK(int from, int to) {
+		sort(from, to);
+	}
+
+	/**
+	 * Currently calls {@link #sort(Comparator)} because this can't access
+	 * {@link java.util.Arrays#sort(Object[], int, int, Comparator)} without the parent ArrayList's items array.
+	 * You can use {@link ObjectDeque}, which has a working {@link ObjectDeque#sortJDK(Comparator)}, or you
+	 * can just use {@link #sort(Comparator)}, which is likely slower but doesn't allocate.
+	 *
+	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
+	 * @see #sort(Comparator) Use sort() or use an ObjectDeque and its sortJDK().
+	 */
+	public void sortJDK(@Nullable Comparator<? super T> c) {
+		sort(c);
+	}
+
+	/**
+	 * Currently calls {@link #sort(int, int, Comparator)} because this can't access
+	 * {@link java.util.Arrays#sort(Object[], int, int, Comparator)} without the parent ArrayList's items array.
+	 * You can use {@link ObjectDeque}, which has a working {@link ObjectDeque#sortJDK(int, int, Comparator)}, or you
+	 * can just use {@link #sort(int, int, Comparator)}, which is likely slower but doesn't allocate.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
+	 * @see #sort(int, int, Comparator) Use sort() or use an ObjectDeque and its sortJDK().
+	 */
+	public void sortJDK(int from, int to, @Nullable Comparator<? super T> c) {
+		sort(from, to, c);
+	}
+
+	/**
 	 * Constructs an empty list given the type as a generic type argument.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
