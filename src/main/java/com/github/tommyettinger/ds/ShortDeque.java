@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.sort.ByteComparator;
+import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
@@ -2499,11 +2501,31 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Attempts to sort this deque in-place using its natural ordering, which requires short to
-	 * implement {@link Comparable} of short.
+	 * Sorts this deque in-place using {@link Arrays#sort(short[], int, int)} in ascending order.
 	 */
+	@Override
 	public void sort() {
-		sort(null);
+		sort(0, size);
+	}
+
+	/**
+	 * Uses {@link Arrays#sort(short[], int, int)} to sort a (clamped) subrange of this deque.
+	 *
+	 * @param from first index to use, inclusive
+	 * @param to   last index to use, exclusive
+	 */
+	@Override
+	public void sort(int from, int to) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (head + to <= items.length) {
+			Arrays.sort(items, head + from, head + to);
+		} else if (head + from >= items.length) {
+			Arrays.sort(items, head + from - items.length, head + to - items.length);
+		} else {
+			trimToSize(); // rearranges items so it is linear starting at 0
+			Arrays.sort(items, from, to);
+		}
 	}
 
 	/**
@@ -2518,8 +2540,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @param comparator the Comparator to use for short items; may be null to use the natural
 	 *                   order of short items when short implements Comparable of short
 	 */
+	@Override
 	public void sort(@Nullable ShortComparator comparator) {
-		if (head <= tail) {
+		if (comparator == null) {
+			sort();
+		} else if (head <= tail) {
 			ShortComparators.sort(items, head, tail + 1, comparator);
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
@@ -2530,9 +2555,15 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	@Override
-	public void sort(int from, int to, ShortComparator comparator) {
-		if (head <= tail) {
+	public void sort(int from, int to, @Nullable ShortComparator comparator) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (comparator == null) {
+			sort(from, to);
+		} else if (head + to <= items.length) {
 			ShortComparators.sort(items, head + from, head + to, comparator);
+		} else if (head + from >= items.length) {
+			ShortComparators.sort(items, head + from - items.length, head + to - items.length, comparator);
 		} else {
 			trimToSize(); // rearranges items so it is linear starting at 0
 			ShortComparators.sort(items, from, to, comparator);

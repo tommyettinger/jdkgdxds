@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.sort.ByteComparator;
+import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.function.ShortToShortFunction;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
@@ -859,8 +861,23 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		return newItems;
 	}
 
+	/**
+	 * Sorts this entire collection using {@link Arrays#sort(short[], int, int)} in ascending order.
+	 */
 	public void sort() {
 		Arrays.sort(items, 0, size);
+	}
+
+	/**
+	 * Uses {@link Arrays#sort(short[], int, int)} to sort a (clamped) subrange of this collection in ascending order.
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 */
+	public void sort(int from, int to) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		Arrays.sort(items, from, to);
 	}
 
 	/**
@@ -871,12 +888,12 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 *
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
-	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but it does not allocate additional memory; as a result, it can be
-	 * used as a generic sorting algorithm.
+	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>),
+	 * but it does not allocate additional memory; as a result, it can be used as a generic sorting algorithm.
 	 *
 	 * @param c the comparator to determine the order of the ShortList
 	 */
-	public void sort(@Nullable final ShortComparator c) {
+	public void sort(final @Nullable ShortComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -888,14 +905,20 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * Sorts the specified range of elements according to the order induced by the specified
 	 * comparator using mergesort, or {@link Arrays#sort(short[], int, int)} if {@code c} is null.
 	 * This purely uses {@link ShortComparators#sort(short[], int, int, ShortComparator)}, and you
-	 * can see its docs for more information.
+	 * can see its docs for more information. This clamps {@code from} and {@code to} to the valid range.
 	 *
-	 * @param from the index of the first element (inclusive) to be sorted.
-	 * @param to   the index of the last element (exclusive) to be sorted.
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the ShortList
 	 */
-	public void sort(final int from, final int to, final ShortComparator c) {
-		ShortComparators.sort(items, from, to, c);
+	public void sort(int from, int to, final @Nullable ShortComparator c) {
+		if (c == null) {
+			sort(from, to);
+		} else {
+			from = Math.max(Math.min(from, size - 1), 0);
+			to = Math.max(Math.min(to, size), from);
+			ShortComparators.sort(items, from, to, c);
+		}
 	}
 
 	@Override
