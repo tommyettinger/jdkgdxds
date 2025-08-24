@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.function.BooleanPredicate;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -758,15 +759,30 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		return newItems;
 	}
 
+	/**
+	 * Sorts this entire collection using {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)}
+	 * in ascending order (false, then true).
+	 */
 	public void sort() {
 		sort(BooleanComparators.NATURAL_COMPARATOR);
 	}
 
 	/**
+	 * Uses {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)} to sort a (clamped) subrange of
+	 * this collection in ascending order (false, then true).
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 */
+	public void sort(int from, int to) {
+		sort(from, to, BooleanComparators.NATURAL_COMPARATOR);
+	}
+
+	/**
 	 * Sorts all elements according to the order induced by the specified
 	 * comparator using {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)}.
-	 * If {@code c} is null, this uses {@link BooleanComparators#NATURAL_COMPARATOR} as its c.
-	 *
+	 * If {@code c} is null, this uses {@link BooleanComparators#NATURAL_COMPARATOR} as its c (which
+	 * sorts false before true).
 	 * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not be reordered as a result
 	 * of the sort. The sorting algorithm is an in-place mergesort that is significantly slower than a
 	 * standard mergesort, as its running time is <i>O</i>(<var>n</var>&nbsp;(log&nbsp;<var>n</var>)<sup>2</sup>), but
@@ -775,16 +791,13 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param c the comparator to determine the order of the BooleanList
 	 */
 	public void sort(@Nullable final BooleanComparator c) {
-		if (c == null) {
-			sort(0, size, BooleanComparators.NATURAL_COMPARATOR);
-		} else {
-			sort(0, size, c);
-		}
+		sort(0, size, c);
 	}
 
 	/**
-	 * Sorts the specified range of elements according to the order induced by the specified
-	 * comparator using mergesort, or {@link BooleanComparators#NATURAL_COMPARATOR} if {@code c} is null.
+	 * Sorts the specified (clamped) subrange of elements according to the order induced by the specified
+	 * comparator using mergesort, or {@link BooleanComparators#NATURAL_COMPARATOR} if {@code c} is null (which
+	 * sorts false before true).
 	 * This purely uses {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)}, and you
 	 * can see its docs for more information.
 	 *
@@ -792,7 +805,9 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param to   the index of the last element (exclusive) to be sorted.
 	 * @param c    the comparator to determine the order of the BooleanList
 	 */
-	public void sort(final int from, final int to, final BooleanComparator c) {
+	public void sort(int from, int to, @Nullable BooleanComparator c) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
 		BooleanComparators.sort(items, from, to, c);
 	}
 

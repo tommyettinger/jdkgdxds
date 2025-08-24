@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
+import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.function.BooleanPredicate;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -2467,11 +2468,22 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	}
 
 	/**
-	 * Attempts to sort this deque in-place using its natural ordering, which requires boolean to
-	 * implement {@link Comparable} of boolean.
+	 * Attempts to sort this deque in-place using its natural ordering, which sorts false before true.
+	 * Uses {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)}.
 	 */
 	public void sort() {
-		sort(null);
+		sort(BooleanComparators.NATURAL_COMPARATOR);
+	}
+
+	/**
+	 * Uses {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)} to sort a (clamped) subrange of
+	 * this collection in ascending order (false, then true).
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 */
+	public void sort(int from, int to) {
+		sort(from, to, BooleanComparators.NATURAL_COMPARATOR);
 	}
 
 	/**
@@ -2481,7 +2493,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 * continuous, this takes an additional O(n) step (where n is less than the size of
 	 * the deque) to rearrange the internals before sorting. You can pass null as the value
 	 * for {@code comparator}, which will make this
-	 * use the natural ordering for boolean.
+	 * use the natural ordering for boolean (false before true).
 	 *
 	 * @param comparator the Comparator to use for boolean items; may be null to use the natural
 	 *                   order of boolean items when boolean implements Comparable of boolean
@@ -2492,15 +2504,34 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 		} else {
 			System.arraycopy(items, head, items, tail + 1, items.length - head);
 			BooleanComparators.sort(items, 0, tail + 1 + items.length - head, comparator);
-			tail += items.length - head;
 			head = 0;
+			tail = (size > 0) ? size - 1 : 0;
 		}
 	}
 
+	/**
+	 * Sorts a (clamped) subrange of this deque in-place using
+	 * {@link BooleanComparators#sort(boolean[], int, int, BooleanComparator)}.
+	 * This should operate in O(n log(n)) time or less when the internals of the deque are
+	 * continuous (the head is before the tail in the array). If the internals are not
+	 * continuous, this takes an additional O(n) step (where n is less than the size of
+	 * the deque) to rearrange the internals before sorting. You can pass null as the value
+	 * for {@code comparator}, which will make this
+	 * use the natural ordering for boolean (false before true).
+	 *
+	 * @param from the index of the first element (inclusive) to be sorted
+	 * @param to   the index of the last element (exclusive) to be sorted
+	 * @param comparator the Comparator to use for boolean items; may be null to use the natural
+	 *                   order of boolean items when boolean implements Comparable of boolean
+	 */
 	@Override
-	public void sort(int from, int to, BooleanComparator comparator) {
-		if (head <= tail) {
+	public void sort(int from, int to, @Nullable BooleanComparator comparator) {
+		from = Math.max(Math.min(from, size - 1), 0);
+		to = Math.max(Math.min(to, size), from);
+		if (head + to <= items.length) {
 			BooleanComparators.sort(items, head + from, head + to, comparator);
+		} else if (head + from >= items.length) {
+			BooleanComparators.sort(items, head + from - items.length, head + to - items.length, comparator);
 		} else {
 			trimToSize(); // rearranges items so it is linear starting at 0
 			BooleanComparators.sort(items, from, to, comparator);
