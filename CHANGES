@@ -1,3 +1,6 @@
+[1.12.1]
+- Dependency on digital updated to 0.9.2; this is a hotfix for bugs in the behavior of scrambled Base objects, and is unlikely to affect most applications.
+
 [1.12.0]
 - [BREAKING] "Appender" functional interfaces in `com.github.tommyettinger.ds.support.util` now can't be StringBuilder method references, but can take more than StringBuilder as their first parameter (this is a change throughout the ecosystem in this update). Any type that is both a CharSequence an Appendable can work, such as StringBuffer and CharBuffer as well as CharList and CharDeque here.
 - [BREAKING] You should usually use `Appender::append` instead of `StringBuilder::append` when you need a generic `Appender`.
