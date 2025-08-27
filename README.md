@@ -1,5 +1,27 @@
 # jdkgdxds
-Making libGDX's data structures implement JDK interfaces
+
+![jdkgdxds](docs/logo.png)
+
+Taking libGDX's data structures and implementing JDK interfaces.
+
+Primitive-backed? Insertion-ordered? Value-sortable? Double-ended? Case-insensitive? **WE HAVE IT ALL!**
+Lists, Bags, Deques, Sets, Maps! This library supplies most of the common varieties of data structures, and tries to
+reduce how much memory it allocates all over. It works on all common and not-so-common platforms, including HotSpot
+JDKs, Graal Native Image, Android, iOS via RoboVM or Multi-OS Engine, browsers via Google Web Toolkit or TeaVM, etc.
+Reflection is entirely avoided. Variants on maps and sets are available to treat keys as case-insensitive, ignore/edit
+certain characters in String keys while hashing/comparing, or use Enum keys efficiently and without breaking normal
+serialization rules. We have an EnumMap and EnumSet that actually have zero-argument constructors! We have an all-around
+improvement to `java.util.ArrayDeque` that implements both Deque and List, allows `O(1)` lookup at any index, and didn't
+forget to implement `equals()` and `hashCode()`: `ObjectDeque` ! For every unordered map or set, an insertion-ordered
+variant is provided. These ordered variants can also be sorted offline, including by key or by value for maps. We have a
+`CharList` that can fill in for a `StringBuilder` in some ways while still being used as a collection.
+
+The library and [all](https://github.com/tommyettinger/funderby) its
+[dependencies](https://github.com/tommyettinger/digital) should be under 2MB in size, and can be easily reduced in size
+further by tools like R8 or ProGuard that perform dead code elimination.
+[Compare that](https://central.sonatype.com/artifact/it.unimi.dsi/fastutil-core) with
+[FastUtil Core](https://github.com/vigna/fastutil/), if you want! This library uses some code from FastUtil for sorting,
+and both projects are Apache-licensed. Note that FastUtil won't work on all platforms jdkgdxds targets, such as RoboVM.
 
 ## What is this?
 
