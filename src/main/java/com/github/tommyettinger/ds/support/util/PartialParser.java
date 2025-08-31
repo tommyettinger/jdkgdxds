@@ -16,9 +16,7 @@
 
 package com.github.tommyettinger.ds.support.util;
 
-import com.github.tommyettinger.ds.Junction;
-import com.github.tommyettinger.ds.OrderType;
-import com.github.tommyettinger.ds.PrimitiveCollection;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.function.ObjSupplier;
 import com.github.tommyettinger.function.ObjToObjFunction;
 
@@ -71,6 +69,58 @@ public interface PartialParser<R> {
 	 * Wraps {@link Junction#parse(String, int, int)}.
 	 */
 	PartialParser<Junction<String>> DEFAULT_JUNCTION_STRING = Junction::parse;
+
+	/**
+	 * Creates a PartialParser that can parse a section of text with multiple {@code T} items separated by
+	 * {@code delimiter} using {@code innerParser} to read each item, creates an ObjectList, populates it with
+	 * {@link ObjectList#addLegible(String, String, PartialParser, int, int)}, and returns the new collection.
+	 *
+	 * @param innerParser a PartialParser to read in each T item in the ObjectList this parses
+	 * @param delimiter the String that separates items in the expected text
+	 * @param brackets  if true, the text will be expected to be surrounded by one bracket char on each side, which will be ignored
+	 * @return a (typically new) ObjectList of T loaded from the given text
+	 * @param <T> the type of items in the ObjectList this parses
+	 */
+	static <T> PartialParser<ObjectList<T>> objectListParser(final PartialParser<T> innerParser,
+															 final String delimiter,
+															 final boolean brackets) {
+		return (String text, int start, int end) -> {
+			final ObjectList<T> coll = new ObjectList<>();
+			if (brackets)
+				coll.addLegible(text, delimiter, innerParser, start + 1, end - start - 2);
+			else
+				coll.addLegible(text, delimiter, innerParser, start, end - start);
+			return coll;
+		};
+	}
+
+	/**
+	 * Creates a PartialParser that can parse a section of text with multiple {@code T} items separated by
+	 * {@code delimiter} using {@code innerParser} to read each item, creates a {@code C} EnhancedCollection with the
+	 * given {@code supplier}, populates it with
+	 * {@link EnhancedCollection#addLegible(String, String, PartialParser, int, int)}, and returns the new collection.
+	 *
+	 * @param supplier  typically a constructor reference to {@code C}, which can be stored for better Android performance
+	 * @param innerParser a PartialParser to read in each {@code T} item in the {@code C} this parses
+	 * @param delimiter the String that separates items in the expected text
+	 * @param brackets  if true, the text will be expected to be surrounded by one bracket char on each side, which will be ignored
+	 * @return a {@code C} (or EnhancedCollection of {@code T}) loaded from the given text
+	 * @param <T> the type of items in the EnhancedCollection this parses
+	 * @param <C> the type of EnhancedCollection of T, such as {@link ObjectDeque} or {@link ObjectOrderedSet}
+	 */
+	static <T, C extends EnhancedCollection<T>> PartialParser<C> collectionParser(ObjSupplier<C> supplier,
+																				  final PartialParser<T> innerParser,
+																				  final String delimiter,
+																				  final boolean brackets) {
+		return (String text, int start, int end) -> {
+			final C coll = supplier.get();
+			if (brackets)
+				coll.addLegible(text, delimiter, innerParser, start + 1, end - start - 2);
+			else
+				coll.addLegible(text, delimiter, innerParser, start, end - start);
+			return coll;
+		};
+	}
 
 	/**
 	 * Creates a PartialParser that can parse a section of text with multiple int items separated by {@code delimiter},
