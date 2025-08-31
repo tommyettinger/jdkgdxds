@@ -44,6 +44,11 @@ public interface PartialParser<R> {
 	PartialParser<String> DEFAULT_STRING = String::substring;
 
 	/**
+	 * Wraps {@link CharSequence#subSequence(int, int)}.
+	 */
+	PartialParser<CharSequence> DEFAULT_CHAR_SEQUENCE = CharSequence::subSequence;
+
+	/**
 	 * Given an enum type's {@code valueOf} as a method reference, this creates a PartialParser that tries to obtain
 	 * an enum of the given type using that valueOf on a substring of the parsed text. This should be useful with the
 	 * {@link com.github.tommyettinger.ds.EnumSet#addLegible(String, String, PartialParser)} method and any putLegible
