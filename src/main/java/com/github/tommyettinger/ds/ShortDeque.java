@@ -2971,4 +2971,47 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public static ShortDeque with(short... varargs) {
 		return new ShortDeque(varargs);
 	}
+
+	/**
+	 * Calls {@link #withLegible(String, String, boolean)} with brackets set to false.
+	 * @param str a String that will be parsed in full
+	 * @param delimiter the delimiter between items in str
+	 * @return a new collection parsed from str
+	 */
+	public static ShortDeque withLegible(String str, String delimiter) {
+		return withLegible(str, delimiter, false);
+	}
+
+	/**
+	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} on either all of
+	 * {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if {@code brackets}
+	 * is true). Each item is expected to be separated by {@code delimiter}.
+	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param delimiter the delimiter between items in str
+	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @return a new collection parsed from str
+	 */
+	public static ShortDeque withLegible(String str, String delimiter, boolean brackets) {
+		ShortDeque c = new ShortDeque();
+		if(brackets)
+			c.addLegible(str, delimiter, 1, str.length() - 1);
+		else
+			c.addLegible(str, delimiter);
+		return c;
+	}
+
+	/**
+	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} with the given
+	 * four parameters as-is.
+	 * @param str a String that will have the given section parsed
+	 * @param delimiter the delimiter between items in str
+	 * @param offset the first position to parse in str, inclusive
+	 * @param length how many chars to parse, starting from offset
+	 * @return a new collection parsed from str
+	 */
+	public static ShortDeque withLegible(String str, String delimiter, int offset, int length) {
+		ShortDeque c = new ShortDeque();
+		c.addLegible(str, delimiter, offset, length);
+		return c;
+	}
 }
