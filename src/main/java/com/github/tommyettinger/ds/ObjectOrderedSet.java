@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.PartialParser;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -703,5 +704,51 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	@SafeVarargs
 	public static <T> ObjectOrderedSet<T> with(T... varargs) {
 		return new ObjectOrderedSet<>(varargs);
+	}
+
+	/**
+	 * Calls {@link #withLegible(String, String, PartialParser, boolean)} with brackets set to false.
+	 * @param str a String that will be parsed in full
+	 * @param delimiter the delimiter between items in str
+	 * @return a new collection parsed from str
+	 */
+	public static <T> ObjectOrderedSet<T> withLegible(String str, String delimiter, PartialParser<T> parser) {
+		return withLegible(str, delimiter, parser, false);
+	}
+
+	/**
+	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, PartialParser, int, int)} on
+	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
+	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
+	 *
+	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param delimiter the delimiter between items in str
+	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @return a new collection parsed from str
+	 */
+	public static <T> ObjectOrderedSet<T> withLegible(String str, String delimiter, PartialParser<T> parser, boolean brackets) {
+		ObjectOrderedSet<T> c = new ObjectOrderedSet<>();
+		if(brackets)
+			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
+		else
+			c.addLegible(str, delimiter, parser);
+		return c;
+	}
+
+	/**
+	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, PartialParser, int, int)}
+	 * with the given five parameters as-is.
+	 *
+	 * @param str a String that will have the given section parsed
+	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param offset the first position to parse in str, inclusive
+	 * @param length how many chars to parse, starting from offset
+	 * @return a new collection parsed from str
+	 */
+	public static <T> ObjectOrderedSet<T> withLegible(String str, String delimiter, PartialParser<T> parser, int offset, int length) {
+		ObjectOrderedSet<T> c = new ObjectOrderedSet<>();
+		c.addLegible(str, delimiter, parser, offset, length);
+		return c;
 	}
 }
