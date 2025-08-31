@@ -820,6 +820,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 * @param <T>       the type of item, typically inferred
 	 * @param <K>       the type of keys that extractor pulls from T items
@@ -837,6 +838,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param str a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 * @param <T>       the type of item, typically inferred

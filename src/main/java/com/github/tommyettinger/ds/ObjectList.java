@@ -1391,6 +1391,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * Calls {@link #withLegible(String, String, PartialParser, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectList<T> withLegible(String str, String delimiter, PartialParser<T> parser) {
@@ -1404,6 +1405,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 *
 	 * @param str a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
