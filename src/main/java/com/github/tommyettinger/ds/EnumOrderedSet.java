@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.PartialParser;
+import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -812,6 +814,60 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 		return new EnumOrderedSet(varargs);
 	}
 
+	/**
+	 * Calls {@link #withLegible(String, String, PartialParser, boolean)} with brackets set to false.
+	 * <br>
+	 * The {@code parser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 *  @param str a String that will be parsed in full
+	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns an {@link Enum} item from a section of {@code str}
+	 * @return a new collection parsed from str
+	 */
+	public static EnumOrderedSet withLegible(String str, String delimiter, PartialParser<Enum<?>> parser) {
+		return withLegible(str, delimiter, parser, false);
+	}
+
+	/**
+	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, PartialParser, int, int)} on
+	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
+	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
+	 * <br>
+	 * The {@code parser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns an {@link Enum} item from a section of {@code str}
+	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @return a new collection parsed from str
+	 */
+	public static EnumOrderedSet withLegible(String str, String delimiter, PartialParser<Enum<?>> parser, boolean brackets) {
+		EnumOrderedSet c = new EnumOrderedSet();
+		if(brackets)
+			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
+		else
+			c.addLegible(str, delimiter, parser);
+		return c;
+	}
+
+	/**
+	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, PartialParser, int, int)}
+	 * with the given five parameters as-is.
+	 * <br>
+	 * The {@code parser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str a String that will have the given section parsed
+	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns an {@link Enum} item from a section of {@code str}
+	 * @param offset the first position to parse in str, inclusive
+	 * @param length how many chars to parse, starting from offset
+	 * @return a new collection parsed from str
+	 */
+	public static EnumOrderedSet withLegible(String str, String delimiter, PartialParser<Enum<?>> parser, int offset, int length) {
+		EnumOrderedSet c = new EnumOrderedSet();
+		c.addLegible(str, delimiter, parser, offset, length);
+		return c;
+	}
 
 	/**
 	 * Alias of {@link #with(Enum)} for compatibility.
