@@ -18,14 +18,11 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.util.FloatAppender;
-import com.github.tommyettinger.ds.support.util.LongAppender;
-import com.github.tommyettinger.ds.support.util.LongIterator;
+import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongFloatBiConsumer;
 import com.github.tommyettinger.function.LongFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongToFloatFunction;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -2075,5 +2072,62 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		map.put(key2, value2);
 		map.put(key3, value3);
 		return map;
+	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str},
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and
+	 * the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 */
+	public static LongFloatMap withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator) {
+		return withLegible(str, entrySeparator, keyValueSeparator, false);
+	}
+	/**
+	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
+	 * chars), with entries separated by {@code entrySeparator},
+	 * such as {@code ", "} and the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
+	 */
+	public static LongFloatMap withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator,
+												   boolean brackets) {
+		LongFloatMap m = new LongFloatMap();
+		if(brackets)
+			m.putLegible(str, entrySeparator, keyValueSeparator, 1, str.length() - 1);
+		else
+			m.putLegible(str, entrySeparator, keyValueSeparator, 0, -1);
+		return m;
+	}
+
+	/**
+	 * Creates a new map by parsing the given subrange of {@code str},
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and the keys separated from values
+	 * by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public static LongFloatMap withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator,
+												   int offset,
+												   int length) {
+		LongFloatMap m = new LongFloatMap();
+		m.putLegible(str, entrySeparator, keyValueSeparator, offset, length);
+		return m;
 	}
 }
