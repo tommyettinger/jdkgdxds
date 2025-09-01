@@ -1909,4 +1909,79 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		map.put(key3, value3);
 		return map;
 	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str} with the given PartialParser for keys,
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and
+	 * the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 */
+	public static <K> ObjectIntMap<K> withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator,
+												   PartialParser<K> keyParser) {
+		return withLegible(str, entrySeparator, keyValueSeparator, keyParser, false);
+	}
+	/**
+	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
+	 * chars) with the given PartialParser for keys, with entries separated by {@code entrySeparator},
+	 * such as {@code ", "} and the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
+	 */
+	public static <K> ObjectIntMap<K> withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator,
+												   PartialParser<K> keyParser,
+												   boolean brackets) {
+		ObjectIntMap<K> m = new ObjectIntMap<>();
+		if(brackets)
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 1, str.length() - 1);
+		else
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 0, -1);
+		return m;
+	}
+
+	/**
+	 * Creates a new map by parsing the given subrange of {@code str} with the given PartialParser for keys,
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and the keys separated from values
+	 * by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public static <K> ObjectIntMap<K> withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator,
+												   PartialParser<K> keyParser,
+												   int offset,
+												   int length) {
+		ObjectIntMap<K> m = new ObjectIntMap<>();
+		m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, offset, length);
+		return m;
+	}
 }
