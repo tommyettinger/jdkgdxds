@@ -17,7 +17,9 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjPredicate;
+import com.github.tommyettinger.function.ObjToObjFunction;
 import com.github.tommyettinger.function.ObjToSameFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -496,5 +498,82 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	@SafeVarargs
 	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I... items) {
 		return new FilteredIterableSet<>(filter, editor, items);
+	}
+
+	/**
+	 * Calls {@link #withLegible(ObjPredicate, ObjToSameFunction, String, String, PartialParser, boolean)} with brackets set to false.
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param str a String that will be parsed in full
+	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns an {@code I} item from a section of {@code str}
+	 * @return a new collection parsed from str
+	 * @param <T>       the type of item in each Iterable
+	 * @param <I>       the Iterable of T type this holds
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> withLegible(ObjPredicate<T> filter,
+																				   ObjToSameFunction<T> editor,
+																				   String str,
+																				   String delimiter,
+																				   PartialParser<I> parser) {
+		return withLegible(filter, editor, str, delimiter, parser, false);
+	}
+
+	/**
+	 * Creates a new HolderSet using {@code extractor} and fills it by calling
+	 * {@link #addLegible(String, String, PartialParser, int, int)} on
+	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
+	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns an {@code I} item from a section of {@code str}
+	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @return a new collection parsed from str
+	 * @param <T>       the type of item in each Iterable
+	 * @param <I>       the Iterable of T type this holds
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> withLegible(ObjPredicate<T> filter,
+																				   ObjToSameFunction<T> editor,
+																				   String str,
+																				   String delimiter,
+																				   PartialParser<I> parser,
+																				   boolean brackets) {
+		FilteredIterableSet<T, I> c = new FilteredIterableSet<>(filter, editor);
+		if(brackets)
+			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
+		else
+			c.addLegible(str, delimiter, parser);
+		return c;
+	}
+
+	/**
+	 * Creates a new HolderSet using {@code extractor} and fills it by calling
+	 * {@link #addLegible(String, String, PartialParser, int, int)}
+	 * with the other five parameters as-is.
+	 *
+	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param str a String that will have the given section parsed
+	 * @param delimiter the delimiter between items in str
+	 * @param parser a PartialParser that returns an {@code I} item from a section of {@code str}
+	 * @param offset the first position to parse in str, inclusive
+	 * @param length how many chars to parse, starting from offset
+	 * @return a new collection parsed from str
+	 * @param <T>       the type of item in each Iterable
+	 * @param <I>       the Iterable of T type this holds
+	 */
+	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> withLegible(ObjPredicate<T> filter,
+																				   ObjToSameFunction<T> editor,
+																				   String str,
+																				   String delimiter,
+																				   PartialParser<I> parser,
+																				   int offset,
+																				   int length) {
+		FilteredIterableSet<T, I> c = new FilteredIterableSet<>(filter, editor);
+		c.addLegible(str, delimiter, parser, offset, length);
+		return c;
 	}
 }
