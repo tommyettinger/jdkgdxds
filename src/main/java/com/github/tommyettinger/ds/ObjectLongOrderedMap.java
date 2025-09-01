@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.support.sort.LongComparators;
 
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
+import com.github.tommyettinger.ds.support.util.PartialParser;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -1070,5 +1071,80 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		map.put(key2, value2);
 		map.put(key3, value3);
 		return map;
+	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str} with the given PartialParser for keys,
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and
+	 * the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 */
+	public static <K> ObjectLongOrderedMap<K> withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator,
+												   PartialParser<K> keyParser) {
+		return withLegible(str, entrySeparator, keyValueSeparator, keyParser, false);
+	}
+	/**
+	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
+	 * chars) with the given PartialParser for keys, with entries separated by {@code entrySeparator},
+	 * such as {@code ", "} and the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
+	 */
+	public static <K> ObjectLongOrderedMap<K> withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator,
+												   PartialParser<K> keyParser,
+												   boolean brackets) {
+		ObjectLongOrderedMap<K> m = new ObjectLongOrderedMap<>();
+		if(brackets)
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 1, str.length() - 1);
+		else
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 0, -1);
+		return m;
+	}
+
+	/**
+	 * Creates a new map by parsing the given subrange of {@code str} with the given PartialParser for keys,
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and the keys separated from values
+	 * by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public static <K> ObjectLongOrderedMap<K> withLegible(String str,
+												   String entrySeparator,
+												   String keyValueSeparator,
+												   PartialParser<K> keyParser,
+												   int offset,
+												   int length) {
+		ObjectLongOrderedMap<K> m = new ObjectLongOrderedMap<>();
+		m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, offset, length);
+		return m;
 	}
 }
