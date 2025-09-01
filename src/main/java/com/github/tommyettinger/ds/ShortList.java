@@ -16,8 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.ds.support.sort.ByteComparator;
-import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.function.ShortToShortFunction;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;

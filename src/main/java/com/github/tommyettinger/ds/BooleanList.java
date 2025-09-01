@@ -22,7 +22,6 @@ import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.function.BooleanPredicate;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Random;

@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 
 import java.io.IOException;
 import java.util.Objects;
