@@ -1121,4 +1121,62 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 		map.put(key3, value3);
 		return map;
 	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str},
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and
+	 * the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 */
+	public static IntLongOrderedMap withLegible(String str,
+										  String entrySeparator,
+										  String keyValueSeparator) {
+		return withLegible(str, entrySeparator, keyValueSeparator, false);
+	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
+	 * chars), with entries separated by {@code entrySeparator},
+	 * such as {@code ", "} and the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
+	 */
+	public static IntLongOrderedMap withLegible(String str,
+										  String entrySeparator,
+										  String keyValueSeparator,
+										  boolean brackets) {
+		IntLongOrderedMap m = new IntLongOrderedMap();
+		if(brackets)
+			m.putLegible(str, entrySeparator, keyValueSeparator, 1, str.length() - 1);
+		else
+			m.putLegible(str, entrySeparator, keyValueSeparator, 0, -1);
+		return m;
+	}
+
+	/**
+	 * Creates a new map by parsing the given subrange of {@code str},
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and the keys separated from values
+	 * by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public static IntLongOrderedMap withLegible(String str,
+										  String entrySeparator,
+										  String keyValueSeparator,
+										  int offset,
+										  int length) {
+		IntLongOrderedMap m = new IntLongOrderedMap();
+		m.putLegible(str, entrySeparator, keyValueSeparator, offset, length);
+		return m;
+	}
 }
