@@ -1139,7 +1139,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	}
 
 	/**
-	 * Calls {@link #withLegible(ObjToObjFunction, String, String, PartialParser, boolean)} with brackets set to false.
+	 * Calls {@link #parse(ObjToObjFunction, String, String, PartialParser, boolean)} with brackets set to false.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
@@ -1148,8 +1148,8 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @param <T>       the type of item, typically inferred
 	 * @param <K>       the type of keys that extractor pulls from T items
 	 */
-	public static <T, K> HolderSet<T, K> withLegible(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser) {
-		return withLegible(extractor, str, delimiter, parser, false);
+	public static <T, K> HolderSet<T, K> parse(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser) {
+		return parse(extractor, str, delimiter, parser, false);
 	}
 
 	/**
@@ -1167,7 +1167,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @param <T>       the type of item, typically inferred
 	 * @param <K>       the type of keys that extractor pulls from T items
 	 */
-	public static <T, K> HolderSet<T, K> withLegible(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser, boolean brackets) {
+	public static <T, K> HolderSet<T, K> parse(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser, boolean brackets) {
 		HolderSet<T, K> c = new HolderSet<>(extractor);
 		if(brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
@@ -1191,7 +1191,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @param <T>       the type of item, typically inferred
 	 * @param <K>       the type of keys that extractor pulls from T items
 	 */
-	public static <T, K> HolderSet<T, K> withLegible(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser, int offset, int length) {
+	public static <T, K> HolderSet<T, K> parse(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser, int offset, int length) {
 		HolderSet<T, K> c = new HolderSet<>(extractor);
 		c.addLegible(str, delimiter, parser, offset, length);
 		return c;

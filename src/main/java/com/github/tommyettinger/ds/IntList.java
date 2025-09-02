@@ -1467,13 +1467,13 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
-	public static IntList withLegible(String str, String delimiter) {
-		return withLegible(str, delimiter, false);
+	public static IntList parse(String str, String delimiter) {
+		return parse(str, delimiter, false);
 	}
 
 	/**
@@ -1485,7 +1485,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static IntList withLegible(String str, String delimiter, boolean brackets) {
+	public static IntList parse(String str, String delimiter, boolean brackets) {
 		IntList c = new IntList();
 		if(brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
@@ -1503,7 +1503,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static IntList withLegible(String str, String delimiter, int offset, int length) {
+	public static IntList parse(String str, String delimiter, int offset, int length) {
 		IntList c = new IntList();
 		c.addLegible(str, delimiter, offset, length);
 		return c;

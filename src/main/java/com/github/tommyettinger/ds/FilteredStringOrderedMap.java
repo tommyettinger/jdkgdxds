@@ -613,7 +613,6 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V> FilteredStringOrderedMap<V> with(CharFilter filter, String key0, V value0, Object... rest) {
 		FilteredStringOrderedMap<V> map = new FilteredStringOrderedMap<>(filter, 1 + (rest.length >>> 1));
 		map.put(key0, value0);

@@ -431,14 +431,14 @@ public class FilteredStringSet extends ObjectSet<String> {
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, PartialParser, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
 	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
-	public static FilteredStringSet withLegible(CharFilter filter, String str, String delimiter) {
-		return withLegible(filter, str, delimiter, false);
+	public static FilteredStringSet parse(CharFilter filter, String str, String delimiter) {
+		return parse(filter, str, delimiter, false);
 	}
 
 	/**
@@ -453,7 +453,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static FilteredStringSet withLegible(CharFilter filter, String str, String delimiter, boolean brackets) {
+	public static FilteredStringSet parse(CharFilter filter, String str, String delimiter, boolean brackets) {
 		FilteredStringSet c = new FilteredStringSet(filter);
 		if(brackets)
 			c.addLegible(str, delimiter, PartialParser.DEFAULT_STRING, 1, str.length() - 1);
@@ -474,7 +474,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static FilteredStringSet withLegible(CharFilter filter, String str, String delimiter, int offset, int length) {
+	public static FilteredStringSet parse(CharFilter filter, String str, String delimiter, int offset, int length) {
 		FilteredStringSet c = new FilteredStringSet(filter);
 		c.addLegible(str, delimiter, PartialParser.DEFAULT_STRING, offset, length);
 		return c;

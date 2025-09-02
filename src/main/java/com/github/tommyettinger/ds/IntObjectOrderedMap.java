@@ -1130,11 +1130,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
-	public static <V> IntObjectOrderedMap<V> withLegible(String str,
+	public static <V> IntObjectOrderedMap<V> parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator,
 												   PartialParser<V> valueParser) {
-		return withLegible(str, entrySeparator, keyValueSeparator, valueParser, false);
+		return parse(str, entrySeparator, keyValueSeparator, valueParser, false);
 	}
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
@@ -1151,7 +1151,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
-	public static <V> IntObjectOrderedMap<V> withLegible(String str,
+	public static <V> IntObjectOrderedMap<V> parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator,
 												   PartialParser<V> valueParser,
@@ -1180,7 +1180,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param offset            the first position to read parseable text from in {@code str}
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
-	public static <V> IntObjectOrderedMap<V> withLegible(String str,
+	public static <V> IntObjectOrderedMap<V> parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator,
 												   PartialParser<V> valueParser,

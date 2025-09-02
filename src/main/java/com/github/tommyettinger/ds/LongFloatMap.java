@@ -2083,10 +2083,10 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 */
-	public static LongFloatMap withLegible(String str,
+	public static LongFloatMap parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator) {
-		return withLegible(str, entrySeparator, keyValueSeparator, false);
+		return parse(str, entrySeparator, keyValueSeparator, false);
 	}
 
 	/**
@@ -2099,7 +2099,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
-	public static LongFloatMap withLegible(String str,
+	public static LongFloatMap parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator,
 												   boolean brackets) {
@@ -2122,7 +2122,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @param offset            the first position to read parseable text from in {@code str}
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
-	public static LongFloatMap withLegible(String str,
+	public static LongFloatMap parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator,
 												   int offset,

@@ -1388,14 +1388,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, PartialParser, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 */
-	public static <T> ObjectList<T> withLegible(String str, String delimiter, PartialParser<T> parser) {
-		return withLegible(str, delimiter, parser, false);
+	public static <T> ObjectList<T> parse(String str, String delimiter, PartialParser<T> parser) {
+		return parse(str, delimiter, parser, false);
 	}
 
 	/**
@@ -1409,7 +1409,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static <T> ObjectList<T> withLegible(String str, String delimiter, PartialParser<T> parser, boolean brackets) {
+	public static <T> ObjectList<T> parse(String str, String delimiter, PartialParser<T> parser, boolean brackets) {
 		ObjectList<T> c = new ObjectList<>();
 		if(brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
@@ -1429,7 +1429,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static <T> ObjectList<T> withLegible(String str, String delimiter, PartialParser<T> parser, int offset, int length) {
+	public static <T> ObjectList<T> parse(String str, String delimiter, PartialParser<T> parser, int offset, int length) {
 		ObjectList<T> c = new ObjectList<>();
 		c.addLegible(str, delimiter, parser, offset, length);
 		return c;

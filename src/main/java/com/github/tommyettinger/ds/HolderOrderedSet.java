@@ -816,7 +816,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	}
 
 	/**
-	 * Calls {@link #withLegible(ObjToObjFunction, String, String, PartialParser, boolean)} with brackets set to false.
+	 * Calls {@link #parse(ObjToObjFunction, String, String, PartialParser, boolean)} with brackets set to false.
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
@@ -825,8 +825,8 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param <T>       the type of item, typically inferred
 	 * @param <K>       the type of keys that extractor pulls from T items
 	 */
-	public static <T, K> HolderOrderedSet<T, K> withLegible(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser) {
-		return withLegible(extractor, str, delimiter, parser, false);
+	public static <T, K> HolderOrderedSet<T, K> parse(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser) {
+		return parse(extractor, str, delimiter, parser, false);
 	}
 
 	/**
@@ -844,7 +844,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param <T>       the type of item, typically inferred
 	 * @param <K>       the type of keys that extractor pulls from T items
 	 */
-	public static <T, K> HolderOrderedSet<T, K> withLegible(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser, boolean brackets) {
+	public static <T, K> HolderOrderedSet<T, K> parse(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser, boolean brackets) {
 		HolderOrderedSet<T, K> c = new HolderOrderedSet<>(extractor);
 		if(brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
@@ -868,7 +868,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param <T>       the type of item, typically inferred
 	 * @param <K>       the type of keys that extractor pulls from T items
 	 */
-	public static <T, K> HolderOrderedSet<T, K> withLegible(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser, int offset, int length) {
+	public static <T, K> HolderOrderedSet<T, K> parse(ObjToObjFunction<T, K> extractor, String str, String delimiter, PartialParser<T> parser, int offset, int length) {
 		HolderOrderedSet<T, K> c = new HolderOrderedSet<>(extractor);
 		c.addLegible(str, delimiter, parser, offset, length);
 		return c;

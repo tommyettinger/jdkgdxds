@@ -348,7 +348,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V> CaseInsensitiveMap<V> with(CharSequence key0, V value0, Object... rest) {
 		CaseInsensitiveMap<V> map = new CaseInsensitiveMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);

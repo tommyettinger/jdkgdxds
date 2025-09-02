@@ -1087,11 +1087,11 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
 	 */
-	public static <K> ObjectIntOrderedMap<K> withLegible(String str,
+	public static <K> ObjectIntOrderedMap<K> parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator,
 												   PartialParser<K> keyParser) {
-		return withLegible(str, entrySeparator, keyValueSeparator, keyParser, false);
+		return parse(str, entrySeparator, keyValueSeparator, keyParser, false);
 	}
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
@@ -1108,7 +1108,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
-	public static <K> ObjectIntOrderedMap<K> withLegible(String str,
+	public static <K> ObjectIntOrderedMap<K> parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator,
 												   PartialParser<K> keyParser,
@@ -1137,7 +1137,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param offset            the first position to read parseable text from in {@code str}
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
-	public static <K> ObjectIntOrderedMap<K> withLegible(String str,
+	public static <K> ObjectIntOrderedMap<K> parse(String str,
 												   String entrySeparator,
 												   String keyValueSeparator,
 												   PartialParser<K> keyParser,

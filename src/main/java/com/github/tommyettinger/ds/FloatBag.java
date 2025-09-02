@@ -377,13 +377,13 @@ public class FloatBag extends FloatList {
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
-	public static FloatBag withLegible(String str, String delimiter) {
-		return withLegible(str, delimiter, false);
+	public static FloatBag parse(String str, String delimiter) {
+		return parse(str, delimiter, false);
 	}
 
 	/**
@@ -395,7 +395,7 @@ public class FloatBag extends FloatList {
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static FloatBag withLegible(String str, String delimiter, boolean brackets) {
+	public static FloatBag parse(String str, String delimiter, boolean brackets) {
 		FloatBag c = new FloatBag();
 		if(brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
@@ -413,7 +413,7 @@ public class FloatBag extends FloatList {
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static FloatBag withLegible(String str, String delimiter, int offset, int length) {
+	public static FloatBag parse(String str, String delimiter, int offset, int length) {
 		FloatBag c = new FloatBag();
 		c.addLegible(str, delimiter, offset, length);
 		return c;

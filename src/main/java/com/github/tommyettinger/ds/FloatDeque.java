@@ -3133,13 +3133,13 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
-	public static FloatDeque withLegible(String str, String delimiter) {
-		return withLegible(str, delimiter, false);
+	public static FloatDeque parse(String str, String delimiter) {
+		return parse(str, delimiter, false);
 	}
 
 	/**
@@ -3151,7 +3151,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static FloatDeque withLegible(String str, String delimiter, boolean brackets) {
+	public static FloatDeque parse(String str, String delimiter, boolean brackets) {
 		FloatDeque c = new FloatDeque();
 		if(brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
@@ -3169,7 +3169,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static FloatDeque withLegible(String str, String delimiter, int offset, int length) {
+	public static FloatDeque parse(String str, String delimiter, int offset, int length) {
 		FloatDeque c = new FloatDeque();
 		c.addLegible(str, delimiter, offset, length);
 		return c;

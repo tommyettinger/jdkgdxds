@@ -1148,10 +1148,10 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 */
-	public static LongLongOrderedMap withLegible(String str,
+	public static LongLongOrderedMap parse(String str,
 												  String entrySeparator,
 												  String keyValueSeparator) {
-		return withLegible(str, entrySeparator, keyValueSeparator, false);
+		return parse(str, entrySeparator, keyValueSeparator, false);
 	}
 
 	/**
@@ -1164,7 +1164,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
-	public static LongLongOrderedMap withLegible(String str,
+	public static LongLongOrderedMap parse(String str,
 												  String entrySeparator,
 												  String keyValueSeparator,
 												  boolean brackets) {
@@ -1187,7 +1187,7 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param offset            the first position to read parseable text from in {@code str}
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
-	public static LongLongOrderedMap withLegible(String str,
+	public static LongLongOrderedMap parse(String str,
 												  String entrySeparator,
 												  String keyValueSeparator,
 												  int offset,

@@ -450,13 +450,13 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, PartialParser, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
-	public static CaseInsensitiveOrderedSet withLegible(String str, String delimiter) {
-		return withLegible(str, delimiter, false);
+	public static CaseInsensitiveOrderedSet parse(String str, String delimiter) {
+		return parse(str, delimiter, false);
 	}
 
 	/**
@@ -469,7 +469,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static CaseInsensitiveOrderedSet withLegible(String str, String delimiter, boolean brackets) {
+	public static CaseInsensitiveOrderedSet parse(String str, String delimiter, boolean brackets) {
 		CaseInsensitiveOrderedSet c = new CaseInsensitiveOrderedSet();
 		if(brackets)
 			c.addLegible(str, delimiter, PartialParser.DEFAULT_CHAR_SEQUENCE, 1, str.length() - 1);
@@ -488,7 +488,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static CaseInsensitiveOrderedSet withLegible(String str, String delimiter, int offset, int length) {
+	public static CaseInsensitiveOrderedSet parse(String str, String delimiter, int offset, int length) {
 		CaseInsensitiveOrderedSet c = new CaseInsensitiveOrderedSet();
 		c.addLegible(str, delimiter, PartialParser.DEFAULT_CHAR_SEQUENCE, offset, length);
 		return c;

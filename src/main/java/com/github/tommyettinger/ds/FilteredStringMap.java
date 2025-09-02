@@ -426,7 +426,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V> FilteredStringMap<V> with(CharFilter filter, String key0, V value0, Object... rest) {
 		FilteredStringMap<V> map = new FilteredStringMap<>(filter, 1 + (rest.length >>> 1));
 		map.put(key0, value0);

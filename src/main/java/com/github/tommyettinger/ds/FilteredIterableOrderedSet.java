@@ -662,7 +662,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	}
 
 	/**
-	 * Calls {@link #withLegible(ObjPredicate, ObjToSameFunction, String, String, PartialParser, boolean)} with brackets set to false.
+	 * Calls {@link #parse(ObjPredicate, ObjToSameFunction, String, String, PartialParser, boolean)} with brackets set to false.
 	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
 	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
 	 * @param str a String that will be parsed in full
@@ -672,12 +672,12 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param <T>       the type of item in each Iterable
 	 * @param <I>       the Iterable of T type this holds
 	 */
-	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> withLegible(ObjPredicate<T> filter,
+	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> parse(ObjPredicate<T> filter,
 																				   ObjToSameFunction<T> editor,
 																				   String str,
 																				   String delimiter,
 																				   PartialParser<I> parser) {
-		return withLegible(filter, editor, str, delimiter, parser, false);
+		return parse(filter, editor, str, delimiter, parser, false);
 	}
 
 	/**
@@ -696,7 +696,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param <T>       the type of item in each Iterable
 	 * @param <I>       the Iterable of T type this holds
 	 */
-	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> withLegible(ObjPredicate<T> filter,
+	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> parse(ObjPredicate<T> filter,
 																				   ObjToSameFunction<T> editor,
 																				   String str,
 																				   String delimiter,
@@ -726,7 +726,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @param <T>       the type of item in each Iterable
 	 * @param <I>       the Iterable of T type this holds
 	 */
-	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> withLegible(ObjPredicate<T> filter,
+	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> parse(ObjPredicate<T> filter,
 																				   ObjToSameFunction<T> editor,
 																				   String str,
 																				   String delimiter,

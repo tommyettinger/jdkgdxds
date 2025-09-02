@@ -325,14 +325,14 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, PartialParser, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 */
-	public static <T> IdentityOrderedSet<T> withLegible(String str, String delimiter, PartialParser<T> parser) {
-		return withLegible(str, delimiter, parser, false);
+	public static <T> IdentityOrderedSet<T> parse(String str, String delimiter, PartialParser<T> parser) {
+		return parse(str, delimiter, parser, false);
 	}
 
 	/**
@@ -346,7 +346,7 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static <T> IdentityOrderedSet<T> withLegible(String str, String delimiter, PartialParser<T> parser, boolean brackets) {
+	public static <T> IdentityOrderedSet<T> parse(String str, String delimiter, PartialParser<T> parser, boolean brackets) {
 		IdentityOrderedSet<T> c = new IdentityOrderedSet<>();
 		if(brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
@@ -366,7 +366,7 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static <T> IdentityOrderedSet<T> withLegible(String str, String delimiter, PartialParser<T> parser, int offset, int length) {
+	public static <T> IdentityOrderedSet<T> parse(String str, String delimiter, PartialParser<T> parser, int offset, int length) {
 		IdentityOrderedSet<T> c = new IdentityOrderedSet<>();
 		c.addLegible(str, delimiter, parser, offset, length);
 		return c;

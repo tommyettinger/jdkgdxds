@@ -431,7 +431,6 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V> CaseInsensitiveOrderedMap<V> with(CharSequence key0, V value0, Object... rest) {
 		CaseInsensitiveOrderedMap<V> map = new CaseInsensitiveOrderedMap<>(1 + (rest.length >>> 1));
 		map.put(key0, value0);

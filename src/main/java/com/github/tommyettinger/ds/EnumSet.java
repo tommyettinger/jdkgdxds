@@ -854,7 +854,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, PartialParser, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
 	 * <br>
 	 * The {@code parser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
 	 *
@@ -863,8 +863,8 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param parser a PartialParser that returns an {@link Enum} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 */
-	public static EnumSet withLegible(String str, String delimiter, PartialParser<Enum<?>> parser) {
-		return withLegible(str, delimiter, parser, false);
+	public static EnumSet parse(String str, String delimiter, PartialParser<Enum<?>> parser) {
+		return parse(str, delimiter, parser, false);
 	}
 
 	/**
@@ -880,7 +880,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static EnumSet withLegible(String str, String delimiter, PartialParser<Enum<?>> parser, boolean brackets) {
+	public static EnumSet parse(String str, String delimiter, PartialParser<Enum<?>> parser, boolean brackets) {
 		EnumSet c = new EnumSet();
 		if(brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
@@ -902,7 +902,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static EnumSet withLegible(String str, String delimiter, PartialParser<Enum<?>> parser, int offset, int length) {
+	public static EnumSet parse(String str, String delimiter, PartialParser<Enum<?>> parser, int offset, int length) {
 		EnumSet c = new EnumSet();
 		c.addLegible(str, delimiter, parser, offset, length);
 		return c;

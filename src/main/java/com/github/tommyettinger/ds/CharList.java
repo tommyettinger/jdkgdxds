@@ -1886,13 +1886,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
-	public static CharList withLegible(String str, String delimiter) {
-		return withLegible(str, delimiter, false);
+	public static CharList parse(String str, String delimiter) {
+		return parse(str, delimiter, false);
 	}
 
 	/**
@@ -1904,7 +1904,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static CharList withLegible(String str, String delimiter, boolean brackets) {
+	public static CharList parse(String str, String delimiter, boolean brackets) {
 		CharList c = new CharList();
 		if(brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
@@ -1922,7 +1922,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static CharList withLegible(String str, String delimiter, int offset, int length) {
+	public static CharList parse(String str, String delimiter, int offset, int length) {
 		CharList c = new CharList();
 		c.addLegible(str, delimiter, offset, length);
 		return c;

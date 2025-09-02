@@ -1907,12 +1907,12 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
-	public static <K, V> ObjectObjectMap<K, V> withLegible(String str,
+	public static <K, V> ObjectObjectMap<K, V> parse(String str,
 														   String entrySeparator,
 														   String keyValueSeparator,
 														   PartialParser<K> keyParser,
 														   PartialParser<V> valueParser) {
-		return withLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, false);
+		return parse(str, entrySeparator, keyValueSeparator, keyParser, valueParser, false);
 	}
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
@@ -1930,7 +1930,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
-	public static <K, V> ObjectObjectMap<K, V> withLegible(String str,
+	public static <K, V> ObjectObjectMap<K, V> parse(String str,
 														   String entrySeparator,
 														   String keyValueSeparator,
 														   PartialParser<K> keyParser,
@@ -1961,7 +1961,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param offset            the first position to read parseable text from in {@code str}
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
-	public static <K, V> ObjectObjectMap<K, V> withLegible(String str,
+	public static <K, V> ObjectObjectMap<K, V> parse(String str,
 														   String entrySeparator,
 														   String keyValueSeparator,
 														   PartialParser<K> keyParser,

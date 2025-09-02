@@ -451,7 +451,6 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * @param <V>    the type of values, inferred from value0
 	 * @return a new map containing the given keys and values
 	 */
-	@SuppressWarnings("unchecked")
 	public static <K, I extends Iterable<K>, V> FilteredIterableMap<K, I, V> with(ObjPredicate<K> filter, ObjToSameFunction<K> editor, I key0, V value0, Object... rest) {
 		FilteredIterableMap<K, I, V> map = new FilteredIterableMap<>(filter, editor, 1 + (rest.length >>> 1));
 		map.put(key0, value0);

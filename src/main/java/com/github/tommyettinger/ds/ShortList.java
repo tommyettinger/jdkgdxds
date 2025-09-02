@@ -1465,13 +1465,13 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Calls {@link #withLegible(String, String, boolean)} with brackets set to false.
+	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
 	 * @param str a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
-	public static ShortList withLegible(String str, String delimiter) {
-		return withLegible(str, delimiter, false);
+	public static ShortList parse(String str, String delimiter) {
+		return parse(str, delimiter, false);
 	}
 
 	/**
@@ -1483,7 +1483,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static ShortList withLegible(String str, String delimiter, boolean brackets) {
+	public static ShortList parse(String str, String delimiter, boolean brackets) {
 		ShortList c = new ShortList();
 		if(brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
@@ -1501,7 +1501,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static ShortList withLegible(String str, String delimiter, int offset, int length) {
+	public static ShortList parse(String str, String delimiter, int offset, int length) {
 		ShortList c = new ShortList();
 		c.addLegible(str, delimiter, offset, length);
 		return c;
