@@ -1136,6 +1136,7 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 										   String keyValueSeparator) {
 		return withLegible(str, entrySeparator, keyValueSeparator, false);
 	}
+
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
 	 * chars), with entries separated by {@code entrySeparator},
