@@ -18,6 +18,8 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.PartialParser;
+import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -1064,6 +1066,125 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 		map.put(key0, value0);
 		map.putPairs(rest);
 		return map;
+	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str} with the given PartialParser for keys and
+	 * for values, with entries separated by {@code entrySeparator}, such as {@code ", "} and
+	 * the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
+	 */
+	public static <V> EnumOrderedMap<V> parse(String str,
+									   String entrySeparator,
+									   String keyValueSeparator,
+									   PartialParser<Enum<?>> keyParser,
+									   PartialParser<V> valueParser) {
+		return parse(str, entrySeparator, keyValueSeparator, keyParser, valueParser, false);
+	}
+	/**
+	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
+	 * chars) with the given PartialParser for keys and for values, with entries separated by {@code entrySeparator},
+	 * such as {@code ", "} and the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
+	 */
+	public static <V> EnumOrderedMap<V> parse(String str,
+									   String entrySeparator,
+									   String keyValueSeparator,
+									   PartialParser<Enum<?>> keyParser,
+									   PartialParser<V> valueParser,
+									   boolean brackets) {
+		EnumOrderedMap<V> m = new EnumOrderedMap<>();
+		if(brackets)
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, 1, str.length() - 1);
+		else
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, 0, -1);
+		return m;
+	}
+
+	/**
+	 * Creates a new map by parsing the given subrange of {@code str} with the given PartialParser for keys and for
+	 * values, with entries separated by {@code entrySeparator}, such as {@code ", "} and the keys separated from values
+	 * by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * Various {@link PartialParser} instances are defined as constants, such as
+	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
+	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public static <V> EnumOrderedMap<V> parse(String str,
+									   String entrySeparator,
+									   String keyValueSeparator,
+									   PartialParser<Enum<?>> keyParser,
+									   PartialParser<V> valueParser,
+									   int offset,
+									   int length) {
+		EnumOrderedMap<V> m = new EnumOrderedMap<>();
+		m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, offset, length);
+		return m;
+	}
+
+	/**
+	 * Constructs an empty map given the types as generic type arguments; an alias for {@link #with()}.
+	 *
+	 * @param <V> the type of values
+	 * @return a new map containing nothing
+	 */
+	public static <V> EnumOrderedMap<V> of() {
+		return with();
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value; an alias for {@link #with(Enum, Object)}.
+	 *
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @param <V>    the type of value0
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static <V> EnumOrderedMap<V> of(Enum<?> key0, V value0) {
+		return with(key0, value0);
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values; an alias for {@link #with(Enum, Object, Object...)}.
+	 *
+	 * @param key0   the first key (an Enum)
+	 * @param value0 the first value; will be used to determine the type of all values
+	 * @param rest   an array or varargs of alternating Enum, V, Enum, V... elements
+	 * @param <V>    the type of values, inferred from value0
+	 * @return a new map containing the given keys and values
+	 */
+	public static <V> EnumOrderedMap<V> of(Enum<?> key0, V value0, Object... rest) {
+		return with(key0, value0, rest);
 	}
 
 	/**
