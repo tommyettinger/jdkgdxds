@@ -21,6 +21,8 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
+import com.github.tommyettinger.ds.support.util.PartialParser;
+import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -991,6 +993,75 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 		map.put(key0, value0.intValue());
 		map.putPairs(rest);
 		return map;
+	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str} with the given PartialParser for keys,
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and
+	 * the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
+	 */
+	public static EnumIntOrderedMap parse(String str,
+									String entrySeparator,
+									String keyValueSeparator,
+									PartialParser<Enum<?>> keyParser) {
+		return parse(str, entrySeparator, keyValueSeparator, keyParser, false);
+	}
+	/**
+	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
+	 * chars) with the given PartialParser for keys, with entries separated by {@code entrySeparator},
+	 * such as {@code ", "} and the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
+	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
+	 */
+	public static EnumIntOrderedMap parse(String str,
+									String entrySeparator,
+									String keyValueSeparator,
+									PartialParser<Enum<?>> keyParser,
+									boolean brackets) {
+		EnumIntOrderedMap m = new EnumIntOrderedMap();
+		if(brackets)
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 1, str.length() - 1);
+		else
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 0, -1);
+		return m;
+	}
+
+	/**
+	 * Creates a new map by parsing the given subrange of {@code str} with the given PartialParser for keys,
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and the keys separated from values
+	 * by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public static EnumIntOrderedMap parse(String str,
+									String entrySeparator,
+									String keyValueSeparator,
+									PartialParser<Enum<?>> keyParser,
+									int offset,
+									int length) {
+		EnumIntOrderedMap m = new EnumIntOrderedMap();
+		m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, offset, length);
+		return m;
 	}
 
 	/**
