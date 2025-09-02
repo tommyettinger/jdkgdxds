@@ -1081,7 +1081,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param str               a String containing parseable text
 	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public static <V> EnumOrderedMap<V> parse(String str,
@@ -1104,7 +1104,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param str               a String containing parseable text
 	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
@@ -1135,7 +1135,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param str               a String containing parseable text
 	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
-	 * @param keyParser         a PartialParser that returns a {@code K} key from a section of {@code str}
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 * @param offset            the first position to read parseable text from in {@code str}
 	 * @param length            how many chars to read; -1 is treated as maximum length

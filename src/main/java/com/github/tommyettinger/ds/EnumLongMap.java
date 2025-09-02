@@ -1856,6 +1856,75 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	/**
+	 * Creates a new map by parsing all of {@code str} with the given PartialParser for keys,
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and
+	 * the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
+	 */
+	public static EnumLongMap parse(String str,
+											 String entrySeparator,
+											 String keyValueSeparator,
+											 PartialParser<Enum<?>> keyParser) {
+		return parse(str, entrySeparator, keyValueSeparator, keyParser, false);
+	}
+	/**
+	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
+	 * chars) with the given PartialParser for keys, with entries separated by {@code entrySeparator},
+	 * such as {@code ", "} and the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
+	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
+	 */
+	public static EnumLongMap parse(String str,
+											 String entrySeparator,
+											 String keyValueSeparator,
+											 PartialParser<Enum<?>> keyParser,
+											 boolean brackets) {
+		EnumLongMap m = new EnumLongMap();
+		if(brackets)
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 1, str.length() - 1);
+		else
+			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 0, -1);
+		return m;
+	}
+
+	/**
+	 * Creates a new map by parsing the given subrange of {@code str} with the given PartialParser for keys,
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and the keys separated from values
+	 * by {@code keyValueSeparator}, such as {@code "="}.
+	 * <br>
+	 * The {@code keyParser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public static EnumLongMap parse(String str,
+											 String entrySeparator,
+											 String keyValueSeparator,
+											 PartialParser<Enum<?>> keyParser,
+											 int offset,
+											 int length) {
+		EnumLongMap m = new EnumLongMap();
+		m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, offset, length);
+		return m;
+	}
+
+	/**
 	 * Constructs an empty map.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.
