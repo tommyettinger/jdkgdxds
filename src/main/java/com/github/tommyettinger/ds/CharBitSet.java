@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.CharAppender;
 import com.github.tommyettinger.ds.support.util.CharIterator;
@@ -116,6 +117,31 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 		}
 		bits = new int[2048];
 		addAll(toCopy, off, length);
+	}
+
+	/**
+	 * Allows passing an int array either to be treated as char contents to enter (ignoring any ints outside the valid
+	 * char range) or as the raw bits that are used internally (which can be accessed with {@link #getRawBits()}.
+	 * Note that {@code ints} should always have a length of 1 or more; otherwise, it won't be used directly (or if
+	 * {@code useAsRawBits} is false, it won't have any contents copied out).
+	 *
+	 * @param ints depending on {@code useAsRawBits}, this will be used as either char items or raw bits
+	 * @param useAsRawBits if true, {@code ints} will be used as raw bits and used directly, not copied as char items
+	 */
+	public CharBitSet(int[] ints, boolean useAsRawBits) {
+		if (ints != null) {
+			if (useAsRawBits) {
+				if (ints.length != 0) {
+					this.bits = ints;
+				} else
+					this.bits = new int[1];
+			} else {
+				this.bits = new int[2048];
+				addAll(ints);
+			}
+		} else {
+			this.bits = new int[1];
+		}
 	}
 
 	/**
@@ -751,6 +777,21 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 		return toString(", ", true);
 	}
 
+	/**
+	 * A convenience method that returns a String of Java source that constructs this CharBitSet directly from its raw
+	 * bits, without any extra steps involved.
+	 * <br>
+	 * This is intended to allow tests on one platform to set up CharBitSet values that store the results of some test,
+	 * such as {@link Character#isLetter(char)}, and to load those results on any platform without having to recalculate
+	 * the results (potentially with incorrect results on other platforms). Notably, GWT doesn't calculate many Unicode
+	 * queries correctly (at least according to their JVM documentation), and this can store their results for a recent
+	 * Unicode version by running on the most recent desktop JDK, and storing to be loaded on other platforms.
+	 *
+	 * @return a String of Java code that can be used to construct an exact copy of this CharBitSet
+	 */
+	public String toJavaCode() {
+		return "new CharBitSet(new int[]{" + Base.joinReadable(",", bits) + "}, true)";
+	}
 
 	public static class CharBitSetIterator implements CharIterator {
 		static private final int INDEX_ILLEGAL = -1, INDEX_ZERO = -1;
