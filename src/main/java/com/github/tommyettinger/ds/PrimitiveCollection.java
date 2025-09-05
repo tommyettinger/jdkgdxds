@@ -456,7 +456,7 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link IntAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better yet,
 		 * use {@link IntAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
@@ -484,9 +484,9 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link IntAppender}
-		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * Appends to an Appendable CharSequence from the contents of this PrimitiveCollection, but uses the given
+		 * {@link IntAppender} to convert each item to a customizable representation and append them to {@code sb}. To use
+		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better yet,
 		 * use {@link IntAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param sb        a StringBuilder or similar that this can append to
@@ -1065,7 +1065,7 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link LongAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better yet,
 		 * use {@link LongAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
@@ -1093,8 +1093,8 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link LongAppender}
-		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * Appends to an Appendable CharSequence from the contents of this PrimitiveCollection, but uses the given
+		 * {@link LongAppender} to convert each item to a customizable representation and append them to {@code sb}. To use
 		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better
 		 * yet, use {@link LongAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
@@ -1653,7 +1653,7 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link FloatAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * the default String representation, you can use {@code Base.BASE10::appendGeneral} as an appender, or better yet,
 		 * use {@link FloatAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
@@ -1681,8 +1681,8 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link FloatAppender}
-		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * Appends to an Appendable CharSequence from the contents of this PrimitiveCollection, but uses the given
+		 * {@link FloatAppender} to convert each item to a customizable representation and append them to {@code sb}. To use
 		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better
 		 * yet, use {@link FloatAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
@@ -2236,7 +2236,7 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link DoubleAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * the default String representation, you can use {@code Base.BASE10::appendGeneral} as an appender, or better yet,
 		 * use {@link DoubleAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
@@ -2264,8 +2264,8 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link DoubleAppender}
-		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+		 * Appends to an Appendable CharSequence from the contents of this PrimitiveCollection, but uses the given
+		 * {@link DoubleAppender} to convert each item to a customizable representation and append them to {@code sb}. To use
 		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better
 		 * yet, use {@link DoubleAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
@@ -2809,6 +2809,14 @@ public interface PrimitiveCollection<T> {
 			return toString(separator, false);
 		}
 
+		/**
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean)} using a new StringBuilder and converts it to
+		 * a new String.
+		 *
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @return a new String representing this PrimitiveCollection
+		 */
 		default String toString(String separator, boolean brackets) {
 			return appendTo(new StringBuilder(32), separator, brackets).toString();
 		}
@@ -2816,12 +2824,12 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link ShortAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better yet,
 		 * use {@link ShortAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
-		 * @param appender  a function that takes a StringBuilder and a short, and returns the modified StringBuilder
+		 * @param appender  a function that takes an Appendable CharSequence and a short, and returns the modified sequence
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets,
@@ -2829,37 +2837,54 @@ public interface PrimitiveCollection<T> {
 			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
 		}
 
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets) {
+		/**
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean, ShortAppender)} using
+		 * {@link ShortAppender#DEFAULT} to append int items.
+		 *
+		 * @param sb        a StringBuilder or similar that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+		 */
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, ShortAppender.DEFAULT);
 		}
 
 		/**
-		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link ShortAppender}
-		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
-		 * use {@link ShortAppender#DEFAULT}, which caches the above method reference when Android won't do that.
+		 * Appends to an Appendable CharSequence from the contents of this PrimitiveCollection, but uses the given
+		 * {@link ShortAppender} to convert each item to a customizable representation and append them to {@code sb}. To use
+		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better
+		 * yet, use {@link ShortAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
-		 * @param sb        a StringBuilder that this can append to
+		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
-		 * @param appender  a function that takes a StringBuilder and a short, and returns the modified StringBuilder
+		 * @param appender  a function that takes an Appendable CharSequence and a short, and returns the modified sequence
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets, ShortAppender appender) {
-			if (isEmpty()) return brackets ? sb.append("[]") : sb;
-			if (brackets) sb.append('[');
-			ShortIterator it = iterator();
-			if (it.hasNext()) {
-				while (true) {
-					appender.apply(sb, it.nextShort());
-					if (it.hasNext()) sb.append(separator);
-					else break;
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, ShortAppender appender) {
+			try {
+				if (isEmpty()){
+					if(brackets) sb.append("[]");
+					return sb;
 				}
+				if (brackets) sb.append('[');
+				ShortIterator it = iterator();
+				if (it.hasNext()) {
+					while (true) {
+						appender.apply(sb, it.nextShort());
+						if (it.hasNext()) sb.append(separator);
+						else break;
+					}
+				}
+				if (brackets) sb.append(']');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
-			if (brackets) sb.append(']');
 			return sb;
 		}
-
 
 		/**
 		 * Returns a String representing this PrimitiveCollection with three {@link Base#BASE90} digits per item,
@@ -2990,7 +3015,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
 		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
@@ -3004,7 +3029,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
 		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
@@ -3363,6 +3388,14 @@ public interface PrimitiveCollection<T> {
 			return toString(separator, false);
 		}
 
+		/**
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean)} using a new StringBuilder and converts it to
+		 * a new String.
+		 *
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @return a new String representing this PrimitiveCollection
+		 */
 		default String toString(String separator, boolean brackets) {
 			return appendTo(new StringBuilder(32), separator, brackets).toString();
 		}
@@ -3370,12 +3403,12 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link ByteAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better yet,
 		 * use {@link ByteAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
-		 * @param appender  a function that takes a StringBuilder and a byte, and returns the modified StringBuilder
+		 * @param appender  a function that takes an Appendable CharSequence and a byte, and returns the modified sequence
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets,
@@ -3383,37 +3416,54 @@ public interface PrimitiveCollection<T> {
 			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
 		}
 
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets) {
+		/**
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean, ByteAppender)} using
+		 * {@link ByteAppender#DEFAULT} to append int items.
+		 *
+		 * @param sb        a StringBuilder or similar that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+		 */
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, ByteAppender.DEFAULT);
 		}
 
 		/**
-		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link ByteAppender}
-		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
-		 * use {@link ByteAppender#DEFAULT}, which caches the above method reference when Android won't do that.
+		 * Appends to an Appendable CharSequence from the contents of this PrimitiveCollection, but uses the given
+		 * {@link ByteAppender} to convert each item to a customizable representation and append them to {@code sb}. To use
+		 * the default String representation, you can use {@code Base.BASE10::appendSigned} as an appender, or better
+		 * yet, use {@link ByteAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
-		 * @param sb        a StringBuilder that this can append to
+		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
-		 * @param appender  a function that takes a StringBuilder and a byte, and returns the modified StringBuilder
+		 * @param appender  a function that takes an Appendable CharSequence and a byte, and returns the modified sequence
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets, ByteAppender appender) {
-			if (isEmpty()) return brackets ? sb.append("[]") : sb;
-			if (brackets) sb.append('[');
-			ByteIterator it = iterator();
-			if (it.hasNext()) {
-				while (true) {
-					appender.apply(sb, it.nextByte());
-					if (it.hasNext()) sb.append(separator);
-					else break;
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, ByteAppender appender) {
+			try {
+				if (isEmpty()){
+					if(brackets) sb.append("[]");
+					return sb;
 				}
+				if (brackets) sb.append('[');
+				ByteIterator it = iterator();
+				if (it.hasNext()) {
+					while (true) {
+						appender.apply(sb, it.nextByte());
+						if (it.hasNext()) sb.append(separator);
+						else break;
+					}
+				}
+				if (brackets) sb.append(']');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
-			if (brackets) sb.append(']');
 			return sb;
 		}
-
 
 		/**
 		 * Returns a String representing this PrimitiveCollection with two {@link Base#BASE90} digits per item,
@@ -3543,7 +3593,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
 		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
@@ -3557,7 +3607,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
 		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
@@ -3916,6 +3966,14 @@ public interface PrimitiveCollection<T> {
 			return toString(separator, false);
 		}
 
+		/**
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean)} using a new StringBuilder and converts it to
+		 * a new String.
+		 *
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @return a new String representing this PrimitiveCollection
+		 */
 		default String toString(String separator, boolean brackets) {
 			return appendTo(new StringBuilder(32), separator, brackets).toString();
 		}
@@ -3923,12 +3981,12 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link CharAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * the default String representation, you can use {@code CharAppender::append} as an appender, or better yet,
 		 * use {@link CharAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
-		 * @param appender  a function that takes a StringBuilder and a char, and returns the modified StringBuilder
+		 * @param appender  a function that takes an Appendable CharSequence and a char, and returns the modified sequence
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets,
@@ -3936,37 +3994,54 @@ public interface PrimitiveCollection<T> {
 			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
 		}
 
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets) {
+		/**
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean, CharAppender)} using
+		 * {@link CharAppender#DEFAULT} to append int items.
+		 *
+		 * @param sb        a StringBuilder or similar that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+		 */
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, CharAppender.DEFAULT);
 		}
 
 		/**
-		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link CharAppender}
-		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
-		 * use {@link CharAppender#DEFAULT}, which caches the above method reference when Android won't do that.
+		 * Appends to an Appendable CharSequence from the contents of this PrimitiveCollection, but uses the given
+		 * {@link CharAppender} to convert each item to a customizable representation and append them to {@code sb}. To use
+		 * the default String representation, you can use {@code CharAppender::append} as an appender, or better
+		 * yet, use {@link CharAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
-		 * @param sb        a StringBuilder that this can append to
+		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
-		 * @param appender  a function that takes a StringBuilder and a char, and returns the modified StringBuilder
+		 * @param appender  a function that takes an Appendable CharSequence and a char, and returns the modified sequence
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets, CharAppender appender) {
-			if (isEmpty()) return brackets ? sb.append("[]") : sb;
-			if (brackets) sb.append('[');
-			CharIterator it = iterator();
-			if (it.hasNext()) {
-				while (true) {
-					appender.apply(sb, it.nextChar());
-					if (it.hasNext()) sb.append(separator);
-					else break;
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, CharAppender appender) {
+			try {
+				if (isEmpty()){
+					if(brackets) sb.append("[]");
+					return sb;
 				}
+				if (brackets) sb.append('[');
+				CharIterator it = iterator();
+				if (it.hasNext()) {
+					while (true) {
+						appender.apply(sb, it.nextChar());
+						if (it.hasNext()) sb.append(separator);
+						else break;
+					}
+				}
+				if (brackets) sb.append(']');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
-			if (brackets) sb.append(']');
 			return sb;
 		}
-
 
 		/**
 		 * Returns a String representing this PrimitiveCollection  as the char items themselves, with no
@@ -4098,7 +4173,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
 		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
@@ -4112,7 +4187,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item can vary significantly in length, and should use
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
 		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
@@ -4471,6 +4546,14 @@ public interface PrimitiveCollection<T> {
 			return toString(separator, false);
 		}
 
+		/**
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean)} using a new StringBuilder and converts it to
+		 * a new String.
+		 *
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @return a new String representing this PrimitiveCollection
+		 */
 		default String toString(String separator, boolean brackets) {
 			return appendTo(new StringBuilder(32), separator, brackets).toString();
 		}
@@ -4478,12 +4561,12 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Makes a String from the contents of this PrimitiveCollection, but uses the given {@link BooleanAppender}
 		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
+		 * the default String representation, you can use {@code BooleanAppender::append} as an appender, or better yet,
 		 * use {@link BooleanAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
-		 * @param appender  a function that takes a StringBuilder and a boolean, and returns the modified StringBuilder
+		 * @param appender  a function that takes an Appendable CharSequence and a boolean, and returns the modified sequence
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets,
@@ -4492,45 +4575,53 @@ public interface PrimitiveCollection<T> {
 		}
 
 		/**
-		 * Appends to {@code sb} any items in this PrimitiveCollection as either "true" or "false", separated by
-		 * {@code separator} and optionally with square brackets surrounding the text if {@code brackets} is true.
+		 * Delegates to {@link #appendTo(CharSequence, String, boolean, BooleanAppender)} using
+		 * {@link BooleanAppender#DEFAULT} to append int items.
 		 *
-		 * @param sb        the StringBuilder to append to
-		 * @param separator the String that will separate each item
-		 * @param brackets  if true, square brackets will surround the appended text
-		 * @return {@code sb}, for chaining
+		 * @param sb        a StringBuilder or similar that this can append to
+		 * @param separator how to separate items, such as {@code ", "}
+		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets) {
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, BooleanAppender.DEFAULT);
 		}
 
 		/**
-		 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link BooleanAppender}
-		 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-		 * the default String representation, you can use {@code StringBuilder::append} as an appender, or better yet,
-		 * use {@link BooleanAppender#DEFAULT}, which caches the above method reference when Android won't do that.
+		 * Appends to an Appendable CharSequence from the contents of this PrimitiveCollection, but uses the given
+		 * {@link BooleanAppender} to convert each item to a customizable representation and append them to {@code sb}. To use
+		 * the default String representation, you can use {@code BooleanAppender::append} as an appender, or better
+		 * yet, use {@link BooleanAppender#DEFAULT}, which caches the above method reference when Android won't do that.
 		 *
-		 * @param sb        a StringBuilder that this can append to
+		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
-		 * @param appender  a function that takes a StringBuilder and a boolean, and returns the modified StringBuilder
+		 * @param appender  a function that takes an Appendable CharSequence and a boolean, and returns the modified sequence
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
+		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
-		default StringBuilder appendTo(StringBuilder sb, String separator, boolean brackets, BooleanAppender appender) {
-			if (isEmpty()) return brackets ? sb.append("[]") : sb;
-			if (brackets) sb.append('[');
-			BooleanIterator it = iterator();
-			if (it.hasNext()) {
-				while (true) {
-					appender.apply(sb, it.nextBoolean());
-					if (it.hasNext()) sb.append(separator);
-					else break;
+		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, BooleanAppender appender) {
+			try {
+				if (isEmpty()){
+					if(brackets) sb.append("[]");
+					return sb;
 				}
+				if (brackets) sb.append('[');
+				BooleanIterator it = iterator();
+				if (it.hasNext()) {
+					while (true) {
+						appender.apply(sb, it.nextBoolean());
+						if (it.hasNext()) sb.append(separator);
+						else break;
+					}
+				}
+				if (brackets) sb.append(']');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
-			if (brackets) sb.append(']');
 			return sb;
 		}
-
 
 		/**
 		 * Returns a String representing this PrimitiveCollection with "1" for true items and "0" for false, with no
@@ -4657,7 +4748,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item should be "true" or "false", making it
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item should be "true" or "false", making it
 		 * human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
@@ -4671,7 +4762,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(StringBuilder, String, boolean)}. Each item should be "true" or "false", making it
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item should be "true" or "false", making it
 		 * human-readable. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
