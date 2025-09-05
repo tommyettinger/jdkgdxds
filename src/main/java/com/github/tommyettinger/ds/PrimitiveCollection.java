@@ -3954,6 +3954,32 @@ public interface PrimitiveCollection<T> {
 			throw new IllegalStateException("Can't get the first() item of an empty PrimitiveCollection.");
 		}
 
+		/**
+		 * Compares this PrimitiveCollection.OfChar with a PrimitiveSet.SetOfChar by checking their identity,
+		 * their types (both must implement PrimitiveCollection.OfChar, and other must implement PrimitiveSet.SetOfChar),
+		 * and their sizes, before checking if other contains each item in this PrimitiveCollection.OfChar, in any order
+		 * or quantity. This is most useful for the key "set" or value collection in a primitive-backed map, since
+		 * quantity doesn't matter for keys and order doesn't matter for either. Many implementations may need to reset
+		 * the iterator on this PrimitiveCollection.OfChar, but that isn't necessary for {@code other}.
+		 * <br>
+		 * This is not meant for general object equality, but instead for equality following Set semantics. Classes that
+		 * implement PrimitiveCollection that are not Set-like should usually not use this.
+		 *
+		 * @param other another Object that should be a PrimitiveSet.SetOfChar
+		 * @return true if other is a PrimitiveSet.SetOfChar with exactly the same items, false otherwise
+		 */
+		default boolean equalContents(Object other) {
+			if (this == other) return true;
+			if (!(other instanceof PrimitiveSet.SetOfChar)) return false;
+			PrimitiveSet.SetOfChar o = (PrimitiveSet.SetOfChar) other;
+			if (size() != o.size()) return false;
+			CharIterator it = iterator();
+			while (it.hasNext()) {
+				if (!o.contains(it.nextChar())) return false;
+			}
+			return true;
+		}
+
 		// STRING CONVERSION
 
 		/**

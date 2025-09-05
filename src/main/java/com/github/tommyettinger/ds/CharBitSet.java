@@ -40,7 +40,7 @@ import java.util.NoSuchElementException;
  * @author jshapcott
  * @author tommyettinger
  */
-public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
+public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * The raw bits, each one representing the presence or absence of a char at a position.

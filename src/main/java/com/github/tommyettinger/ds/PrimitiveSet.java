@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 
@@ -77,6 +78,31 @@ public interface PrimitiveSet<T> extends PrimitiveCollection<T> {
 			LongIterator it = iterator();
 			while (it.hasNext()) {
 				if (!o.contains(it.nextLong())) return false;
+			}
+			return true;
+		}
+	}
+
+	interface SetOfChar extends PrimitiveCollection.OfChar, PrimitiveSet<Character> {
+		/**
+		 * Compares this PrimitiveSet.SetOfChar with another PrimitiveSet.SetOfChar by checking their identity,
+		 * their types (both must implement PrimitiveSet.SetOfChar), and their sizes, before checking if other
+		 * contains each item in this PrimitiveSet.SetOfChar, in any order or quantity. This is most useful for
+		 * the key "set" or value collection in a primitive-backed map, since quantity doesn't matter for keys and
+		 * order doesn't matter for either. Many implementations may need to reset the iterator on this
+		 * PrimitiveSet.SetOfChar, but that isn't necessary for {@code other}.
+		 *
+		 * @param other another Object that should be a PrimitiveSet.SetOfChar
+		 * @return true if other is another PrimitiveSet.SetOfChar with exactly the same items, false otherwise
+		 */
+		default boolean equalContents(Object other) {
+			if (this == other) return true;
+			if (!(other instanceof PrimitiveSet.SetOfChar)) return false;
+			OfChar o = (OfChar) other;
+			if (size() != o.size()) return false;
+			CharIterator it = iterator();
+			while (it.hasNext()) {
+				if (!o.contains(it.nextChar())) return false;
 			}
 			return true;
 		}
