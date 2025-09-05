@@ -485,7 +485,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 	/**
 	 * Returns the index of the first bit that is set to true that occurs on or after the specified starting index. If no such bit
-	 * exists then {@link #getOffset() - 1} is returned.
+	 * exists then {@code getOffset() - 1} is returned.
 	 *
 	 * @param fromIndex the index to start looking at
 	 * @return the first position that is set to true that occurs on or after the specified starting index
@@ -634,7 +634,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
-	 * Returns true if the specified BitSet has any bits set to true that are also set to true in this BitSet.
+	 * Returns true if the specified OffsetBitSet has any bits set to true that are also set to true in this OffsetBitSet.
 	 * Both this OffsetBitSet and {@code other} must have the same offset.
 	 *
 	 * @param other another OffsetBitSet; must have the same offset as this
@@ -657,7 +657,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 	/**
 	 * Returns true if this bit set is a super set of the specified set, i.e. it has all bits set to true that are also set to
-	 * true in the specified BitSet. If this OffsetBitSet and {@code other} have the same offset, this is much more efficient, but
+	 * true in the specified OffsetBitSet. If this OffsetBitSet and {@code other} have the same offset, this is much more efficient, but
 	 * it will work even if the offsets are different.
 	 *
 	 * @param other another OffsetBitSet
@@ -686,9 +686,8 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 	@Override
 	public int hashCode() {
-		final int limit = (length() + 31 - offset >>> 5);
 		int hash = offset;
-		for (int i = 0; i < limit; i++) {
+		for (int i = 0, n = bits.length; i < n; i++) {
 			hash += bits[i];
 		}
 		return hash;
@@ -711,7 +710,17 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 		if (bits.length == otherBits.length) return true;
 
-		return length() == other.length();
+		if(commonWords < otherBits.length) {
+			for (int i = commonWords, n = otherBits.length; i < n; i++) {
+				if (0 != otherBits[i]) return false;
+			}
+		} else {
+			for (int i = commonWords, n = bits.length; i < n; i++) {
+				if (0 != bits[i]) return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
