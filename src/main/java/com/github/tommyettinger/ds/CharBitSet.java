@@ -120,6 +120,24 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
+	 * Meant primarily for offline use to store the results of a CharPredicate on one target platform so those results
+	 * can be recalled identically on all platforms. This can be relevant because of changing Unicode versions on newer
+	 * JDK versions, or partial implementations of JDK predicates like {@link Character#isLetter(char)} on GWT.
+	 *
+	 * @param predicate a CharPredicate, which could be a method reference like {@code Character::isLetter}
+	 * @see #toJavaCode() Once you have a CharBitSet on a working target platform, you can store it with toJavaCode().
+	 */
+	public CharBitSet(CharPredicate predicate) {
+		this();
+		if(predicate != null) {
+			for (int i = 0; i < 65536; i++) {
+				if (predicate.test((char) i))
+					bits[i >>> 5] |= 1 << i;
+			}
+		}
+	}
+
+	/**
 	 * Allows passing an int array either to be treated as char contents to enter (ignoring any ints outside the valid
 	 * char range) or as the raw bits that are used internally (which can be accessed with {@link #getRawBits()}.
 	 * Note that {@code ints} should always have a length of 1 or more; otherwise, it won't be used directly (or if
