@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.CharAppender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.CharPredicate;
@@ -344,28 +345,26 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 
 
 	/**
-	 * Sets the given int position to true, unless the position is less
-	 * than the {@link #getOffset() offset} (then it does nothing).
+	 * Sets the given int position to true, unless the position is outside char range
+	 * (then it does nothing).
 	 *
 	 * @param index the index of the bit to set
 	 */
 	public void activate(int index) {
-		index -= offset;
-		if (index < 0) return;
+		if (index < 0 || index >= 65536) return;
 		final int word = index >>> 5;
 		checkCapacity(word);
 		bits[word] |= 1 << index;
 	}
 
 	/**
-	 * Sets the given int position to false, unless the position is less
-	 * than the {@link #getOffset() offset} (then it does nothing).
+	 * Sets the given int position to false, unless the position is outside char range
+	 * (then it does nothing).
 	 *
 	 * @param index the index of the bit to clear
 	 */
 	public void deactivate(int index) {
-		index -= offset;
-		if (index < 0) return;
+		if (index < 0 || index >= 65536) return;
 		final int word = index >>> 5;
 		if (word >= bits.length) return;
 		bits[word] &= ~(1 << index);
@@ -373,14 +372,12 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 
 	/**
 	 * Changes the given int position from true to false, or from false to true,
-	 * unless the position is less than the {@link #getOffset() offset} (then it
-	 * does nothing).
+	 * unless the position is outside char range (then it does nothing).
 	 *
 	 * @param index the index of the bit to flip
 	 */
 	public void toggle(int index) {
-		index -= offset;
-		if (index < 0) return;
+		if (index < 0 || index >= 65536) return;
 		final int word = index >>> 5;
 		checkCapacity(word);
 		bits[word] ^= 1 << index;
@@ -413,8 +410,7 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 
 	/**
 	 * Returns the "logical extent" of this bitset: the index of the highest set bit in the bitset plus one. Returns zero if the
-	 * bitset contains no set bits. If this has any set bits, it will return an int at least equal to {@code offset}.
-	 * Runs in O(n) time.
+	 * bitset contains no set bits. Runs in O(n) time.
 	 *
 	 * @return the logical extent of this bitset
 	 */
@@ -423,7 +419,7 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 		for (int word = bits.length - 1; word >= 0; --word) {
 			int bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
-				return (word + 1 << 5) - BitConversion.countLeadingZeros(bitsAtWord) + offset;
+				return (word + 1 << 5) - BitConversion.countLeadingZeros(bitsAtWord);
 			}
 		}
 		return 0;
@@ -471,211 +467,186 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	}
 
 	/**
-	 * Returns the index of the first bit that is set to true that occurs on or after the specified starting index. If no such bit
-	 * exists then {@link #getOffset() - 1} is returned.
+	 * Returns the index of the first bit that is set to true that occurs on or after the specified starting index.
+	 * If no such bit exists then {@code -1} is returned.
 	 *
 	 * @param fromIndex the index to start looking at
 	 * @return the first position that is set to true that occurs on or after the specified starting index
 	 */
 	public int nextSetBit(int fromIndex) {
-		fromIndex -= offset;
-		if (fromIndex < 0) return offset - 1;
+		if (fromIndex < 0) return -1;
 		int[] bits = this.bits;
 		int word = fromIndex >>> 5;
 		int bitsLength = bits.length;
 		if (word >= bitsLength)
-			return offset - 1;
+			return -1;
 		int bitsAtWord = bits[word] & -1 << fromIndex; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != 0) {
-			return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+			// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+			return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5);
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
-				return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5) + offset;
+				return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5);
 			}
 		}
-		return offset - 1;
+		return -1;
 	}
 
 	/**
 	 * Returns the index of the first bit that is set to false that occurs on or after the specified starting index. If no such bit
-	 * exists then {@code numBits() + getOffset()}  is returned.
+	 * exists then {@link #numBits()}  is returned.
 	 *
 	 * @param fromIndex the index to start looking at
 	 * @return the first position that is set to true that occurs on or after the specified starting index
 	 */
 	public int nextClearBit(int fromIndex) {
-		fromIndex -= offset;
-		if (fromIndex < 0) return (bits.length << 5) + offset;
+		if (fromIndex < 0) return (bits.length << 5);
 		int[] bits = this.bits;
 		int word = fromIndex >>> 5;
 		int bitsLength = bits.length;
-		if (word >= bitsLength) return (bits.length << 5) + offset;
+		if (word >= bitsLength) return (bits.length << 5);
 		int bitsAtWord = bits[word] | (1 << fromIndex) - 1; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != -1) {
-			return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+			// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+			return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5);
 		}
 		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != -1) {
-				return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5) + offset; // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+				// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
+				return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5);
 			}
 		}
-		return (bits.length << 5) + offset;
+		return (bits.length << 5);
 	}
 
 	/**
 	 * Performs a logical <b>AND</b> of this target bit set with the argument bit set. This bit set is modified so that each bit
 	 * in it has the value true if and only if it both initially had the value true and the corresponding bit in the bit set
-	 * argument also had the value true. Both this OffsetBitSet and {@code other} must have the same offset.
+	 * argument also had the value true.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSet
 	 */
 	public void and(CharBitSet other) {
-		if (offset == other.offset) {
-			int commonWords = Math.min(bits.length, other.bits.length);
-			for (int i = 0; commonWords > i; i++) {
-				bits[i] &= other.bits[i];
-			}
+		int commonWords = Math.min(bits.length, other.bits.length);
+		for (int i = 0; commonWords > i; i++) {
+			bits[i] &= other.bits[i];
+		}
 
-			if (bits.length > commonWords) {
-				for (int i = commonWords, s = bits.length; s > i; i++) {
-					bits[i] = 0;
-				}
+		if (bits.length > commonWords) {
+			for (int i = commonWords, s = bits.length; s > i; i++) {
+				bits[i] = 0;
 			}
-		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call and().");
 		}
 	}
 
 	/**
 	 * Clears all the bits in this bit set whose corresponding bit is set in the specified bit set.
-	 * This can be seen as an optimized version of {@link OfInt#removeAll(OfInt)} that only works if
-	 * both OffsetBitSet objects have the same {@link #offset}. Both this OffsetBitSet and {@code other} must have the same offset.
+	 * This can be seen as an optimized version of {@link OfInt#removeAll(OfInt)}.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSet
 	 */
 	public void andNot(CharBitSet other) {
-		if (offset == other.offset) {
-			for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
-				bits[i] &= ~other.bits[i];
-			}
-		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call andNot().");
+		for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
+			bits[i] &= ~other.bits[i];
 		}
-
 	}
 
 	/**
-	 * Performs a logical <b>OR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
-	 * the value true if and only if it either already had the value true or the corresponding bit in the bit set argument has the
-	 * value true. Both this OffsetBitSet and {@code other} must have the same offset.
+	 * Performs a logical <b>OR</b> of this bit set with the bit set argument.
+	 * This bit set is modified so that a bit in it has the value true if and only if
+	 * it either already had the value true or the corresponding bit in {@code other}
+	 * has the value true.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSet
 	 */
 	public void or(CharBitSet other) {
-		if (offset == other.offset) {
-			int commonWords = Math.min(bits.length, other.bits.length);
-			for (int i = 0; commonWords > i; i++) {
-				bits[i] |= other.bits[i];
-			}
+		int commonWords = Math.min(bits.length, other.bits.length);
+		for (int i = 0; commonWords > i; i++) {
+			bits[i] |= other.bits[i];
+		}
 
-			if (commonWords < other.bits.length) {
-				checkCapacity(other.bits.length);
-				for (int i = commonWords, s = other.bits.length; s > i; i++) {
-					bits[i] = other.bits[i];
-				}
+		if (commonWords < other.bits.length) {
+			checkCapacity(other.bits.length);
+			for (int i = commonWords, s = other.bits.length; s > i; i++) {
+				bits[i] = other.bits[i];
 			}
-		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call or().");
 		}
 	}
 
 	/**
-	 * Performs a logical <b>XOR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
-	 * the value true if and only if one of the following statements holds:
+	 * Performs a logical <b>XOR</b> of this bit set with the bit set argument. This bit set is modified so that
+	 * a bit in it has the value true if and only if one of the following statements holds:
 	 * <ul>
 	 * <li>The bit initially has the value true, and the corresponding bit in the argument has the value false.</li>
 	 * <li>The bit initially has the value false, and the corresponding bit in the argument has the value true.</li>
 	 * </ul>
-	 * Both this OffsetBitSet and {@code other} must have the same offset.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSet
 	 */
 	public void xor(CharBitSet other) {
-		if (offset == other.offset) {
-			int commonWords = Math.min(bits.length, other.bits.length);
-			for (int i = 0; commonWords > i; i++) {
-				bits[i] ^= other.bits[i];
+		int commonWords = Math.min(bits.length, other.bits.length);
+		for (int i = 0; commonWords > i; i++) {
+			bits[i] ^= other.bits[i];
+		}
+		if (commonWords < other.bits.length) {
+			checkCapacity(other.bits.length);
+			for (int i = commonWords, s = other.bits.length; s > i; i++) {
+				bits[i] = other.bits[i];
 			}
-			if (commonWords < other.bits.length) {
-				checkCapacity(other.bits.length);
-				for (int i = commonWords, s = other.bits.length; s > i; i++) {
-					bits[i] = other.bits[i];
-				}
-			}
-		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call xor().");
 		}
 	}
 
 	/**
-	 * Returns true if the specified BitSet has any bits set to true that are also set to true in this BitSet.
-	 * Both this OffsetBitSet and {@code other} must have the same offset.
+	 * Returns true if the specified CharBitSet has any bits set to true that are also
+	 * set to true in this CharBitSet.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
-	 * @return boolean indicating whether this bit set intersects the specified bit set
+	 * @param other another CharBitSet
+	 * @return true if this bit set shares any set bits with the specified bit set
 	 */
 	public boolean intersects(CharBitSet other) {
-		if (offset == other.offset) {
-			int[] bits = this.bits;
-			int[] otherBits = other.bits;
-			for (int i = Math.min(bits.length, otherBits.length) - 1; i >= 0; i--) {
-				if ((bits[i] & otherBits[i]) != 0) {
-					return true;
-				}
+		int[] bits = this.bits;
+		int[] otherBits = other.bits;
+		for (int i = Math.min(bits.length, otherBits.length) - 1; i >= 0; i--) {
+			if ((bits[i] & otherBits[i]) != 0) {
+				return true;
 			}
-			return false;
-		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call intersects().");
 		}
+		return false;
 	}
 
 	/**
-	 * Returns true if this bit set is a super set of the specified set, i.e. it has all bits set to true that are also set to
-	 * true in the specified BitSet. If this OffsetBitSet and {@code other} have the same offset, this is much more efficient, but
-	 * it will work even if the offsets are different.
+	 * Returns true if this bit set is a super set of the specified set, i.e. it has all bits set
+	 * to true that are also set to true in the specified CharBitSet.
 	 *
-	 * @param other another OffsetBitSet
+	 * @param other another CharBitSet
 	 * @return boolean indicating whether this bit set is a super set of the specified set
 	 */
 	public boolean containsAll(CharBitSet other) {
-		if (offset == other.offset) {
-			int[] bits = this.bits;
-			int[] otherBits = other.bits;
-			int otherBitsLength = otherBits.length;
-			int bitsLength = bits.length;
+		int[] bits = this.bits;
+		int[] otherBits = other.bits;
+		int otherBitsLength = otherBits.length;
+		int bitsLength = bits.length;
 
-			for (int i = bitsLength; i < otherBitsLength; i++) {
-				if (otherBits[i] != 0) {
-					return false;
-				}
+		for (int i = bitsLength; i < otherBitsLength; i++) {
+			if (otherBits[i] != 0) {
+				return false;
 			}
-			for (int i = Math.min(bitsLength, otherBitsLength) - 1; i >= 0; i--) {
-				if ((bits[i] & otherBits[i]) != otherBits[i]) {
-					return false;
-				}
+		}
+		for (int i = Math.min(bitsLength, otherBitsLength) - 1; i >= 0; i--) {
+			if ((bits[i] & otherBits[i]) != otherBits[i]) {
+				return false;
 			}
-			return true;
-		} else return ((OfInt) this).containsAll(other);
+		}
+		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		final int limit = (length() + 31 - offset >>> 5);
-		int hash = offset;
-		for (int i = 0; i < limit; i++) {
+		int hash = 1;
+		for (int i = 0, n = bits.length; i < n; i++) {
 			hash += bits[i];
 		}
 		return hash;
@@ -688,17 +659,26 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 		if (getClass() != obj.getClass()) return false;
 
 		CharBitSet other = (CharBitSet) obj;
-		if (offset != other.offset) return false;
 		int[] otherBits = other.bits;
 
 		int commonWords = Math.min(bits.length, otherBits.length);
-		for (int i = 0; commonWords > i; i++) {
+		for (int i = 0; i < commonWords; i++) {
 			if (bits[i] != otherBits[i]) return false;
 		}
 
 		if (bits.length == otherBits.length) return true;
 
-		return length() == other.length();
+		if(commonWords < otherBits.length) {
+			for (int i = commonWords, n = otherBits.length; i < n; i++) {
+				if (0 != otherBits[i]) return false;
+			}
+		} else {
+			for (int i = commonWords, n = bits.length; i < n; i++) {
+				if (0 != bits[i]) return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
