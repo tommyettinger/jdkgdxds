@@ -72,6 +72,14 @@ if (JavaVersion.current().isJava9Compatible()) {
 	}
 }
 
+compileTestJava {
+	sourceCompatibility = 24
+	targetCompatibility = 24
+	if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_24) ) {
+		options.setRelease(24)
+	}
+}
+
 apply plugin: 'idea'
 idea.module.excludeDirs += [file("docs/")]
 
