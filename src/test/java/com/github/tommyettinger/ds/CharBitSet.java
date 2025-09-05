@@ -18,7 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.CharAppender;
-import com.github.tommyettinger.ds.support.util.IntAppender;
+import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.CharPredicate;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -47,9 +47,9 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	protected int[] bits;
 
 	@Nullable
-	protected transient OffsetBitSetIterator iterator1;
+	protected transient CharBitSetIterator iterator1;
 	@Nullable
-	protected transient OffsetBitSetIterator iterator2;
+	protected transient CharBitSetIterator iterator2;
 
 	/**
 	 * Creates a bit set with an initial size that can store positions between 0 and 65535, inclusive, without
@@ -323,13 +323,13 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
-	 * Use the {@link OffsetBitSetIterator} constructor for nested or multithreaded iteration.
+	 * Use the {@link CharBitSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public OffsetBitSetIterator iterator() {
+	public CharBitSetIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new OffsetBitSetIterator(this);
-			iterator2 = new OffsetBitSetIterator(this);
+			iterator1 = new CharBitSetIterator(this);
+			iterator2 = new CharBitSetIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -682,8 +682,8 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	}
 
 	/**
-	 * Given a StringBuilder, this appends part of the toString() representation of this OffsetBitSet, without allocating a String.
-	 * This does not include the opening {@code [} and closing {@code ]} chars, and only appends the int positions in this OffsetBitSet,
+	 * Given a StringBuilder, this appends part of the toString() representation of this CharBitSet, without allocating a String.
+	 * This does not include the opening {@code [} and closing {@code ]} chars, and only appends the int positions in this CharBitSet,
 	 * each pair separated by the given delimiter String. You can use this to choose a different delimiter from what toString() uses.
 	 *
 	 * @param builder   a StringBuilder that will be modified in-place and returned
@@ -691,16 +691,16 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	 * @return the given StringBuilder, after modifications
 	 */
 	public StringBuilder appendContents(StringBuilder builder, String delimiter) {
-		int curr = nextSetBit(offset);
+		int curr = nextSetBit(0);
 		builder.append(curr);
-		while ((curr = nextSetBit(curr + 1)) != offset - 1) {
+		while ((curr = nextSetBit(curr + 1)) != -1) {
 			builder.append(delimiter).append(curr);
 		}
 		return builder;
 	}
 
 	/**
-	 * Given a StringBuilder, this appends the toString() representation of this OffsetBitSet, without allocating a String.
+	 * Given a StringBuilder, this appends the toString() representation of this CharBitSet, without allocating a String.
 	 * This includes the opening {@code [} and closing {@code ]} chars; it uses {@code ", "} as its delimiter.
 	 *
 	 * @param builder a StringBuilder that will be modified in-place and returned
@@ -711,9 +711,9 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link IntAppender}
+	 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link CharAppender}
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-	 * the default String representation, you can use {@link IntAppender#DEFAULT} as an appender.
+	 * the default String representation, you can use {@link CharAppender#DEFAULT} as an appender.
 	 *
 	 * @param sb        a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
@@ -722,7 +722,7 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	 * @return {@code sb}, with the appended items of this PrimitiveCollection
 	 */
 	@Override
-	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, IntAppender appender) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, CharAppender appender) {
 		try {
 			if (isEmpty()) {
 				if(brackets) sb.append("[]");
@@ -731,11 +731,11 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 			if (brackets) {
 				sb.append('[');
 			}
-			int curr = nextSetBit(offset);
-			appender.apply(sb, curr);
-			while ((curr = nextSetBit(curr + 1)) != offset - 1) {
+			int curr = nextSetBit(0);
+			appender.apply(sb, (char) curr);
+			while ((curr = nextSetBit(curr + 1)) != -1) {
 				sb.append(separator);
-				appender.apply(sb, curr);
+				appender.apply(sb, (char) curr);
 			}
 			if (brackets) {
 				sb.append(']');
@@ -752,7 +752,7 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	}
 
 
-	public static class OffsetBitSetIterator implements IntIterator {
+	public static class CharBitSetIterator implements CharIterator {
 		static private final int INDEX_ILLEGAL = -1, INDEX_ZERO = -1;
 
 		public boolean hasNext;
@@ -761,20 +761,20 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public OffsetBitSetIterator(CharBitSet set) {
+		public CharBitSetIterator(CharBitSet set) {
 			this.set = set;
 			reset();
 		}
 
 		public void reset() {
-			currentIndex = INDEX_ILLEGAL + set.offset;
-			nextIndex = INDEX_ZERO + set.offset;
+			currentIndex = INDEX_ILLEGAL;
+			nextIndex = INDEX_ZERO;
 			findNextIndex();
 		}
 
 		void findNextIndex() {
 			nextIndex = set.nextSetBit(nextIndex + 1);
-			hasNext = nextIndex != INDEX_ILLEGAL + set.offset;
+			hasNext = nextIndex != INDEX_ILLEGAL;
 		}
 
 		/**
@@ -798,33 +798,33 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 				throw new IllegalStateException("next must be called before remove.");
 			}
 			set.deactivate(currentIndex);
-			currentIndex = INDEX_ILLEGAL + set.offset;
+			currentIndex = INDEX_ILLEGAL;
 		}
 
 		@Override
-		public int nextInt() {
+		public char nextChar() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
-			int key = nextIndex;
+			char key = (char)nextIndex;
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
 		}
 
 		/**
-		 * Returns a new {@link IntList} containing the remaining items.
+		 * Returns a new {@link CharList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public IntList toList() {
-			IntList list = new IntList(set.size());
+		public CharList toList() {
+			CharList list = new CharList(set.size());
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
 			while (hasNext) {
-				list.add(nextInt());
+				list.add(nextChar());
 			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
@@ -833,17 +833,17 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 		}
 
 		/**
-		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfInt.
+		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfChar.
 		 * Does not change the position of this iterator.
 		 *
-		 * @param coll any modifiable PrimitiveCollection.OfInt; may have items appended into it
+		 * @param coll any modifiable PrimitiveCollection.OfChar; may have items appended into it
 		 * @return the given primitive collection
 		 */
-		public OfInt appendInto(OfInt coll) {
+		public OfChar appendInto(OfChar coll) {
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
 			while (hasNext) {
-				coll.add(nextInt());
+				coll.add(nextChar());
 			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
@@ -854,28 +854,28 @@ public class CharBitSet implements PrimitiveCollection.OfChar, CharPredicate {
 	}
 
 	/**
-	 * Static builder for an OffsetBitSet; this overload does not allocate an
+	 * Static builder for a CharBitSet; this overload does not allocate an
 	 * array for the index/indices, but only takes one index. This always has
 	 * an offset of 0.
 	 *
-	 * @param index the one position to place in the built bit set; must be non-negative
-	 * @return a new OffsetBitSet with the given item
+	 * @param index the one char to place in the built bit set
+	 * @return a new CharBitSet with the given item
 	 */
-	public static CharBitSet with(int index) {
+	public static CharBitSet with(char index) {
 		CharBitSet s = new CharBitSet(index + 1);
 		s.add(index);
 		return s;
 	}
 
 	/**
-	 * Static builder for an OffsetBitSet; this overload allocates an array for
+	 * Static builder for a CharBitSet; this overload allocates an array for
 	 * the indices unless given an array already, and can take many indices. This
 	 * always has an offset of 0.
 	 *
 	 * @param indices the positions to place in the built bit set; must be non-negative
-	 * @return a new OffsetBitSet with the given items
+	 * @return a new CharBitSet with the given items
 	 */
-	public static CharBitSet with(int... indices) {
+	public static CharBitSet with(char... indices) {
 		CharBitSet s = new CharBitSet();
 		s.addAll(indices);
 		return s;
