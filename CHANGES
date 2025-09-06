@@ -1,3 +1,10 @@
+[1.12.2]
+- [BREAKING] The change starting in 1.12.0 that moved parameters from `StringBuilder` to generic types that are both `Appendable` and `CharSequence` wasn't completed for `PrimitiveCollection` default methods; now all PrimitiveCollection types use the Appendable CharSequence parameter.
+- Almost every data structure that can be converted to a legible String now provides static parse() methods that can recreate the data structure from that String, potentially needing one or two PartialParser instances to parse objects.
+- More PartialParser generator functions are provided as static methods in PartialParser.
+- CharBitSet is new, and acts like an even simpler version of OffsetBitSet for char items. It is also a CharPredicate that can be used to check if it contains a char.
+- CharPredicates defines several CharPredicate constants (using CharBitSet) that work identically to OpenJDK 24 on all target platforms (including GWT and RoboVM).
+
 [1.12.1]
 - Dependency on digital updated to 0.9.2; this is a hotfix for bugs in the behavior of scrambled Base objects, and is unlikely to affect most applications.
 
