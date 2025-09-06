@@ -22,15 +22,17 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A small class that holds two functional-interface values used for filtering and editing characters, and a name they are
- * associated with. Every time a CharFilter is constructed, it is registered internally, so it can be looked up at a later time
- * by name, using {@link #get(String)} or {@link #getOrDefault(String, CharFilter)}. Actually obtaining CharFilter objects is done
- * with {@link #getOrCreate(String, CharPredicate, CharToCharFunction)}, which tries to get an existing CharFilter first, and if it
- * can't find one, then it creates, registers, and returns one. A suggested practice for names is to describe the
- * filter's effects first, if any, followed by the editor's effects. A typical filter might only allow letter chars through,
- * and would convert them to upper-case so that they can (almost always) be treated as case-insensitive. This could use method
- * references to {@link Character#isLetter(char)} for the filter, {@link Character#toUpperCase(char)} (or
- * {@link Casing#caseUp(char)}) for the editor, and could be named {@code "LetterOnlyCaseInsensitive"}.
+ * A small class that holds two functional-interface values used for filtering and editing characters, and a name they
+ * are associated with. Every time a CharFilter is constructed, it is registered internally, so it can be looked up at a
+ * later time by name, using {@link #get(String)} or {@link #getOrDefault(String, CharFilter)}. Actually obtaining
+ * CharFilter objects is done with {@link #getOrCreate(String, CharPredicate, CharToCharFunction)}, which tries to get
+ * an existing CharFilter first, and if it can't find one, then it creates, registers, and returns one. A suggested
+ * practice for names is to describe the filter's effects first, if any, followed by the editor's effects. A typical
+ * filter might only allow letter chars through, and would convert them to upper-case so that they can (almost always)
+ * be treated as case-insensitive. This could use
+ * {@code com.github.tommyettinger.ds.support.util.CharPredicates.IS_LETTER} (or a method reference to
+ * {@link Character#isLetter(char)}) for the filter, {@link Casing#caseUp(char)} (or
+ * {@link Character#toUpperCase(char)}) for the editor, and could be named {@code "LetterOnlyCaseInsensitive"}.
  * <br>
  * Any CharFilter can be used as a factory to create {@link FilteredStringSet} and {@link FilteredStringOrderedSet}
  * collections as if using their {@link FilteredStringSet#with()} static method and this CharFilter. These use the
@@ -44,10 +46,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <br>
  * If you target GWT, be aware that several built-in JDK methods for handling chars may work differently in HTML than on
  * desktop, Android, or other platforms. In particular, {@link Character#isLetter(char)} will not work on most Unicode
- * chars on GWT, so you need another way to handle checks like that. If you depend on
- * <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a>, you can use its {@code Category.L::contains} as a
- * filter to allow only chars in Unicode category L (letters), and this works on GWT. Because
- * jdkgdxds does not depend on RegExodus, these aren't used in predefined filters or editors here.
+ * chars on GWT, so you need another way to handle checks like that.
+ * {@code com.github.tommyettinger.ds.support.util.CharPredicates.IS_LETTER} is a CharPredicate you can use instead of
+ * isLetter on any platform, and acts as {@link Character#isLetter(char)} does on Java 24, but on all Java versions and
+ * target platforms (including GWT). Other fields in CharPredicates may also be useful, and you can create your own
+ * {@link CharBitSet} objects to serve as predefined predicates that look up a char in an uncompressed bit set.
  */
 public class CharFilter {
 	/**

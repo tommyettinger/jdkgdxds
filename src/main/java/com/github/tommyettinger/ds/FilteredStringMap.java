@@ -46,6 +46,8 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * such as TeaVM, but it isn't clear yet which platforms have full Unicode support. You can consider depending upon
  * <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a> for more cross-platform Unicode support; a method
  * reference to {@code Category.L::contains} acts like {@code Character::isLetter}, but works on GWT.
+ * {@code com.github.tommyettinger.ds.support.util.CharPredicates} provides a few common CharPredicate constants that
+ * will work identically on all platforms.
  */
 public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);

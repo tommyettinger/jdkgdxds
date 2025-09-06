@@ -43,8 +43,10 @@ import java.util.Iterator;
  * FilteredStringSet works with Strings rather than CharSequences, which
  * may be more convenient, and allows filtering some characters out of hashing and equality comparisons. If you want a
  * case-insensitive set that ignores any non-letter characters in a String, then CaseInsensitiveSet won't do,
- * but {@code new FilteredStringSet<>(Character::isLetter, Character::toUpperCase)} will work. Note that GWT only
- * handles {@link Character#isLetter(char)} for ASCII letters; the library RegExodus offers replacements in Category.
+ * but {@code new FilteredStringSet<>(CharPredicates.IS_LETTER, Casing::caseUp} will work. Note that GWT only
+ * handles {@link Character#isLetter(char)} for ASCII letters; CharPredicates in this library provides cross-platform
+ * predicates that use {@link CharBitSet} to store their data, and the library RegExodus offers replacements in
+ * Category for other Unicode categories, such as upper-case letters, currency symbols, decimal digits, and so on.
  */
 public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 

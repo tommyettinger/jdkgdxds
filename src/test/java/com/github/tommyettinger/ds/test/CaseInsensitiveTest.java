@@ -16,15 +16,8 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.ds.CaseInsensitiveMap;
-import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
-import com.github.tommyettinger.ds.CaseInsensitiveOrderedSet;
-import com.github.tommyettinger.ds.CaseInsensitiveSet;
-import com.github.tommyettinger.ds.CharFilter;
-import com.github.tommyettinger.ds.FilteredStringOrderedMap;
-import com.github.tommyettinger.ds.FilteredStringOrderedSet;
-import com.github.tommyettinger.ds.FilteredStringSet;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.support.util.CharPredicates;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -92,6 +85,14 @@ public class CaseInsensitiveTest {
 		for (Map.Entry<String, String> ent : fil) {
 			Assert.assertTrue(fil.equate(ent.getKey(), ent.getValue()));
 		}
+		fil = new FilteredStringOrderedMap<>(
+			CharFilter.getOrCreate("LetterOnlyCaseInsensitive", CharPredicates.IS_LETTER, Casing::caseUp),
+			new String[]{"foo42", "bar666", "baz9001"},
+			new String[]{"foo", "bar", "baz"}
+		);
+		for (Map.Entry<String, String> ent : fil) {
+			Assert.assertTrue(fil.equate(ent.getKey(), ent.getValue()));
+		}
 		CaseInsensitiveOrderedMap<ObjectList<String>> synonyms = CaseInsensitiveOrderedMap.with(
 			"intelligence", ObjectList.with("cunning", "acumen", "wits", "wisdom", "intellect"),
 			"strength", ObjectList.with("power", "potency", "brawn", "muscle", "force")
@@ -107,7 +108,7 @@ public class CaseInsensitiveTest {
 		String[] items = new String[]{"FOO", "foo", "BAR", "BAZ", "bar", "baz"};
 		CaseInsensitiveSet set = CaseInsensitiveSet.with(items);
 		Assert.assertEquals(set.size(), 3);
-		CharFilter filter = CharFilter.getOrCreate("LetterOnlyCaseInsensitive", Character::isLetter, Character::toUpperCase);
+		CharFilter filter = CharFilter.getOrCreate("LetterOnlyCaseInsensitive", CharPredicates.IS_LETTER, Casing::caseUp);
 		FilteredStringSet fil = FilteredStringSet.with(filter, items);
 		Assert.assertEquals(fil.size(), 3);
 		Assert.assertEquals(set, fil);
@@ -118,7 +119,7 @@ public class CaseInsensitiveTest {
 		String[] items = new String[]{"FOO", "foo", "BAR", "BAZ", "bar", "baz"};
 		CaseInsensitiveOrderedSet set = CaseInsensitiveOrderedSet.with(items);
 		Assert.assertEquals(set.size(), 3);
-		CharFilter filter = CharFilter.getOrCreate("LetterOnlyCaseInsensitive", Character::isLetter, Character::toUpperCase);
+		CharFilter filter = CharFilter.getOrCreate("LetterOnlyCaseInsensitive", CharPredicates.IS_LETTER, Casing::caseUp);
 		FilteredStringOrderedSet fil = FilteredStringOrderedSet.with(filter, items);
 		Assert.assertEquals(fil.size(), 3);
 		Assert.assertEquals(set, fil);
