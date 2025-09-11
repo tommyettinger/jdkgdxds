@@ -183,26 +183,34 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.12.2"
+api "com.github.tommyettinger:jdkgdxds:1.12.3"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
 `mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on [digital](https://github.com/tommyettinger/digital)
 (which provides common math code meant for use by multiple projects), [funderby](https://github.com/tommyettinger/funderby)
-(Java 8 functional interfaces for primitive types), and for annotations only, [checker-qual](https://github.com/typetools/checker-framework). The
+(Java 8 functional interfaces for primitive types), and for building jdkgdxds only (not at runtime),
+[JetBrains java-annotations](https://github.com/JetBrains/java-annotations) version 26.0.2-1 . The
 version for the `digital` dependency is 0.9.2 (you can specify it manually with the core dependency
 `api "com.github.tommyettinger:digital:0.9.2"`). Funderby has only changed a bit since its initial release, and is on version
-0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`). The version for
-`checker-qual` is 3.42.0 , and  is expected to go up often because checker-qual rather-frequently updates to handle JDK changes.
-Earlier versions of jdkgdxds used `jsr305` instead of `checker-qual`, which had some potential problems on Java 9 and up (not to
+0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`).
+
+In versions before jdkgdxds 1.12.3, this depended on [checker-qual](https://github.com/typetools/checker-framework).
+The version for `checker-qual` was 3.42.0 in the last version that used it. Earlier versions of jdkgdxds used `jsr305`
+instead of `checker-qual` or `java-annotations`, which had some potential problems on Java 9 and up (not to
 mention that JSR305 is currently unmaintained). You can manually specify a `checker-qual` version with
-`api "org.checkerframework:checker-qual:3.42.0"`.
+`api "org.checkerframework:checker-qual:3.42.0"`, but this shouldn't be needed in version 1.12.3 and later. You can opt
+in to JB Annotations on a per-project level by adding `compileOnly "org.jetbrains:annotations:26.0.2-1"`, which only
+applies to the main (library or application) code. To apply JB annotations to tests in a project, use
+`testCompileOnly "org.jetbrains:annotations:$jbAnnotations"`. Using `compileOnly` means the dependency won't be required
+for any applications built using jdkgdxds, and also won't be available to other libraries that depend on jdkgdxds (they
+can opt in themselves).
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
 implementation "com.github.tommyettinger:digital:0.9.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.12.2:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.12.3:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -211,7 +219,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.digital" />
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
-in with the other `inherits` lines. You shouldn't need to specify checker-qual in GWT dependencies.
+in with the other `inherits` lines. You shouldn't need to specify java-annotations in GWT dependencies.
 Using jdkgdxds 1.6.2 or later (or preferably, the current version) is strongly encouraged for GWT applications for
 performance reasons.
 

@@ -1,3 +1,6 @@
+[1.12.3]
+- [BREAKING] The `api` dependency on Checker Framework has been replaced with a `compileOnly` dependency on JetBrains Annotations. Libraries using jdkgdxds will no longer have access to Checker's annotations `NonNull` and `Nullable`, but can replace them with JetBrains annotations `NotNull` and `Nullable`. This saves about 210 KB from each fat JAR produced.
+
 [1.12.2]
 - [BREAKING] The change starting in 1.12.0 that moved parameters from `StringBuilder` to generic types that are both `Appendable` and `CharSequence` wasn't completed for `PrimitiveCollection` default methods; now all PrimitiveCollection types use the Appendable CharSequence parameter.
 - Almost every data structure that can be converted to a legible String now provides static parse() methods that can recreate the data structure from that String, potentially needing one or two PartialParser instances to parse objects.
