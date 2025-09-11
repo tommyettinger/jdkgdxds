@@ -19,8 +19,8 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -603,7 +603,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NonNull Keys<K, V> keySet() {
+	public @NotNull Keys<K, V> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
@@ -628,7 +628,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NonNull Values<K, V> values() {
+	public @NotNull Values<K, V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -654,7 +654,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NonNull Entries<K, V> entrySet() {
+	public @NotNull Entries<K, V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -681,7 +681,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull MapIterator<K, V, Map.Entry<K, V>> iterator() {
+	public @NotNull MapIterator<K, V, Map.Entry<K, V>> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -739,7 +739,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
-				public @NonNull MapIterator<K, V, Map.Entry<K, V>> iterator() {
+				public @NotNull MapIterator<K, V, Map.Entry<K, V>> iterator() {
 					return this;
 				}
 
@@ -797,7 +797,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, K>(map) {
 				@Override
-				public @NonNull MapIterator<K, V, K> iterator() {
+				public @NotNull MapIterator<K, V, K> iterator() {
 					return this;
 				}
 
@@ -853,7 +853,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, V>(map) {
 				@Override
-				public @NonNull MapIterator<K, V, V> iterator() {
+				public @NotNull MapIterator<K, V, V> iterator() {
 					return this;
 				}
 

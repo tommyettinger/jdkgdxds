@@ -20,7 +20,7 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntToIntFunction;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;

@@ -21,8 +21,8 @@ import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.function.CharToCharFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -1471,7 +1471,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code char}, containing all the elements in this collection
 	 */
-	public char @NonNull [] toArray() {
+	public char @NotNull [] toArray() {
 		char[] next = new char[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);

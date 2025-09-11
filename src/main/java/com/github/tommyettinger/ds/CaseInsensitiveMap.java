@@ -17,8 +17,8 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -126,7 +126,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	}
 
 	@Override
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		if (item instanceof CharSequence)
 			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
 		return super.place(item);
@@ -192,7 +192,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	}
 
 	@Override
-	public @NonNull Keys<CharSequence, V> keySet() {
+	public @NotNull Keys<CharSequence, V> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new CaseInsensitiveKeys<>(this);
 			keys2 = new CaseInsensitiveKeys<>(this);

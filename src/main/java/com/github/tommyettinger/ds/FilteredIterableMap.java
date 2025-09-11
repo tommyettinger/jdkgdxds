@@ -22,8 +22,8 @@ import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -247,7 +247,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	@Override
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		if (item instanceof Iterable) {
 			return hashHelper((I) item) & mask;
 		}

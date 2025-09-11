@@ -20,8 +20,8 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -258,7 +258,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll(@NonNull EnumMap<? extends V> map) {
+	public void putAll(@NotNull EnumMap<? extends V> map) {
 		if (map.universe == null) return;
 		if (universe == null) universe = map.universe;
 		if (valueTable == null) valueTable = new Object[universe.length];
@@ -900,7 +900,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+	public @NotNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -924,7 +924,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NonNull Keys keySet() {
+	public @NotNull Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys(this);
 			keys2 = new Keys(this);
@@ -948,7 +948,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NonNull Values<V> values() {
+	public @NotNull Values<V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values<>(this);
 			values2 = new Values<>(this);
@@ -973,7 +973,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NonNull Entries<V> entrySet() {
+	public @NotNull Entries<V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries<>(this);
 			entries2 = new Entries<>(this);
@@ -1136,7 +1136,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		public Entries(EnumMap<V> map) {
 			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
-				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+				public @NotNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 					return this;
 				}
 
@@ -1274,7 +1274,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+		public @NotNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 			return iter;
 		}
 
@@ -1334,7 +1334,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NonNull [] toArray() {
+		public Object @NotNull [] toArray() {
 			Object[] a = new Object[iter.map.size];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1355,7 +1355,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @param a
 		 */
 		@Override
-		public <T> T @NonNull [] toArray(T[] a) {
+		public <T> T @NotNull [] toArray(T[] a) {
 			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1433,7 +1433,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		public Values(EnumMap<V> map) {
 			iter = new MapIterator<V, V>(map) {
 				@Override
-				public @NonNull MapIterator<V, V> iterator() {
+				public @NotNull MapIterator<V, V> iterator() {
 					return this;
 				}
 
@@ -1468,7 +1468,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<V, V> iterator() {
+		public @NotNull MapIterator<V, V> iterator() {
 			return iter;
 		}
 
@@ -1509,7 +1509,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @throws NullPointerException          {@inheritDoc}
 		 */
 		@Override
-		public boolean removeAll(@NonNull Collection<?> c) {
+		public boolean removeAll(@NotNull Collection<?> c) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1522,7 +1522,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public boolean retainAll(@NonNull Collection<?> c) {
+		public boolean retainAll(@NotNull Collection<?> c) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			iter.reset();
@@ -1610,7 +1610,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NonNull [] toArray() {
+		public Object @NotNull [] toArray() {
 			Object[] a = new Object[iter.map.size];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1631,7 +1631,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @param a
 		 */
 		@Override
-		public <T> T @NonNull [] toArray(T[] a) {
+		public <T> T @NotNull [] toArray(T[] a) {
 			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1689,7 +1689,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		public Keys(EnumMap<?> map) {
 			iter = new MapIterator<Object, Enum<?>>(map) {
 				@Override
-				public @NonNull MapIterator<?, Enum<?>> iterator() {
+				public @NotNull MapIterator<?, Enum<?>> iterator() {
 					return this;
 				}
 
@@ -1781,7 +1781,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull MapIterator<?, Enum<?>> iterator() {
+		public @NotNull MapIterator<?, Enum<?>> iterator() {
 			return iter;
 		}
 
@@ -1841,7 +1841,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NonNull [] toArray() {
+		public Object @NotNull [] toArray() {
 			Object[] a = new Object[iter.map.size];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1862,7 +1862,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @param a
 		 */
 		@Override
-		public <T> T @NonNull [] toArray(T[] a) {
+		public <T> T @NotNull [] toArray(T[] a) {
 			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;

@@ -18,7 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 

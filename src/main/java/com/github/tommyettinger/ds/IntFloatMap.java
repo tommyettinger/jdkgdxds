@@ -24,8 +24,8 @@ import com.github.tommyettinger.function.IntFloatBiConsumer;
 import com.github.tommyettinger.function.IntFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntToFloatFunction;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -968,7 +968,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator iterator() {
+	public @NotNull EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1310,7 +1310,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		}
 
 		@Override
-		public @NonNull EntryIterator iterator() {
+		public @NotNull EntryIterator iterator() {
 			return this;
 		}
 
@@ -1359,7 +1359,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator iterator() {
+		public @NotNull EntryIterator iterator() {
 			return iter;
 		}
 

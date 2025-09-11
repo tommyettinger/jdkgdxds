@@ -20,8 +20,8 @@ import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.function.BooleanPredicate;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -1453,7 +1453,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code boolean}, containing all the elements in this collection
 	 */
-	public boolean @NonNull [] toArray() {
+	public boolean @NotNull [] toArray() {
 		boolean[] next = new boolean[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);

@@ -18,8 +18,8 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractList;
 import java.util.ArrayDeque;
@@ -1494,7 +1494,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * type} is {@code Object}, containing all the elements in this collection
 	 */
 	@Override
-	public Object @NonNull [] toArray() {
+	public Object @NotNull [] toArray() {
 		Object[] next = new Object[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -1533,7 +1533,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NullPointerException if the specified array is null
 	 */
 	@Override
-	public <E> @Nullable E @NonNull [] toArray(@Nullable E @NonNull [] a) {
+	public <E> @Nullable E @NotNull [] toArray(@Nullable E @NotNull [] a) {
 		int oldSize = size;
 		if (a.length < oldSize) {
 			a = Arrays.copyOf(a, oldSize);
@@ -2712,7 +2712,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque)}.
 	 */
 	@Override
-	public @NonNull ObjectDequeIterator<T> iterator() {
+	public @NotNull ObjectDequeIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectDequeIterator<>(this);
 			iterator2 = new ObjectDequeIterator<>(this);
@@ -2739,7 +2739,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public @NonNull ObjectDequeIterator<T> descendingIterator() {
+	public @NotNull ObjectDequeIterator<T> descendingIterator() {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ObjectDequeIterator<>(this, true);
 			descendingIterator2 = new ObjectDequeIterator<>(this, true);
@@ -2767,7 +2767,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public @NonNull ObjectDequeIterator<T> descendingIterator(int index) {
+	public @NotNull ObjectDequeIterator<T> descendingIterator(int index) {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ObjectDequeIterator<>(this, index, true);
 			descendingIterator2 = new ObjectDequeIterator<>(this, index, true);
@@ -3411,7 +3411,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 * @return a ListIterator; really this same ObjectDequeIterator.
 		 */
 		@Override
-		public @NonNull ObjectDequeIterator<T> iterator() {
+		public @NotNull ObjectDequeIterator<T> iterator() {
 			return this;
 		}
 	}

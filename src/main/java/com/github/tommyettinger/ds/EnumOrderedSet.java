@@ -18,8 +18,8 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -50,7 +50,7 @@ import java.util.*;
  */
 public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 
-	protected final ObjectList<@NonNull Enum<?>> ordering;
+	protected final ObjectList<@NotNull Enum<?>> ordering;
 
 	/**
 	 * Only specifies an OrderType; using this will postpone allocating any internal arrays until {@link #add(Enum)} is
@@ -114,7 +114,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param type     either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                 use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedSet(@NonNull Iterator<? extends Enum<?>> contents, OrderType type) {
+	public EnumOrderedSet(@NotNull Iterator<? extends Enum<?>> contents, OrderType type) {
 		this(type);
 		addAll(contents);
 	}
@@ -127,7 +127,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param type     either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                 use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedSet(@NonNull Collection<? extends Enum<?>> contents, OrderType type) {
+	public EnumOrderedSet(@NotNull Collection<? extends Enum<?>> contents, OrderType type) {
 		this(type);
 		addAll(contents);
 	}
@@ -139,7 +139,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param type  either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *              use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedSet(@NonNull EnumSet other, OrderType type) {
+	public EnumOrderedSet(@NotNull EnumSet other, OrderType type) {
 		if (other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
 		this.universe = other.universe;
@@ -154,7 +154,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param type  either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *              use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedSet(@NonNull EnumOrderedSet other, OrderType type) {
+	public EnumOrderedSet(@NotNull EnumOrderedSet other, OrderType type) {
 		this.size = other.size;
 		if (other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
@@ -188,7 +188,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param type     either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                 use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedSet(Enum<?> @NonNull [] contents, OrderType type) {
+	public EnumOrderedSet(Enum<?> @NotNull [] contents, OrderType type) {
 		this(type);
 		addAll(contents);
 	}
@@ -255,7 +255,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumOrderedSet(@NonNull Iterator<? extends Enum<?>> contents) {
+	public EnumOrderedSet(@NotNull Iterator<? extends Enum<?>> contents) {
 		this(contents, OrderType.LIST);
 	}
 
@@ -265,7 +265,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumOrderedSet(@NonNull Collection<? extends Enum<?>> contents) {
+	public EnumOrderedSet(@NotNull Collection<? extends Enum<?>> contents) {
 		this(contents, OrderType.LIST);
 	}
 
@@ -274,7 +274,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 *
 	 * @param other another EnumSet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
-	public EnumOrderedSet(@NonNull EnumSet other) {
+	public EnumOrderedSet(@NotNull EnumSet other) {
 		this(other, OrderType.LIST);
 	}
 
@@ -283,7 +283,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 *
 	 * @param other another EnumOrderedSet that will have its contents and ordering copied
 	 */
-	public EnumOrderedSet(@NonNull EnumOrderedSet other) {
+	public EnumOrderedSet(@NotNull EnumOrderedSet other) {
 		this.size = other.size;
 		if (other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
@@ -312,7 +312,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public EnumOrderedSet(Enum<?> @NonNull [] contents) {
+	public EnumOrderedSet(Enum<?> @NotNull [] contents) {
 		this(contents, OrderType.LIST);
 	}
 
@@ -397,7 +397,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll(Enum<?> @NonNull [] other, int offset, int count) {
+	public boolean addAll(Enum<?> @NotNull [] other, int offset, int count) {
 		return addAll(size, other, offset, count);
 	}
 
@@ -411,7 +411,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll(int insertionIndex, Enum<?> @NonNull [] other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Enum<?> @NotNull [] other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.length);
 		for (int i = offset; i < end; i++) {
@@ -422,7 +422,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	}
 
 	@Override
-	public boolean remove(@NonNull Object key) {
+	public boolean remove(@NotNull Object key) {
 		return super.remove(key) && ordering.remove(key);
 	}
 
@@ -586,7 +586,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @return an {@link Iterator} over the Enum items in this, in order
 	 */
 	@Override
-	public @NonNull EnumSetIterator iterator() {
+	public @NotNull EnumSetIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new EnumOrderedSetIterator(this);
 			iterator2 = new EnumOrderedSetIterator(this);

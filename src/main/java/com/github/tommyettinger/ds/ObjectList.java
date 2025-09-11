@@ -19,8 +19,8 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -710,7 +710,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @throws IndexOutOfBoundsException {@inheritDoc}
 	 */
 	@Override
-	public @NonNull ObjectListIterator<T> listIterator(int index) {
+	public @NotNull ObjectListIterator<T> listIterator(int index) {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this, index);
 			iterator2 = new ObjectListIterator<>(this, index);
@@ -736,7 +736,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @see #listIterator(int)
 	 */
 	@Override
-	public @NonNull ObjectListIterator<T> listIterator() {
+	public @NotNull ObjectListIterator<T> listIterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this);
 			iterator2 = new ObjectListIterator<>(this);
@@ -762,7 +762,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @return an iterator over the elements in this list in proper sequence
 	 */
 	@Override
-	public @NonNull ObjectListIterator<T> iterator() {
+	public @NotNull ObjectListIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this);
 			iterator2 = new ObjectListIterator<>(this);
@@ -1011,7 +1011,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 * @return a ListIterator; really this same ObjectListIterator.
 		 */
 		@Override
-		public @NonNull ObjectListIterator<T> iterator() {
+		public @NotNull ObjectListIterator<T> iterator() {
 			return this;
 		}
 	}

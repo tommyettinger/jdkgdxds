@@ -25,8 +25,8 @@ import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -730,7 +730,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator iterator() {
+	public @NotNull EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 

@@ -18,7 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.util.CharIterator;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;

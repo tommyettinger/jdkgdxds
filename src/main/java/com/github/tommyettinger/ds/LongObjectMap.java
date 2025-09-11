@@ -23,8 +23,8 @@ import com.github.tommyettinger.function.LongObjBiConsumer;
 import com.github.tommyettinger.function.LongObjToObjBiFunction;
 
 import com.github.tommyettinger.function.LongToObjFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -933,7 +933,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator<V> iterator() {
+	public @NotNull EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1276,7 +1276,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public @NonNull EntryIterator<V> iterator() {
+		public @NotNull EntryIterator<V> iterator() {
 			return this;
 		}
 
@@ -1326,7 +1326,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator<V> iterator() {
+		public @NotNull EntryIterator<V> iterator() {
 			return iter;
 		}
 
@@ -1446,7 +1446,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull ValueIterator<V> iterator() {
+		public @NotNull ValueIterator<V> iterator() {
 			return iter;
 		}
 

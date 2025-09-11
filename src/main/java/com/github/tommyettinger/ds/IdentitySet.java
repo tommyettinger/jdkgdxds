@@ -17,8 +17,8 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -75,7 +75,7 @@ public class IdentitySet<T> extends ObjectSet<T> {
 	}
 
 	@Override
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		return System.identityHashCode(item) & mask;
 	}
 

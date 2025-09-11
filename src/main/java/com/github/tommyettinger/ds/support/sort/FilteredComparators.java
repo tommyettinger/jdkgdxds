@@ -21,7 +21,7 @@ import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -155,7 +155,7 @@ public class FilteredComparators {
 	 * @param <T>            the type of items in each Iterable
 	 * @return a Comparator of Iterable of T, which will use the given filter and editor
 	 */
-	public static <T, I extends Iterable<T>> Comparator<I> makeComparator(final @NonNull Comparator<T> baseComparator,
+	public static <T, I extends Iterable<T>> Comparator<I> makeComparator(final @NotNull Comparator<T> baseComparator,
 																		  final ObjPredicate<T> filter, final ObjToSameFunction<T> editor) {
 		return (I l, I r) -> {
 			int countL = 0, countR = 0;

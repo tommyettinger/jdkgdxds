@@ -20,8 +20,8 @@ import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.function.ByteToByteFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -1453,7 +1453,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code byte}, containing all the elements in this collection
 	 */
-	public byte @NonNull [] toArray() {
+	public byte @NotNull [] toArray() {
 		byte[] next = new byte[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);

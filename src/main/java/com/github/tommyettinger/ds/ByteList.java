@@ -20,7 +20,7 @@ import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.function.ByteToByteFunction;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;

@@ -22,8 +22,8 @@ import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 import com.github.tommyettinger.ds.support.util.DoubleIterator;
 import com.github.tommyettinger.function.DoubleToDoubleFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -1455,7 +1455,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code double}, containing all the elements in this collection
 	 */
-	public double @NonNull [] toArray() {
+	public double @NotNull [] toArray() {
 		double[] next = new double[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);

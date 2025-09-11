@@ -17,8 +17,8 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -123,7 +123,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param type either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *             use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public HolderOrderedSet(@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll, OrderType type) {
+	public HolderOrderedSet(@NotNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll, OrderType type) {
 		this(extractor, type);
 		addAll(coll);
 	}
@@ -235,7 +235,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public HolderOrderedSet(@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll) {
+	public HolderOrderedSet(@NotNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll) {
 		this(extractor);
 		addAll(coll);
 	}
@@ -540,7 +540,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public @NonNull HolderSetIterator<T, K> iterator() {
+	public @NotNull HolderSetIterator<T, K> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HolderOrderedSetIterator<>(this);
 			iterator2 = new HolderOrderedSetIterator<>(this);

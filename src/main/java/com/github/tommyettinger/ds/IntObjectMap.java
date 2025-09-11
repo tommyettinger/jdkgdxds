@@ -24,8 +24,8 @@ import com.github.tommyettinger.function.IntObjToObjBiFunction;
 
 import com.github.tommyettinger.function.IntToObjFunction;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -923,7 +923,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator<V> iterator() {
+	public @NotNull EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1270,7 +1270,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public @NonNull EntryIterator<V> iterator() {
+		public @NotNull EntryIterator<V> iterator() {
 			return this;
 		}
 
@@ -1320,7 +1320,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator<V> iterator() {
+		public @NotNull EntryIterator<V> iterator() {
 			return iter;
 		}
 
@@ -1440,7 +1440,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull ValueIterator<V> iterator() {
+		public @NotNull ValueIterator<V> iterator() {
 			return iter;
 		}
 

@@ -24,8 +24,8 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -715,7 +715,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator<V> iterator() {
+	public @NotNull EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 

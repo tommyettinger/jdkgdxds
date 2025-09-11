@@ -20,8 +20,8 @@ import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 import com.github.tommyettinger.function.ShortToShortFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -1453,7 +1453,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code short}, containing all the elements in this collection
 	 */
-	public short @NonNull [] toArray() {
+	public short @NotNull [] toArray() {
 		short[] next = new short[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);

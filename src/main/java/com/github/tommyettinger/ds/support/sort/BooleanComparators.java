@@ -16,7 +16,7 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 

@@ -17,9 +17,8 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import com.github.tommyettinger.function.ObjToFloatFunction;
-
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -36,7 +35,7 @@ public final class ObjectComparators {
 	protected static class NaturalImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
 
 		@Override
-		public final int compare(final @NonNull T a, final T b) {
+		public final int compare(final @NotNull T a, final T b) {
 			return a == b ? 0 : a.compareTo(b);
 		}
 
@@ -55,7 +54,7 @@ public final class ObjectComparators {
 	protected static class OppositeImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
 
 		@Override
-		public final int compare(final T a, final @NonNull T b) {
+		public final int compare(final T a, final @NotNull T b) {
 			return a == b ? 0 : b.compareTo(a);
 		}
 

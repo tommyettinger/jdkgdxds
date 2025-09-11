@@ -17,8 +17,8 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractQueue;
 import java.util.Collection;
@@ -525,7 +525,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	}
 
 	@Override
-	public boolean containsAll(Collection<@NonNull ?> c) {
+	public boolean containsAll(Collection<@NotNull ?> c) {
 		for (Object o : c) {
 			if (!contains(o)) {
 				return false;
@@ -542,7 +542,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * in the specified array
 	 * @see #containsAll(Collection)
 	 */
-	public boolean containsAll(@NonNull Object[] array) {
+	public boolean containsAll(@NotNull Object[] array) {
 		for (Object o : array) {
 			if (!contains(o))
 				return false;
@@ -560,7 +560,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * in the specified range of array
 	 * @see #containsAll(Object[])
 	 */
-	public boolean containsAll(@NonNull Object[] array, int offset, int length) {
+	public boolean containsAll(@NotNull Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			if (!contains(array[i])) return false;
 		}
@@ -573,7 +573,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAnyIterable(Iterable<@NonNull ?> values) {
+	public boolean containsAnyIterable(Iterable<@NotNull ?> values) {
 		for (Object v : values) {
 			if (contains(v)) {
 				return true;
@@ -588,7 +588,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny(@NonNull Object[] values) {
+	public boolean containsAny(@NotNull Object[] values) {
 		for (Object v : values) {
 			if (contains(v)) {
 				return true;
@@ -605,7 +605,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param length how many items to check from values
 	 * @return true if this set contains any of the items in the given range of {@code values}, false otherwise
 	 */
-	public boolean containsAny(@NonNull Object[] values, int offset, int length) {
+	public boolean containsAny(@NotNull Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			if (contains(values[i])) {
 				return true;
@@ -623,7 +623,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @see #removeEachIterable(Iterable)
 	 */
 	@Override
-	public boolean removeAll(@NonNull Collection<@NonNull ?> other) {
+	public boolean removeAll(@NotNull Collection<@NotNull ?> other) {
 		return removeEachIterable(other);
 	}
 
@@ -636,7 +636,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return {@code true} if this list changed as a result of the call
 	 * @see #removeAll(Collection)
 	 */
-	public boolean removeAll(@NonNull Object[] other) {
+	public boolean removeAll(@NotNull Object[] other) {
 		return removeEach(other);
 	}
 
@@ -652,7 +652,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @see #removeAll(Object[])
 	 * @see #removeEach(Object[], int, int)
 	 */
-	public boolean removeAll(@NonNull Object[] array, int offset, int length) {
+	public boolean removeAll(@NotNull Object[] array, int offset, int length) {
 		return removeEach(array, offset, length);
 	}
 
@@ -665,7 +665,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @param other an Iterable of T items to remove one-by-one, such as another ObjectList or an ObjectSet
 	 * @return true if this list was modified.
 	 */
-	public boolean removeEachIterable(@NonNull Iterable<@NonNull ?> other) {
+	public boolean removeEachIterable(@NotNull Iterable<@NotNull ?> other) {
 		boolean changed = false;
 		for (Object item : other) {
 			changed |= remove(item);
@@ -680,7 +680,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return {@code true} if this list changed as a result of the call
 	 * @see #removeEachIterable(Iterable)
 	 */
-	public boolean removeEach(@NonNull Object @NonNull [] array) {
+	public boolean removeEach(@NotNull Object @NotNull [] array) {
 		return removeEach(array, 0, array.length);
 	}
 
@@ -693,7 +693,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return {@code true} if this list changed as a result of the call
 	 * @see #removeEach(Object[])
 	 */
-	public boolean removeEach(@NonNull Object @NonNull [] array, int offset, int length) {
+	public boolean removeEach(@NotNull Object @NotNull [] array, int offset, int length) {
 		boolean changed = false;
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			changed |= remove(array[i]);
@@ -741,7 +741,7 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	 * @return an iterator over the elements contained in this collection
 	 */
 	@Override
-	public @NonNull HeapIterator<T> iterator() {
+	public @NotNull HeapIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HeapIterator<>(this);
 			iterator2 = new HeapIterator<>(this);

@@ -25,8 +25,8 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -714,7 +714,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator<V> iterator() {
+	public @NotNull EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 

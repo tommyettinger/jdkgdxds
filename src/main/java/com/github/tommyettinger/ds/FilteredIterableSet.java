@@ -20,8 +20,8 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -241,7 +241,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	}
 
 	@Override
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		if (item instanceof Iterable) {
 			return hashHelper((I) item) & mask;
 		}

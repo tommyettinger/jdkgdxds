@@ -22,8 +22,8 @@ import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.IntLongBiConsumer;
 import com.github.tommyettinger.function.IntLongToLongBiFunction;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -922,7 +922,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator iterator() {
+	public @NotNull EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1263,7 +1263,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 
 		@Override
-		public @NonNull Iterator<Entry> iterator() {
+		public @NotNull Iterator<Entry> iterator() {
 			return this;
 		}
 
@@ -1313,7 +1313,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator iterator() {
+		public @NotNull EntryIterator iterator() {
 			return iter;
 		}
 

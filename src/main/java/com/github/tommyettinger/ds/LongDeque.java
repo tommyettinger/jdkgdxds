@@ -20,8 +20,8 @@ import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongToLongFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -1453,7 +1453,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
      * @return an array, whose {@linkplain Class#getComponentType runtime component
      * type} is {@code long}, containing all the elements in this collection
      */
-    public long @NonNull [] toArray() {
+    public long @NotNull [] toArray() {
         long[] next = new long[size];
         if (head <= tail) {
             System.arraycopy(items, head, next, 0, tail - head + 1);

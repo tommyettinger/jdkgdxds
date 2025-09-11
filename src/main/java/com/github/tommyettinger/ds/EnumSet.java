@@ -19,8 +19,8 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -109,7 +109,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public EnumSet(Enum<?> @NonNull [] contents) {
+	public EnumSet(Enum<?> @NotNull [] contents) {
 		super();
 		addAll(contents);
 	}
@@ -120,7 +120,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumSet(@NonNull Iterator<? extends Enum<?>> contents) {
+	public EnumSet(@NotNull Iterator<? extends Enum<?>> contents) {
 		super();
 		addAll(contents);
 	}
@@ -131,7 +131,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumSet(@NonNull Collection<? extends Enum<?>> contents) {
+	public EnumSet(@NotNull Collection<? extends Enum<?>> contents) {
 		super();
 		addAll(contents);
 	}
@@ -141,7 +141,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param other another EnumSet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
-	public EnumSet(@NonNull EnumSet other) {
+	public EnumSet(@NotNull EnumSet other) {
 		this.size = other.size;
 		if (other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
@@ -198,7 +198,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Use the {@link EnumSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public @NonNull Iterator<Enum<?>> iterator() {
+	public @NotNull Iterator<Enum<?>> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new EnumSetIterator(this);
 			iterator2 = new EnumSetIterator(this);
@@ -294,7 +294,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean retainAll(@NonNull Collection<?> c) {
+	public boolean retainAll(@NotNull Collection<?> c) {
 		if (size == 0 || table == null || universe == null || universe.length == 0) return false;
 		if (!(c instanceof EnumSet))
 			return super.retainAll(c);
@@ -317,7 +317,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean addAll(@NonNull Collection<? extends Enum<?>> c) {
+	public boolean addAll(@NotNull Collection<? extends Enum<?>> c) {
 		if (!(c instanceof EnumSet))
 			return super.addAll(c);
 		EnumSet es = (EnumSet) c;
@@ -339,7 +339,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean containsAll(@NonNull Collection<?> c) {
+	public boolean containsAll(@NotNull Collection<?> c) {
 		if (!(c instanceof EnumSet))
 			return super.containsAll(c);
 		EnumSet es = (EnumSet) c;
@@ -359,7 +359,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @return {@code true} if this set changed as a result of the call
 	 */
 	@Override
-	public boolean removeAll(@NonNull Collection<?> c) {
+	public boolean removeAll(@NotNull Collection<?> c) {
 		if (table == null || universe == null || universe.length == 0) return false;
 		if (!(c instanceof EnumSet))
 			return super.removeAll(c);
@@ -380,7 +380,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @see #add(Enum)
 	 */
-	public boolean addAll(Enum<?> @NonNull [] c) {
+	public boolean addAll(Enum<?> @NotNull [] c) {
 		boolean modified = false;
 		for (int i = 0; i < c.length; i++) {
 			modified |= add(c[i]);

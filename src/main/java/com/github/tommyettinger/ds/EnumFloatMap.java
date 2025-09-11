@@ -26,8 +26,8 @@ import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.ObjToFloatFunction;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -132,7 +132,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param keys   an array of Enum keys
 	 * @param values an array of float values
 	 */
-	public EnumFloatMap(Enum<?> @NonNull [] keys, float @NonNull [] values) {
+	public EnumFloatMap(Enum<?> @NotNull [] keys, float @NotNull [] values) {
 		this();
 		putAll(keys, values);
 	}
@@ -144,7 +144,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param keys   a Collection of Enum keys
 	 * @param values a PrimitiveCollection of float values
 	 */
-	public EnumFloatMap(@NonNull Collection<? extends Enum<?>> keys, @NonNull OfFloat values) {
+	public EnumFloatMap(@NotNull Collection<? extends Enum<?>> keys, @NotNull OfFloat values) {
 		this();
 		putAll(keys, values);
 	}
@@ -156,7 +156,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param keys   a Collection of Enum keys
 	 * @param values a PrimitiveCollection of float values
 	 */
-	public void putAll(@NonNull Collection<? extends Enum<?>> keys, @NonNull OfFloat values) {
+	public void putAll(@NotNull Collection<? extends Enum<?>> keys, @NotNull OfFloat values) {
 		Enum<?> key;
 		Iterator<? extends Enum<?>> ki = keys.iterator();
 		FloatIterator vi = values.iterator();
@@ -175,7 +175,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param value the float value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
-	public float put(@NonNull Enum<?> key, float value) {
+	public float put(@NotNull Enum<?> key, float value) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -200,7 +200,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param defaultValue the float value to return if {@code key} was not already present
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
-	public float putOrDefault(@NonNull Enum<?> key, float value, float defaultValue) {
+	public float putOrDefault(@NotNull Enum<?> key, float value, float defaultValue) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -225,7 +225,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 *
 	 * @param map another EnumFloatMap with an equivalent key universe
 	 */
-	public void putAll(@NonNull EnumFloatMap map) {
+	public void putAll(@NotNull EnumFloatMap map) {
 		if (map.keys == null || map.keys.universe == null) return;
 		if (keys == null || keys.universe == null) keys = map.keys;
 		Enum<?>[] universe = keys.universe;
@@ -251,7 +251,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param keys   an array of keys
 	 * @param values an array of values
 	 */
-	public void putAll(Enum<?> @NonNull [] keys, float @NonNull [] values) {
+	public void putAll(Enum<?> @NotNull [] keys, float @NotNull [] values) {
 		putAll(keys, 0, values, 0, Math.min(keys.length, values.length));
 	}
 
@@ -263,7 +263,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param values an array of values
 	 * @param length how many items from keys and values to insert, at-most
 	 */
-	public void putAll(Enum<?> @NonNull [] keys, float @NonNull [] values, int length) {
+	public void putAll(Enum<?> @NotNull [] keys, float @NotNull [] values, int length) {
 		putAll(keys, 0, values, 0, Math.min(length, Math.min(keys.length, values.length)));
 	}
 
@@ -277,7 +277,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param valueOffset the first index in values to insert
 	 * @param length      how many items from keys and values to insert, at-most
 	 */
-	public void putAll(Enum<?> @NonNull [] keys, int keyOffset, float @NonNull [] values, int valueOffset, int length) {
+	public void putAll(Enum<?> @NotNull [] keys, int keyOffset, float @NotNull [] values, int valueOffset, int length) {
 		length = Math.min(length, Math.min(keys.length - keyOffset, values.length - valueOffset));
 		Enum<?> key;
 		for (int k = keyOffset, v = valueOffset, i = 0, n = length; i < n; i++, k++, v++) {
@@ -343,7 +343,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @throws IllegalArgumentException      if some property of a key or value in
 	 *                                       the specified map prevents it from being stored in this map
 	 */
-	public void putAll(@NonNull ObjectFloatMap<Enum<?>> m) {
+	public void putAll(@NotNull ObjectFloatMap<Enum<?>> m) {
 		for (ObjectFloatMap.Entry<Enum<?>> kv : m.entrySet()) {
 			put(kv.getKey(), kv.getValue());
 		}
@@ -353,7 +353,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * Returns the key's current value and increments the stored value. If the key is not in the map, defaultValue + increment is
 	 * put into the map and defaultValue is returned.
 	 */
-	public float getAndIncrement(@NonNull Enum<?> key, float defaultValue, float increment) {
+	public float getAndIncrement(@NotNull Enum<?> key, float defaultValue, float increment) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -756,7 +756,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator iterator() {
+	public @NotNull EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -779,7 +779,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public @NonNull Keys keySet() {
+	public @NotNull Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys(this);
 			keys2 = new Keys(this);
@@ -803,7 +803,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 *
 	 * @return a {@link PrimitiveCollection} of float values
 	 */
-	public @NonNull Values values() {
+	public @NotNull Values values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values(this);
 			values2 = new Values(this);
@@ -827,7 +827,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 *
 	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
-	public @NonNull Entries entrySet() {
+	public @NotNull Entries entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries(this);
 			entries2 = new Entries(this);
@@ -852,7 +852,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		public Entry() {
 		}
 
-		public Entry(@NonNull Entry entry) {
+		public Entry(@NotNull Entry entry) {
 			this.key = entry.key;
 			this.value = entry.value;
 		}
@@ -952,7 +952,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		}
 
 		@Override
-		public @NonNull KeyIterator iterator() {
+		public @NotNull KeyIterator iterator() {
 			return this;
 		}
 
@@ -1021,7 +1021,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		}
 
 		@Override
-		public @NonNull EntryIterator iterator() {
+		public @NotNull EntryIterator iterator() {
 			return this;
 		}
 
@@ -1159,7 +1159,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator iterator() {
+		public @NotNull EntryIterator iterator() {
 			return iter;
 		}
 
@@ -1218,7 +1218,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NonNull [] toArray() {
+		public Object @NotNull [] toArray() {
 			Object[] a = new Object[iter.map.size()];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1240,7 +1240,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T> T @NonNull [] toArray(T[] a) {
+		public <T> T @NotNull [] toArray(T[] a) {
 			if (a.length < iter.map.size()) a = Arrays.copyOf(a, iter.map.size());
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1482,17 +1482,17 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		}
 
 		@Override
-		public boolean add(@NonNull Enum<?> item) {
+		public boolean add(@NotNull Enum<?> item) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
 		@Override
-		public boolean addAll(@NonNull Collection<? extends Enum<?>> c) {
+		public boolean addAll(@NotNull Collection<? extends Enum<?>> c) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
 		@Override
-		public boolean addAll(Enum<?> @NonNull [] c) {
+		public boolean addAll(Enum<?> @NotNull [] c) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
@@ -1517,7 +1517,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull Iterator<Enum<?>> iterator() {
+		public @NotNull Iterator<Enum<?>> iterator() {
 			return iter;
 		}
 

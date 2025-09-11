@@ -20,8 +20,8 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntToIntFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -1453,7 +1453,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code int}, containing all the elements in this collection
 	 */
-	public int @NonNull [] toArray() {
+	public int @NotNull [] toArray() {
 		int[] next = new int[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);

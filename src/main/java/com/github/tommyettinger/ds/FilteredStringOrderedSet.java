@@ -21,8 +21,8 @@ import com.github.tommyettinger.ds.support.sort.FilteredComparators;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -390,7 +390,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	}
 
 	@Override
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		if (item instanceof String) {
 			return hashHelper((String) item) & mask;
 		}

@@ -20,8 +20,8 @@ import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -655,7 +655,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NonNull Keys keySet() {
+	public @NotNull Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys(this);
 			keys2 = new OrderedMapKeys(this);
@@ -680,7 +680,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NonNull Values<V> values() {
+	public @NotNull Values<V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -706,7 +706,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NonNull Entries<V> entrySet() {
+	public @NotNull Entries<V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -733,7 +733,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+	public @NotNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -789,7 +789,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 			keys = map.ordering;
 			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
-				public @NonNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+				public @NotNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 					return this;
 				}
 
@@ -847,7 +847,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 			ordering = map.ordering;
 			iter = new MapIterator<Object, Enum<?>>(map) {
 				@Override
-				public @NonNull MapIterator<?, Enum<?>> iterator() {
+				public @NotNull MapIterator<?, Enum<?>> iterator() {
 					return this;
 				}
 
@@ -903,7 +903,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 			keys = map.ordering;
 			iter = new MapIterator<V, V>(map) {
 				@Override
-				public @NonNull MapIterator<V, V> iterator() {
+				public @NotNull MapIterator<V, V> iterator() {
 					return this;
 				}
 

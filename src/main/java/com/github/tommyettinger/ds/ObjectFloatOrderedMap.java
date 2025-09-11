@@ -23,8 +23,8 @@ import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.FloatAppender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -673,7 +673,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NonNull EntryIterator<K> iterator() {
+	public @NotNull EntryIterator<K> iterator() {
 		return entrySet().iterator();
 	}
 

@@ -22,8 +22,8 @@ import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.IntIntToIntBiFunction;
 import com.github.tommyettinger.function.ObjToIntFunction;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -171,7 +171,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param value the int value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
-	public int put(@NonNull Enum<?> key, int value) {
+	public int put(@NotNull Enum<?> key, int value) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -196,7 +196,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param defaultValue the int value to return if {@code key} was not already present
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
-	public int putOrDefault(@NonNull Enum<?> key, int value, int defaultValue) {
+	public int putOrDefault(@NotNull Enum<?> key, int value, int defaultValue) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -221,7 +221,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @param map another EnumIntMap with an equivalent key universe
 	 */
-	public void putAll(@NonNull EnumIntMap map) {
+	public void putAll(@NotNull EnumIntMap map) {
 		if (map.keys == null || map.keys.universe == null) return;
 		if (keys == null || keys.universe == null) keys = map.keys;
 		Enum<?>[] universe = keys.universe;
@@ -751,7 +751,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator iterator() {
+	public @NotNull EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -774,7 +774,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public @NonNull Keys keySet() {
+	public @NotNull Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys(this);
 			keys2 = new Keys(this);
@@ -798,7 +798,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a {@link PrimitiveCollection} of int values
 	 */
-	public @NonNull Values values() {
+	public @NotNull Values values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values(this);
 			values2 = new Values(this);
@@ -822,7 +822,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
-	public @NonNull Entries entrySet() {
+	public @NotNull Entries entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries(this);
 			entries2 = new Entries(this);
@@ -847,7 +847,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		public Entry() {
 		}
 
-		public Entry(@NonNull Entry entry) {
+		public Entry(@NotNull Entry entry) {
 			this.key = entry.key;
 			this.value = entry.value;
 		}
@@ -947,7 +947,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		@Override
-		public @NonNull KeyIterator iterator() {
+		public @NotNull KeyIterator iterator() {
 			return this;
 		}
 
@@ -1016,7 +1016,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		@Override
-		public @NonNull EntryIterator iterator() {
+		public @NotNull EntryIterator iterator() {
 			return this;
 		}
 
@@ -1154,7 +1154,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator iterator() {
+		public @NotNull EntryIterator iterator() {
 			return iter;
 		}
 
@@ -1213,7 +1213,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NonNull [] toArray() {
+		public Object @NotNull [] toArray() {
 			Object[] a = new Object[iter.map.size()];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1235,7 +1235,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T> T @NonNull [] toArray(T[] a) {
+		public <T> T @NotNull [] toArray(T[] a) {
 			if (a.length < iter.map.size()) a = Arrays.copyOf(a, iter.map.size());
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1477,17 +1477,17 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		@Override
-		public boolean add(@NonNull Enum<?> item) {
+		public boolean add(@NotNull Enum<?> item) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
 		@Override
-		public boolean addAll(@NonNull Collection<? extends Enum<?>> c) {
+		public boolean addAll(@NotNull Collection<? extends Enum<?>> c) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
 		@Override
-		public boolean addAll(Enum<?> @NonNull [] c) {
+		public boolean addAll(Enum<?> @NotNull [] c) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
@@ -1512,7 +1512,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull Iterator<Enum<?>> iterator() {
+		public @NotNull Iterator<Enum<?>> iterator() {
 			return iter;
 		}
 

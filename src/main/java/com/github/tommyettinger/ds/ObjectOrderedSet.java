@@ -17,8 +17,8 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -275,7 +275,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	@Override
-	public boolean remove(@NonNull Object key) {
+	public boolean remove(@NotNull Object key) {
 		return super.remove(key) && items.remove(key);
 	}
 
@@ -451,7 +451,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public @NonNull ObjectSetIterator<T> iterator() {
+	public @NotNull ObjectSetIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectOrderedSetIterator<>(this);
 			iterator2 = new ObjectOrderedSetIterator<>(this);

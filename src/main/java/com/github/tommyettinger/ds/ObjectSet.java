@@ -18,8 +18,8 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -190,7 +190,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -252,7 +252,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	@Override
-	public boolean containsAll(Collection<@NonNull ?> c) {
+	public boolean containsAll(Collection<@NotNull ?> c) {
 		for (Object o : c) {
 			if (!contains(o)) {
 				return false;
@@ -269,7 +269,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * in the specified array
 	 * @see #containsAll(Collection)
 	 */
-	public boolean containsAll(@NonNull Object[] array) {
+	public boolean containsAll(@NotNull Object[] array) {
 		for (Object o : array) {
 			if (!contains(o))
 				return false;
@@ -287,7 +287,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * in the specified range of array
 	 * @see #containsAll(Object[])
 	 */
-	public boolean containsAll(@NonNull Object[] array, int offset, int length) {
+	public boolean containsAll(@NotNull Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			if (!contains(array[i])) return false;
 		}
@@ -300,7 +300,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAnyIterable(Iterable<@NonNull ?> values) {
+	public boolean containsAnyIterable(Iterable<@NotNull ?> values) {
 		for (Object v : values) {
 			if (contains(v)) {
 				return true;
@@ -315,7 +315,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny(@NonNull Object[] values) {
+	public boolean containsAny(@NotNull Object[] values) {
 		for (Object v : values) {
 			if (contains(v)) {
 				return true;
@@ -332,7 +332,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param length how many items to check from values
 	 * @return true if this set contains any of the items in the given range of {@code values}, false otherwise
 	 */
-	public boolean containsAny(@NonNull Object[] values, int offset, int length) {
+	public boolean containsAny(@NotNull Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			if (contains(values[i])) {
 				return true;
@@ -354,7 +354,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	@Override
-	public boolean retainAll(@NonNull Collection<?> c) {
+	public boolean retainAll(@NotNull Collection<?> c) {
 		boolean modified = false;
 		for (Object o : this) {
 			if (!c.contains(o)) {
@@ -373,7 +373,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		return modified;
 	}
 
-	public boolean removeAll(@NonNull Object[] values) {
+	public boolean removeAll(@NotNull Object[] values) {
 		boolean modified = false;
 		for (Object o : values) {
 			modified |= remove(o);
@@ -381,7 +381,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		return modified;
 	}
 
-	public boolean removeAll(@NonNull Object[] values, int offset, int length) {
+	public boolean removeAll(@NotNull Object[] values, int offset, int length) {
 		boolean modified = false;
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			modified |= remove(values[i]);
@@ -432,7 +432,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * Returns true if the key was removed.
 	 */
 	@Override
-	public boolean remove(@NonNull Object key) {
+	public boolean remove(@NotNull Object key) {
 		if (key == null) return false;
 		int pos = locateKey(key);
 		if (pos < 0) return false;
@@ -526,7 +526,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	@Override
-	public boolean contains(@NonNull Object key) {
+	public boolean contains(@NotNull Object key) {
 		if (key == null) return false;
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
@@ -627,7 +627,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	@Override
-	public Object @NonNull [] toArray() {
+	public Object @NotNull [] toArray() {
 		return toArray(new Object[size()]);
 	}
 
@@ -647,7 +647,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> @Nullable E @NonNull [] toArray(@Nullable E[] a) {
+	public <E> @Nullable E @NotNull [] toArray(@Nullable E[] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -766,7 +766,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(ObjectSet)}.
 	 */
 	@Override
-	public @NonNull ObjectSetIterator<T> iterator() {
+	public @NotNull ObjectSetIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectSetIterator<>(this);
 			iterator2 = new ObjectSetIterator<>(this);
@@ -879,7 +879,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		}
 
 		@Override
-		public @NonNull ObjectSetIterator<T> iterator() {
+		public @NotNull ObjectSetIterator<T> iterator() {
 			return this;
 		}
 

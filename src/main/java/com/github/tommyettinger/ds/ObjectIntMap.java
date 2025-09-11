@@ -23,8 +23,8 @@ import com.github.tommyettinger.function.IntIntToIntBiFunction;
 import com.github.tommyettinger.function.ObjIntBiConsumer;
 import com.github.tommyettinger.function.ObjIntToIntBiFunction;
 import com.github.tommyettinger.function.ObjToIntFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -213,7 +213,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -861,7 +861,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NonNull EntryIterator<K> iterator() {
+	public @NotNull EntryIterator<K> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1109,7 +1109,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		@Override
-		public @NonNull KeyIterator<K> iterator() {
+		public @NotNull KeyIterator<K> iterator() {
 			return this;
 		}
 
@@ -1178,7 +1178,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		@Override
-		public @NonNull EntryIterator<K> iterator() {
+		public @NotNull EntryIterator<K> iterator() {
 			return this;
 		}
 
@@ -1223,7 +1223,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NonNull EntryIterator<K> iterator() {
+		public @NotNull EntryIterator<K> iterator() {
 			return iter;
 		}
 
@@ -1416,7 +1416,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		@Override
-		public @NonNull KeyIterator<K> iterator() {
+		public @NotNull KeyIterator<K> iterator() {
 			return iter;
 		}
 

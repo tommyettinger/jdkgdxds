@@ -18,8 +18,8 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -140,7 +140,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @param loadFactor      what fraction of the capacity can be filled before this has to resize; 0 &lt; loadFactor &lt;= 1
 	 */
 	@SuppressWarnings("unchecked")
-	public HolderSet(@NonNull ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor) {
+	public HolderSet(@NotNull ObjToObjFunction<T, K> extractor, int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor > 1f) {
 			throw new IllegalArgumentException("loadFactor must be > 0 and <= 1: " + loadFactor);
 		}
@@ -161,7 +161,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 *
 	 * @param coll an iterator that will have its remaining contents added to this
 	 */
-	public HolderSet(@NonNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll) {
+	public HolderSet(@NotNull ObjToObjFunction<T, K> extractor, Iterator<? extends T> coll) {
 		this(extractor);
 		addAll(coll);
 	}
@@ -227,7 +227,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 *
 	 * @param extractor a ObjToObjFunction that takes a T and gets a unique K from it; often a method reference
 	 */
-	public void setExtractor(@NonNull ObjToObjFunction<T, K> extractor) {
+	public void setExtractor(@NotNull ObjToObjFunction<T, K> extractor) {
 		if (this.extractor == null)
 			this.extractor = extractor;
 	}
@@ -238,7 +238,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -266,7 +266,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 *
 	 * @param key a non-null Object that should probably be a K
 	 */
-	protected int locateKey(@NonNull Object key) {
+	protected int locateKey(@NotNull Object key) {
 		@Nullable T[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			@Nullable T other = keyTable[i];
@@ -346,7 +346,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @return true if this Set was modified
 	 */
 	@Override
-	public boolean retainAll(@NonNull Collection<@NonNull ?> c) {
+	public boolean retainAll(@NotNull Collection<@NotNull ?> c) {
 		boolean modified = false;
 		for (Object o : this) {
 			if (!c.contains(o)) {
@@ -364,7 +364,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @return true if this Set was modified
 	 */
 	@Override
-	public boolean removeAll(Collection<@NonNull ?> c) {
+	public boolean removeAll(Collection<@NotNull ?> c) {
 		boolean modified = false;
 		for (Object o : c) {
 			modified |= remove(o);
@@ -372,7 +372,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		return modified;
 	}
 
-	public boolean removeAll(@NonNull Object[] values) {
+	public boolean removeAll(@NotNull Object[] values) {
 		boolean modified = false;
 		for (Object o : values) {
 			modified |= remove(o);
@@ -380,7 +380,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		return modified;
 	}
 
-	public boolean removeAll(@NonNull Object[] values, int offset, int length) {
+	public boolean removeAll(@NotNull Object[] values, int offset, int length) {
 		boolean modified = false;
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			modified |= remove(values[i]);
@@ -389,7 +389,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	}
 
 	@Override
-	public boolean containsAll(Collection<@NonNull ?> c) {
+	public boolean containsAll(Collection<@NotNull ?> c) {
 		for (Object o : c) {
 			if (!contains(o)) {
 				return false;
@@ -406,7 +406,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * in the specified array
 	 * @see #containsAll(Collection)
 	 */
-	public boolean containsAll(@NonNull Object[] array) {
+	public boolean containsAll(@NotNull Object[] array) {
 		for (Object o : array) {
 			if (!contains(o))
 				return false;
@@ -424,7 +424,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * in the specified range of array
 	 * @see #containsAll(Object[])
 	 */
-	public boolean containsAll(@NonNull Object[] array, int offset, int length) {
+	public boolean containsAll(@NotNull Object[] array, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < array.length; i++, n++) {
 			if (!contains(array[i])) return false;
 		}
@@ -437,7 +437,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAnyIterable(Iterable<@NonNull ?> values) {
+	public boolean containsAnyIterable(Iterable<@NotNull ?> values) {
 		for (Object v : values) {
 			if (contains(v)) {
 				return true;
@@ -452,7 +452,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @param values must not contain nulls, and must not be null itself
 	 * @return true if this set contains any of the items in {@code values}, false otherwise
 	 */
-	public boolean containsAny(@NonNull Object[] values) {
+	public boolean containsAny(@NotNull Object[] values) {
 		for (Object v : values) {
 			if (contains(v)) {
 				return true;
@@ -469,7 +469,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @param length how many items to check from values
 	 * @return true if this set contains any of the items in the given range of {@code values}, false otherwise
 	 */
-	public boolean containsAny(@NonNull Object[] values, int offset, int length) {
+	public boolean containsAny(@NotNull Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			if (contains(values[i])) {
 				return true;
@@ -481,7 +481,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	protected void addResize(@NonNull T key) {
+	protected void addResize(@NotNull T key) {
 		assert extractor != null;
 		T[] keyTable = this.keyTable;
 		for (int i = place(extractor.apply(key)); ; i = i + 1 & mask) {
@@ -717,7 +717,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	}
 
 	@Override
-	public Object @NonNull [] toArray() {
+	public Object @NotNull [] toArray() {
 		return toArray(new Object[size()]);
 	}
 
@@ -737,7 +737,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * @return an array containing all the elements in this set
 	 */
 	@Override
-	public <E> E @NonNull [] toArray(E @NonNull [] a) {
+	public <E> E @NotNull [] toArray(E @NotNull [] a) {
 		int size = size();
 		if (a.length < size) {
 			a = Arrays.copyOf(a, size);
@@ -839,7 +839,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 * iteration, use {@link HolderSetIterator#HolderSetIterator(HolderSet)}.
 	 */
 	@Override
-	public @NonNull HolderSetIterator<T, K> iterator() {
+	public @NotNull HolderSetIterator<T, K> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new HolderSetIterator<>(this);
 			iterator2 = new HolderSetIterator<>(this);
@@ -934,7 +934,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		}
 
 		@Override
-		public @NonNull HolderSetIterator<T, K> iterator() {
+		public @NotNull HolderSetIterator<T, K> iterator() {
 			return this;
 		}
 
