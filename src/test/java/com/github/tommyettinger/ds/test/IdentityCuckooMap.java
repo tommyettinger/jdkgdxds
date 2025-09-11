@@ -20,7 +20,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IdentitySet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.Utilities;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -377,7 +377,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public @NonNull Set<K> keySet() {
+	public @NotNull Set<K> keySet() {
 		Set<K> set = new IdentitySet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -388,7 +388,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public @NonNull Collection<V> values() {
+	public @NotNull Collection<V> values() {
 		List<V> values = new ObjectList<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -399,7 +399,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public @NonNull Set<Entry<K, V>> entrySet() {
+	public @NotNull Set<Entry<K, V>> entrySet() {
 		Set<Entry<K, V>> set = new IdentitySet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {

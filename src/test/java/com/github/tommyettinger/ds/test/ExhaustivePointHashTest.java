@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import static com.github.tommyettinger.ds.test.PileupTest.*;
 
@@ -60,7 +60,7 @@ public class ExhaustivePointHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place(@NonNull Object item) {
+					protected int place(@NotNull Object item) {
 						final Point2 p = (Point2) item;
 						return p.x * hashX + p.y * hashY & mask;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
@@ -70,7 +70,7 @@ public class ExhaustivePointHashTest {
 					}
 
 					@Override
-					protected void addResize(@NonNull Object key) {
+					protected void addResize(@NotNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

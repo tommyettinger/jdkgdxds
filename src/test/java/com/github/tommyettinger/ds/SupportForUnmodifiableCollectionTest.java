@@ -51,21 +51,21 @@ public class SupportForUnmodifiableCollectionTest extends TestCase {
 
 		// contains
 		assertTrue("UnmodifiableCollectionTest - should contain 0", col
-			.contains(new Integer(0)));
+			.contains(Integer.valueOf(0)));
 		assertTrue("UnmodifiableCollectionTest - should contain 50", col
-			.contains(new Integer(50)));
+			.contains(Integer.valueOf(50)));
 		assertTrue("UnmodifiableCollectionTest - should not contain 100", !col
-			.contains(new Integer(100)));
+			.contains(Integer.valueOf(100)));
 
 		// containsAll
 		HashSet<Integer> hs = new HashSet<Integer>();
-		hs.add(new Integer(0));
-		hs.add(new Integer(25));
-		hs.add(new Integer(99));
+		hs.add(Integer.valueOf(0));
+		hs.add(Integer.valueOf(25));
+		hs.add(Integer.valueOf(99));
 		assertTrue(
 			"UnmodifiableCollectionTest - should contain set of 0, 25, and 99",
 			col.containsAll(hs));
-		hs.add(new Integer(100));
+		hs.add(Integer.valueOf(100));
 		assertTrue(
 			"UnmodifiableCollectionTest - should not contain set of 0, 25, 99 and 100",
 			!col.containsAll(hs));

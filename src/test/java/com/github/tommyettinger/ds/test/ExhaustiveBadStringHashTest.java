@@ -19,7 +19,7 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import static com.github.tommyettinger.ds.test.PileupTest.LEN;
 import static com.github.tommyettinger.ds.test.PileupTest.generateUniqueBad;
@@ -88,7 +88,7 @@ public class ExhaustiveBadStringHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place(@NonNull Object item) {
+					protected int place(@NotNull Object item) {
 						return item.hashCode() * hashMul + hashAdd >>> shift;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
 //                        final int h = item.hashCode() + (int)(hashMultiplier>>>32);
@@ -97,7 +97,7 @@ public class ExhaustiveBadStringHashTest {
 					}
 
 					@Override
-					protected void addResize(@NonNull Object key) {
+					protected void addResize(@NotNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

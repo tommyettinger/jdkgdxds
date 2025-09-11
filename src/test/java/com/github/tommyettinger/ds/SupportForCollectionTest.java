@@ -45,21 +45,20 @@ public class SupportForCollectionTest extends junit.framework.TestCase {
 
 		// setup
 		Collection<Integer> myCollection = new TreeSet<Integer>();
-		myCollection.add(new Integer(101));
-		myCollection.add(new Integer(102));
-		myCollection.add(new Integer(103));
+		myCollection.add(Integer.valueOf(101));
+		myCollection.add(Integer.valueOf(102));
+		myCollection.add(Integer.valueOf(103));
 
 		// add
-		assertTrue("CollectionTest - a) add did not work", col.add(new Integer(
-			101)));
+		assertTrue("CollectionTest - a) add did not work", col.add(Integer.valueOf(101)));
 		assertTrue("CollectionTest - b) add did not work", col
-			.contains(new Integer(101)));
+			.contains(Integer.valueOf(101)));
 
 		// remove
 		assertTrue("CollectionTest - a) remove did not work", col
-			.remove(new Integer(101)));
+			.remove(Integer.valueOf(101)));
 		assertTrue("CollectionTest - b) remove did not work", !col
-			.contains(new Integer(101)));
+			.contains(Integer.valueOf(101)));
 
 		// addAll
 		assertTrue("CollectionTest - a) addAll failed", col
@@ -70,7 +69,7 @@ public class SupportForCollectionTest extends junit.framework.TestCase {
 		// containsAll
 		assertTrue("CollectionTest - a) containsAll failed", col
 			.containsAll(myCollection));
-		col.remove(new Integer(101));
+		col.remove(Integer.valueOf(101));
 		assertTrue("CollectionTest - b) containsAll failed", !col
 			.containsAll(myCollection));
 
@@ -81,9 +80,9 @@ public class SupportForCollectionTest extends junit.framework.TestCase {
 			.removeAll(myCollection)); // should not change the colletion
 		// the 2nd time around
 		assertTrue("CollectionTest - c) removeAll failed", !col
-			.contains(new Integer(102)));
+			.contains(Integer.valueOf(102)));
 		assertTrue("CollectionTest - d) removeAll failed", !col
-			.contains(new Integer(103)));
+			.contains(Integer.valueOf(103)));
 
 		// retianAll
 		col.addAll(myCollection);
@@ -95,15 +94,15 @@ public class SupportForCollectionTest extends junit.framework.TestCase {
 		assertTrue("CollectionTest - c) retainAll failed", col
 			.containsAll(myCollection));
 		assertTrue("CollectionTest - d) retainAll failed", !col
-			.contains(new Integer(0)));
+			.contains(Integer.valueOf(0)));
 		assertTrue("CollectionTest - e) retainAll failed", !col
-			.contains(new Integer(50)));
+			.contains(Integer.valueOf(50)));
 
 		// clear
 		col.clear();
 		assertTrue("CollectionTest - a) clear failed", col.isEmpty());
 		assertTrue("CollectionTest - b) clear failed", !col
-			.contains(new Integer(101)));
+			.contains(Integer.valueOf(101)));
 
 	}
 

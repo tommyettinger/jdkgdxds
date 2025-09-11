@@ -19,8 +19,8 @@ package com.github.tommyettinger.ds.flip;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.Utilities;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -662,7 +662,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public @NonNull Set<Map.Entry<K, V>> entrySet() {
+	public @NotNull Set<Map.Entry<K, V>> entrySet() {
 		Set<Map.Entry<K, V>> entries;
 		return (entries = entrySet) == null ? (entrySet = new EntrySet<>(this)) : entries;
 	}
@@ -803,7 +803,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		@NonNull
+		@NotNull
 		public Iterator<Map.Entry<K, V>> iterator() {
 			return new EntryIterator<>(map);
 		}
@@ -939,7 +939,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an Iterator.
 		 */
 		@Override
-		public @NonNull Iterator<Map.Entry<K, V>> iterator() {
+		public @NotNull Iterator<Map.Entry<K, V>> iterator() {
 			return this;
 		}
 	}
@@ -951,7 +951,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			this.map = map;
 		}
 
-		public @NonNull Iterator<K> iterator() {
+		public @NotNull Iterator<K> iterator() {
 			return new KeyIterator<>(map);
 		}
 
@@ -972,7 +972,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 	}
 
-	public @NonNull Set<K> keySet() {
+	public @NotNull Set<K> keySet() {
 		Set<K> ks = keySet;
 		if (ks == null) {
 			ks = new KeySet<>(this);
@@ -989,7 +989,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			this.map = map;
 		}
 
-		public @NonNull Iterator<V> iterator() {
+		public @NotNull Iterator<V> iterator() {
 			return new ValueIterator<>(map);
 		}
 
@@ -1010,7 +1010,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 	}
 
-	public @NonNull Collection<V> values() {
+	public @NotNull Collection<V> values() {
 		Collection<V> vals = values;
 		if (vals == null) {
 			vals = new ValueCollection<>(this);
@@ -1045,7 +1045,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an Iterator.
 		 */
 		@Override
-		public @NonNull Iterator<K> iterator() {
+		public @NotNull Iterator<K> iterator() {
 			return this;
 		}
 	}
@@ -1075,7 +1075,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an Iterator.
 		 */
 		@Override
-		public @NonNull Iterator<V> iterator() {
+		public @NotNull Iterator<V> iterator() {
 			return this;
 		}
 	}

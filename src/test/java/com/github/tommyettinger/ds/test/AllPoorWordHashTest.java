@@ -21,7 +21,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.random.WhiskerRandom;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -50,7 +50,7 @@ public class AllPoorWordHashTest {
 					int longestPileup = 0;
 
 					@Override
-					protected void addResize(@NonNull Object key) {
+					protected void addResize(@NotNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

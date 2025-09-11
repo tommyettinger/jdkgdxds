@@ -18,8 +18,8 @@ package com.github.tommyettinger.ds.enums;
 
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.Utilities;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -100,7 +100,7 @@ public class EnumObjectOrderedMap<K extends Enum<K>, V> extends ObjectObjectOrde
 	}
 
 	@Override
-	protected int place(@NonNull Object item) {
+	protected int place(@NotNull Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
 			return ((Enum<?>) item).ordinal() & mask;

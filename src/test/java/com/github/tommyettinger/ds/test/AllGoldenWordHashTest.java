@@ -23,7 +23,7 @@ import com.github.tommyettinger.ds.LongLongOrderedMap;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -153,13 +153,13 @@ Highest pileup    : 28
 					 * Highest pileup    : 23
 					 */
 					@Override
-					protected int place(@NonNull Object item) {
+					protected int place(@NotNull Object item) {
 						final int h = item.hashCode() * hashMul;
 						return (h >>> shift) ^ (h & mask);
 					}
 
 					@Override
-					protected void addResize(@NonNull Object key) {
+					protected void addResize(@NotNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

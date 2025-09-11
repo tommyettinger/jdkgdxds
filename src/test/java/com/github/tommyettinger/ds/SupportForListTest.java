@@ -49,68 +49,68 @@ public class SupportForListTest extends junit.framework.TestCase {
 			elem = list.get(counter);
 			hashCode = 29 * hashCode + elem.hashCode();
 			assertTrue("ListTest - get failed", elem
-				.equals(new Integer(counter)));
+				.equals(Integer.valueOf(counter)));
 		}
 //		assertTrue("ListTest - hashCode failed", hashCode == list.hashCode());
 
-		list.add(50, new Integer(1000));
+		list.add(50, Integer.valueOf(1000));
 		assertTrue("ListTest - a) add with index failed--did not insert", list
-			.get(50).equals(new Integer(1000)));
+			.get(50).equals(Integer.valueOf(1000)));
 		assertTrue(
 			"ListTest - b) add with index failed--did not move following elements",
-			list.get(51).equals(new Integer(50)));
+			list.get(51).equals(Integer.valueOf(50)));
 		assertTrue(
 			"ListTest - c) add with index failed--affected previous elements",
-			list.get(49).equals(new Integer(49)));
+			list.get(49).equals(Integer.valueOf(49)));
 
-		list.set(50, new Integer(2000));
+		list.set(50, Integer.valueOf(2000));
 		assertTrue("ListTest - a) set failed--did not set", list.get(50)
-			.equals(new Integer(2000)));
+			.equals(Integer.valueOf(2000)));
 		assertTrue("ListTest - b) set failed--affected following elements",
-			list.get(51).equals(new Integer(50)));
+			list.get(51).equals(Integer.valueOf(50)));
 		assertTrue("ListTest - c) set failed--affected previous elements", list
-			.get(49).equals(new Integer(49)));
+			.get(49).equals(Integer.valueOf(49)));
 
 		list.remove(50);
 		assertTrue("ListTest - a) remove with index failed--did not remove",
-			list.get(50).equals(new Integer(50)));
+			list.get(50).equals(Integer.valueOf(50)));
 		assertTrue(
 			"ListTest - b) remove with index failed--did not move following elements",
-			list.get(51).equals(new Integer(51)));
+			list.get(51).equals(Integer.valueOf(51)));
 		assertTrue(
 			"ListTest - c) remove with index failed--affected previous elements",
-			list.get(49).equals(new Integer(49)));
+			list.get(49).equals(Integer.valueOf(49)));
 
 		List<Integer> myList = new LinkedList<Integer>();
-		myList.add(new Integer(500));
-		myList.add(new Integer(501));
-		myList.add(new Integer(502));
+		myList.add(Integer.valueOf(500));
+		myList.add(Integer.valueOf(501));
+		myList.add(Integer.valueOf(502));
 
 		list.addAll(50, myList);
 		assertTrue("ListTest - a) addAll with index failed--did not insert",
-			list.get(50).equals(new Integer(500)));
+			list.get(50).equals(Integer.valueOf(500)));
 		assertTrue("ListTest - b) addAll with index failed--did not insert",
-			list.get(51).equals(new Integer(501)));
+			list.get(51).equals(Integer.valueOf(501)));
 		assertTrue("ListTest - c) addAll with index failed--did not insert",
-			list.get(52).equals(new Integer(502)));
+			list.get(52).equals(Integer.valueOf(502)));
 		assertTrue(
 			"ListTest - d) addAll with index failed--did not move following elements",
-			list.get(53).equals(new Integer(50)));
+			list.get(53).equals(Integer.valueOf(50)));
 		assertTrue(
 			"ListTest - e) addAll with index failed--affected previous elements",
-			list.get(49).equals(new Integer(49)));
+			list.get(49).equals(Integer.valueOf(49)));
 
 		List<Integer> mySubList = list.subList(50, 53);
 		assertEquals(3, mySubList.size());
 		assertTrue(
 			"ListTest - a) sublist Failed--does not contain correct elements",
-			mySubList.get(0).equals(new Integer(500)));
+			mySubList.get(0).equals(Integer.valueOf(500)));
 		assertTrue(
 			"ListTest - b) sublist Failed--does not contain correct elements",
-			mySubList.get(1).equals(new Integer(501)));
+			mySubList.get(1).equals(Integer.valueOf(501)));
 		assertTrue(
 			"ListTest - c) sublist Failed--does not contain correct elements",
-			mySubList.get(2).equals(new Integer(502)));
+			mySubList.get(2).equals(Integer.valueOf(502)));
 
 		t_listIterator(mySubList);
 
@@ -124,7 +124,7 @@ public class SupportForListTest extends junit.framework.TestCase {
 			Object elem;
 			elem = li.next();
 			assertTrue("ListTest - listIterator failed", elem
-				.equals(new Integer(counter)));
+				.equals(Integer.valueOf(counter)));
 		}
 
 		new SupportForCollectionTest("", list).runTest();
@@ -190,8 +190,8 @@ public class SupportForListTest extends junit.framework.TestCase {
 		}
 		assertTrue("list iterator previous() exception", exception);
 
-		Integer add1 = new Integer(600);
-		Integer add2 = new Integer(601);
+		Integer add1 = Integer.valueOf(600);
+		Integer add2 = Integer.valueOf(601);
 		li.add(add1);
 		assertTrue("list iterator add(), size()", list.size() == (orgSize + 1));
 		assertEquals("list iterator add(), nextIndex()", 1, li.nextIndex());

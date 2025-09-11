@@ -46,7 +46,7 @@ public class ObjectObjectOrderedMapTest {
 		objArray = new Object[hmSize];
 		objArray2 = new Object[hmSize];
 		for (int i = 0; i < objArray.length; i++) {
-			objArray[i] = new Integer(i);
+			objArray[i] = Integer.valueOf(i);
 			objArray2[i] = objArray[i].toString();
 		}
 	}
@@ -153,7 +153,7 @@ public class ObjectObjectOrderedMapTest {
 //		m.put(null, "test");
 //		assertEquals("Failed with null key", "test", m.get(null));
 //		assertNull("Failed with missing key matching null hash", m
-//				.get(new Integer(0)));
+//				.get(Integer.valueOf(0)));
 	}
 
 	@Test
@@ -166,11 +166,11 @@ public class ObjectObjectOrderedMapTest {
 //		ObjectObjectOrderedMap m = new ObjectObjectOrderedMap();
 //		m.put(new Short((short) 0), "short");
 //		m.put(null, "test");
-//		m.put(new Integer(0), "int");
+//		m.put(Integer.valueOf(0), "int");
 //		assertEquals("Failed adding to bucket containing null", "short", m.get(
 //				new Short((short) 0)));
 //		assertEquals("Failed adding to bucket containing null2", "int", m.get(
-//				new Integer(0)));
+//				Integer.valueOf(0)));
 	}
 
 	@Test
@@ -179,7 +179,7 @@ public class ObjectObjectOrderedMapTest {
 		ObjectObjectOrderedMap hm2 = new ObjectObjectOrderedMap();
 		hm2.putAll(hm);
 		for (int i = 0; i < 1000; i++)
-			assertTrue("Failed to put all elements", hm2.get(new Integer(i).toString()).equals(new Integer(i)));
+			assertTrue("Failed to put all elements", hm2.get(Integer.valueOf(i).toString()).equals(Integer.valueOf(i)));
 	}
 
 //    @Test
@@ -227,16 +227,16 @@ public class ObjectObjectOrderedMapTest {
 //		assertNull("Failed with null key", m.keySet().iterator().next());
 
 		ObjectObjectOrderedMap map = new ObjectObjectOrderedMap(101);
-		map.put(new Integer(1), "1");
-		map.put(new Integer(102), "102");
-		map.put(new Integer(203), "203");
+		map.put(Integer.valueOf(1), "1");
+		map.put(Integer.valueOf(102), "102");
+		map.put(Integer.valueOf(203), "203");
 		Iterator it = map.keySet().iterator();
 		Integer remove1 = (Integer) it.next();
 		it.hasNext();
 		it.remove();
 		Integer remove2 = (Integer) it.next();
 		it.remove();
-		ObjectList list = new ObjectList(Arrays.asList(new Integer[]{new Integer(1), new Integer(102), new Integer(203)}));
+		ObjectList list = new ObjectList(Arrays.asList(new Integer[]{Integer.valueOf(1), Integer.valueOf(102), Integer.valueOf(203)}));
 		list.remove(remove1);
 		list.remove(remove2);
 		assertTrue("Wrong result", it.next().equals(list.get(0)));
@@ -244,15 +244,15 @@ public class ObjectObjectOrderedMapTest {
 		assertTrue("Wrong contents", map.keySet().iterator().next().equals(list.get(0)));
 
 		ObjectObjectOrderedMap map2 = new ObjectObjectOrderedMap(101);
-		map2.put(new Integer(1), "1");
-		map2.put(new Integer(4), "4");
+		map2.put(Integer.valueOf(1), "1");
+		map2.put(Integer.valueOf(4), "4");
 		Iterator it2 = map2.keySet().iterator();
 		Integer remove3 = (Integer) it2.next();
 		Integer next;
 		if (remove3.intValue() == 1)
-			next = new Integer(4);
+			next = Integer.valueOf(4);
 		else
-			next = new Integer(1);
+			next = Integer.valueOf(1);
 		it2.hasNext();
 		it2.remove();
 		assertTrue("Wrong result 2", it2.next().equals(next));
@@ -289,17 +289,17 @@ public class ObjectObjectOrderedMapTest {
 		// Test for method java.lang.Object
 		// com.github.tommyettinger.ds.ObjectObjectOrderedMap.remove(java.lang.Object)
 		int size = hm.size();
-		Integer y = new Integer(9);
+		Integer y = Integer.valueOf(9);
 		Integer x = (Integer) hm.remove(y.toString());
-		assertTrue("Remove returned incorrect value", x.equals(new Integer(9)));
-		Assert.assertNull("Failed to remove given key", hm.get(new Integer(9)));
+		assertTrue("Remove returned incorrect value", x.equals(Integer.valueOf(9)));
+		Assert.assertNull("Failed to remove given key", hm.get(Integer.valueOf(9)));
 		assertTrue("Failed to decrement size", hm.size() == size - 1);
 		Assert.assertNull("Remove of non-existent key returned non-null", hm.remove("LCLCLC"));
 
 //		ObjectObjectOrderedMap m = new ObjectObjectOrderedMap();
 //		m.put(null, "test");
 //		assertNull("Failed with same hash as null",
-//				m.remove(new Integer(0)));
+//				m.remove(Integer.valueOf(0)));
 //		assertEquals("Failed with null key", "test", m.remove(null));
 	}
 
@@ -317,22 +317,22 @@ public class ObjectObjectOrderedMapTest {
 	public void test_containsKeyLjava_lang_Object() {
 		// Test for method boolean
 		// com.github.tommyettinger.ds.ObjectObjectOrderedMap.containsKey(java.lang.Object)
-		assertTrue("Returned false for valid key", hm.containsKey(new Integer(876).toString()));
+		assertTrue("Returned false for valid key", hm.containsKey(Integer.valueOf(876).toString()));
 		assertTrue("Returned true for invalid key", !hm.containsKey("KKDKDKD"));
 
 //		ObjectObjectOrderedMap m = new ObjectObjectOrderedMap();
 //		m.put(null, "test");
 //		assertTrue("Failed with null key", m.containsKey(null));
 //		assertTrue("Failed with missing key matching null hash", !m
-//				.containsKey(new Integer(0)));
+//				.containsKey(Integer.valueOf(0)));
 	}
 
 	@Test
 	public void test_containsValueLjava_lang_Object() {
 		// Test for method boolean
 		// com.github.tommyettinger.ds.ObjectObjectOrderedMap.containsValue(java.lang.Object)
-		assertTrue("Returned false for valid value", hm.containsValue(new Integer(875), false));
-		assertTrue("Returned true for invalid value", !hm.containsValue(new Integer(-9), false));
+		assertTrue("Returned false for valid value", hm.containsValue(Integer.valueOf(875), false));
+		assertTrue("Returned true for invalid value", !hm.containsValue(Integer.valueOf(-9), false));
 	}
 
 	@Test
@@ -354,7 +354,7 @@ public class ObjectObjectOrderedMapTest {
 		int sz = 100;
 		ObjectObjectOrderedMap lhm = new ObjectObjectOrderedMap();
 		for (i = 0; i < sz; i++) {
-			Integer ii = new Integer(i);
+			Integer ii = Integer.valueOf(i);
 			lhm.put(ii, ii.toString());
 		}
 
@@ -374,7 +374,7 @@ public class ObjectObjectOrderedMapTest {
 		int sz = 100;
 		ObjectObjectOrderedMap lhm = new ObjectObjectOrderedMap();
 		for (i = 0; i < sz; i++) {
-			Integer ii = new Integer(i);
+			Integer ii = Integer.valueOf(i);
 			lhm.put(ii, ii.toString());
 		}
 
@@ -393,8 +393,8 @@ public class ObjectObjectOrderedMapTest {
 		int sz = 100;
 		ObjectObjectOrderedMap lhm = new ObjectObjectOrderedMap();
 		for (i = 0; i < sz; i++) {
-			Integer ii = new Integer(i);
-			lhm.put(ii, new Integer(i * 2));
+			Integer ii = Integer.valueOf(i);
+			lhm.put(ii, Integer.valueOf(i * 2));
 		}
 
 		Collection s1 = lhm.values();

@@ -20,7 +20,7 @@ import com.github.tommyettinger.ds.HolderSet;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Tommy Ettinger on 10/26/2020.
@@ -28,16 +28,16 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @SuppressWarnings("SuspiciousMethodCalls")
 public class HolderSetTest {
 	public static class Person {
-		@NonNull
+		@NotNull
 		private String name;
 		private int x, y;
 
-		@NonNull
+		@NotNull
 		public String getName() {
 			return name;
 		}
 
-		public void setName(@NonNull String name) {
+		public void setName(@NotNull String name) {
 			this.name = name;
 		}
 
@@ -61,11 +61,11 @@ public class HolderSetTest {
 			this("Nihilus", 0, 0);
 		}
 
-		public Person(@NonNull String name) {
+		public Person(@NotNull String name) {
 			this(name, 0, 0);
 		}
 
-		public Person(@NonNull String name, int x, int y) {
+		public Person(@NotNull String name, int x, int y) {
 			this.name = name;
 			this.x = x;
 			this.y = y;

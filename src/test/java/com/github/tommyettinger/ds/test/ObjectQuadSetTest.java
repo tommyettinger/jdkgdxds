@@ -33,7 +33,7 @@ public class ObjectQuadSetTest {
 	{
 		objArray = new Object[1000];
 		for (int i = 0; i < objArray.length; i++)
-			objArray[i] = new Integer(i);
+			objArray[i] = Integer.valueOf(i);
 	}
 
 	@Test
@@ -82,11 +82,11 @@ public class ObjectQuadSetTest {
 	public void test_addLjava_lang_Object() {
 		// Test for method boolean com.github.tommyettinger.ds.ObjectQuadSet.add(java.lang.Object)
 		int size = hs.size();
-		hs.add(new Integer(8));
+		hs.add(Integer.valueOf(8));
 		Assert.assertTrue("Added element already contained by set", hs.size() == size);
-		hs.add(new Integer(-9));
+		hs.add(Integer.valueOf(-9));
 		Assert.assertTrue("Failed to increment set size after add", hs.size() == size + 1);
-		Assert.assertTrue("Failed to add element to set", hs.contains(new Integer(-9)));
+		Assert.assertTrue("Failed to add element to set", hs.contains(Integer.valueOf(-9)));
 	}
 
 	@Test
@@ -138,15 +138,15 @@ public class ObjectQuadSetTest {
 	public void test_removeLjava_lang_Object() {
 		// Test for method boolean com.github.tommyettinger.ds.test.ObjectQuadSet.remove(java.lang.Object)
 		int size = hs.size();
-		hs.remove(new Integer(98));
-		Assert.assertTrue("Failed to remove element", !hs.contains(new Integer(98)));
+		hs.remove(Integer.valueOf(98));
+		Assert.assertTrue("Failed to remove element", !hs.contains(Integer.valueOf(98)));
 		Assert.assertTrue("Failed to decrement set size", hs.size() == size - 1);
 
 //		WhiskerRandom rnd = new WhiskerRandom(123);
 //		int[] numbers = ArrayTools.shuffle(ArrayTools.range(objArray.length), rnd);
 		int[] numbers = ArrayTools.range(objArray.length);
 		for (int i = 0; i < numbers.length; i++) {
-			if (!hs.remove(new Integer(numbers[i])))
+			if (!hs.remove(Integer.valueOf(numbers[i])))
 				System.out.println(numbers[i]);
 		}
 		// This should print an empty set... but it doesn't.

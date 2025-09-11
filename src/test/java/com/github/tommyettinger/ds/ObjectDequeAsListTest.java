@@ -29,7 +29,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
 	{
 		objArray = new Object[100];
 		for (int i = 0; i < objArray.length; i++)
-			objArray[i] = new Integer(i);
+			objArray[i] = Integer.valueOf(i);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
 
 		ObjectDeque subList = new ObjectDeque();
 		for (int i = -50; i < 150; i++)
-			subList.add(new Integer(i));
+			subList.add(Integer.valueOf(i));
 		new SupportForListTest("", subList.subList(50, 150)).runTest();
 	}
 
@@ -479,7 +479,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
 		assertTrue("Returned false for valid element", alist
 			.contains(objArray[99]));
 		assertTrue("Returned false for equal element", alist
-			.contains(new Integer(8)));
+			.contains(Integer.valueOf(8)));
 		assertTrue("Returned true for invalid element", !alist
 			.contains(new Object()));
 		assertTrue("Returned true for null but should have returned false",
@@ -573,7 +573,7 @@ public class ObjectDequeAsListTest extends junit.framework.TestCase {
 	 */
 	public void test_lastIndexOfLjava_lang_Object() {
 		// Test for method int java.util.ObjectDeque.lastIndexOf(java.lang.Object)
-		alist.add(new Integer(99));
+		alist.add(Integer.valueOf(99));
 		assertEquals("Returned incorrect index", 100, alist
 			.lastIndexOf(objArray[99]));
 		assertEquals("Returned index for invalid Object", -1, alist

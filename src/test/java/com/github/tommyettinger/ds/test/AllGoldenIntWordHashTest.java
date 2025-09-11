@@ -23,7 +23,7 @@ import com.github.tommyettinger.ds.IntOrderedSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.random.WhiskerRandom;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -275,7 +275,7 @@ public class AllGoldenIntWordHashTest {
 					int hm = 0xB7AD9447;//0xF1042721;// 0x9E3779B7;
 
 					@Override
-					protected int place(@NonNull Object item) {
+					protected int place(@NotNull Object item) {
 //						final int h = BitConversion.imul(item.hashCode(), hm);
 //						return (h ^ h << 16) >>> shift;
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
@@ -283,7 +283,7 @@ public class AllGoldenIntWordHashTest {
 					}
 
 					@Override
-					protected void addResize(@NonNull Object key) {
+					protected void addResize(@NotNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

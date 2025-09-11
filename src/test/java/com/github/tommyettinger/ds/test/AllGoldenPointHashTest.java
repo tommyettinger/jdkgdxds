@@ -22,7 +22,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -93,12 +93,12 @@ public class AllGoldenPointHashTest {
 					long hm = hashMultiplier * 0xF1357AEA2E62A9C5L;
 
 					@Override
-					protected int place(@NonNull Object item) {
+					protected int place(@NotNull Object item) {
 						return (int) (item.hashCode() * hm >>> shift);
 					}
 
 					@Override
-					protected void addResize(@NonNull Object key) {
+					protected void addResize(@NotNull Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
