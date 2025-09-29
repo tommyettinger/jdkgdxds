@@ -1,3 +1,6 @@
+[1.12.4]
+- The dependency on digital has been updated to 0.9.4 . This is a non-breaking update that should fix a (potential) compilation issue on RoboVM. The previous 0.9.3 release is also non-breaking, and adds some small features.
+
 [1.12.3]
 - [BREAKING] The `api` dependency on Checker Framework has been replaced with a `compileOnly` dependency on JetBrains Annotations. Libraries using jdkgdxds will no longer have access to Checker's annotations `NonNull` and `Nullable`, but can replace them with JetBrains annotations `NotNull` and `Nullable`. This saves about 210 KB from each fat JAR produced.
 

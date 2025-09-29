@@ -183,7 +183,7 @@ You have two options: Maven Central for stable releases, or JitPack to select a 
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.12.3"
+api "com.github.tommyettinger:jdkgdxds:1.12.4"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -191,17 +191,12 @@ It does not need any additional repository to be specified in most cases; if it 
 (which provides common math code meant for use by multiple projects), [funderby](https://github.com/tommyettinger/funderby)
 (Java 8 functional interfaces for primitive types), and for building jdkgdxds only (not at runtime),
 [JetBrains java-annotations](https://github.com/JetBrains/java-annotations) version 26.0.2-1 . The
-version for the `digital` dependency is 0.9.2 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.9.2"`). Funderby has only changed a bit since its initial release, and is on version
+version for the `digital` dependency is 0.9.4 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.9.4"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`).
 
-In versions before jdkgdxds 1.12.3, this depended on [checker-qual](https://github.com/typetools/checker-framework).
-The version for `checker-qual` was 3.42.0 in the last version that used it. Earlier versions of jdkgdxds used `jsr305`
-instead of `checker-qual` or `java-annotations`, which had some potential problems on Java 9 and up (not to
-mention that JSR305 is currently unmaintained). You can manually specify a `checker-qual` version with
-`api "org.checkerframework:checker-qual:3.42.0"`, but this shouldn't be needed in version 1.12.3 and later. You can opt
-in to JB Annotations on a per-project level by adding `compileOnly "org.jetbrains:annotations:26.0.2-1"`, which only
-applies to the main (library or application) code. To apply JB annotations to tests in a project, use
+You can opt in to JB Annotations on a per-project level by adding `compileOnly "org.jetbrains:annotations:26.0.2-1"`,
+which only applies to the main (library or application) code. To apply JB annotations to tests in a project, use
 `testCompileOnly "org.jetbrains:annotations:$jbAnnotations"`. Using `compileOnly` means the dependency won't be required
 for any applications built using jdkgdxds, and also won't be available to other libraries that depend on jdkgdxds (they
 can opt in themselves).
@@ -209,8 +204,8 @@ can opt in themselves).
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.9.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.12.3:sources"
+implementation "com.github.tommyettinger:digital:0.9.4:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.12.4:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -224,7 +219,7 @@ Using jdkgdxds 1.6.2 or later (or preferably, the current version) is strongly e
 performance reasons.
 
 If you have an Android module, you may need to ensure that multi-dex and desugaring are enabled. Projects generated with
-gdx-liftoff that target Java 8 or higher have this already, but projects made with gdx-setup or manually do not.
+gdx-liftoff that target Java 8 or higher have this already, but older projects made with gdx-setup or manually do not.
 If these aren't already enabled, add:
 ```
 android.defaultConfig.multiDexEnabled true
@@ -238,35 +233,24 @@ dependencies {
 	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }
 ```
-to whatever module uses an `android` or `com.android.application` plugin. You do not need to add any lines about
-multi-dex if you target MinSDK 21 or higher, which is the case for libGDX 1.13.5 .
-The `desugar_jdk_libs` version should only be updated if
+to whatever module uses an `android` or `com.android.application` plugin. You should avoid libGDX 1.13.5 , but 1.13.1 is
+fine, and later versions should also be fine for Android usage. In upcoming libGDX versions, multi-dex-related lines
+won't be needed in Gradle configuration. The `desugar_jdk_libs` version should only be updated if
 you have checked for compatibility with your Android Gradle Plugin version; see [Android docs](https://developer.android.com/studio/write/java8-support#library-desugaring-versions).
-In short, if you use Android Gradle Plugin 7.4.0 or later (the default for gdx-liftoff projects is 8.6.1), you should use
-`'com.android.tools:desugar_jdk_libs:2.1.5'`. If you use Android Gradle Plugin 7.3.0, you should use
-`'com.android.tools:desugar_jdk_libs:1.2.3'`. You may need to set the `minSdkVersion`
-to a higher value, depending on where it is already; 19 is known to work, and 16 probably works.
-
-The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
-The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
-[juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.8.2) might be a good idea, though it is still optional.
-Another option for random number generation, if you use libGDX, is [cringe](https://github.com/tommyettinger/cringe), which is more closely-integrated with libGDX.
-The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
-for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
-The version for funderby is expected to stay at or around 0.1.2, since it is a relatively small library and is probably complete.
+In short, if you use Android Gradle Plugin 7.4.0 or later (the default for gdx-liftoff projects is much newer), you
+should use `'com.android.tools:desugar_jdk_libs:2.1.5'`.
 
 You can build specific, typically brand-new commits on JitPack.
-[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/0f0fd7e85c).
+[JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/1e8e71a629).
 To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
-`implementation 'com.github.tommyettinger:jdkgdxds:0f0fd7e85c'` or `api 'com.github.tommyettinger:jdkgdxds:0f0fd7e85c'`, depending
+`implementation 'com.github.tommyettinger:jdkgdxds:1e8e71a629'` or `api 'com.github.tommyettinger:jdkgdxds:1e8e71a629'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.7.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:0f0fd7e85c:sources"
+implementation "com.github.tommyettinger:digital:0.9.4:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1e8e71a629:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -275,7 +259,7 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.digital" />
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
-in with the other `inherits` lines. `0f0fd7e85c` is an example of a recent commit, and can be
+in with the other `inherits` lines. `1e8e71a629` is an example of a recent commit, and can be
 replaced with other commits shown on JitPack.
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
@@ -289,8 +273,8 @@ Another optional dependency, [kryo-more](https://github.com/tommyettinger/kryo-m
 efficiently on non-GWT platforms (using [Kryo](https://github.com/EsotericSoftware/kryo) 5.x for binary serialization).
 Dependency information is provided in the kryo-more README.md .
 
-You can also use [Apache Fury](https://fury.apache.org) to serialize these data structures by using
-[tantrum](https://github.com/tommyettinger/tantrum). The tantrum README.md has dependency information. Fury can be
+You can also use [Apache Fory](https://fory.apache.org) to serialize these data structures by using
+[tantrum](https://github.com/tommyettinger/tantrum). The tantrum README.md has dependency information. Fory can be
 faster than Kryo, and despite being "Incubating" at the Apache Foundation, I have so-far encountered no bugs with it in
 practice that persisted more than 2 weeks before being fixed in a release.
 
@@ -402,3 +386,25 @@ will only affect user code that extends classes such as ObjectSet, ObjectObjectM
 LongIntMap, and so on, and even then only if the subclass needs to access `hashMultiplier`. The getters and setters for
 `hashMultiplier` are still there, and can still be overridden to do something even if a class doesn't use a
 `hashMultiplier` at all.
+
+# Historical Dependency Info
+
+You should probably look into the history of README.md (this file) or [gradle.properties](gradle.properties) on GitHub
+for the particular older code you might want to depend on. In particular, gradle.properties will show the dependencies
+that were used for any commit you can get from JitPack, for digital, funderby, checker-qual, and potentially other
+libraries. Some other info here was scattered through this file and has been consolidated here.
+
+The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
+The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
+[juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
+randomized algorithms here (like shuffles), then depending on Juniper (0.8.4) might be a good idea, though it is still optional.
+Another option for random number generation, if you use libGDX, is [cringe](https://github.com/tommyettinger/cringe), which is more closely-integrated with libGDX.
+The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
+for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
+The version for funderby is expected to stay at or around 0.1.2, since it is a relatively small library and is probably complete.
+
+In versions before jdkgdxds 1.12.3, this depended on [checker-qual](https://github.com/typetools/checker-framework).
+The version for `checker-qual` was 3.42.0 in the last version that used it. Earlier versions of jdkgdxds used `jsr305`
+instead of `checker-qual` or `java-annotations`, which had some potential problems on Java 9 and up (not to
+mention that JSR305 is currently unmaintained). You can manually specify a `checker-qual` version with
+`api "org.checkerframework:checker-qual:3.42.0"`, but this is only needed before version 1.12.3.
