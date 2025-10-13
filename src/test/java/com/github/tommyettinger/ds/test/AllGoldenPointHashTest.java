@@ -22,6 +22,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
+import com.github.tommyettinger.random.EnhancedRandom;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -88,18 +89,17 @@ public class AllGoldenPointHashTest {
 		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.125 * collisions.size()));
 
 		final int[] problems = {0};
-		final int COUNT = 512;
-		LongIntOrderedMap good = new LongIntOrderedMap(512);
-		for (int x = 0; x < COUNT; x++) {
-			good.put(LongUtilities.GOOD_MULTIPLIERS[x], 0);
-		}
+		final int COUNT = 16;
+		LongLongOrderedMap good = new LongLongOrderedMap(COUNT);
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
-		short[] chosen = new short[512];
 		for (int a = 0; a < COUNT; a++) {
-			final long g = LongUtilities.GOOD_MULTIPLIERS[a];
+			final long g = EnhancedRandom.fixGamma(a << 1, 1);
+			good.put(g, 0);
+
+//			final long g = LongUtilities.GOOD_MULTIPLIERS[a];
 			{
 				int finalA = a;
-				ObjectSet set = new ObjectSet(51, 0.6f) {
+				ObjectSet set = new ObjectSet(51, 0.7f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
 					long hm = g;
@@ -119,7 +119,6 @@ public class AllGoldenPointHashTest {
 							} else {
 								collisionTotal++;
 								longestPileup = Math.max(longestPileup, ++p);
-								good.put(g, longestPileup);
 							}
 						}
 					}
@@ -158,9 +157,9 @@ public class AllGoldenPointHashTest {
 //						int index = (int)(hm >>> 48 + shift) & 511;
 //						int index = (int)(hm * shift >>> 10) & 511;
 //						int index = (int) (hm * shift >>> 5) & 511;
-						int index = 64 - shift + finalA & 511;
-						chosen[index]++;
-						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
+//						int index = 64 - shift + finalA & 511;
+//						chosen[index]++;
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[finalA];
 //						hm = LongUtilities.GOOD_MULTIPLIERS[index];
 						hm = g;
 						Object[] oldKeyTable = keyTable;
@@ -168,7 +167,7 @@ public class AllGoldenPointHashTest {
 						keyTable = new Object[newSize];
 
 //						collisionTotal = 0;
-						longestPileup = 0;
+//						longestPileup = 0;
 
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
@@ -189,11 +188,12 @@ public class AllGoldenPointHashTest {
 					@Override
 					public void clear() {
 						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
-						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + good.get(g));
+						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						minMax[0] = Math.min(minMax[0], collisionTotal);
 						minMax[1] = Math.max(minMax[1], collisionTotal);
-						minMax[2] = Math.min(minMax[2], good.get(g));
-						minMax[3] = Math.max(minMax[3], good.get(g));
+						minMax[2] = Math.min(minMax[2], longestPileup);
+						minMax[3] = Math.max(minMax[3], longestPileup);
+						good.put(g, collisionTotal);
 						super.clear();
 					}
 
@@ -215,20 +215,11 @@ public class AllGoldenPointHashTest {
 			}
 		}
 		System.out.println("This used a threshold of " + THRESHOLD);
-		System.out.println("Indices used: ");
-		for (int y = 0, idx = 0; y < 32; y++) {
-			for (int x = 0; x < 16; x++) {
-				System.out.print(Base.BASE16.unsigned(chosen[idx++]) + " ");
-			}
-			System.out.println();
-		}
-		good.sortByValue(IntComparators.NATURAL_COMPARATOR);
+		good.sortByValue(LongComparators.NATURAL_COMPARATOR);
 
 		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
 		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "=0x" + Base.BASE16.unsigned(good.getAt(i)) + ", ");
-			if ((i & 7) == 7)
-				System.out.println();
+			System.out.println("0x" + Base.BASE16.unsigned(good.keyAt(i)) + ", //" + Base.BASE10.signed(good.getAt(i)));
 		}
 		System.out.println("};\n");
 		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");

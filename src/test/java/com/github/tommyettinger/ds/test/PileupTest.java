@@ -47,8 +47,8 @@ import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
 @Ignore
 public class PileupTest {
-	public static final int LEN = 2000000;//500000;//1000000;//
-	public static final float LOAD = 0.5f; //0.6f
+	public static final int LEN = 500000;//2000000;//1000000;//
+	public static final float LOAD = 0.7f; //0.6f
 
 	public static String[] generateUniqueWordsFibSet(int size) {
 		final int numLetters = 4;
