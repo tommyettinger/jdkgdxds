@@ -82,6 +82,19 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 3997604
  * Lowest pileup     : 12
  * Highest pileup    : 515
+ * <br>
+ * Just checking the earlier GOOD_MULTIPLIERS...
+ * 12 problem multipliers in total, 500 likely good multipliers in total.
+ * Lowest collisions : 539010
+ * Highest collisions: 14342524
+ * Lowest pileup     : 15
+ * Highest pileup    : 166
+ * Against the newer ONE_PERCENT_MULTIPLIERS...
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 624037
+ * Highest collisions: 7821127
+ * Lowest pileup     : 15
+ * Highest pileup    : 32
  */
 public class AllGoldenPointHashTest {
 
@@ -97,14 +110,13 @@ public class AllGoldenPointHashTest {
 		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.125 * collisions.size()));
 
 		final int[] problems = {0};
-		final int COUNT = 51200;
+		final int COUNT = 512;
 		LongLongOrderedMap good = new LongLongOrderedMap(COUNT);
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		for (int a = 0; a < COUNT; a++) {
-			final long g = EnhancedRandom.fixGamma(a << 1, 1);
+//			final long g = EnhancedRandom.fixGamma(a << 1, 1);
+			final long g = LongUtilities.ONE_PERCENT_MULTIPLIERS[a];
 			good.put(g, 0);
-
-//			final long g = LongUtilities.GOOD_MULTIPLIERS[a];
 			{
 				int finalA = a;
 				ObjectSet set = new ObjectSet(51, 0.7f) {
@@ -207,7 +219,8 @@ public class AllGoldenPointHashTest {
 
 					public void setHashMultiplier(int index) {
 						super.setHashMultiplier(Utilities.GOOD_MULTIPLIERS[index & 511]);
-						hm = EnhancedRandom.fixGamma(index << 1, 1);
+//						hm = EnhancedRandom.fixGamma(index << 1, 1);
+						hm = LongUtilities.ONE_PERCENT_MULTIPLIERS[index & 511];
 					}
 				};
 				set.setHashMultiplier(finalA);
@@ -226,7 +239,7 @@ public class AllGoldenPointHashTest {
 		good.sortByValue(LongComparators.NATURAL_COMPARATOR);
 
 		System.out.println("\n\npublic static final long[] GOOD_MULTIPLIERS = new long[]{");
-		for (int i = 0, n = 600; i < n; i++) {
+		for (int i = 0, n = Math.min(good.size(), 600); i < n; i++) {
 			System.out.println("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "L, //" + Base.BASE10.signed(good.getAt(i)));
 		}
 		System.out.println("};\n");
