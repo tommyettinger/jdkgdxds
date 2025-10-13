@@ -32,7 +32,7 @@ import java.util.Objects;
  * and/or altering chars/items when they are compared. Meant to be used with
  * {@link com.github.tommyettinger.ds.FilteredStringOrderedSet} and {@link com.github.tommyettinger.ds.FilteredStringOrderedMap}.
  */
-public class FilteredComparators {
+public final class FilteredComparators {
 
 	private FilteredComparators() {
 

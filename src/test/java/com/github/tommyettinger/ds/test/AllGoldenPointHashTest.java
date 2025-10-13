@@ -61,6 +61,18 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 6697191
  * Lowest pileup     : 16
  * Highest pileup    : 62
+ * <br>
+ * With changing disabled and using the all-unique hashCodes from Coord...
+ *   WHOOPS!!!  Multiplier 0xAD9BA24D9CF0D513 on index   28 has 40657592 collisions and 29 pileup
+ * 0xAD9BA24D9CF0D513L FAILURE
+ *   WHOOPS!!!  Multiplier 0xF5EA757A0A98C863 on index  228 has 57754458 collisions and 127 pileup
+ * 0xF5EA757A0A98C863L FAILURE
+ *   WHOOPS!!!  Multiplier 0x8DC566B8C4F9DBF5 on index  282 has 21721638 collisions and 24 pileup
+ * 0x8DC566B8C4F9DBF5L FAILURE
+ *   WHOOPS!!!  Multiplier 0xBD2A41A08F91F0ED on index  342 has 44644926 collisions and 29 pileup
+ * 0xBD2A41A08F91F0EDL FAILURE
+ *   WHOOPS!!!  Multiplier 0xCB3AFBA6E7EED305 on index  472 has 29584896 collisions and 25 pileup
+ * 0xCB3AFBA6E7EED305L FAILURE
  */
 public class AllGoldenPointHashTest {
 
@@ -90,7 +102,7 @@ public class AllGoldenPointHashTest {
 				ObjectSet set = new ObjectSet(51, 0.6f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					long hm = hashMultiplier * 0xF1357AEA2E62A9C5L;
+					long hm = g;
 
 					@Override
 					protected int place(@NotNull Object item) {
@@ -145,10 +157,12 @@ public class AllGoldenPointHashTest {
 //						hashMultiplier = LongUtilities.GOOD_MULTIPLIERS[(int)(hashMultiplier >>> 48 + shift) & 511];
 //						int index = (int)(hm >>> 48 + shift) & 511;
 //						int index = (int)(hm * shift >>> 10) & 511;
-						int index = (int) (hm * shift >>> 5) & 511;
+//						int index = (int) (hm * shift >>> 5) & 511;
+						int index = 64 - shift + finalA & 511;
 						chosen[index]++;
 						hashMultiplier = Utilities.GOOD_MULTIPLIERS[index];
-						hm = LongUtilities.GOOD_MULTIPLIERS[index];
+//						hm = LongUtilities.GOOD_MULTIPLIERS[index];
+						hm = g;
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
@@ -165,9 +179,8 @@ public class AllGoldenPointHashTest {
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
-//							System.out.printf("  WHOOPS!!!  Multiplier %016X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
-//							problems.put(g, collisionTotal);
-//							good.remove(g);
+							System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hm, finalA, collisionTotal, longestPileup);
+							good.remove(g);
 							problems[0]++;
 							throw new RuntimeException();
 						}
@@ -195,7 +208,7 @@ public class AllGoldenPointHashTest {
 						set.add(spiral[i]);
 					}
 				} catch (RuntimeException ignored) {
-					System.out.println(g + " FAILURE");
+					System.out.println("0x"+ Base.BASE16.unsigned(g) + "L FAILURE");
 					continue;
 				}
 				set.clear();
