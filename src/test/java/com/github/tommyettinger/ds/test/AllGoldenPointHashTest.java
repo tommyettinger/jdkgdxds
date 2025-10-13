@@ -74,6 +74,14 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * 0xBD2A41A08F91F0EDL FAILURE
  *   WHOOPS!!!  Multiplier 0xCB3AFBA6E7EED305 on index  472 has 29584896 collisions and 25 pileup
  * 0xCB3AFBA6E7EED305L FAILURE
+ * <br>
+ * With changing disabled, all-unique hashCodes from Coord, and testing 51200 randomized multipliers...
+ * (Pileup is counted cumulatively here, not reset like in earlier tests.)
+ * 1525 problem multipliers in total, 49675 likely good multipliers in total.
+ * Lowest collisions : 137457
+ * Highest collisions: 3997604
+ * Lowest pileup     : 12
+ * Highest pileup    : 515
  */
 public class AllGoldenPointHashTest {
 
@@ -89,7 +97,7 @@ public class AllGoldenPointHashTest {
 		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.125 * collisions.size()));
 
 		final int[] problems = {0};
-		final int COUNT = 16;
+		final int COUNT = 51200;
 		LongLongOrderedMap good = new LongLongOrderedMap(COUNT);
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		for (int a = 0; a < COUNT; a++) {
@@ -159,7 +167,7 @@ public class AllGoldenPointHashTest {
 //						int index = (int) (hm * shift >>> 5) & 511;
 //						int index = 64 - shift + finalA & 511;
 //						chosen[index]++;
-						hashMultiplier = Utilities.GOOD_MULTIPLIERS[finalA];
+						hashMultiplier = Utilities.GOOD_MULTIPLIERS[finalA & 511];
 //						hm = LongUtilities.GOOD_MULTIPLIERS[index];
 						hm = g;
 						Object[] oldKeyTable = keyTable;
@@ -199,7 +207,7 @@ public class AllGoldenPointHashTest {
 
 					public void setHashMultiplier(int index) {
 						super.setHashMultiplier(Utilities.GOOD_MULTIPLIERS[index & 511]);
-						hm = LongUtilities.GOOD_MULTIPLIERS[index & 511];
+						hm = EnhancedRandom.fixGamma(index << 1, 1);
 					}
 				};
 				set.setHashMultiplier(finalA);
@@ -217,9 +225,9 @@ public class AllGoldenPointHashTest {
 		System.out.println("This used a threshold of " + THRESHOLD);
 		good.sortByValue(LongComparators.NATURAL_COMPARATOR);
 
-		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
-		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.println("0x" + Base.BASE16.unsigned(good.keyAt(i)) + ", //" + Base.BASE10.signed(good.getAt(i)));
+		System.out.println("\n\npublic static final long[] GOOD_MULTIPLIERS = new long[]{");
+		for (int i = 0, n = 600; i < n; i++) {
+			System.out.println("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "L, //" + Base.BASE10.signed(good.getAt(i)));
 		}
 		System.out.println("};\n");
 		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");
