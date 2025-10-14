@@ -103,6 +103,13 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Average collisions: 1954380.625
  * Lowest pileup     : 17
  * Highest pileup    : 25
+ * Testing all 512 ONE_PERCENT_MULTIPLIERS:
+ * 0 problem multipliers in total, 512 likely good multipliers in total.
+ * Lowest collisions : 624037
+ * Highest collisions: 7821127
+ * Average collisions: 2013388.083984375
+ * Lowest pileup     : 15
+ * Highest pileup    : 32
  */
 public class AllGoldenPointHashTest {
 
