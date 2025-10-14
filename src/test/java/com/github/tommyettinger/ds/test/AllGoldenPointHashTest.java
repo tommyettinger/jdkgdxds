@@ -95,6 +95,14 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest collisions: 7821127
  * Lowest pileup     : 15
  * Highest pileup    : 32
+ * <br>
+ * Testing the first 16 of the ONE_PERCENT_MULTIPLIERS...
+ * 0 problem multipliers in total, 16 likely good multipliers in total.
+ * Lowest collisions : 624037
+ * Highest collisions: 6512436
+ * Average collisions: 1954380.625
+ * Lowest pileup     : 17
+ * Highest pileup    : 25
  */
 public class AllGoldenPointHashTest {
 
@@ -199,7 +207,7 @@ public class AllGoldenPointHashTest {
 						}
 						if (collisionTotal > THRESHOLD) {
 							System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hm, finalA, collisionTotal, longestPileup);
-							good.remove(g);
+//							good.remove(g);
 							problems[0]++;
 							throw new RuntimeException();
 						}
@@ -238,14 +246,18 @@ public class AllGoldenPointHashTest {
 		System.out.println("This used a threshold of " + THRESHOLD);
 		good.sortByValue(LongComparators.NATURAL_COMPARATOR);
 
+		long bigTotal = 0L;
 		System.out.println("\n\npublic static final long[] GOOD_MULTIPLIERS = new long[]{");
 		for (int i = 0, n = Math.min(good.size(), 600); i < n; i++) {
-			System.out.println("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "L, //" + Base.BASE10.signed(good.getAt(i)));
+			long collCount = good.getAt(i);
+			bigTotal += collCount;
+			System.out.println("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "L, //" + Base.BASE10.signed(collCount));
 		}
 		System.out.println("};\n");
 		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");
 		System.out.println("Lowest collisions : " + minMax[0]);
 		System.out.println("Highest collisions: " + minMax[1]);
+		System.out.println("Average collisions: " + (bigTotal / (double)good.size()));
 		System.out.println("Lowest pileup     : " + minMax[2]);
 		System.out.println("Highest pileup    : " + minMax[3]);
 	}
