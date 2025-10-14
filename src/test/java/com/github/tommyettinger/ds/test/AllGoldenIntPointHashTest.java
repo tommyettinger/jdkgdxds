@@ -19,8 +19,10 @@ package com.github.tommyettinger.ds.test;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
+import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.IntSet;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
+import com.github.tommyettinger.ds.support.sort.LongComparators;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -410,22 +412,19 @@ public class AllGoldenIntPointHashTest {
 
 //		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		final int[] problems = {0};
-		final int COUNT = 512;
-		IntIntOrderedMap good = new IntIntOrderedMap(512);
-		for (int x = 0; x < COUNT; x++) {
-			good.put(GOOD[x], 0);
-		}
+		final int COUNT = 16;
+		IntLongOrderedMap good = new IntLongOrderedMap(COUNT);
 //		int[] GOLDEN_INTS = good.keySet().toArray();
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
-		short[] chosen = new short[512];
+		short[] chosen = new short[COUNT];
 		for (int a = 0; a < COUNT; a++) {
 			final int g = GOOD[a];
 			{
 				final int finalA = a;
-				ObjectSet set = new ObjectSet(51, 0.6f) {
+				ObjectSet set = new ObjectSet(51, 0.7f) {
 					long collisionTotal = 0;
 					int longestPileup = 0;
-					int hm = 0xB7AD9447;//0xF1042721;// 0x9E3779B7;
+					int hm = g;//0xB7AD9447;//0xF1042721;// 0x9E3779B7;
 
 					@Override
 					protected int place(@NotNull Object item) {
@@ -447,7 +446,6 @@ public class AllGoldenIntPointHashTest {
 							} else {
 								collisionTotal++;
 								longestPileup = Math.max(longestPileup, ++p);
-								good.put(g, longestPileup);
 							}
 						}
 					}
@@ -460,15 +458,16 @@ public class AllGoldenIntPointHashTest {
 						shift = BitConversion.countLeadingZeros(mask) + 32;
 
 //						int index = (hm ^ hm >>> 17 ^ shift) & 511;
-						int index = BitConversion.imul(hm, shift) >>> 5 & 511;
-						chosen[index]++;
-						hashMultiplier = hm = GOOD[index];
+//						int index = BitConversion.imul(hm, shift) >>> 5 & 511;
+//						chosen[index]++;
+//						hashMultiplier = hm = GOOD[index];
+						hashMultiplier = hm = g;
 						Object[] oldKeyTable = keyTable;
 
 						keyTable = new Object[newSize];
 
 //						collisionTotal = 0;
-						longestPileup = 0;
+//						longestPileup = 0;
 
 						if (size > 0) {
 							for (int i = 0; i < oldCapacity; i++) {
@@ -479,9 +478,9 @@ public class AllGoldenIntPointHashTest {
 							}
 						}
 						if (collisionTotal > THRESHOLD) {
-//							System.out.printf("  WHOOPS!!!  Multiplier %08X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
+							System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hm, finalA, collisionTotal, longestPileup);
+							good.remove(g);
 							problems[0]++;
-//							good.remove(g);
 							throw new RuntimeException();
 						}
 					}
@@ -489,11 +488,12 @@ public class AllGoldenIntPointHashTest {
 					@Override
 					public void clear() {
 						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": Original 0x" + Base.BASE16.unsigned(g) + " on latest " + Base.BASE16.unsigned(hm));
-						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + good.get(g));
+						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 						minMax[0] = Math.min(minMax[0], collisionTotal);
 						minMax[1] = Math.max(minMax[1], collisionTotal);
-						minMax[2] = Math.min(minMax[2], good.get(g));
-						minMax[3] = Math.max(minMax[3], good.get(g));
+						minMax[2] = Math.min(minMax[2], longestPileup);
+						minMax[3] = Math.max(minMax[3], longestPileup);
+						good.put(g, collisionTotal);
 						super.clear();
 					}
 
@@ -510,7 +510,7 @@ public class AllGoldenIntPointHashTest {
 						set.add(spiral[i]);
 					}
 				} catch (RuntimeException ignored) {
-					System.out.println(g + " FAILURE");
+					System.out.println("0x" + Base.BASE16.unsigned(g) + " FAILURE");
 					continue;
 				}
 				set.clear();
@@ -518,24 +518,26 @@ public class AllGoldenIntPointHashTest {
 		}
 		System.out.println("This used a threshold of " + THRESHOLD);
 		System.out.println("Indices used: ");
-		for (int y = 0, idx = 0; y < 32; y++) {
-			for (int x = 0; x < 16; x++) {
-				System.out.print(Base.BASE16.unsigned(chosen[idx++]) + " ");
+		for (int y = 0, idx = 0; y < 32 && idx < COUNT; y++) {
+			for (int x = 0; x < 16 && idx < COUNT; x++) {
+				System.out.print("0x" + Base.BASE16.unsigned(chosen[idx++]) + " ");
 			}
 			System.out.println();
 		}
-		good.sortByValue(IntComparators.NATURAL_COMPARATOR);
+		good.sortByValue(LongComparators.NATURAL_COMPARATOR);
 
+		long bigTotal = 0L;
 		System.out.println("\n\nint[] GOOD_MULTIPLIERS = new int[]{");
-		for (int i = 0; i < Integer.highestOneBit(good.size()); i++) {
-			System.out.print("0x" + Base.BASE16.unsigned(good.keyAt(i)) + "=0x" + Base.BASE16.unsigned(good.getAt(i)) + ", ");
-			if ((i & 7) == 7)
-				System.out.println();
+		for (int i = 0, n = good.size(); i < n; i++) {
+			long collCount = good.getAt(i);
+			System.out.println("0x" + Base.BASE16.unsigned(good.keyAt(i)) + ", //" + Base.BASE10.signed(collCount));
+			bigTotal += collCount;
 		}
 		System.out.println("};\n");
 		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");
 		System.out.println("Lowest collisions : " + minMax[0]);
 		System.out.println("Highest collisions: " + minMax[1]);
+		System.out.println("Average collisions: " + (bigTotal / (double)good.size()));
 		System.out.println("Lowest pileup     : " + minMax[2]);
 		System.out.println("Highest pileup    : " + minMax[3]);
 	}
