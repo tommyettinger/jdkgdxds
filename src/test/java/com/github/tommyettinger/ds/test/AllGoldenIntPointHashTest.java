@@ -999,10 +999,10 @@ Highest pileup    : 69
 
 		 */
 
-		new int[5120];
-		for (int i = 0; i < GOOD.length; i++) {
-			GOOD[i] = fixGamma(i << 1, 1);
-		}
+//		new int[5120];
+//		for (int i = 0; i < GOOD.length; i++) {
+//			GOOD[i] = fixGamma(i << 1, 1);
+//		}
 		/*
 		With the above fixGamma() results, we get one awful multiplier in the first 16 (subrandom!) multipliers,
 		but the rest seem fairly good...
@@ -1029,7 +1029,17 @@ Highest collisions: 1995908
 Average collisions: 181235.13333333333 (only average of best 600 multipliers)
 Lowest pileup     : 12
 Highest pileup    : 78
+		 */
 
+		TEN_PERCENT_MULTIPLIERS;
+		/*
+		Using the first 512 of the TEN_PERCENT_MULTIPLIERS (and the 500K LEN):
+0 problem multipliers in total, 512 likely good multipliers in total.
+Lowest collisions : 131722
+Highest collisions: 197887
+Average collisions: 178039.720703125
+Lowest pileup     : 12
+Highest pileup    : 30
 
 		 */
 
@@ -1048,7 +1058,7 @@ Highest pileup    : 78
 
 //		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		final int[] problems = {0};
-		final int COUNT = 5120;
+		final int COUNT = 512;
 		IntLongOrderedMap good = new IntLongOrderedMap(COUNT);
 //		int[] GOLDEN_INTS = good.keySet().toArray();
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
