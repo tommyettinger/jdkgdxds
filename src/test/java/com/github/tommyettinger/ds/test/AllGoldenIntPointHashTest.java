@@ -79,11 +79,10 @@ public class AllGoldenIntPointHashTest {
 	}
 
 	/**
-	 * The best 600 out of 5120 multipliers selected subrandomly via {@link #fixGamma(int, int)}, with likely
+	 * The best 597 out of 5120 multipliers selected subrandomly via {@link #fixGamma(int, int)}, with likely
 	 * only 512 actually going to be used.
 	 */
 	public static final int[] TEN_PERCENT_MULTIPLIERS = new int[]{
-		0xF3292887, //131722
 		0x358845BF, //134468
 		0x229CF84B, //134938
 		0x66A8F137, //137821
@@ -95,7 +94,6 @@ public class AllGoldenIntPointHashTest {
 		0x89B80DB9, //141620
 		0xA70C4EAF, //141718
 		0xF68DCC19, //141773
-		0x6FA8CD19, //141930
 		0x8F381579, //142027
 		0xBE445AE3, //142302
 		0xEAE02E85, //142514
@@ -543,7 +541,6 @@ public class AllGoldenIntPointHashTest {
 		0xA8E5F4C1, //194977
 		0xA49DBE11, //194991
 		0x8362A6CF, //195069
-		0xCE2C6E29, //195103
 		0xEAEB9D01, //195153
 		0xB3C0C15B, //195239
 		0xEF915323, //195261
@@ -1040,6 +1037,22 @@ Highest collisions: 197887
 Average collisions: 178039.720703125
 Lowest pileup     : 12
 Highest pileup    : 30
+
+		With 2M LEN, some problems appear:
+3 problem multipliers in total, 509 likely good multipliers in total.
+Lowest collisions : 581672
+Highest collisions: 7868305
+Average collisions: 1935993.2691552064
+Lowest pileup     : 14
+Highest pileup    : 32
+
+		Removing just the 3 problems, using 3 of the extra 88 surplus multipliers:
+0 problem multipliers in total, 512 likely good multipliers in total.
+Lowest collisions : 581672
+Highest collisions: 7868305
+Average collisions: 1933497.94140625
+Lowest pileup     : 14
+Highest pileup    : 32
 
 		 */
 
