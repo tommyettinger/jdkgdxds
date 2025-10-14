@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.IntSet;
@@ -65,6 +66,17 @@ import static com.github.tommyettinger.ds.test.PileupTest.*;
  * Highest pileup    : 30
  */
 public class AllGoldenIntPointHashTest {
+	public static int fixGamma(int gamma, int threshold) {
+		gamma |= 1;
+		int inverse, add = 0;
+		while (Math.abs(Integer.bitCount(gamma) - 16) > threshold
+			|| Math.abs(Integer.bitCount(gamma ^ gamma >>> 1) - 16) > threshold
+			|| Math.abs(Integer.bitCount(inverse = MathTools.modularMultiplicativeInverse(gamma)) - 16) > threshold
+			|| Math.abs(Integer.bitCount(inverse ^ inverse >>> 1) - 16) > threshold) {
+			gamma = gamma * 0xDE82EF95 + (add += 2);
+		}
+		return gamma;
+	}
 
 	public static void main(String[] args) throws IOException {
 		final int[] GOOD =
@@ -357,7 +369,7 @@ public class AllGoldenIntPointHashTest {
 //				0x84C86EE7, 0xAB058D3B, 0xB87E35EB, 0xA03786ED, 0x9AC482DB, 0xB6815DDB, 0xC2E0B9F1,
 //			};
 
-			Utilities.GOOD_MULTIPLIERS;
+//			Utilities.GOOD_MULTIPLIERS;
 
 		/*
 		Making this so it doesn't change modifier at all (which magnifies the effects of a seriously mismatched
@@ -381,6 +393,32 @@ Highest pileup    : 69
 
 		 */
 
+		new int[512];
+		for (int i = 0; i < 512; i++) {
+			GOOD[i] = fixGamma(i << 1, 1);
+		}
+		/*
+		With the above fixGamma() results, we get one really bad multiplier in the first 16 (subrandom!) multipliers,
+		but the rest seem fairly good...
+
+0 problem multipliers in total, 16 likely good multipliers in total.
+Lowest collisions : 733633
+Highest collisions: 15171715
+Average collisions: 2454735.8125
+Lowest pileup     : 16
+Highest pileup    : 30
+
+		Removing the problem multiplier at index 11:
+1 problem multipliers in total, 15 likely good multipliers in total.
+Lowest collisions : 733633
+Highest collisions: 6221620
+Average collisions: 1606937.2
+Lowest pileup     : 16
+Highest pileup    : 30
+
+
+		 */
+
 //		int[] GOLDEN_INTS = new int[MathTools.GOLDEN_LONGS.length];
 //		for (int i = 0; i < GOLDEN_INTS.length; i++) {
 //			GOLDEN_INTS[i] = (int)(MathTools.GOLDEN_LONGS[i] >>> 32) | 1;
@@ -392,11 +430,11 @@ Highest pileup    : 69
 		}
 		System.out.println(collisions.size() + "/" + LEN + " hashes are unique.");
 //		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));
-		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.125 * collisions.size()));
+		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.25 * collisions.size()));
 
 //		IntLongOrderedMap problems = new IntLongOrderedMap(100);
 		final int[] problems = {0};
-		final int COUNT = 512;
+		final int COUNT = 16;
 		IntLongOrderedMap good = new IntLongOrderedMap(COUNT);
 //		int[] GOLDEN_INTS = good.keySet().toArray();
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
