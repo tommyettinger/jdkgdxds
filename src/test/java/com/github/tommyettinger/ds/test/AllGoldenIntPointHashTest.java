@@ -370,6 +370,15 @@ Average collisions: 2287928.3125
 Lowest pileup     : 16
 Highest pileup    : 25
 
+		On all 512 Utilities.GOOD_MULTIPLIERS:
+
+11 problem multipliers in total, 501 likely good multipliers in total.
+Lowest collisions : 595698
+Highest collisions: 14424048
+Average collisions: 2221559.5209580837
+Lowest pileup     : 16
+Highest pileup    : 69
+
 		 */
 
 //		int[] GOLDEN_INTS = new int[MathTools.GOLDEN_LONGS.length];
