@@ -22,6 +22,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.IntSet;
+import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import org.jetbrains.annotations.NotNull;
@@ -116,11 +117,36 @@ import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
  * 59644FCD DAC8E8C7 8574B837 300B59D7 CDA1D21D 1A73ED11 15C2D39F 66C1D617 6A878DA1 15C17F29 C2A74F31 741A7723 4CB73891 E213ACCB 7222B9DB 7222B9DB 11BC992F BC1938ED 0E3D936D 9EA79A41 1B7E3415 843EAE93 4B8E319B 5E59E991 5C1B45B3 A4BB3907 A4BB3907 13ECAA63 13ECAA63 C2E438BB C612375D A10F9E5D 6F1DD941 8FB22447 2682D739 F4266789 E48B93D9 6A35C0DD C8A0BE5B CC8F906D 24FB06BB C884DFA5 4AF8364D 712E0957 47B092EB 0599FA53 BD011A75 D8F50D87 645A39A7 289FF151 289FF151 1AC26D9F 50A985FB C2D8E0EB 70F295D1 B1C6C2CB 315719F1 E66874CB 752D9E21 425E437B 6EE5C0A9 2A077597 3CB0D173 3CB0D173 D165C619 1C829FA9 A49BFA61 9DA5CC87 3C83BD2B 872C5C8D 3298728F 7F28885B 872C5C8D 7F28885B 56F88E89 8DD33671 2F6C35C5 2F6C35C5 68C8BB13 290FC5B7 30E72577 D486E87D A2E2229F 9A1E2EE1 9923E931 61BDE4C5
  * </pre>
  * There's some overlap with known problems from earlier, at least... hm...
+ * <br>
+ * Getting better! Using FUSED_MULTIPLIERS...
+ * <pre>
+ * This used a threshold of 28571 and LEN of 10000
+ * 37 problem multipliers in total, 475 likely good multipliers in total.
+ * Lowest collisions : 3468
+ * Highest collisions: 11049
+ * Average collisions: 5315.686230248307
+ * Lowest pileup     : 0
+ * Highest pileup    : 14
+ * Likely bad multipliers (base 16):
+ * DB6B35F7 A8FA9803 90C42FAF DE086517 DE086517 C32D0D1D BFA927CB 247D170B FCC13CA9 C8F0EC99 B784AF47 D0DE6BBD 8C2A253F C94E3F59 A49D3AFF C0A7D057 FCE635CB 4AF8364D 4AF8364D 872C5C8D 872C5C8D 645A39A7 8BD6AD6F 8A2E6A69 D0CDB4FF 8BC825F9 E607294F 9BE73B1B 51AE4FC5 51AE4FC5 DC95806B DAF09BD5 B84DA7F3 B17706B9 EB8D7DB5 87FF76C1 9D0F4E11
+ * </pre>
+ * Filling in with TEN_PERCENT_MULTIPLIERS seems to have caused problems!
+ * <pre>
+ * This used a threshold of 28571 and LEN of 10000
+ * 44 problem multipliers in total, 468 likely good multipliers in total.
+ * Lowest collisions : 3378
+ * Highest collisions: 33824
+ * Average collisions: 5677.641379310345
+ * Lowest pileup     : 0
+ * Highest pileup    : 15
+ * Likely bad multipliers (base 16):
+ * 3A7D0AC9 E35C86ED 9E55CBF3 DC92F983 FB73BC8B DC0CFB0D B56A208B B3A06767 D80DB433 D1D3B9E7 EDEAD625 9E0B289B A2DFA303 A68C7791 90738567 A42433BF 5DEA5C13 63A95E87 B57AD749 83887061 2682D739 518CF5CD D9ABF481 C21736F9 4A1DDE53 8DC1D40F 66A8F137 66A8F137 66A8F137 66A8F137 66A8F137 229CF84B 283EDE53 3BE28E65 52431FAD A19ACF23 A19ACF23 CECCCC93 CECCCC93 51F4F481 12CFACE5 4A1F1765 4B8E319B B423727D
+ * </pre>
  */
 public class BroadSpectrumMultiplierTest {
 
 	public static void main(String[] args) throws IOException {
-		Utilities2.replaceGoodMultipliers(Utilities2.THREE_PERCENT_MULTIPLIERS);
+		Utilities2.replaceGoodMultipliers(Utilities2.FUSED_MULTIPLIERS2);
 		final Point2[] spiral = generatePointSpiral(LEN);
 		IntSet collisions = new IntSet(LEN);
 		for (int i = 0; i < LEN; i++) {
@@ -180,7 +206,7 @@ public class BroadSpectrumMultiplierTest {
 					}
 					if (longestPileup > 64 - shift) {
 						System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
-//							good.remove(g);
+						good.remove(hashMultiplier);
 						likelyBad.add(hashMultiplier);
 						problems[0]++;
 						throw new RuntimeException();
@@ -195,7 +221,7 @@ public class BroadSpectrumMultiplierTest {
 					minMax[1] = Math.max(minMax[1], collisionTotal);
 					minMax[2] = Math.min(minMax[2], longestPileup);
 					minMax[3] = Math.max(minMax[3], longestPileup);
-					good.put(finalA, collisionTotal);
+					good.put(hashMultiplier, collisionTotal);
 					super.clear();
 				}
 			};
@@ -203,24 +229,28 @@ public class BroadSpectrumMultiplierTest {
 				for (int i = 0, n = spiral.length; i < n; i++) {
 					set.add(spiral[i]);
 				}
+				set.clear();
 			} catch (RuntimeException ignored) {
 				System.out.println(finalA + " FAILURE");
 			}
-			set.clear();
 			// rotate multipliers by 1
 			System.arraycopy(Utilities.GOOD_MULTIPLIERS, 1, buffer, 0, Utilities.GOOD_MULTIPLIERS.length - 1);
 			System.arraycopy(Utilities.GOOD_MULTIPLIERS, 0, buffer, Utilities.GOOD_MULTIPLIERS.length - 1, 1);
 			System.arraycopy(buffer, 0, Utilities.GOOD_MULTIPLIERS, 0, buffer.length);
 
 		}
-		System.out.println("This used a threshold of " + THRESHOLD + " and LEN of " + LEN);
 		good.sortByValue(LongComparators.NATURAL_COMPARATOR);
 
 		long bigTotal = 0L;
-		for (int i = 0, n = Math.min(512, good.size()); i < n; i++) {
+		System.out.println("\n\npublic static final int[] GOOD_MULTIPLIERS = new int[]{");
+		for (int i = 0, n = Math.min(600, good.size()); i < n; i++) {
 			long collCount = good.getAt(i);
 			bigTotal += collCount;
+			System.out.println("0x" + Base.BASE16.unsigned(good.keyAt(i)) + ", //" + Base.BASE10.signed(collCount));
 		}
+		System.out.println("};\n");
+
+		System.out.println("This used a threshold of " + THRESHOLD + " and LEN of " + LEN);
 		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");
 		System.out.println("Lowest collisions : " + minMax[0]);
 		System.out.println("Highest collisions: " + minMax[1]);
