@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -56,18 +57,21 @@ public interface Appender<T> {
 		return sb;
 	}
 
-	static <S extends CharSequence & Appendable, E extends Enum<?>> S appendEnumName(S sb, E item) {
-		try {
-			sb.append(item == null ? "null" : item.name());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return sb;
-	}
-
 	/**
 	 * Used in enum-keyed maps and sets to write an Enum constant's name, rather than its toString result.
+	 * Does not use a method reference, and instead has to use an anonymous inner class, because of GWT.
 	 */
-	Appender<Enum<?>> ENUM_NAME_APPENDER = Appender::appendEnumName;
+	Appender<Enum<?>> ENUM_NAME_APPENDER = new Appender<Enum<?>>() {
+		@Override
+		public <S extends CharSequence & Appendable> S apply(S sb, Enum<?> item) {
+			try {
+				sb.append(item == null ? "null" : item.name());
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return sb;
+
+		}
+	};
 
 }
