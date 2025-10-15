@@ -63,11 +63,24 @@ import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
  * </pre>
  * Index 0, which wasn't using the first element in THREE_PERCENT_MULTIPLIERS, has significant problems, and they make
  * it into a problem multiplier when the threshold is just a little tighter.
+ * <br>
+ * Great... the likely bad multipliers are probably pointing in the wrong place...
+ * <pre>
+ * This used a threshold of 28571 and LEN of 10000
+ * 22 problem multipliers in total, 490 likely good multipliers in total.
+ * Lowest collisions : 3203
+ * Highest collisions: 87588
+ * Average collisions: 9332.3671875
+ * Lowest pileup     : 7
+ * Highest pileup    : 60
+ * Likely bad multipliers (base 16):
+ * 54138AFD 70A4F257 9D0F4E11 69F30297 36E8CCB1 4CFC12D1 770B9169 173291DF 64BF161D 1737AC19 712E0957 BD011A75 F3B16263 29DC70E9 50D33F41 A471E313 C93631C9 1F8972B3 2509EDA3 E586C9D1 59E6478B E10933CB
+ * </pre>
  */
 public class BroadSpectrumMultiplierTest {
 
 	public static void main(String[] args) throws IOException {
-		Utilities2.replaceGoodMultipliers(Utilities2.THREE_PERCENT_MULTIPLIERS);
+		Utilities2.replaceGoodMultipliers(Utilities2.THREE_PERCENT_MULTIPLIERS_AMENDED);
 		final Point2[] spiral = generatePointSpiral(LEN);
 		IntSet collisions = new IntSet(LEN);
 		for (int i = 0; i < LEN; i++) {
