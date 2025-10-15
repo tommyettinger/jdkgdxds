@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -706,11 +705,10 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
 	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList, int)} to create a ListIterator if you need nested iteration.
 	 *
-	 * @param index
-	 * @throws IndexOutOfBoundsException {@inheritDoc}
+	 * @param index the index to start the iterator at
 	 */
 	@Override
-	public @NotNull ObjectListIterator<T> listIterator(int index) {
+	public ObjectListIterator<T> listIterator(int index) {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this, index);
 			iterator2 = new ObjectListIterator<>(this, index);
@@ -736,7 +734,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @see #listIterator(int)
 	 */
 	@Override
-	public @NotNull ObjectListIterator<T> listIterator() {
+	public ObjectListIterator<T> listIterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this);
 			iterator2 = new ObjectListIterator<>(this);
@@ -762,7 +760,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @return an iterator over the elements in this list in proper sequence
 	 */
 	@Override
-	public @NotNull ObjectListIterator<T> iterator() {
+	public ObjectListIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectListIterator<>(this);
 			iterator2 = new ObjectListIterator<>(this);
@@ -1011,7 +1009,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 * @return a ListIterator; really this same ObjectListIterator.
 		 */
 		@Override
-		public @NotNull ObjectListIterator<T> iterator() {
+		public ObjectListIterator<T> iterator() {
 			return this;
 		}
 	}

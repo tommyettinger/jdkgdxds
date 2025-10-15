@@ -289,7 +289,7 @@ public interface Ordered<T> extends Arrangeable {
 		 * @param kthLowest  rank of desired object according to comparison; k is based on ordinal numbers, not array indices. For min
 		 *                   value use 1, for max value use size of the Ordered; using 0 results in a runtime exception.
 		 * @return the index of the kth lowest ranked item.
-		 * @see Ordered.OfInt#selectRanked(Comparator, int)
+		 * @see Ordered.OfInt#selectRanked(IntComparator, int)
 		 */
 		default int selectRankedIndex(IntComparator comparator, int kthLowest) {
 			if (kthLowest < 1) {

@@ -1134,7 +1134,6 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * {@inheritDoc}
 		 *
 		 * @param c
-		 * @throws ClassCastException   {@inheritDoc}
 		 * @throws NullPointerException {@inheritDoc}
 		 * @implSpec This implementation iterates over the specified collection,
 		 * checking each element returned by the iterator in turn to see

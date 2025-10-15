@@ -1254,7 +1254,6 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * {@inheritDoc}
 		 *
 		 * @param c
-		 * @throws ClassCastException   {@inheritDoc}
 		 * @throws NullPointerException {@inheritDoc}
 		 * @implSpec This implementation iterates over the specified collection,
 		 * checking each element returned by the iterator in turn to see
@@ -1478,15 +1477,8 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		/**
-		 * {@inheritDoc}
-		 *
-		 * @param o
-		 * @throws UnsupportedOperationException {@inheritDoc}
-		 * @throws ClassCastException            {@inheritDoc}
-		 * @throws NullPointerException          {@inheritDoc}
-		 * @implSpec This implementation iterates over the collection looking for the
-		 * specified element.  If it finds the element, it removes the element
-		 * from the collection using the iterator's remove method.
+		 * @param o the item to try to remove
+		 * @return true if the item was removed successfully; false otherwise
 		 */
 		@Override
 		public boolean remove(Object o) {
@@ -1501,12 +1493,8 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		/**
-		 * {@inheritDoc}
-		 *
-		 * @param c
-		 * @throws UnsupportedOperationException {@inheritDoc}
-		 * @throws ClassCastException            {@inheritDoc}
-		 * @throws NullPointerException          {@inheritDoc}
+		 * @param c a Collection of any items to try to remove
+		 * @return true if this was modified as a result of this call, or false otherwise
 		 */
 		@Override
 		public boolean removeAll(@NotNull Collection<?> c) {
@@ -1723,20 +1711,8 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		/**
-		 * {@inheritDoc}
-		 *
-		 * @param o
-		 * @throws UnsupportedOperationException {@inheritDoc}
-		 * @throws ClassCastException            {@inheritDoc}
-		 * @throws NullPointerException          {@inheritDoc}
-		 * @implSpec This implementation iterates over the collection looking for the
-		 * specified element.  If it finds the element, it removes the element
-		 * from the collection using the iterator's remove method.
-		 *
-		 * <p>Note that this implementation throws an
-		 * {@code UnsupportedOperationException} if the iterator returned by this
-		 * collection's iterator method does not implement the {@code remove}
-		 * method and this collection contains the specified object.
+		 * @param o the item to try to remove
+		 * @return true if this map was modified (meaning the item was removed successfully); false otherwise
 		 */
 		@Override
 		public boolean remove(Object o) {
