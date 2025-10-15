@@ -32,6 +32,19 @@ import static com.github.tommyettinger.ds.test.PileupTest.LEN;
 import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
 
 /**
+ * Trying a shorter LEN value (10K) here so the tests finish quickly.
+ * Using 1.12.4's Utilities class:
+ * <br>
+ * This used a threshold of 40000 and LEN of 10000
+ * 27 problem multipliers in total, 485 likely good multipliers in total.
+ * Lowest collisions : 3373
+ * Highest collisions: 97351
+ * Average collisions: 9765.841796875
+ * Lowest pileup     : 7
+ * Highest pileup    : 79
+ * <br>
+ * Even though only the first 32 multipliers are used in 1.12.4, one of the problem multipliers has issues when 28
+ * rotations through GOOD_MULTIPLIERS have occurred, so it might have issues in practice on very large inputs...
  */
 public class BroadSpectrumMultiplierTest {
 
@@ -124,7 +137,7 @@ public class BroadSpectrumMultiplierTest {
 			System.arraycopy(buffer, 0, Utilities.GOOD_MULTIPLIERS, 0, buffer.length);
 
 		}
-		System.out.println("This used a threshold of " + THRESHOLD);
+		System.out.println("This used a threshold of " + THRESHOLD + " and LEN of " + LEN);
 		good.sortByValue(LongComparators.NATURAL_COMPARATOR);
 
 		long bigTotal = 0L;
