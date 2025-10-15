@@ -120,7 +120,7 @@ public class BroadSpectrumMultiplierTest {
 			set.clear();
 			// rotate multipliers by 1
 			System.arraycopy(Utilities.GOOD_MULTIPLIERS, 1, buffer, 0, Utilities.GOOD_MULTIPLIERS.length - 1);
-			System.arraycopy(Utilities.GOOD_MULTIPLIERS, Utilities.GOOD_MULTIPLIERS.length - 1, buffer, 0, 1);
+			System.arraycopy(Utilities.GOOD_MULTIPLIERS, 0, buffer, Utilities.GOOD_MULTIPLIERS.length - 1, 1);
 			System.arraycopy(buffer, 0, Utilities.GOOD_MULTIPLIERS, 0, buffer.length);
 
 		}
