@@ -56,7 +56,7 @@ public interface Appender<T> {
 		return sb;
 	}
 
-	static <S extends CharSequence & Appendable> S appendEnumName(S sb, Enum<?> item) {
+	static <S extends CharSequence & Appendable, E extends Enum<?>> S appendEnumName(S sb, E item) {
 		try {
 			sb.append(item == null ? "null" : item.name());
 		} catch (IOException e) {
