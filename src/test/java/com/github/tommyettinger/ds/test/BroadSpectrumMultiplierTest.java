@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.IntSet;
@@ -28,7 +27,6 @@ import com.github.tommyettinger.ds.support.sort.LongComparators;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import static com.github.tommyettinger.ds.test.PileupTest.LEN;
 import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
@@ -142,11 +140,48 @@ import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
  * Likely bad multipliers (base 16):
  * 3A7D0AC9 E35C86ED 9E55CBF3 DC92F983 FB73BC8B DC0CFB0D B56A208B B3A06767 D80DB433 D1D3B9E7 EDEAD625 9E0B289B A2DFA303 A68C7791 90738567 A42433BF 5DEA5C13 63A95E87 B57AD749 83887061 2682D739 518CF5CD D9ABF481 C21736F9 4A1DDE53 8DC1D40F 66A8F137 66A8F137 66A8F137 66A8F137 66A8F137 229CF84B 283EDE53 3BE28E65 52431FAD A19ACF23 A19ACF23 CECCCC93 CECCCC93 51F4F481 12CFACE5 4A1F1765 4B8E319B B423727D
  * </pre>
+ * <br>
+ * Changing the threshold somewhat to try to find problems as they happen, also much higher LEN...
+ * <pre>
+ * This used a pileup threshold of 118 - shift * 2, and LEN of 500000
+ * 94 problem multipliers in total, 418 likely good multipliers in total.
+ * Lowest collisions : 163957
+ * Highest collisions: 9667551
+ * Average collisions: 647612.0644257703
+ * Lowest pileup     : 0
+ * Highest pileup    : 34
+ * Likely bad multipliers (base 16):
+ * E5182F73 31A6C2EB 8AE04AAD E2061CD3 B76FD153 6A3DC2CD 3CF16429 CEA405C7 C33AFB2F C33AFB2F 5A052EF9 BFA927CB 4A4C196F 85C8ADB5 AF2D17D7 A562FE85 E72A6339 D0DE6BBD 9296AFF5 8C2A253F EA326ABB EA326ABB D963E9A1 D963E9A1 C0A7D057 D48BF7C7 83D18A7B 83D18A7B AA19AAB7 E0CC8899 EC34F7A1 EC34F7A1 2DA9833D E39ECEF7 90738567 752D9E21 FFD4C7BD E208D04F AC612BF1 AC612BF1 E4F8CD59 B965E897 1737AC19 FC5B4507 8AEDE62B 4386ED2F C1ADCC9D F3AEC9B5 E8738C4D C5414787 EF3AF87B F98DDA5B CCF4E271 B26623D3 ACABAFB3 ACABAFB3 E213ACCB E213ACCB E213ACCB A30FAD43 83887061 68A8C7F3 DC95806B DF391243 D866C25D A8FFC28D 289FF151 D8279727 508B85AF B1173B23 A6989707 D30A3B83 7E869917 35D834E5 1C829FA9 1C829FA9 A6D2E6D1 76188D6B 25743A2F FAD1EED3 A32B06F3 CDC96E23 B725C529 291C7533 5B073B15 7C706855 D98EC64B CDA1D21D 8099F855 3867C535 F664655D E935C8D7 115583CF 115583CF
+ * </pre>
+ * Switching back to collision-based threshold, using FUSED with 500K LEN:
+ * <pre>
+ * This used a THRESHOLD of 2000000, and LEN of 500000
+ * 26 problem multipliers in total, 486 likely good multipliers in total.
+ * Lowest collisions : 163957
+ * Highest collisions: 1882363
+ * Average collisions: 532296.8024691358
+ * Lowest pileup     : 0
+ * Highest pileup    : 30
+ * Likely bad multipliers (base 16):
+ * C5F768E7 FF54D7E7 6A3DC2CD DB41FBB9 AF2D17D7 A2DFA303 EBE28BC7 AFA63E3F AFA63E3F A03E58D5 C79860D5 7F28885B FAEFB6C3 A5DE22F3 E4F8CD59 F16A6DCD A26FD4F7 F3AEC9B5 BA7B6B01 BA7B6B01 F55C20BB AF439D51 83887061 83887061 91D8C35D CBA24E17
+ * </pre>
+ * Comparing with 1.12.4's GOOD_MULTIPLIERS:
+ * <pre>
+ * This used a THRESHOLD of 2000000, and LEN of 500000
+ * 36 problem multipliers in total, 476 likely good multipliers in total.
+ * Lowest collisions : 153014
+ * Highest collisions: 1983066
+ * Average collisions: 540531.6512605041
+ * Lowest pileup     : 0
+ * Highest pileup    : 30
+ * Likely bad multipliers (base 16):
+ * F16A6DCD EBE28BC7 9F45E6F1 FF54D7E7 C7C8533D E4F8CD59 AF439D51 8F405B2D DD51AB15 F3AEC9B5 EB1A2609 C4E985F9 82E63243 C79860D5 CE42682D C8FF67C7 C8FF67C7 AF2D17D7 A26FD4F7 A9288C65 E81D90D5 E81D90D5 B80947FD FAEFB6C3 D9EFDB5D EB65580F DFBF3899 AFA63E3F AFA63E3F DB41FBB9 83887061 83887061 B672ADC5 C5F768E7 CCE4C43F 82E28415
+ * </pre>
  */
 public class BroadSpectrumMultiplierTest {
 
 	public static void main(String[] args) throws IOException {
-		Utilities2.replaceGoodMultipliers(Utilities2.FUSED_MULTIPLIERS2);
+//		Utilities2.replaceGoodMultipliers(Utilities2.FUSED_MULTIPLIERS);
 		final Point2[] spiral = generatePointSpiral(LEN);
 		IntSet collisions = new IntSet(LEN);
 		for (int i = 0; i < LEN; i++) {
@@ -154,11 +189,11 @@ public class BroadSpectrumMultiplierTest {
 		}
 		System.out.println(collisions.size() + "/" + LEN + " hashes are unique.");
 //		final long THRESHOLD = (long)(Math.pow(LEN, 11.0/10.0));
-		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.35 * collisions.size()));
+		final long THRESHOLD = (long) ((double) LEN * (double) LEN / (0.25 * collisions.size()));
 
 		final int[] problems = {0};
 		IntList likelyBad = new IntList(64);
-		final int COUNT = 512;
+		final int COUNT = 512, MASK = COUNT - 1;
 		IntLongOrderedMap good = new IntLongOrderedMap(COUNT);
 		int[] buffer = new int[Utilities.GOOD_MULTIPLIERS.length];
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
@@ -189,7 +224,7 @@ public class BroadSpectrumMultiplierTest {
 					threshold = (int) (newSize * loadFactor);
 					mask = newSize - 1;
 					shift = BitConversion.countLeadingZeros(mask) + 32;
-					hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift & 511];
+					hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift & MASK];
 					Object[] oldKeyTable = keyTable;
 
 					keyTable = new Object[newSize];
@@ -204,8 +239,9 @@ public class BroadSpectrumMultiplierTest {
 							}
 						}
 					}
-					if (longestPileup > 64 - shift) {
-						System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
+					if (collisionTotal > THRESHOLD) {
+//					if (longestPileup > 118 - shift * 2) {
+						System.out.printf("  WHOOPS!!!  Multiplier 0x%08X on index %4d has %d collisions and %d pileup\n", hashMultiplier, finalA, collisionTotal, longestPileup);
 						good.remove(hashMultiplier);
 						likelyBad.add(hashMultiplier);
 						problems[0]++;
@@ -250,11 +286,12 @@ public class BroadSpectrumMultiplierTest {
 		}
 		System.out.println("};\n");
 
-		System.out.println("This used a threshold of " + THRESHOLD + " and LEN of " + LEN);
+		System.out.println("This used a THRESHOLD of " + THRESHOLD + ", and LEN of " + LEN);
+//		System.out.println("This used a pileup threshold of 118 - shift * 2, and LEN of " + LEN);
 		System.out.println(problems[0] + " problem multipliers in total, " + (COUNT - problems[0]) + " likely good multipliers in total.");
 		System.out.println("Lowest collisions : " + minMax[0]);
 		System.out.println("Highest collisions: " + minMax[1]);
-		System.out.println("Average collisions: " + (bigTotal / Math.min(512.0, good.size())));
+		System.out.println("Average collisions: " + (bigTotal / Math.min((double) COUNT, good.size())));
 		System.out.println("Lowest pileup     : " + minMax[2]);
 		System.out.println("Highest pileup    : " + minMax[3]);
 		System.out.println("Likely bad multipliers (base 16):");
