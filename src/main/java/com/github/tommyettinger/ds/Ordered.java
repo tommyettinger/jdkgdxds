@@ -26,7 +26,6 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -93,7 +92,7 @@ public interface Ordered<T> extends Arrangeable {
 	 *
 	 * @return a randomly selected item from this, or {@code null} if this is empty
 	 */
-	default @Nullable T random() {
+	default T random() {
 		return random(ArrayTools.RANDOM);
 	}
 
@@ -106,7 +105,7 @@ public interface Ordered<T> extends Arrangeable {
 	 * @param rng any {@link Random} class
 	 * @return a random T value from this Ordered
 	 */
-	default @Nullable T random(Random rng) {
+	default T random(Random rng) {
 		return order().random(rng);
 	}
 
@@ -126,7 +125,7 @@ public interface Ordered<T> extends Arrangeable {
 	 *
 	 * @param comparator used to sort the T items this contains; may be null if T implements Comparable
 	 */
-	default void sort(@Nullable Comparator<? super T> comparator) {
+	default void sort(Comparator<? super T> comparator) {
 		order().sort(comparator);
 	}
 
@@ -260,7 +259,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable IntComparator comparator) {
+		default void sort(IntComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -396,7 +395,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable LongComparator comparator) {
+		default void sort(LongComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -532,7 +531,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable FloatComparator comparator) {
+		default void sort(FloatComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -668,7 +667,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable DoubleComparator comparator) {
+		default void sort(DoubleComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -801,7 +800,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable ShortComparator comparator) {
+		default void sort(ShortComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -934,7 +933,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable ByteComparator comparator) {
+		default void sort(ByteComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -1067,7 +1066,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable CharComparator comparator) {
+		default void sort(CharComparator comparator) {
 			order().sort(comparator);
 		}
 
@@ -1249,7 +1248,7 @@ public interface Ordered<T> extends Arrangeable {
 		 *
 		 * @param comparator used to sort the T items this contains; may be null to use natural ordering
 		 */
-		default void sort(@Nullable BooleanComparator comparator) {
+		default void sort(BooleanComparator comparator) {
 			order().sort(comparator);
 		}
 

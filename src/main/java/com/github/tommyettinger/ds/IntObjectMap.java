@@ -24,8 +24,6 @@ import com.github.tommyettinger.function.IntObjToObjBiFunction;
 
 import com.github.tommyettinger.function.IntToObjFunction;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -66,9 +64,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	protected int size;
 
 	protected int[] keyTable;
-	protected @Nullable V[] valueTable;
+	protected V[] valueTable;
 	protected boolean hasZeroValue;
-	@Nullable
 	protected V zeroValue;
 
 	/**
@@ -109,20 +106,13 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable
 	protected transient Entries<V> entries1;
-	@Nullable
 	protected transient Entries<V> entries2;
-	@Nullable
 	protected transient Values<V> values1;
-	@Nullable
 	protected transient Values<V> values2;
-	@Nullable
 	protected transient Keys<V> keys1;
-	@Nullable
 	protected transient Keys<V> keys2;
 
-	@Nullable
 	public V defaultValue = null;
 
 	/**
@@ -251,8 +241,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
-	@Nullable
-	public V put(int key, @Nullable V value) {
+	public V put(int key, V value) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -282,8 +271,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	/**
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
-	@Nullable
-	public V putOrDefault(int key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(int key, V value, V defaultValue) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -377,7 +365,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	protected void putResize(int key, @Nullable V value) {
+	protected void putResize(int key, V value) {
 		int[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
@@ -393,7 +381,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param key any {@code int}
 	 */
-	@Nullable
 	public V get(int key) {
 		if (key == 0) {
 			return hasZeroValue ? zeroValue : defaultValue;
@@ -411,8 +398,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	@Nullable
-	public V getOrDefault(int key, @Nullable V defaultValue) {
+	public V getOrDefault(int key, V defaultValue) {
 		if (key == 0) {
 			return hasZeroValue ? zeroValue : defaultValue;
 		}
@@ -426,12 +412,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 	}
 
-	public @Nullable V remove(int key) {
+	public V remove(int key) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				hasZeroValue = false;
 				--size;
-				@Nullable V oldValue = zeroValue;
+				V oldValue = zeroValue;
 				zeroValue = null;
 				return oldValue;
 			}
@@ -440,8 +426,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		int[] keyTable = this.keyTable;
-		@Nullable V[] valueTable = this.valueTable;
-		@Nullable V oldValue = valueTable[pos];
+		V[] valueTable = this.valueTable;
+		V oldValue = valueTable[pos];
 
 		int mask = this.mask, last, slot;
 		size--;
@@ -493,7 +479,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @return the current default value
 	 */
-	@Nullable
 	public V getDefaultValue() {
 		return defaultValue;
 	}
@@ -505,7 +490,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 *
 	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue(@Nullable V defaultValue) {
+	public void setDefaultValue(V defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -554,7 +539,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 */
-	public boolean containsValue(@Nullable Object value) {
+	public boolean containsValue(Object value) {
 		if (hasZeroValue) {
 			return Objects.equals(zeroValue, value);
 		}
@@ -591,7 +576,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param defaultKey the key to return when value cannot be found
 	 * @return a key that maps to value, if present, or defaultKey if value cannot be found
 	 */
-	public int findKey(@Nullable V value, int defaultKey) {
+	public int findKey(V value, int defaultKey) {
 		if (hasZeroValue && Objects.equals(zeroValue, value)) {
 			return 0;
 		}
@@ -691,8 +676,8 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	public int hashCode() {
 		int h = hasZeroValue && zeroValue != null ? zeroValue.hashCode() ^ size : size;
 		int[] keyTable = this.keyTable;
-		@Nullable V[] valueTable = this.valueTable;
-		@Nullable V v;
+		V[] valueTable = this.valueTable;
+		V v;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			int key = keyTable[i];
 			if (key != 0) {
@@ -923,7 +908,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NotNull EntryIterator<V> iterator() {
+	public EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1012,13 +997,12 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 	public static class Entry<V> {
 		public int key;
-		@Nullable
 		public V value;
 
 		public Entry() {
 		}
 
-		public Entry(int key, @Nullable V value) {
+		public Entry(int key, V value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -1052,7 +1036,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		@Nullable
 		public V getValue() {
 			return value;
 		}
@@ -1077,15 +1060,14 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 *                                       required to, throw this exception if the entry has been
 		 *                                       removed from the backing map.
 		 */
-		@Nullable
-		public V setValue(@Nullable V value) {
+		public V setValue(V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -1239,7 +1221,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		@Nullable
 		public V next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
@@ -1270,7 +1251,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public @NotNull EntryIterator<V> iterator() {
+		public EntryIterator<V> iterator() {
 			return this;
 		}
 
@@ -1320,7 +1301,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull EntryIterator<V> iterator() {
+		public EntryIterator<V> iterator() {
 			return iter;
 		}
 
@@ -1415,17 +1396,17 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		protected ValueIterator<V> iter;
 
 		@Override
-		public boolean add(@Nullable V item) {
+		public boolean add(V item) {
 			throw new UnsupportedOperationException("IntObjectMap.Values is read-only");
 		}
 
 		@Override
-		public boolean remove(@Nullable Object item) {
+		public boolean remove(Object item) {
 			throw new UnsupportedOperationException("IntObjectMap.Values is read-only");
 		}
 
 		@Override
-		public boolean contains(@Nullable Object item) {
+		public boolean contains(Object item) {
 			return iter.map.containsValue(item);
 		}
 
@@ -1440,7 +1421,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull ValueIterator<V> iterator() {
+		public ValueIterator<V> iterator() {
 			return iter;
 		}
 
@@ -1619,7 +1600,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 
 	}
 
-	@Nullable
 	public V putIfAbsent(int key, V value) {
 		if (key == 0) {
 			if (hasZeroValue) {
@@ -1643,7 +1623,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		return true;
 	}
 
-	@Nullable
 	public V replace(int key, V value) {
 		if (key == 0) {
 			if (hasZeroValue) {
@@ -1681,7 +1660,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 		return false;
 	}
 
-	@Nullable
 	public V merge(int key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
@@ -1704,7 +1682,6 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @param remappingFunction given a V from this and the V {@code value}, this should return what V to use
 	 * @return the value now associated with key
 	 */
-	@Nullable
 	public V combine(int key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);

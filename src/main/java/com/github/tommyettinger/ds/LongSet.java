@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.LongIterator;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -86,9 +85,7 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable
 	protected transient LongSetIterator iterator1;
-	@Nullable
 	protected transient LongSetIterator iterator2;
 
 	/**

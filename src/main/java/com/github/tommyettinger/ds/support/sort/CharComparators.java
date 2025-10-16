@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -111,7 +110,7 @@ public final class CharComparators {
 		return new CharComparator() {
 			@Override
 			public int compare(char x, char y) {
-				return c.compare(Character.valueOf(x), Character.valueOf(y));
+				return c.compare(x, y);
 			}
 
 			@SuppressWarnings("deprecation")
@@ -247,7 +246,7 @@ public final class CharComparators {
 	 * @param items the char array to be sorted
 	 * @param c     a CharComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(char[] items, final @Nullable CharComparator c) {
+	public static void sort(char[] items, final CharComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -269,7 +268,7 @@ public final class CharComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a CharComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(char[] items, final int from, final int to, final @Nullable CharComparator c) {
+	public static void sort(char[] items, final int from, final int to, final CharComparator c) {
 		if (to <= 0) {
 			return;
 		}

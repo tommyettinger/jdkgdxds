@@ -22,8 +22,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -575,8 +573,7 @@ public class CuckooMapTest extends TestCase {
 		}
 
 		@Override
-		@Nullable
-		public V put(@NotNull K key, @Nullable V value) {
+		public V put(K key, V value) {
 			throw new UnsupportedOperationException();
 		}
 	}

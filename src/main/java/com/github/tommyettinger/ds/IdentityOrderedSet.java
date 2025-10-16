@@ -17,8 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -123,19 +121,19 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		return System.identityHashCode(item) & mask;
 	}
 
 	@Override
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		return left == right;
 	}
 
 	@Override
 	public int hashCode() {
 		int h = size;
-		ObjectList<@Nullable T> order = items;
+		ObjectList<T> order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
 			h += System.identityHashCode(order.get(i)); // checking for null items doesn't matter here; their hash is 0.
 		}

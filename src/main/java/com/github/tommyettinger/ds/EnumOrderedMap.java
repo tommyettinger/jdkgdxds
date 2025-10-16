@@ -20,8 +20,6 @@ import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -81,7 +79,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param type     either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                 use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap(Enum<?> @Nullable [] universe, OrderType type) {
+	public EnumOrderedMap(Enum<?>[] universe, OrderType type) {
 		super();
 		if (universe == null) {
 			ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
@@ -102,7 +100,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param type          either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                      use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumOrderedMap(@Nullable Class<? extends Enum<?>> universeClass, OrderType type) {
+	public EnumOrderedMap(Class<? extends Enum<?>> universeClass, OrderType type) {
 		this(universeClass == null ? null : universeClass.getEnumConstants(), type);
 	}
 
@@ -197,7 +195,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
-	public EnumOrderedMap(Enum<?> @Nullable [] universe) {
+	public EnumOrderedMap(Enum<?>[] universe) {
 		this(universe, OrderType.LIST);
 	}
 
@@ -209,7 +207,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumOrderedMap(@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumOrderedMap(Class<? extends Enum<?>> universeClass) {
 		this(universeClass, OrderType.LIST);
 	}
 
@@ -282,8 +280,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
 	@Override
-	@Nullable
-	public V put(Enum<?> key, @Nullable V value) {
+	public V put(Enum<?> key, V value) {
 		if (key != null) {
 			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
 			if (valueTable == null) valueTable = new Object[universe.length];
@@ -312,8 +309,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or null otherwise
 	 */
-	@Nullable
-	public V put(Enum<?> key, @Nullable V value, int index) {
+	public V put(Enum<?> key, V value, int index) {
 		if (key != null) {
 			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
 			if (valueTable == null) valueTable = new Object[universe.length];
@@ -337,9 +333,8 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 		return defaultValue;
 	}
 
-	@Nullable
 	@Override
-	public V putOrDefault(Enum<?> key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(Enum<?> key, V value, V defaultValue) {
 		if (key != null) {
 			if (universe == null) universe = key.getDeclaringClass().getEnumConstants();
 			if (valueTable == null) valueTable = new Object[universe.length];
@@ -414,7 +409,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
 	 * @return the value of the removed entry
 	 */
-	@Nullable
 	public V removeAt(int index) {
 		return super.remove(ordering.removeAt(index));
 	}
@@ -469,7 +463,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	@Nullable
 	public V setAt(int index, V v) {
 		if (index < 0 || index >= size || universe == null || valueTable == null) {
 			return null;
@@ -488,7 +481,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	@Nullable
 	public V getAt(int index) {
 		return get(ordering.get(index));
 	}
@@ -530,7 +522,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clearToUniverse(Enum<?> @Nullable [] universe) {
+	public void clearToUniverse(Enum<?>[] universe) {
 		super.clearToUniverse(universe);
 		ordering.clear();
 	}
@@ -552,7 +544,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
 	 */
-	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse(Class<? extends Enum<?>> universe) {
 		super.clearToUniverse(universe);
 		ordering.clear();
 	}
@@ -582,7 +574,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable Comparator<? super Enum<?>> comp) {
+	public void sort(Comparator<? super Enum<?>> comp) {
 		ordering.sort(comp);
 	}
 
@@ -595,7 +587,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 *
 	 * @param comp a Comparator that can compare {@code V} values; may be null to use natural order of Comparable values
 	 */
-	public void sortByValue(@Nullable Comparator<V> comp) {
+	public void sortByValue(Comparator<V> comp) {
 		if (comp == null)
 			//noinspection unchecked
 			ordering.sort((a, b) -> ((Comparator<V>) ObjectComparators.NATURAL_COMPARATOR).compare(get(a), get(b)));
@@ -655,7 +647,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NotNull Keys keySet() {
+	public Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys(this);
 			keys2 = new OrderedMapKeys(this);
@@ -680,7 +672,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NotNull Values<V> values() {
+	public Values<V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -706,7 +698,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull Entries<V> entrySet() {
+	public Entries<V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -733,7 +725,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NotNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+	public MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -789,7 +781,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 			keys = map.ordering;
 			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
-				public @NotNull MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+				public MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 					return this;
 				}
 
@@ -847,7 +839,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 			ordering = map.ordering;
 			iter = new MapIterator<Object, Enum<?>>(map) {
 				@Override
-				public @NotNull MapIterator<?, Enum<?>> iterator() {
+				public MapIterator<?, Enum<?>> iterator() {
 					return this;
 				}
 
@@ -903,7 +895,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 			keys = map.ordering;
 			iter = new MapIterator<V, V>(map) {
 				@Override
-				public @NotNull MapIterator<V, V> iterator() {
+				public MapIterator<V, V> iterator() {
 					return this;
 				}
 
@@ -923,7 +915,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				}
 
 				@Override
-				@Nullable
 				public V next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();

@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -61,7 +60,6 @@ public interface Term<T extends Comparable<T>> extends Comparable<Term<T>> {
 	 *
 	 * @return a T value not inside another wrapping Term, or null if this Term doesn't have a T value.
 	 */
-	@Nullable
 	T value();
 
 	/**

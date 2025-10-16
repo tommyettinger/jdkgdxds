@@ -20,8 +20,6 @@ import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.function.BooleanPredicate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -75,9 +73,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 */
 	protected int tail = 0;
 
-	@Nullable
 	protected transient BooleanDequeIterator descendingIterator1;
-	@Nullable
 	protected transient BooleanDequeIterator descendingIterator2;
 
 	/**
@@ -1453,7 +1449,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code boolean}, containing all the elements in this collection
 	 */
-	public boolean @NotNull [] toArray() {
+	public boolean[] toArray() {
 		boolean[] next = new boolean[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -2497,7 +2493,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 * @param comparator the Comparator to use for boolean items; may be null to use the natural
 	 *                   order of boolean items when boolean implements Comparable of boolean
 	 */
-	public void sort(@Nullable BooleanComparator comparator) {
+	public void sort(BooleanComparator comparator) {
 		if (head <= tail) {
 			BooleanComparators.sort(items, head, tail + 1, comparator);
 		} else {
@@ -2524,7 +2520,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 *                   order of boolean items when boolean implements Comparable of boolean
 	 */
 	@Override
-	public void sort(int from, int to, @Nullable BooleanComparator comparator) {
+	public void sort(int from, int to, BooleanComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (head + to <= items.length) {

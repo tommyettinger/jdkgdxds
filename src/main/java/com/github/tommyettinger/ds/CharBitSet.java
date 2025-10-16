@@ -22,7 +22,6 @@ import com.github.tommyettinger.ds.support.util.CharAppender;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.CharPredicate;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -47,9 +46,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	protected int[] bits;
 
-	@Nullable
 	protected transient CharBitSetIterator iterator1;
-	@Nullable
 	protected transient CharBitSetIterator iterator2;
 
 	/**

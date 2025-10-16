@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntToIntFunction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -48,9 +47,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	public int[] items;
 	protected int size;
-	@Nullable
 	protected transient IntListIterator iterator1;
-	@Nullable
 	protected transient IntListIterator iterator2;
 
 	/**
@@ -894,7 +891,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 *
 	 * @param c the comparator to determine the order of the IntList
 	 */
-	public void sort(final @Nullable IntComparator c) {
+	public void sort(final IntComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -912,7 +909,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the IntList
 	 */
-	public void sort(int from, int to, final @Nullable IntComparator c) {
+	public void sort(int from, int to, final IntComparator c) {
 		if (c == null) {
 			sort(from, to);
 		} else {

@@ -21,8 +21,6 @@ import com.github.tommyettinger.ds.support.sort.FilteredComparators;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -404,7 +402,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		if (item instanceof Iterable) {
 			return hashHelper((I) item) & mask;
 		}
@@ -422,7 +420,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * @return true if left and right are equivalent according to the rules this filtered type uses
 	 */
 	@Override
-	public boolean equate(Object left, @Nullable Object right) {
+	public boolean equate(Object left, Object right) {
 		if (left == right)
 			return true;
 		if (right == null) return false;
@@ -462,9 +460,9 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	@Override
 	public int hashCode() {
 		int h = size;
-		ObjectList<@Nullable I> order = items;
+		ObjectList<I> order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
-			@Nullable I key = order.get(i);
+			I key = order.get(i);
 			if (key != null) {
 				h += hashHelper(key);
 			}

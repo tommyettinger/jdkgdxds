@@ -21,8 +21,6 @@ import com.github.tommyettinger.ds.support.sort.FilteredComparators;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -390,7 +388,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		if (item instanceof String) {
 			return hashHelper((String) item) & mask;
 		}
@@ -408,7 +406,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 * @return true if left and right are equivalent according to the rules this filtered type uses
 	 */
 	@Override
-	public boolean equate(Object left, @Nullable Object right) {
+	public boolean equate(Object left, Object right) {
 
 		if (left == right)
 			return true;
@@ -442,9 +440,9 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	@Override
 	public int hashCode() {
 		int h = size;
-		ObjectList<@Nullable String> order = items;
+		ObjectList<String> order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
-			@Nullable String key = order.get(i);
+			String key = order.get(i);
 			if (key != null) {
 				h += hashHelper(key);
 			}

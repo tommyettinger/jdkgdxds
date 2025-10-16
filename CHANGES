@@ -1,3 +1,9 @@
+[1.13.0]
+- [BREAKING] All nullity annotations have been removed. We were already doing substantial null-checking because the annotations aren't very effective at eliminating that, and forcing users to depend on an annotations dependency isn't a very good policy. Having nullity annotations on almost everything hampered readability, also.
+- Appender compiles again on GWT 2.11.0; in at least some earlier versions, a GWT bug or behavior difference prevented `ENUM_NAME_APPENDER` from compiling. TeaVM was unaffected, which is why the bug escaped notice.
+- Utilities.GOOD_MULTIPLIERS changed so at least in some cases, there are fewer collisions by a substantial factor (fewer than half the collisions in one large input set). The set of multipliers is a mix of the best ones from earlier, with others found by generating thousands of multipliers with close-to-16 bit counts and seeing which ones didn't cause as many collisions.
+- Various mistakes in JavaDoc strings have been fixed.
+
 [1.12.4]
 - The dependency on digital has been updated to 0.9.4 . This is a non-breaking update that should fix a (potential) compilation issue on RoboVM. The previous 0.9.3 release is also non-breaking, and adds some small features.
 

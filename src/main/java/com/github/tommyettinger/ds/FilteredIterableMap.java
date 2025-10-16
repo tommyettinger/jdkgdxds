@@ -22,8 +22,6 @@ import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -247,7 +245,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		if (item instanceof Iterable) {
 			return hashHelper((I) item) & mask;
 		}
@@ -265,7 +263,7 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	 * @return true if left and right are equivalent according to the rules this filtered type uses
 	 */
 	@Override
-	public boolean equate(Object left, @Nullable Object right) {
+	public boolean equate(Object left, Object right) {
 		if (left == right)
 			return true;
 		if (right == null) return false;

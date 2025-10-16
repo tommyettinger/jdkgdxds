@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -111,7 +110,7 @@ public final class ByteComparators {
 		return new ByteComparator() {
 			@Override
 			public int compare(byte x, byte y) {
-				return c.compare(Byte.valueOf(x), Byte.valueOf(y));
+				return c.compare(x, y);
 			}
 
 			@SuppressWarnings("deprecation")
@@ -287,7 +286,7 @@ public final class ByteComparators {
 	 * @param items the byte array to be sorted
 	 * @param c     a ByteComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(byte[] items, final @Nullable ByteComparator c) {
+	public static void sort(byte[] items, final ByteComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -309,7 +308,7 @@ public final class ByteComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a ByteComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(byte[] items, final int from, final int to, final @Nullable ByteComparator c) {
+	public static void sort(byte[] items, final int from, final int to, final ByteComparator c) {
 		if (to <= 0) {
 			return;
 		}

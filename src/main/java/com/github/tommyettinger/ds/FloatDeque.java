@@ -22,8 +22,6 @@ import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.function.FloatToFloatFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -77,9 +75,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	protected int tail = 0;
 
-	@Nullable
 	protected transient FloatDequeIterator descendingIterator1;
-	@Nullable
 	protected transient FloatDequeIterator descendingIterator2;
 
 	/**
@@ -1455,7 +1451,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code float}, containing all the elements in this collection
 	 */
-	public float @NotNull [] toArray() {
+	public float[] toArray() {
 		float[] next = new float[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -2701,7 +2697,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 *                   order of float items when float implements Comparable of float
 	 */
 	@Override
-	public void sort(@Nullable FloatComparator comparator) {
+	public void sort(FloatComparator comparator) {
 		if (comparator == null) {
 			sort();
 		} else if (head <= tail) {
@@ -2715,7 +2711,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	}
 
 	@Override
-	public void sort(int from, int to, @Nullable FloatComparator comparator) {
+	public void sort(int from, int to, FloatComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (comparator == null) {

@@ -20,8 +20,6 @@ import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongToLongFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -75,9 +73,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
      */
     protected int tail = 0;
 
-    @Nullable
     protected transient LongDequeIterator descendingIterator1;
-    @Nullable
     protected transient LongDequeIterator descendingIterator2;
 
     /**
@@ -1453,7 +1449,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
      * @return an array, whose {@linkplain Class#getComponentType runtime component
      * type} is {@code long}, containing all the elements in this collection
      */
-    public long @NotNull [] toArray() {
+    public long[] toArray() {
         long[] next = new long[size];
         if (head <= tail) {
             System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -2539,7 +2535,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 *                   order of long items when long implements Comparable of long
 	 */
 	@Override
-	public void sort(@Nullable LongComparator comparator) {
+	public void sort(LongComparator comparator) {
 		if (comparator == null) {
 			sort();
 		} else if (head <= tail) {
@@ -2553,7 +2549,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void sort(int from, int to, @Nullable LongComparator comparator) {
+	public void sort(int from, int to, LongComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (comparator == null) {

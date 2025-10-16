@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.function.ByteToByteFunction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -48,9 +47,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	public byte[] items;
 	protected int size;
-	@Nullable
 	protected transient ByteListIterator iterator1;
-	@Nullable
 	protected transient ByteListIterator iterator2;
 
 	/**
@@ -894,7 +891,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 *
 	 * @param c the comparator to determine the order of the ByteList
 	 */
-	public void sort(final @Nullable ByteComparator c) {
+	public void sort(final ByteComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -912,7 +909,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the ByteList
 	 */
-	public void sort(int from, int to, final @Nullable ByteComparator c) {
+	public void sort(int from, int to, final ByteComparator c) {
 		if (c == null) {
 			sort(from, to);
 		} else {

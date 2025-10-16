@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -72,7 +71,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 	}
 
 	@Override
-	public @Nullable T value() {
+	public T value() {
 		return null;
 	}
 
@@ -167,7 +166,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		}
 
 		@Override
-		public @Nullable T value() {
+		public T value() {
 			return item;
 		}
 
@@ -257,7 +256,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		}
 
 		@Override
-		public @Nullable T value() {
+		public T value() {
 			return null;
 		}
 
@@ -364,7 +363,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		}
 
 		@Override
-		public @Nullable T value() {
+		public T value() {
 			return null;
 		}
 
@@ -496,7 +495,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		}
 
 		@Override
-		public @Nullable T value() {
+		public T value() {
 			return null;
 		}
 
@@ -626,7 +625,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		}
 
 		@Override
-		public @Nullable T value() {
+		public T value() {
 			return null;
 		}
 

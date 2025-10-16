@@ -22,8 +22,6 @@ import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.IntIntToIntBiFunction;
 import com.github.tommyettinger.function.ObjToIntFunction;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -52,21 +50,15 @@ import java.util.*;
  * @author Tommy Ettinger (Enum-related adaptation)
  */
 public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
-	protected @Nullable EnumSet keys;
+	protected EnumSet keys;
 
-	protected int @Nullable [] valueTable;
+	protected int[] valueTable;
 
-	@Nullable
 	protected transient Entries entries1;
-	@Nullable
 	protected transient Entries entries2;
-	@Nullable
 	protected transient Values values1;
-	@Nullable
 	protected transient Values values2;
-	@Nullable
 	protected transient Keys keys1;
-	@Nullable
 	protected transient Keys keys2;
 
 	/**
@@ -91,7 +83,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
-	public EnumIntMap(Enum<?> @Nullable [] universe) {
+	public EnumIntMap(Enum<?>[] universe) {
 		if (universe == null) return;
 		this.keys = EnumSet.noneOf(universe);
 		valueTable = new int[universe.length];
@@ -105,7 +97,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumIntMap(@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumIntMap(Class<? extends Enum<?>> universeClass) {
 		this(universeClass == null ? null : universeClass.getEnumConstants());
 	}
 
@@ -171,7 +163,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param value the int value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
-	public int put(@NotNull Enum<?> key, int value) {
+	public int put(Enum<?> key, int value) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -196,7 +188,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param defaultValue the int value to return if {@code key} was not already present
 	 * @return the previous value associated with {@code key}, or the given {@code defaultValue} if the given key was not present
 	 */
-	public int putOrDefault(@NotNull Enum<?> key, int value, int defaultValue) {
+	public int putOrDefault(Enum<?> key, int value, int defaultValue) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -221,7 +213,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @param map another EnumIntMap with an equivalent key universe
 	 */
-	public void putAll(@NotNull EnumIntMap map) {
+	public void putAll(EnumIntMap map) {
 		if (map.keys == null || map.keys.universe == null) return;
 		if (keys == null || keys.universe == null) keys = map.keys;
 		Enum<?>[] universe = keys.universe;
@@ -435,7 +427,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clearToUniverse(Enum<?> @Nullable [] universe) {
+	public void clearToUniverse(Enum<?>[] universe) {
 		if (universe == null) {
 			keys = null;
 			valueTable = null;
@@ -468,7 +460,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
 	 */
-	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse(Class<? extends Enum<?>> universe) {
 		if (universe == null) {
 			keys = null;
 			valueTable = null;
@@ -492,7 +484,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return the current key universe
 	 */
-	public Enum<?> @Nullable [] getUniverse() {
+	public Enum<?>[] getUniverse() {
 		return keys == null ? null : keys.universe;
 	}
 
@@ -524,7 +516,6 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return the corresponding Enum if the value was found, or null otherwise
 	 */
-	@Nullable
 	public Enum<?> findKey(int value) {
 		if (this.keys == null || this.valueTable == null || this.keys.isEmpty() || keys.universe == null) return null;
 		int[] valueTable = this.valueTable;
@@ -751,7 +742,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NotNull EntryIterator iterator() {
+	public EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -774,7 +765,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a set view of the keys contained in this map
 	 */
-	public @NotNull Keys keySet() {
+	public Keys keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new Keys(this);
 			keys2 = new Keys(this);
@@ -798,7 +789,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a {@link PrimitiveCollection} of int values
 	 */
-	public @NotNull Values values() {
+	public Values values() {
 		if (values1 == null || values2 == null) {
 			values1 = new Values(this);
 			values2 = new Values(this);
@@ -822,7 +813,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 *
 	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
-	public @NotNull Entries entrySet() {
+	public Entries entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new Entries(this);
 			entries2 = new Entries(this);
@@ -840,19 +831,18 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 	public static class Entry {
-		@Nullable
 		public Enum<?> key;
 		public int value;
 
 		public Entry() {
 		}
 
-		public Entry(@NotNull Entry entry) {
+		public Entry(Entry entry) {
 			this.key = entry.key;
 			this.value = entry.value;
 		}
 
-		public Entry(@Nullable Enum<?> key, int value) {
+		public Entry(Enum<?> key, int value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -884,7 +874,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -947,7 +937,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		@Override
-		public @NotNull KeyIterator iterator() {
+		public KeyIterator iterator() {
 			return this;
 		}
 
@@ -1016,7 +1006,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		@Override
-		public @NotNull EntryIterator iterator() {
+		public EntryIterator iterator() {
 			return this;
 		}
 
@@ -1131,14 +1121,8 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		/**
-		 * {@inheritDoc}
-		 *
-		 * @param c
-		 * @throws NullPointerException {@inheritDoc}
-		 * @implSpec This implementation iterates over the specified collection,
-		 * checking each element returned by the iterator in turn to see
-		 * if it's contained in this collection.  If all elements are so
-		 * contained {@code true} is returned, otherwise {@code false}.
+		 * @param c a Collection of any type
+		 * @return true if all elements in c are contained in this set; false otherwise
 		 * @see #contains(Object)
 		 */
 		@Override
@@ -1153,7 +1137,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull EntryIterator iterator() {
+		public EntryIterator iterator() {
 			return iter;
 		}
 
@@ -1212,7 +1196,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Object @NotNull [] toArray() {
+		public Object[] toArray() {
 			Object[] a = new Object[iter.map.size()];
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1234,7 +1218,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T> T @NotNull [] toArray(T[] a) {
+		public <T> T[] toArray(T[] a) {
 			if (a.length < iter.map.size()) a = Arrays.copyOf(a, iter.map.size());
 			int i = 0;
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
@@ -1476,17 +1460,17 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		}
 
 		@Override
-		public boolean add(@NotNull Enum<?> item) {
+		public boolean add(Enum<?> item) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
 		@Override
-		public boolean addAll(@NotNull Collection<? extends Enum<?>> c) {
+		public boolean addAll(Collection<? extends Enum<?>> c) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
 		@Override
-		public boolean addAll(Enum<?> @NotNull [] c) {
+		public boolean addAll(Enum<?>[] c) {
 			throw new UnsupportedOperationException("Keys cannot have items added.");
 		}
 
@@ -1511,7 +1495,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull Iterator<Enum<?>> iterator() {
+		public Iterator<Enum<?>> iterator() {
 			return iter;
 		}
 
@@ -1827,7 +1811,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			|| offset < 0 || offset > sl - 1) return;
 		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
 		int end = str.indexOf(keyValueSeparator, offset + 1);
-		@Nullable Enum<?> k = null;
+		Enum<?> k = null;
 		boolean incomplete = false;
 		while (end != -1 && end + kvl < lim) {
 			k = keyParser.parse(str, offset, end);

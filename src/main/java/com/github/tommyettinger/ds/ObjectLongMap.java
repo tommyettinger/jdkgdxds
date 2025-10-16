@@ -23,8 +23,6 @@ import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjLongBiConsumer;
 import com.github.tommyettinger.function.ObjLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjToLongFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -96,17 +94,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable
 	protected transient Entries<K> entries1;
-	@Nullable
 	protected transient Entries<K> entries2;
-	@Nullable
 	protected transient Values<K> values1;
-	@Nullable
 	protected transient Values<K> values2;
-	@Nullable
 	protected transient Keys<K> keys1;
-	@Nullable
 	protected transient Keys<K> keys2;
 
 	public long defaultValue = 0L;
@@ -213,7 +205,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -230,7 +222,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		return left.equals(right);
 	}
 
@@ -423,7 +415,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		K rem;
-		@Nullable K[] keyTable = this.keyTable;
+		K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		long oldValue = valueTable[pos];
 
@@ -563,7 +555,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param value the value to search for
 	 * @return a key that maps to value, if present, or null if value cannot be found
 	 */
-	@Nullable
 	public K findKey(long value) {
 		long[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
@@ -594,7 +585,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 
-		@Nullable K[] oldKeyTable = keyTable;
+		K[] oldKeyTable = keyTable;
 		long[] oldValueTable = valueTable;
 
 		keyTable = (K[]) new Object[newSize];
@@ -661,10 +652,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	@Override
 	public int hashCode() {
 		long h = size;
-		@Nullable K[] keyTable = this.keyTable;
+		K[] keyTable = this.keyTable;
 		long[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			@Nullable K key = keyTable[i];
+			K key = keyTable[i];
 			if (key != null) {
 				h += key.hashCode() * 0x9E3779B97F4A7C15L;
 				h += valueTable[i];
@@ -859,7 +850,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NotNull EntryIterator<K> iterator() {
+	public EntryIterator<K> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -947,14 +938,13 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public static class Entry<K> {
-		@Nullable
 		public K key;
 		public long value;
 
 		public Entry() {
 		}
 
-		public Entry(@Nullable K key, long value) {
+		public Entry(K key, long value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -1020,7 +1010,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -1108,7 +1098,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public @NotNull KeyIterator<K> iterator() {
+		public KeyIterator<K> iterator() {
 			return this;
 		}
 
@@ -1177,7 +1167,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public @NotNull EntryIterator<K> iterator() {
+		public EntryIterator<K> iterator() {
 			return this;
 		}
 
@@ -1222,7 +1212,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull EntryIterator<K> iterator() {
+		public EntryIterator<K> iterator() {
 			return iter;
 		}
 
@@ -1414,7 +1404,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		@Override
-		public @NotNull KeyIterator<K> iterator() {
+		public KeyIterator<K> iterator() {
 			return iter;
 		}
 

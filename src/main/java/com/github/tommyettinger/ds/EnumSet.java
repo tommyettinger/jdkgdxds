@@ -19,8 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -50,11 +48,9 @@ import java.util.Set;
  */
 public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Iterable<Enum<?>>, EnhancedCollection<Enum<?>> {
 	protected int size;
-	protected int @Nullable [] table;
-	protected Enum<?> @Nullable [] universe;
-	@Nullable
+	protected int[] table;
+	protected Enum<?>[] universe;
 	protected transient EnumSetIterator iterator1;
-	@Nullable
 	protected transient EnumSetIterator iterator2;
 
 	/**
@@ -79,7 +75,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param ignoredToDistinguish an ignored boolean that differentiates this constructor, which defined a key universe,
 	 *                             from one that takes contents
 	 */
-	public EnumSet(Enum<?> @Nullable [] universe, boolean ignoredToDistinguish) {
+	public EnumSet(Enum<?>[] universe, boolean ignoredToDistinguish) {
 		super();
 		if (universe == null) return;
 		this.universe = universe;
@@ -95,7 +91,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumSet(@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumSet(Class<? extends Enum<?>> universeClass) {
 		this(universeClass == null ? null : universeClass.getEnumConstants(), true);
 	}
 
@@ -109,7 +105,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents an array of Enum items to place into this set
 	 */
-	public EnumSet(Enum<?> @NotNull [] contents) {
+	public EnumSet(Enum<?>[] contents) {
 		super();
 		addAll(contents);
 	}
@@ -120,7 +116,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumSet(@NotNull Iterator<? extends Enum<?>> contents) {
+	public EnumSet(Iterator<? extends Enum<?>> contents) {
 		super();
 		addAll(contents);
 	}
@@ -131,7 +127,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param contents a Collection of Enum items to place into this set
 	 */
-	public EnumSet(@NotNull Collection<? extends Enum<?>> contents) {
+	public EnumSet(Collection<? extends Enum<?>> contents) {
 		super();
 		addAll(contents);
 	}
@@ -141,7 +137,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param other another EnumSet that will have most of its data copied, but its cached {@code values()} results will be used directly
 	 */
-	public EnumSet(@NotNull EnumSet other) {
+	public EnumSet(EnumSet other) {
 		this.size = other.size;
 		if (other.table != null)
 			this.table = Arrays.copyOf(other.table, other.table.length);
@@ -198,7 +194,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * Use the {@link EnumSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public @NotNull Iterator<Enum<?>> iterator() {
+	public Iterator<Enum<?>> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new EnumSetIterator(this);
 			iterator2 = new EnumSetIterator(this);
@@ -294,7 +290,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean retainAll(@NotNull Collection<?> c) {
+	public boolean retainAll(Collection<?> c) {
 		if (size == 0 || table == null || universe == null || universe.length == 0) return false;
 		if (!(c instanceof EnumSet))
 			return super.retainAll(c);
@@ -317,7 +313,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean addAll(@NotNull Collection<? extends Enum<?>> c) {
+	public boolean addAll(Collection<? extends Enum<?>> c) {
 		if (!(c instanceof EnumSet))
 			return super.addAll(c);
 		EnumSet es = (EnumSet) c;
@@ -339,7 +335,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param c usually another EnumSet, but not required to be
 	 */
 	@Override
-	public boolean containsAll(@NotNull Collection<?> c) {
+	public boolean containsAll(Collection<?> c) {
 		if (!(c instanceof EnumSet))
 			return super.containsAll(c);
 		EnumSet es = (EnumSet) c;
@@ -359,7 +355,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @return {@code true} if this set changed as a result of the call
 	 */
 	@Override
-	public boolean removeAll(@NotNull Collection<?> c) {
+	public boolean removeAll(Collection<?> c) {
 		if (table == null || universe == null || universe.length == 0) return false;
 		if (!(c instanceof EnumSet))
 			return super.removeAll(c);
@@ -380,7 +376,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @see #add(Enum)
 	 */
-	public boolean addAll(Enum<?> @NotNull [] c) {
+	public boolean addAll(Enum<?>[] c) {
 		boolean modified = false;
 		for (int i = 0; i < c.length; i++) {
 			modified |= add(c[i]);
@@ -414,7 +410,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param universe the universe of possible Enum items this can hold; almost always produced by {@code values()} on an Enum
 	 */
-	public void clearToUniverse(Enum<?> @Nullable [] universe) {
+	public void clearToUniverse(Enum<?>[] universe) {
 		size = 0;
 		if (universe == null) {
 			table = null;
@@ -444,7 +440,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @param universe the Class of an Enum type that stores the universe of possible Enum items this can hold
 	 */
-	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse(Class<? extends Enum<?>> universe) {
 		size = 0;
 		if (universe == null) {
 			table = null;
@@ -468,7 +464,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 *
 	 * @return the current key universe
 	 */
-	public Enum<?> @Nullable [] getUniverse() {
+	public Enum<?>[] getUniverse() {
 		return universe;
 	}
 
@@ -937,7 +933,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @return a new EnumSet with the specified universe of possible items, but none present in the set
 	 */
-	public static EnumSet noneOf(Enum<?> @Nullable [] universe) {
+	public static EnumSet noneOf(Enum<?>[] universe) {
 		return new EnumSet(universe, true);
 	}
 
@@ -948,7 +944,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 * @return a new EnumSet with the specified universe of possible items, and all of them present in the set
 	 */
-	public static EnumSet allOf(Enum<?> @Nullable [] universe) {
+	public static EnumSet allOf(Enum<?>[] universe) {
 		if (universe == null) return new EnumSet();
 		return new EnumSet(universe);
 	}
@@ -962,7 +958,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param clazz the Class of any Enum type; you can get this from a constant with {@link Enum#getDeclaringClass()}
 	 * @return a new EnumSet with the specified universe of possible items, but none present in the set
 	 */
-	public static EnumSet noneOf(@Nullable Class<? extends Enum<?>> clazz) {
+	public static EnumSet noneOf(Class<? extends Enum<?>> clazz) {
 		if (clazz == null)
 			return new EnumSet();
 		return new EnumSet(clazz.getEnumConstants(), true);
@@ -975,7 +971,7 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * @param clazz the Class of any Enum type; you can get this from a constant with {@link Enum#getDeclaringClass()}
 	 * @return a new EnumSet with the specified universe of possible items, and all of them present in the set
 	 */
-	public static EnumSet allOf(@Nullable Class<? extends Enum<?>> clazz) {
+	public static EnumSet allOf(Class<? extends Enum<?>> clazz) {
 		if (clazz == null)
 			return new EnumSet();
 		return new EnumSet(clazz.getEnumConstants());

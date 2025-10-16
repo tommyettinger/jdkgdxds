@@ -21,7 +21,6 @@ import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -46,9 +45,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 
 	public short[] items;
 	protected int size;
-	@Nullable
 	protected transient ShortListIterator iterator1;
-	@Nullable
 	protected transient ShortListIterator iterator2;
 
 	/**
@@ -891,7 +888,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 *
 	 * @param c the comparator to determine the order of the ShortList
 	 */
-	public void sort(final @Nullable ShortComparator c) {
+	public void sort(final ShortComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -909,7 +906,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the ShortList
 	 */
-	public void sort(int from, int to, final @Nullable ShortComparator c) {
+	public void sort(int from, int to, final ShortComparator c) {
 		if (c == null) {
 			sort(from, to);
 		} else {

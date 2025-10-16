@@ -17,7 +17,4 @@
 /**
  * A large package of all data structures in this library, plus some interfaces they use.
  */
-@NotNullByDefault
 package com.github.tommyettinger.ds;
-
-import org.jetbrains.annotations.NotNullByDefault;

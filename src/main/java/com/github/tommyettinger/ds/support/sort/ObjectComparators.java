@@ -17,8 +17,6 @@
 package com.github.tommyettinger.ds.support.sort;
 
 import com.github.tommyettinger.function.ObjToFloatFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +33,7 @@ public final class ObjectComparators {
 	protected static class NaturalImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
 
 		@Override
-		public final int compare(final @NotNull T a, final T b) {
+		public final int compare(final T a, final T b) {
 			return a == b ? 0 : a.compareTo(b);
 		}
 
@@ -54,7 +52,7 @@ public final class ObjectComparators {
 	protected static class OppositeImplicitComparator<T extends Comparable<? super T>> implements Comparator<T> {
 
 		@Override
-		public final int compare(final T a, final @NotNull T b) {
+		public final int compare(final T a, final T b) {
 			return a == b ? 0 : b.compareTo(a);
 		}
 
@@ -247,7 +245,7 @@ public final class ObjectComparators {
 	 * @param items the List to be sorted
 	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort(List<K> items, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort(List<K> items, final Comparator<? super K> c) {
 		sort(items, 0, items.size(), c);
 	}
 
@@ -266,7 +264,7 @@ public final class ObjectComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort(List<K> items, final int from, final int to, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort(List<K> items, final int from, final int to, final Comparator<? super K> c) {
 		if (to <= 0) {
 			return;
 		}
@@ -434,7 +432,7 @@ public final class ObjectComparators {
 	 * @param items the List to be sorted
 	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort(K[] items, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort(K[] items, final Comparator<? super K> c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -453,7 +451,7 @@ public final class ObjectComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a Comparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static <K> void sort(K[] items, final int from, final int to, final @Nullable Comparator<? super K> c) {
+	public static <K> void sort(K[] items, final int from, final int to, final Comparator<? super K> c) {
 		if (to <= 0) {
 			return;
 		}

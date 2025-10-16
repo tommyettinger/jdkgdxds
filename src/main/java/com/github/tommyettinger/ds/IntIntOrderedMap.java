@@ -22,8 +22,6 @@ import com.github.tommyettinger.ds.support.sort.IntComparators;
 
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -613,7 +611,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 *
 	 * @param comp a IntComparator, such as one from {@link IntComparators}, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable IntComparator comp) {
+	public void sort(IntComparator comp) {
 		keys.sort(comp);
 	}
 
@@ -727,7 +725,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NotNull EntryIterator iterator() {
+	public EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 

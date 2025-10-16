@@ -23,7 +23,6 @@ import com.github.tommyettinger.ds.LongLongOrderedMap;
 import com.github.tommyettinger.ds.LongOrderedSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -55,7 +54,7 @@ public class AllGoldenVectorHashTest {
 					int longestPileup = 0;
 
 					@Override
-					protected void addResize(@NotNull Object key) {
+					protected void addResize(Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

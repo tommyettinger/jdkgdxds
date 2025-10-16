@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IdentitySet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.Utilities;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -377,7 +376,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public @NotNull Set<K> keySet() {
+	public Set<K> keySet() {
 		Set<K> set = new IdentitySet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -388,7 +387,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public @NotNull Collection<V> values() {
+	public Collection<V> values() {
 		List<V> values = new ObjectList<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {
@@ -399,7 +398,7 @@ public class IdentityCuckooMap<K, V> extends AbstractMap<K, V> implements Map<K,
 	}
 
 	@Override
-	public @NotNull Set<Entry<K, V>> entrySet() {
+	public Set<Entry<K, V>> entrySet() {
 		Set<Entry<K, V>> set = new IdentitySet<>(size);
 		for (int i = 0; i < keyTable.length; i++) {
 			if (keyTable[i] != null) {

@@ -24,8 +24,6 @@ import com.github.tommyettinger.function.LongFloatBiConsumer;
 import com.github.tommyettinger.function.LongFloatToFloatBiFunction;
 import com.github.tommyettinger.function.LongToFloatFunction;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -104,17 +102,11 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable
 	protected transient Entries entries1;
-	@Nullable
 	protected transient Entries entries2;
-	@Nullable
 	protected transient Values values1;
-	@Nullable
 	protected transient Values values2;
-	@Nullable
 	protected transient Keys keys1;
-	@Nullable
 	protected transient Keys keys2;
 
 	public float defaultValue = 0;
@@ -969,7 +961,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NotNull EntryIterator iterator() {
+	public EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1128,7 +1120,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -1309,7 +1301,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		}
 
 		@Override
-		public @NotNull EntryIterator iterator() {
+		public EntryIterator iterator() {
 			return this;
 		}
 
@@ -1359,7 +1351,7 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull EntryIterator iterator() {
+		public EntryIterator iterator() {
 			return iter;
 		}
 

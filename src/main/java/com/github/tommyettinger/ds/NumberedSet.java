@@ -19,8 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -72,12 +70,12 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		}
 
 		@Override
-		protected int place(@NotNull Object item) {
+		protected int place(Object item) {
 			return NumberedSet.this.place(item);
 		}
 
 		@Override
-		protected boolean equate(Object left, @Nullable Object right) {
+		protected boolean equate(Object left, Object right) {
 			return NumberedSet.this.equate(left, right);
 		}
 
@@ -92,9 +90,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	protected transient InternalMap map;
-	@Nullable
 	protected transient NumberedSetIterator<T> iterator1;
-	@Nullable
 	protected transient NumberedSetIterator<T> iterator2;
 
 	public NumberedSet() {
@@ -174,7 +170,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link InternalMap#mask} (both inclusive)
 	 */
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		return BitConversion.imul(item.hashCode(), map.hashMultiplier) >>> map.shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & map.mask;
@@ -193,7 +189,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		return left.equals(right);
 	}
 
@@ -252,7 +248,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public boolean containsAll(Collection<@NotNull ?> c) {
+	public boolean containsAll(Collection<?> c) {
 		for (Object e : c) {
 			if (!map.containsKey(e))
 				return false;
@@ -260,7 +256,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return true;
 	}
 
-	public boolean containsAll(@NotNull Object[] values) {
+	public boolean containsAll(Object[] values) {
 		for (Object e : values) {
 			if (!map.containsKey(e))
 				return false;
@@ -268,7 +264,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return true;
 	}
 
-	public boolean containsAll(@NotNull Object[] values, int offset, int length) {
+	public boolean containsAll(Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			if (!map.containsKey(values[i]))
 				return false;
@@ -276,7 +272,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return true;
 	}
 
-	public boolean containsAnyIterable(Iterable<@NotNull ?> c) {
+	public boolean containsAnyIterable(Iterable<?> c) {
 		for (Object e : c) {
 			if (map.containsKey(e))
 				return true;
@@ -284,7 +280,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return false;
 	}
 
-	public boolean containsAny(@NotNull Object[] values) {
+	public boolean containsAny(Object[] values) {
 		for (Object e : values) {
 			if (map.containsKey(e))
 				return true;
@@ -292,7 +288,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return false;
 	}
 
-	public boolean containsAny(@NotNull Object[] values, int offset, int length) {
+	public boolean containsAny(Object[] values, int offset, int length) {
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			if (map.containsKey(values[i]))
 				return true;
@@ -301,7 +297,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public boolean addAll(Collection<@NotNull ? extends T> c) {
+	public boolean addAll(Collection<? extends T> c) {
 		boolean modified = false;
 		for (T t : c)
 			modified |= add(t);
@@ -317,7 +313,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param count  how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll(Ordered<@NotNull T> other, int offset, int count) {
+	public boolean addAll(Ordered<T> other, int offset, int count) {
 		return addAll(map.size, other, offset, count);
 	}
 
@@ -331,7 +327,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll(int insertionIndex, Ordered<@NotNull T> other, int offset, int count) {
+	public boolean addAll(int insertionIndex, Ordered<T> other, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, other.size());
 		ensureCapacity(end - offset);
@@ -348,7 +344,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param array a non-null array of {@code T}
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll(@NotNull T[] array) {
+	public boolean addAll(T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
@@ -361,7 +357,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param length how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll(@NotNull T[] array, int offset, int length) {
+	public boolean addAll(T[] array, int offset, int length) {
 		ensureCapacity(length);
 		int oldSize = size();
 		for (int i = offset, n = i + length; i < n; i++) {
@@ -380,7 +376,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param count          how many indices in {@code other} to use
 	 * @return true if this is modified by this call, as {@link #addAll(Collection)} does
 	 */
-	public boolean addAll(int insertionIndex, @NotNull T[] array, int offset, int count) {
+	public boolean addAll(int insertionIndex, T[] array, int offset, int count) {
 		boolean changed = false;
 		int end = Math.min(offset + count, array.length);
 		ensureCapacity(end - offset);
@@ -392,7 +388,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public boolean retainAll(@NotNull Collection<@NotNull ?> c) {
+	public boolean retainAll(Collection<?> c) {
 		boolean modified = false;
 		Iterator<T> it = iterator();
 		while (it.hasNext()) {
@@ -409,7 +405,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public boolean removeAll(@NotNull Collection<?> c) {
+	public boolean removeAll(Collection<?> c) {
 		boolean modified = false;
 		Iterator<?> it = iterator();
 		while (it.hasNext()) {
@@ -435,7 +431,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param arr a non-null array of items to remove from this set
 	 * @return true if this had one or more items removed, or false if it is unchanged
 	 */
-	public boolean removeAll(@NotNull Object[] arr) {
+	public boolean removeAll(Object[] arr) {
 		int prevSize = size();
 		for (int i = 0, len = arr.length; i < len; i++) {
 			map.remove(arr[i]);
@@ -459,7 +455,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param length how many items, at most, to get from values and remove from this
 	 * @return true if this had one or more items removed, or false if it is unchanged
 	 */
-	public boolean removeAll(@NotNull Object[] values, int offset, int length) {
+	public boolean removeAll(Object[] values, int offset, int length) {
 		int prevSize = size();
 		for (int i = offset, n = 0; n < length && i < values.length; i++, n++) {
 			map.remove(values[i]);
@@ -671,7 +667,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
 	 */
 	@Override
-	public @NotNull NumberedSetIterator<T> iterator() {
+	public NumberedSetIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new NumberedSetIterator<>(this);
 			iterator2 = new NumberedSetIterator<>(this);
@@ -757,12 +753,12 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	@Override
-	public Object @NotNull [] toArray() {
+	public Object[] toArray() {
 		return map.keySet().toArray();
 	}
 
 	@Override
-	public <T1> T1 @NotNull [] toArray(T1 @NotNull [] a) {
+	public <T1> T1[] toArray(T1[] a) {
 		return map.keySet().toArray(a);
 	}
 
@@ -932,7 +928,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		@Nullable
 		public T next() {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
@@ -988,7 +983,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 *                                element
 		 */
 		@Override
-		@Nullable
 		public T previous() {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
@@ -1106,7 +1100,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 *                                       prevents it from being added to this list
 		 */
 		@Override
-		public void add(@Nullable T t) {
+		public void add(T t) {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
@@ -1135,7 +1129,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 * @return a ListIterator; really this same NumberedSetIterator.
 		 */
 		@Override
-		public @NotNull NumberedSetIterator<T> iterator() {
+		public NumberedSetIterator<T> iterator() {
 			return this;
 		}
 	}

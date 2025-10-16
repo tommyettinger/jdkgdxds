@@ -23,8 +23,6 @@ import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -558,7 +556,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 *
 	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable Comparator<? super K> comp) {
+	public void sort(Comparator<? super K> comp) {
 		keys.sort(comp);
 	}
 
@@ -672,7 +670,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NotNull EntryIterator<K> iterator() {
+	public EntryIterator<K> iterator() {
 		return entrySet().iterator();
 	}
 

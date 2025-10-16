@@ -17,8 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -243,7 +241,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		if (item instanceof CharSequence)
 			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
 		return super.place(item);
@@ -272,7 +270,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	}
 
 	@Override
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
 			return Utilities.equalsIgnoreCase((CharSequence) left, (CharSequence) right);
 		}
@@ -282,9 +280,9 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	@Override
 	public int hashCode() {
 		int h = size;
-		ObjectList<@Nullable CharSequence> order = items;
+		ObjectList<CharSequence> order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
-			@Nullable CharSequence key = order.get(i);
+			CharSequence key = order.get(i);
 			if (key != null) {
 				h ^= Utilities.hashCodeIgnoreCase(key);
 			}

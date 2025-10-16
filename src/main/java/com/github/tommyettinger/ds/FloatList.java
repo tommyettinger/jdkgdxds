@@ -22,7 +22,6 @@ import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.tommyettinger.function.FloatToFloatFunction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -50,9 +49,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	public float[] items;
 	protected int size;
-	@Nullable
 	protected transient FloatListIterator iterator1;
-	@Nullable
 	protected transient FloatListIterator iterator2;
 
 	/**
@@ -979,7 +976,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 *
 	 * @param c the comparator to determine the order of the FloatList
 	 */
-	public void sort(final @Nullable FloatComparator c) {
+	public void sort(final FloatComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -997,7 +994,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the FloatList
 	 */
-	public void sort(int from, int to, final @Nullable FloatComparator c) {
+	public void sort(int from, int to, final FloatComparator c) {
 		if (c == null) {
 			sort(from, to);
 		} else {

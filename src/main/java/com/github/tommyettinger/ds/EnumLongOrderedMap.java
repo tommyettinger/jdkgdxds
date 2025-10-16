@@ -24,8 +24,6 @@ import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -85,7 +83,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param type     either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                 use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumLongOrderedMap(Enum<?> @Nullable [] universe, OrderType type) {
+	public EnumLongOrderedMap(Enum<?>[] universe, OrderType type) {
 		if (universe == null) {
 			ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
 			return;
@@ -105,7 +103,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param type          either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                      use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumLongOrderedMap(@Nullable Class<? extends Enum<?>> universeClass, OrderType type) {
+	public EnumLongOrderedMap(Class<? extends Enum<?>> universeClass, OrderType type) {
 		this(universeClass == null ? null : universeClass.getEnumConstants(), type);
 	}
 
@@ -164,7 +162,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param type   either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *               use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumLongOrderedMap(@NotNull EnumLongOrderedMap other, int offset, int count, OrderType type) {
+	public EnumLongOrderedMap(EnumLongOrderedMap other, int offset, int count, OrderType type) {
 		this(other.keys == null ? null : other.keys.universe, type);
 		putAll(0, other, offset, count);
 	}
@@ -188,7 +186,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
-	public EnumLongOrderedMap(Enum<?> @Nullable [] universe) {
+	public EnumLongOrderedMap(Enum<?>[] universe) {
 		this(universe, OrderType.LIST);
 	}
 
@@ -200,7 +198,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumLongOrderedMap(@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumLongOrderedMap(Class<? extends Enum<?>> universeClass) {
 		this(universeClass, OrderType.LIST);
 	}
 
@@ -248,7 +246,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public EnumLongOrderedMap(@NotNull EnumLongOrderedMap other, int offset, int count) {
+	public EnumLongOrderedMap(EnumLongOrderedMap other, int offset, int count) {
 		this(other.keys == null ? null : other.keys.universe, other.ordering instanceof ObjectBag ? OrderType.BAG : OrderType.LIST);
 		putAll(0, other, offset, count);
 	}
@@ -262,7 +260,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param value the long value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
-	public long put(@NotNull Enum<?> key, long value) {
+	public long put(Enum<?> key, long value) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -289,7 +287,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
-	public long put(@NotNull Enum<?> key, long value, int index) {
+	public long put(Enum<?> key, long value, int index) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -311,7 +309,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	@Override
-	public long putOrDefault(@NotNull Enum<?> key, long value, long defaultValue) {
+	public long putOrDefault(Enum<?> key, long value, long defaultValue) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -351,7 +349,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll(@NotNull EnumLongOrderedMap map) {
+	public void putAll(EnumLongOrderedMap map) {
 		for (int i = 0, kl = map.size(); i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
 		}
@@ -365,7 +363,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 */
-	public void putAll(@NotNull EnumLongOrderedMap other, int offset, int count) {
+	public void putAll(EnumLongOrderedMap other, int offset, int count) {
 		putAll(size(), other, offset, count);
 	}
 
@@ -378,7 +376,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll(int insertionIndex, @NotNull EnumLongOrderedMap other, int offset, int count) {
+	public void putAll(int insertionIndex, EnumLongOrderedMap other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
 		for (int i = offset; i < end; i++) {
 			put(other.keyAt(i), other.getAt(i), insertionIndex++);
@@ -458,14 +456,14 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @throws IllegalArgumentException      if some property of a key or value in
 	 *                                       the specified map prevents it from being stored in this map
 	 */
-	public void putAll(@NotNull ObjectLongOrderedMap<Enum<?>> map) {
+	public void putAll(ObjectLongOrderedMap<Enum<?>> map) {
 		for (int i = 0, kl = map.size(); i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
 		}
 	}
 
 	@Override
-	public long getAndIncrement(@NotNull Enum<?> key, long defaultValue, long increment) {
+	public long getAndIncrement(Enum<?> key, long defaultValue, long increment) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -493,7 +491,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter(@NotNull Enum<?> before, @NotNull Enum<?> after) {
+	public boolean alter(Enum<?> before, Enum<?> after) {
 		if (before == null || after == null || containsKey(after)) {
 			return false;
 		}
@@ -515,7 +513,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterAt(int index, @NotNull Enum<?> after) {
+	public boolean alterAt(int index, Enum<?> after) {
 		if (after == null || index < 0 || index >= size() || containsKey(after)) {
 			return false;
 		}
@@ -572,13 +570,13 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	@Override
-	public void clearToUniverse(Enum<?> @Nullable [] universe) {
+	public void clearToUniverse(Enum<?>[] universe) {
 		super.clearToUniverse(universe);
 		ordering.clear();
 	}
 
 	@Override
-	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse(Class<? extends Enum<?>> universe) {
 		super.clearToUniverse(universe);
 		ordering.clear();
 	}
@@ -608,7 +606,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 *
 	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable Comparator<? super Enum<?>> comp) {
+	public void sort(Comparator<? super Enum<?>> comp) {
 		ordering.sort(comp);
 	}
 
@@ -722,7 +720,7 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	 * @return an {@link Iterator} over key-value pairs as {@link Entry} values
 	 */
 	@Override
-	public @NotNull EntryIterator iterator() {
+	public EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 

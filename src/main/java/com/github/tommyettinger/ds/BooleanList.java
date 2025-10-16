@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.sort.BooleanComparator;
 import com.github.tommyettinger.ds.support.sort.BooleanComparators;
 import com.github.tommyettinger.ds.support.util.BooleanIterator;
 import com.github.tommyettinger.function.BooleanPredicate;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -47,9 +46,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	public boolean[] items;
 	protected int size;
-	@Nullable
 	protected transient BooleanListIterator iterator1;
-	@Nullable
 	protected transient BooleanListIterator iterator2;
 
 	/**
@@ -789,7 +786,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @param c the comparator to determine the order of the BooleanList
 	 */
-	public void sort(@Nullable final BooleanComparator c) {
+	public void sort(final BooleanComparator c) {
 		sort(0, size, c);
 	}
 
@@ -804,7 +801,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * @param to   the index of the last element (exclusive) to be sorted.
 	 * @param c    the comparator to determine the order of the BooleanList
 	 */
-	public void sort(int from, int to, @Nullable BooleanComparator c) {
+	public void sort(int from, int to, BooleanComparator c) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		BooleanComparators.sort(items, from, to, c);

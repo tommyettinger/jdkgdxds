@@ -22,7 +22,6 @@ import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.ds.Utilities;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -92,9 +91,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 */
 	protected int mask;
 
-	@Nullable
 	protected transient ObjectSetIterator<T> iterator1;
-	@Nullable
 	protected transient ObjectSetIterator<T> iterator2;
 
 	/**
@@ -226,7 +223,7 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		return left.equals(right);
 	}
 
@@ -474,7 +471,6 @@ public class ObjectQuadSet<T> implements Iterable<T>, Set<T> {
 		}
 	}
 
-	@Nullable
 	public T get(T key) {
 		T[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {

@@ -23,8 +23,6 @@ import com.github.tommyettinger.function.IntIntToIntBiFunction;
 import com.github.tommyettinger.function.ObjIntBiConsumer;
 import com.github.tommyettinger.function.ObjIntToIntBiFunction;
 import com.github.tommyettinger.function.ObjToIntFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -96,17 +94,11 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable
 	protected transient Entries<K> entries1;
-	@Nullable
 	protected transient Entries<K> entries2;
-	@Nullable
 	protected transient Values<K> values1;
-	@Nullable
 	protected transient Values<K> values2;
-	@Nullable
 	protected transient Keys<K> keys1;
-	@Nullable
 	protected transient Keys<K> keys2;
 
 	public int defaultValue = 0;
@@ -213,7 +205,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @param item a non-null Object; its hashCode() method should be used by most implementations
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		return BitConversion.imul(item.hashCode(), hashMultiplier) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
@@ -230,7 +222,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		return left.equals(right);
 	}
 
@@ -425,7 +417,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		K rem;
-		@Nullable K[] keyTable = this.keyTable;
+		K[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
 		int oldValue = valueTable[pos];
 
@@ -564,7 +556,6 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @param value the value to search for
 	 * @return a key that maps to value, if present, or null if value cannot be found
 	 */
-	@Nullable
 	public K findKey(int value) {
 		int[] valueTable = this.valueTable;
 		K[] keyTable = this.keyTable;
@@ -596,7 +587,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
 		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
-		@Nullable K[] oldKeyTable = keyTable;
+		K[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
 
 		keyTable = (K[]) new Object[newSize];
@@ -663,10 +654,10 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	@Override
 	public int hashCode() {
 		int h = size;
-		@Nullable K[] keyTable = this.keyTable;
+		K[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			@Nullable K key = keyTable[i];
+			K key = keyTable[i];
 			if (key != null) {
 				h ^= key.hashCode();
 				h ^= valueTable[i];
@@ -861,7 +852,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NotNull EntryIterator<K> iterator() {
+	public EntryIterator<K> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -949,14 +940,13 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public static class Entry<K> {
-		@Nullable
 		public K key;
 		public int value;
 
 		public Entry() {
 		}
 
-		public Entry(@Nullable K key, int value) {
+		public Entry(K key, int value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -1022,7 +1012,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -1109,7 +1099,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		@Override
-		public @NotNull KeyIterator<K> iterator() {
+		public KeyIterator<K> iterator() {
 			return this;
 		}
 
@@ -1178,7 +1168,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		@Override
-		public @NotNull EntryIterator<K> iterator() {
+		public EntryIterator<K> iterator() {
 			return this;
 		}
 
@@ -1223,7 +1213,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull EntryIterator<K> iterator() {
+		public EntryIterator<K> iterator() {
 			return iter;
 		}
 
@@ -1416,7 +1406,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		@Override
-		public @NotNull KeyIterator<K> iterator() {
+		public KeyIterator<K> iterator() {
 			return iter;
 		}
 

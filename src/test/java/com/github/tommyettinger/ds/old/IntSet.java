@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds.old;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.util.IntIterator;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -86,9 +85,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 */
 	protected int mask;
 
-	@Nullable
 	protected transient IntSetIterator iterator1;
-	@Nullable
 	protected transient IntSetIterator iterator2;
 
 	/**

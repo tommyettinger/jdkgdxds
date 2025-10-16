@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -115,7 +114,7 @@ public final class LongComparators {
 		return new LongComparator() {
 			@Override
 			public int compare(long x, long y) {
-				return c.compare(Long.valueOf(x), Long.valueOf(y));
+				return c.compare(x, y);
 			}
 
 			@SuppressWarnings("deprecation")
@@ -290,7 +289,7 @@ public final class LongComparators {
 	 * @param items the long array to be sorted
 	 * @param c     a LongComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(long[] items, final @Nullable LongComparator c) {
+	public static void sort(long[] items, final LongComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -312,7 +311,7 @@ public final class LongComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a LongComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(long[] items, final int from, final int to, final @Nullable LongComparator c) {
+	public static void sort(long[] items, final int from, final int to, final LongComparator c) {
 		if (to <= 0) {
 			return;
 		}

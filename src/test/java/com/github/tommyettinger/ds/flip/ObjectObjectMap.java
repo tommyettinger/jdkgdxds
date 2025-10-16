@@ -19,8 +19,6 @@ package com.github.tommyettinger.ds.flip;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.Utilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -139,7 +137,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 
 	protected V[] valueTable;
 
-	@Nullable
 	protected V defaultValue = null;
 
 	/**
@@ -151,19 +148,16 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	/**
 	 * Holds a cached {@link #entrySet()}.
 	 */
-	@Nullable
 	protected transient Set<Map.Entry<K, V>> entrySet;
 
 	/**
 	 * Holds a cached {@link #keySet()}.
 	 */
-	@Nullable
 	protected transient Set<K> keySet;
 
 	/**
 	 * Holds a cached {@link #values()}.
 	 */
-	@Nullable
 	protected transient Collection<V> values;
 
 	/**
@@ -271,7 +265,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		return getOrDefault(key, defaultValue);
 	}
 
-	public V getOrDefault(Object key, @Nullable V defaultValue) {
+	public V getOrDefault(Object key, V defaultValue) {
 		if (key == null) return defaultValue;
 
 		if (flipThreshold == 0) {
@@ -466,7 +460,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 *
 	 * @return the current default value
 	 */
-	@Nullable
 	public V getDefaultValue() {
 		return defaultValue;
 	}
@@ -478,7 +471,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 *
 	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue(@Nullable V defaultValue) {
+	public void setDefaultValue(V defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -650,7 +643,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * Puts key and value but skips checks for existing keys, and doesn't increment size. Meant for use during
 	 * {@link #resize(int)}, hence the name, when using linear probing.
 	 */
-	protected void putResize(K key, @Nullable V value) {
+	protected void putResize(K key, V value) {
 		K[] keyTable = this.keyTable;
 		for (int i = (int) (key.hashCode() * hashMultiplier1 >>> shift); ; i = i + 1 & mask) {
 			if (keyTable[i] == null) {
@@ -662,7 +655,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	}
 
 	@Override
-	public @NotNull Set<Map.Entry<K, V>> entrySet() {
+	public Set<Map.Entry<K, V>> entrySet() {
 		Set<Map.Entry<K, V>> entries;
 		return (entries = entrySet) == null ? (entrySet = new EntrySet<>(this)) : entries;
 	}
@@ -674,15 +667,13 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 	 * @param <V> Should match the {@code V} of a Map that contains this Entry
 	 */
 	public static class Entry<K, V> implements Map.Entry<K, V> {
-		@Nullable
 		public K key;
-		@Nullable
 		public V value;
 
 		public Entry() {
 		}
 
-		public Entry(@Nullable K key, @Nullable V value) {
+		public Entry(K key, V value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -693,7 +684,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 
 		@Override
-		@Nullable
 		public String toString() {
 			return key + "=" + value;
 		}
@@ -723,7 +713,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 *                               removed from the backing map.
 		 */
 		@Override
-		@Nullable
 		public V getValue() {
 			return value;
 		}
@@ -749,7 +738,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 *                                       removed from the backing map.
 		 */
 		@Override
-		@Nullable
 		public V setValue(V value) {
 			V old = this.value;
 			this.value = value;
@@ -757,7 +745,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -803,7 +791,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		@NotNull
 		public Iterator<Map.Entry<K, V>> iterator() {
 			return new EntryIterator<>(map);
 		}
@@ -939,7 +926,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an Iterator.
 		 */
 		@Override
-		public @NotNull Iterator<Map.Entry<K, V>> iterator() {
+		public Iterator<Map.Entry<K, V>> iterator() {
 			return this;
 		}
 	}
@@ -951,7 +938,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			this.map = map;
 		}
 
-		public @NotNull Iterator<K> iterator() {
+		public Iterator<K> iterator() {
 			return new KeyIterator<>(map);
 		}
 
@@ -972,7 +959,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 	}
 
-	public @NotNull Set<K> keySet() {
+	public Set<K> keySet() {
 		Set<K> ks = keySet;
 		if (ks == null) {
 			ks = new KeySet<>(this);
@@ -989,7 +976,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 			this.map = map;
 		}
 
-		public @NotNull Iterator<V> iterator() {
+		public Iterator<V> iterator() {
 			return new ValueIterator<>(map);
 		}
 
@@ -1010,7 +997,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		}
 	}
 
-	public @NotNull Collection<V> values() {
+	public Collection<V> values() {
 		Collection<V> vals = values;
 		if (vals == null) {
 			vals = new ValueCollection<>(this);
@@ -1045,7 +1032,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an Iterator.
 		 */
 		@Override
-		public @NotNull Iterator<K> iterator() {
+		public Iterator<K> iterator() {
 			return this;
 		}
 	}
@@ -1075,7 +1062,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V> {
 		 * @return an Iterator.
 		 */
 		@Override
-		public @NotNull Iterator<V> iterator() {
+		public Iterator<V> iterator() {
 			return this;
 		}
 	}

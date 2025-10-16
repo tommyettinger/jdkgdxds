@@ -34,7 +34,6 @@ import com.github.tommyettinger.random.WhiskerRandom;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,7 +53,7 @@ public class PileupTest {
 		final int numLetters = 4;
 		ObjectSet<String> set = new ObjectSet<String>(size, LOAD) {
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 				return (int) (item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 			}
 		};
@@ -195,7 +194,7 @@ public class PileupTest {
 			double averagePileup = 0;
 
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 //                return (item.hashCode() * 0x9E3779B9) >>> shift;
 //                return (item.hashCode() * 0x9E3779B9) & mask;
 //                return (item.hashCode() * 0x19E377) & mask;
@@ -204,7 +203,7 @@ public class PileupTest {
 			}
 
 //            @Override
-//            protected int place (@NotNull Object item) {
+//            protected int place (Object item) {
 //                return (int)(item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 //            }
 
@@ -214,7 +213,7 @@ public class PileupTest {
 //            }
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -319,14 +318,14 @@ public class PileupTest {
 			double averagePileup = 0;
 
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 //                return BitConversion.imul(hashMultiplier, item.hashCode()) & mask;
 //                return (hashMultiplier * item.hashCode()) & mask;
 				return (hashMultiplier * item.hashCode()) >>> shift;
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -446,7 +445,7 @@ public class PileupTest {
 			double averagePileup = 0;
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -521,7 +520,7 @@ public class PileupTest {
 			double averagePileup = 0;
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + p & mask) {
 					if (keyTable[i] == null) {
@@ -620,7 +619,7 @@ public class PileupTest {
 //            }
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + p & mask) {
 					if (keyTable[i] == null) {
@@ -713,7 +712,7 @@ public class PileupTest {
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + p & mask) {
 					if (keyTable[i] == null) {
@@ -804,12 +803,12 @@ public class PileupTest {
 			int hm = 0x13C6ED;
 
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 				return item.hashCode() * hm >>> shift;
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -897,7 +896,7 @@ public class PileupTest {
 		final int numLetters = 4;
 		ObjectSet<BadString> set = new ObjectSet<BadString>(size, LOAD) {
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 				return (int) (item.hashCode() * 0x9E3779B97F4A7C15L >>> shift);
 			}
 		};
@@ -1000,13 +999,13 @@ public class PileupTest {
 			double averagePileup = 0;
 
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 				return (int) (item.hashCode() * 0xD1B54A32D192ED03L >>> shift); // if this long constant is the same as the one used
 				// by place() in generateUniqueBadFibSet's map, and this uses that FibSet version, then this slows down massively.
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -1314,7 +1313,7 @@ public class PileupTest {
 //            }
 
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 //                return BitConversion.imul(hashMultiplier, item.hashCode()) & mask;
 //                return (hashMultiplier * item.hashCode()) & mask;
 				return (hashMultiplier * item.hashCode()) >>> shift;
@@ -1327,7 +1326,7 @@ public class PileupTest {
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -1462,7 +1461,7 @@ public class PileupTest {
 			double averagePileup = 0;
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -1537,7 +1536,7 @@ public class PileupTest {
 			double averagePileup = 0;
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + p & mask) {
 					if (keyTable[i] == null) {
@@ -1623,7 +1622,7 @@ public class PileupTest {
 //            }
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + p & mask) {
 					if (keyTable[i] == null) {
@@ -1903,7 +1902,7 @@ public class PileupTest {
 			}
 
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 //                return item.hashCode() * hashMul >>> shift;
 //                final int h = item.hashCode() * hashAddend;
 //                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
@@ -1926,7 +1925,7 @@ public class PileupTest {
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -2044,13 +2043,13 @@ public class PileupTest {
 					int oa = ra, ob = rb;
 
 					@Override
-					protected int place(@NotNull Object item) {
+					protected int place(Object item) {
 						final int h = item.hashCode();
 						return (h ^ (h << ra | h >>> -ra) ^ (h << rb | h >>> -rb)) & mask;
 					}
 
 					@Override
-					protected void addResize(@NotNull Object key) {
+					protected void addResize(Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -2155,7 +2154,7 @@ public class PileupTest {
 			}
 
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 //                return item.hashCode() * hashMul >>> shift;
 //                final int h = item.hashCode() * hashAddend;
 //                return (h ^ h >>> 16) & mask; //total collisions: 1842294, longest pileup: 35
@@ -2177,7 +2176,7 @@ public class PileupTest {
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -2282,7 +2281,7 @@ public class PileupTest {
 //                hashMultiplier = 0xD1B54A32D192ED03L;
 //            }
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -2404,7 +2403,7 @@ public class PileupTest {
 //            }
 
 			@Override
-			protected int place(@NotNull Object item) {
+			protected int place(Object item) {
 // 97823400 ns, total collisions: 1917655, longest pileup: 125, average pileup: 7.315273284912109, total of 13 pileups: 428
 //                return (int)Hasher.randomize2(hashMultiplier ^ item.hashCode()) & mask;
 //77881700 ns, total collisions: 1564928, longest pileup: 67, average pileup: 5.9697265625, total of 13 pileups: 222
@@ -2413,7 +2412,7 @@ public class PileupTest {
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 					if (keyTable[i] == null) {
@@ -2514,7 +2513,7 @@ public class PileupTest {
 			}
 
 			@Override
-			protected void addResize(@NotNull Object key) {
+			protected void addResize(Object key) {
 				Object[] keyTable = this.keyTable;
 				for (int i = place(key), p = 0; ; i = i + p & mask) {
 					if (keyTable[i] == null) {
@@ -2703,7 +2702,7 @@ public class PileupTest {
 				int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 				@Override
-				protected int place(@NotNull Object item) {
+				protected int place(Object item) {
 					final Point2 p = (Point2) item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
 //                    return hash.applyAsInt(p.x, p.y) & mask;
@@ -2711,7 +2710,7 @@ public class PileupTest {
 				}
 
 				@Override
-				protected void addResize(@NotNull Object key) {
+				protected void addResize(Object key) {
 					Object[] keyTable = this.keyTable;
 					for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 						if (keyTable[i] == null) {
@@ -2849,7 +2848,7 @@ public class PileupTest {
 				int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 				@Override
-				protected int place(@NotNull Object item) {
+				protected int place(Object item) {
 					final Point2 p = (Point2) item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 					return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -2857,7 +2856,7 @@ public class PileupTest {
 				}
 
 				@Override
-				protected void addResize(@NotNull Object key) {
+				protected void addResize(Object key) {
 					Object[] keyTable = this.keyTable;
 					for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 						if (keyTable[i] == null) {
@@ -2982,7 +2981,7 @@ public class PileupTest {
 				int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 				@Override
-				protected int place(@NotNull Object item) {
+				protected int place(Object item) {
 					final Point2 p = (Point2) item;
 					return (int) (hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -2990,7 +2989,7 @@ public class PileupTest {
 				}
 
 				@Override
-				protected void addResize(@NotNull Object key) {
+				protected void addResize(Object key) {
 					Object[] keyTable = this.keyTable;
 					for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 						if (keyTable[i] == null) {
@@ -3115,7 +3114,7 @@ public class PileupTest {
 				int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 				@Override
-				protected int place(@NotNull Object item) {
+				protected int place(Object item) {
 					final Point2 p = (Point2) item;
 					return (int) (hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                    return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -3123,7 +3122,7 @@ public class PileupTest {
 				}
 
 				@Override
-				protected void addResize(@NotNull Object key) {
+				protected void addResize(Object key) {
 					Object[] keyTable = this.keyTable;
 					for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 						if (keyTable[i] == null) {
@@ -3324,7 +3323,7 @@ public class PileupTest {
 					int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 					@Override
-					protected int place(@NotNull Object item) {
+					protected int place(Object item) {
 						final Point2 p = (Point2) item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 //                        return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -3332,7 +3331,7 @@ public class PileupTest {
 					}
 
 					@Override
-					protected void addResize(@NotNull Object key) {
+					protected void addResize(Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -3467,7 +3466,7 @@ public class PileupTest {
 				int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 				@Override
-				protected int place(@NotNull Object item) {
+				protected int place(Object item) {
 					final Point2 p = (Point2) item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift);
 					return hash.applyAsInt(p.x, p.y) & mask;
@@ -3475,7 +3474,7 @@ public class PileupTest {
 				}
 
 				@Override
-				protected void addResize(@NotNull Object key) {
+				protected void addResize(Object key) {
 					Object[] keyTable = this.keyTable;
 					for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 						if (keyTable[i] == null) {
@@ -3613,7 +3612,7 @@ public class PileupTest {
 				int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 				@Override
-				protected int place(@NotNull Object item) {
+				protected int place(Object item) {
 					final Point2 p = (Point2) item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 					return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -3621,7 +3620,7 @@ public class PileupTest {
 				}
 
 				@Override
-				protected void addResize(@NotNull Object key) {
+				protected void addResize(Object key) {
 					Object[] keyTable = this.keyTable;
 					for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 						if (keyTable[i] == null) {
@@ -3753,7 +3752,7 @@ public class PileupTest {
 				int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 				@Override
-				protected int place(@NotNull Object item) {
+				protected int place(Object item) {
 					final Point2 p = (Point2) item;
 //                    return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 					return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -3761,7 +3760,7 @@ public class PileupTest {
 				}
 
 				@Override
-				protected void addResize(@NotNull Object key) {
+				protected void addResize(Object key) {
 					Object[] keyTable = this.keyTable;
 					for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 						if (keyTable[i] == null) {
@@ -3998,7 +3997,7 @@ public class PileupTest {
 					int hashMul = (int) (hashMultiplier & 0x1FFFFFL);
 
 					@Override
-					protected int place(@NotNull Object item) {
+					protected int place(Object item) {
 						final Point2 p = (Point2) item;
 //                        return (int)(hash.applyAsInt(p.x, p.y) * hashMultiplier >>> shift); // option 1MS
 						return hash.applyAsInt(p.x, p.y) & mask; // option 2A
@@ -4006,7 +4005,7 @@ public class PileupTest {
 					}
 
 					@Override
-					protected void addResize(@NotNull Object key) {
+					protected void addResize(Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {
@@ -4212,12 +4211,12 @@ public class PileupTest {
 		}
 
 		@Override
-		protected int place(@NotNull Object item) {
+		protected int place(Object item) {
 			return super.place(item);
 		}
 
 		@Override
-		protected void addResize(@NotNull String key) {
+		protected void addResize(String key) {
 			Object[] keyTable = this.keyTable;
 			for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 				if (keyTable[i] == null) {
@@ -4268,14 +4267,14 @@ public class PileupTest {
 		}
 
 		@Override
-		protected int place(@NotNull Object item) {
+		protected int place(Object item) {
 			//total collisions: 21742, longest pileup: 10
 			//total of 12 longest pileups: 69
 			return super.place(item);
 		}
 
 		@Override
-		protected void addResize(@NotNull CharSequence key) {
+		protected void addResize(CharSequence key) {
 			Object[] keyTable = this.keyTable;
 			for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 				if (keyTable[i] == null) {

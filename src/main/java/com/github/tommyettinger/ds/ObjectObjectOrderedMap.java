@@ -19,8 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -258,8 +256,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	}
 
 	@Override
-	@Nullable
-	public V put(K key, @Nullable V value) {
+	public V put(K key, V value) {
 		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
@@ -287,8 +284,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or null otherwise
 	 */
-	@Nullable
-	public V put(K key, @Nullable V value, int index) {
+	public V put(K key, V value, int index) {
 		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
@@ -310,9 +306,8 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		return defaultValue;
 	}
 
-	@Nullable
 	@Override
-	public V putOrDefault(K key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(K key, V value, V defaultValue) {
 		if (key == null) return defaultValue;
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
@@ -389,7 +384,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
 	 * @return the value of the removed entry
 	 */
-	@Nullable
 	public V removeAt(int index) {
 		return super.remove(keys.removeAt(index));
 	}
@@ -459,7 +453,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	@Nullable
 	public V setAt(int index, V v) {
 		if (index < 0 || index >= size) {
 			return null;
@@ -477,7 +470,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	@Nullable
 	public V getAt(int index) {
 		return get(keys.get(index));
 	}
@@ -530,7 +522,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 *
 	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable Comparator<? super K> comp) {
+	public void sort(Comparator<? super K> comp) {
 		keys.sort(comp);
 	}
 
@@ -543,7 +535,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 *
 	 * @param comp a Comparator that can compare {@code V} values; may be null to use natural order of Comparable values
 	 */
-	public void sortByValue(@Nullable Comparator<V> comp) {
+	public void sortByValue(Comparator<V> comp) {
 		if (comp == null)
 			//noinspection unchecked
 			keys.sort((a, b) -> ((Comparator<V>) ObjectComparators.NATURAL_COMPARATOR).compare(get(a), get(b)));
@@ -603,7 +595,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
-	public @NotNull Keys<K, V> keySet() {
+	public Keys<K, V> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new OrderedMapKeys<>(this);
 			keys2 = new OrderedMapKeys<>(this);
@@ -628,7 +620,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
-	public @NotNull Values<K, V> values() {
+	public Values<K, V> values() {
 		if (values1 == null || values2 == null) {
 			values1 = new OrderedMapValues<>(this);
 			values2 = new OrderedMapValues<>(this);
@@ -654,7 +646,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
-	public @NotNull Entries<K, V> entrySet() {
+	public Entries<K, V> entrySet() {
 		if (entries1 == null || entries2 == null) {
 			entries1 = new OrderedMapEntries<>(this);
 			entries2 = new OrderedMapEntries<>(this);
@@ -681,7 +673,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NotNull MapIterator<K, V, Map.Entry<K, V>> iterator() {
+	public MapIterator<K, V, Map.Entry<K, V>> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -739,7 +731,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
-				public @NotNull MapIterator<K, V, Map.Entry<K, V>> iterator() {
+				public MapIterator<K, V, Map.Entry<K, V>> iterator() {
 					return this;
 				}
 
@@ -797,7 +789,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, K>(map) {
 				@Override
-				public @NotNull MapIterator<K, V, K> iterator() {
+				public MapIterator<K, V, K> iterator() {
 					return this;
 				}
 
@@ -853,7 +845,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			keys = map.keys;
 			iter = new MapIterator<K, V, V>(map) {
 				@Override
-				public @NotNull MapIterator<K, V, V> iterator() {
+				public MapIterator<K, V, V> iterator() {
 					return this;
 				}
 
@@ -873,7 +865,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 				}
 
 				@Override
-				@Nullable
 				public V next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();

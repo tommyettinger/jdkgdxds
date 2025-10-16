@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -111,7 +110,7 @@ public final class ShortComparators {
 		return new ShortComparator() {
 			@Override
 			public int compare(short x, short y) {
-				return c.compare(Short.valueOf(x), Short.valueOf(y));
+				return c.compare(x, y);
 			}
 
 			@SuppressWarnings("deprecation")
@@ -287,7 +286,7 @@ public final class ShortComparators {
 	 * @param items the short array to be sorted
 	 * @param c     a ShortComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(short[] items, final @Nullable ShortComparator c) {
+	public static void sort(short[] items, final ShortComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -309,7 +308,7 @@ public final class ShortComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a ShortComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(short[] items, final int from, final int to, final @Nullable ShortComparator c) {
+	public static void sort(short[] items, final int from, final int to, final ShortComparator c) {
 		if (to <= 0) {
 			return;
 		}

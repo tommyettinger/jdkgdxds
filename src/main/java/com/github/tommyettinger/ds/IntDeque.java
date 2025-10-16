@@ -20,8 +20,6 @@ import com.github.tommyettinger.ds.support.sort.IntComparator;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.IntToIntFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -75,9 +73,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 */
 	protected int tail = 0;
 
-	@Nullable
 	protected transient IntDequeIterator descendingIterator1;
-	@Nullable
 	protected transient IntDequeIterator descendingIterator2;
 
 	/**
@@ -1453,7 +1449,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code int}, containing all the elements in this collection
 	 */
-	public int @NotNull [] toArray() {
+	public int[] toArray() {
 		int[] next = new int[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -2539,7 +2535,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 *                   order of int items when int implements Comparable of int
 	 */
 	@Override
-	public void sort(@Nullable IntComparator comparator) {
+	public void sort(IntComparator comparator) {
 		if (comparator == null) {
 			sort();
 		} else if (head <= tail) {
@@ -2553,7 +2549,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	}
 
 	@Override
-	public void sort(int from, int to, @Nullable IntComparator comparator) {
+	public void sort(int from, int to, IntComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (comparator == null) {

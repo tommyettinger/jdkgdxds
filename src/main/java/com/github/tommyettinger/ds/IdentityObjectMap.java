@@ -17,8 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -116,20 +114,20 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 	 * @param item a non-null Object; its identityHashCode is used here
 	 */
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		return (System.identityHashCode(item) & mask);
 	}
 
 	@Override
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		return left == right;
 	}
 
 	@Override
 	public int hashCode() {
 		int h = size;
-		@Nullable K[] keyTable = this.keyTable;
-		@Nullable V[] valueTable = this.valueTable;
+		K[] keyTable = this.keyTable;
+		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			K key = keyTable[i];
 			if (key != null) {

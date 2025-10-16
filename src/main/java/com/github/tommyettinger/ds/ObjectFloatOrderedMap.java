@@ -23,8 +23,6 @@ import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.FloatAppender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -559,7 +557,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 *
 	 * @param comp a Comparator that can compare two {@code K} keys, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable Comparator<? super K> comp) {
+	public void sort(Comparator<? super K> comp) {
 		keys.sort(comp);
 	}
 
@@ -673,7 +671,7 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NotNull EntryIterator<K> iterator() {
+	public EntryIterator<K> iterator() {
 		return entrySet().iterator();
 	}
 

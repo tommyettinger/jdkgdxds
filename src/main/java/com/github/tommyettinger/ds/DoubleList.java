@@ -21,7 +21,6 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 import com.github.tommyettinger.ds.support.util.DoubleIterator;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -51,9 +50,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	public double[] items;
 	protected int size;
-	@Nullable
 	protected transient DoubleListIterator iterator1;
-	@Nullable
 	protected transient DoubleListIterator iterator2;
 
 	/**
@@ -976,7 +973,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 *
 	 * @param c the comparator to determine the order of the DoubleList
 	 */
-	public void sort(final @Nullable DoubleComparator c) {
+	public void sort(final DoubleComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -994,7 +991,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the DoubleList
 	 */
-	public void sort(int from, int to, final @Nullable DoubleComparator c) {
+	public void sort(int from, int to, final DoubleComparator c) {
 		if (c == null) {
 			sort(from, to);
 		} else {

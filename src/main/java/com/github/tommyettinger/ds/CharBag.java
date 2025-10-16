@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.util.CharIterator;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -220,7 +219,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	}
 
 	@Override
-	public CharBag append(@Nullable CharSequence csq) {
+	public CharBag append(CharSequence csq) {
 		if(csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
@@ -234,7 +233,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	}
 
 	@Override
-	public CharBag append(@Nullable CharSequence csq, int start, int end) {
+	public CharBag append(CharSequence csq, int start, int end) {
 		if(csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {

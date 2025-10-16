@@ -23,8 +23,6 @@ import com.github.tommyettinger.function.LongObjBiConsumer;
 import com.github.tommyettinger.function.LongObjToObjBiFunction;
 
 import com.github.tommyettinger.function.LongToObjFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -67,9 +65,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	protected int size;
 
 	protected long[] keyTable;
-	protected @Nullable V[] valueTable;
+	protected V[] valueTable;
 	protected boolean hasZeroValue;
-	@Nullable
 	protected V zeroValue;
 
 	/**
@@ -110,24 +107,17 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable
 	protected transient Entries<V> entries1;
-	@Nullable
 	protected transient Entries<V> entries2;
-	@Nullable
 	protected transient Values<V> values1;
-	@Nullable
 	protected transient Values<V> values2;
-	@Nullable
 	protected transient Keys<V> keys1;
-	@Nullable
 	protected transient Keys<V> keys2;
 
 	/**
 	 * Returned by {@link #get(long)} when no value exists for the given key, as well as some other methods to indicate that
 	 * no value in the Map could be returned.
 	 */
-	@Nullable
 	public V defaultValue = null;
 
 	/**
@@ -231,8 +221,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	/**
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
-	@Nullable
-	public V put(long key, @Nullable V value) {
+	public V put(long key, V value) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -262,8 +251,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	/**
 	 * Returns the old value associated with the specified key, or the given {@code defaultValue} if there was no prior value.
 	 */
-	@Nullable
-	public V putOrDefault(long key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(long key, V value, V defaultValue) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -385,7 +373,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	protected void putResize(long key, @Nullable V value) {
+	protected void putResize(long key, V value) {
 		long[] keyTable = this.keyTable;
 		for (int i = place(key); ; i = i + 1 & mask) {
 			if (keyTable[i] == 0) {
@@ -401,7 +389,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 *
 	 * @param key any {@code long}
 	 */
-	@Nullable
 	public V get(long key) {
 		if (key == 0) {
 			return hasZeroValue ? zeroValue : defaultValue;
@@ -419,8 +406,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	/**
 	 * Returns the value for the specified key, or the default value if the key is not in the map.
 	 */
-	@Nullable
-	public V getOrDefault(long key, @Nullable V defaultValue) {
+	public V getOrDefault(long key, V defaultValue) {
 		if (key == 0) {
 			return hasZeroValue ? zeroValue : defaultValue;
 		}
@@ -434,13 +420,12 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 	}
 
-	@Nullable
 	public V remove(long key) {
 		if (key == 0) {
 			if (hasZeroValue) {
 				hasZeroValue = false;
 				--size;
-				@Nullable V oldValue = zeroValue;
+				V oldValue = zeroValue;
 				zeroValue = null;
 				return oldValue;
 			}
@@ -449,8 +434,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		int pos = locateKey(key);
 		if (pos < 0) return defaultValue;
 		long[] keyTable = this.keyTable;
-		@Nullable V[] valueTable = this.valueTable;
-		@Nullable V oldValue = valueTable[pos];
+		V[] valueTable = this.valueTable;
+		V oldValue = valueTable[pos];
 
 		int mask = this.mask, last, slot;
 		size--;
@@ -502,7 +487,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 *
 	 * @return the current default value
 	 */
-	@Nullable
 	public V getDefaultValue() {
 		return defaultValue;
 	}
@@ -514,7 +498,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 *
 	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue(@Nullable V defaultValue) {
+	public void setDefaultValue(V defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -563,7 +547,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Returns true if the specified value is in the map. Note this traverses the entire map and compares every value, which may
 	 * be an expensive operation.
 	 */
-	public boolean containsValue(@Nullable Object value) {
+	public boolean containsValue(Object value) {
 		if (hasZeroValue) {
 			return Objects.equals(zeroValue, value);
 		}
@@ -600,7 +584,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * @param defaultKey the key to return when value cannot be found
 	 * @return a key that maps to value, if present, or defaultKey if value cannot be found
 	 */
-	public long findKey(@Nullable V value, long defaultKey) {
+	public long findKey(V value, long defaultKey) {
 		if (hasZeroValue && Objects.equals(zeroValue, value)) {
 			return 0;
 		}
@@ -933,7 +917,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NotNull EntryIterator<V> iterator() {
+	public EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1022,13 +1006,12 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 
 	public static class Entry<V> {
 		public long key;
-		@Nullable
 		public V value;
 
 		public Entry() {
 		}
 
-		public Entry(long key, @Nullable V value) {
+		public Entry(long key, V value) {
 			this.key = key;
 			this.value = value;
 		}
@@ -1062,7 +1045,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 *
 		 * @return the value corresponding to this entry
 		 */
-		@Nullable
 		public V getValue() {
 			return value;
 		}
@@ -1087,15 +1069,14 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 *                                       required to, throw this exception if the entry has been
 		 *                                       removed from the backing map.
 		 */
-		@Nullable
-		public V setValue(@Nullable V value) {
+		public V setValue(V value) {
 			V old = this.value;
 			this.value = value;
 			return old;
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -1245,7 +1226,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		@Nullable
 		public V next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
@@ -1276,7 +1256,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public @NotNull EntryIterator<V> iterator() {
+		public EntryIterator<V> iterator() {
 			return this;
 		}
 
@@ -1326,7 +1306,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull EntryIterator<V> iterator() {
+		public EntryIterator<V> iterator() {
 			return iter;
 		}
 
@@ -1421,17 +1401,17 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		protected ValueIterator<V> iter;
 
 		@Override
-		public boolean add(@Nullable V item) {
+		public boolean add(V item) {
 			throw new UnsupportedOperationException("LongObjectMap.Values is read-only");
 		}
 
 		@Override
-		public boolean remove(@Nullable Object item) {
+		public boolean remove(Object item) {
 			throw new UnsupportedOperationException("LongObjectMap.Values is read-only");
 		}
 
 		@Override
-		public boolean contains(@Nullable Object item) {
+		public boolean contains(Object item) {
 			return iter.map.containsValue(item);
 		}
 
@@ -1446,7 +1426,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull ValueIterator<V> iterator() {
+		public ValueIterator<V> iterator() {
 			return iter;
 		}
 
@@ -1623,7 +1603,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 	}
 
-	@Nullable
 	public V putIfAbsent(long key, V value) {
 		if (key == 0) {
 			if (hasZeroValue) {
@@ -1647,7 +1626,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		return true;
 	}
 
-	@Nullable
 	public V replace(long key, V value) {
 		if (key == 0) {
 			if (hasZeroValue) {
@@ -1666,7 +1644,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		return defaultValue;
 	}
 
-	@Nullable
 	public V computeIfAbsent(long key, LongToObjFunction<? extends V> mappingFunction) {
 		int i = locateKey(key);
 		if (i < 0) {
@@ -1686,7 +1663,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		return false;
 	}
 
-	@Nullable
 	public V merge(long key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);
@@ -1709,7 +1685,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * @param remappingFunction given a V from this and the V {@code value}, this should return what V to use
 	 * @return the value now associated with key
 	 */
-	@Nullable
 	public V combine(long key, V value, ObjObjToObjBiFunction<? super V, ? super V, ? extends V> remappingFunction) {
 		int i = locateKey(key);
 		V next = (i < 0) ? value : remappingFunction.apply(valueTable[i], value);

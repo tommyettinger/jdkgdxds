@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -80,37 +79,37 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 	}
 
 	@Override
-	public @Nullable T removeFirst() {
+	public T removeFirst() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T removeLast() {
+	public T removeLast() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T pollFirst() {
+	public T pollFirst() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T pollLast() {
+	public T pollLast() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeFirstOccurrence(@Nullable Object o) {
+	public boolean removeFirstOccurrence(Object o) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeLastOccurrence(@Nullable Object o) {
+	public boolean removeLastOccurrence(Object o) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T remove() {
+	public T remove() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
@@ -125,66 +124,66 @@ public class ObjectRing<T> extends ObjectDeque<T> {
 	}
 
 	@Override
-	public @Nullable T poll() {
+	public T poll() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T pop() {
+	public T pop() {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean remove(@Nullable Object o) {
+	public boolean remove(Object o) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeValue(@Nullable Object value, boolean identity) {
+	public boolean removeValue(Object value, boolean identity) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public boolean removeLastValue(@Nullable Object value, boolean identity) {
+	public boolean removeLastValue(Object value, boolean identity) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public void add(int index, @Nullable T item) {
+	public void add(int index, T item) {
 		if (index >= forgotten)
 			super.add(index - forgotten, item);
 	}
 
 	@Override
-	public boolean insert(int index, @Nullable T element) {
+	public boolean insert(int index, T element) {
 		if (index < forgotten) return false;
 		return super.insert(index - forgotten, element);
 	}
 
 	@Override
-	public @Nullable T removeAt(int index) {
+	public T removeAt(int index) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T remove(int index) {
+	public T remove(int index) {
 		throw new UnsupportedOperationException("Ring buffers are append-only.");
 	}
 
 	@Override
-	public @Nullable T get(int index) {
+	public T get(int index) {
 		if (index < forgotten) return defaultValue;
 		return super.get(index - forgotten);
 	}
 
 	@Override
-	public @Nullable T set(int index, @Nullable T item) {
+	public T set(int index, T item) {
 		if (index < forgotten) return defaultValue;
 		return super.set(index - forgotten, item);
 	}
 
 	@Override
-	public @Nullable T random(Random random) {
+	public T random(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ObjectRing is empty.");
 		}

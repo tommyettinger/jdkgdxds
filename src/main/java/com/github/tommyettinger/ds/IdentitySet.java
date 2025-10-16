@@ -17,8 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -75,19 +73,19 @@ public class IdentitySet<T> extends ObjectSet<T> {
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		return System.identityHashCode(item) & mask;
 	}
 
 	@Override
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		return left == right;
 	}
 
 	@Override
 	public int hashCode() {
 		int h = size;
-		@Nullable T[] keyTable = this.keyTable;
+		T[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			T key = keyTable[i];
 			if (key != null) {

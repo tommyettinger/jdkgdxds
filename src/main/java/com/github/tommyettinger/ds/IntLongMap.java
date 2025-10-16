@@ -22,8 +22,6 @@ import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.IntLongBiConsumer;
 import com.github.tommyettinger.function.IntLongToLongBiFunction;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -106,17 +104,11 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable
 	protected transient Entries entries1;
-	@Nullable
 	protected transient Entries entries2;
-	@Nullable
 	protected transient Values values1;
-	@Nullable
 	protected transient Values values2;
-	@Nullable
 	protected transient Keys keys1;
-	@Nullable
 	protected transient Keys keys2;
 
 	public long defaultValue = 0;
@@ -922,7 +914,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NotNull EntryIterator iterator() {
+	public EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1081,7 +1073,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -1263,7 +1255,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 
 		@Override
-		public @NotNull Iterator<Entry> iterator() {
+		public Iterator<Entry> iterator() {
 			return this;
 		}
 
@@ -1313,7 +1305,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull EntryIterator iterator() {
+		public EntryIterator iterator() {
 			return iter;
 		}
 

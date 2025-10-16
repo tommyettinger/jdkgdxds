@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.random.WhiskerRandom;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -111,7 +110,7 @@ public class ExhaustiveWordHashTest {
 //						originalMultiplier = hashMultiplier;
 //					}
 					@Override
-					protected int place(@NotNull Object item) {
+					protected int place(Object item) {
 						return item.hashCode() * hashMul >>> shift;
 //						return item.hashCode() * hashMul + hashAdd >>> shift;
 //						return (int)(item.hashCode() * hashMultiplier >>> shift);
@@ -121,7 +120,7 @@ public class ExhaustiveWordHashTest {
 					}
 
 					@Override
-					protected void addResize(@NotNull Object key) {
+					protected void addResize(Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

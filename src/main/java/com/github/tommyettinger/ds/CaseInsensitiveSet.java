@@ -17,8 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -144,14 +142,14 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		if (item instanceof CharSequence)
 			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
 			return Utilities.equalsIgnoreCase((CharSequence) left, (CharSequence) right);
 		}
@@ -161,9 +159,9 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	@Override
 	public int hashCode() {
 		int h = size;
-		@Nullable CharSequence[] keyTable = this.keyTable;
+		CharSequence[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			@Nullable CharSequence key = keyTable[i];
+			CharSequence key = keyTable[i];
 			if (key != null) {
 				h ^= Utilities.hashCodeIgnoreCase(key);
 			}

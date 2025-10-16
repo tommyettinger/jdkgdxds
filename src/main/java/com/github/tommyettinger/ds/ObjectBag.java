@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -107,7 +106,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void add(int index, @Nullable T element) {
+	public void add(int index, T element) {
 		super.add(element);
 	}
 
@@ -119,7 +118,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @param element element to be inserted
 	 */
 	@Override
-	public void insert(int index, @Nullable T element) {
+	public void insert(int index, T element) {
 		super.add(element);
 	}
 
@@ -131,7 +130,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @throws IndexOutOfBoundsException if the bag is empty
 	 */
 	@Override
-	public @Nullable T remove(int index) {
+	public T remove(int index) {
 		int size = size();
 		T value = super.set(index, get(size - 1));
 		super.remove(size - 1);
@@ -147,7 +146,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @throws IndexOutOfBoundsException if the bag is empty
 	 */
 	@Override
-	public @Nullable T removeAt(int index) {
+	public T removeAt(int index) {
 		int size = size();
 		T value = super.set(index, get(size - 1));
 		super.remove(size - 1);

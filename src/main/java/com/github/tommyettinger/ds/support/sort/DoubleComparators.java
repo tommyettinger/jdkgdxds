@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -111,7 +110,7 @@ public final class DoubleComparators {
 		return new DoubleComparator() {
 			@Override
 			public int compare(double x, double y) {
-				return c.compare(Double.valueOf(x), Double.valueOf(y));
+				return c.compare(x, y);
 			}
 
 			@SuppressWarnings("deprecation")
@@ -297,7 +296,7 @@ public final class DoubleComparators {
 	 * @param items the double array to be sorted
 	 * @param c     a DoubleComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(double[] items, final @Nullable DoubleComparator c) {
+	public static void sort(double[] items, final DoubleComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -319,7 +318,7 @@ public final class DoubleComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a DoubleComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(double[] items, final int from, final int to, final @Nullable DoubleComparator c) {
+	public static void sort(double[] items, final int from, final int to, final DoubleComparator c) {
 		if (to <= 0) {
 			return;
 		}

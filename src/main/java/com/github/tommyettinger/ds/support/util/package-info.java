@@ -18,7 +18,5 @@
  * Functional interfaces for appending data to text, Iterator interfaces for all primitive types, and special wrapper
  * iterators for Object and primitive types.
  */
-@NotNullByDefault
 package com.github.tommyettinger.ds.support.util;
 
-import org.jetbrains.annotations.NotNullByDefault;

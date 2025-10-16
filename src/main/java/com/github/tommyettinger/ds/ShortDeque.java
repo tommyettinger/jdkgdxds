@@ -20,8 +20,6 @@ import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
 import com.github.tommyettinger.ds.support.util.ShortIterator;
 import com.github.tommyettinger.function.ShortToShortFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -75,9 +73,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	protected int tail = 0;
 
-	@Nullable
 	protected transient ShortDequeIterator descendingIterator1;
-	@Nullable
 	protected transient ShortDequeIterator descendingIterator2;
 
 	/**
@@ -1453,7 +1449,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code short}, containing all the elements in this collection
 	 */
-	public short @NotNull [] toArray() {
+	public short[] toArray() {
 		short[] next = new short[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -2539,7 +2535,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 *                   order of short items when short implements Comparable of short
 	 */
 	@Override
-	public void sort(@Nullable ShortComparator comparator) {
+	public void sort(ShortComparator comparator) {
 		if (comparator == null) {
 			sort();
 		} else if (head <= tail) {
@@ -2553,7 +2549,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	@Override
-	public void sort(int from, int to, @Nullable ShortComparator comparator) {
+	public void sort(int from, int to, ShortComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (comparator == null) {

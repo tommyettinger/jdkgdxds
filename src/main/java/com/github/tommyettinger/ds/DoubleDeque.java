@@ -22,8 +22,6 @@ import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import com.github.tommyettinger.ds.support.sort.DoubleComparators;
 import com.github.tommyettinger.ds.support.util.DoubleIterator;
 import com.github.tommyettinger.function.DoubleToDoubleFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -77,9 +75,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	protected int tail = 0;
 
-	@Nullable
 	protected transient DoubleDequeIterator descendingIterator1;
-	@Nullable
 	protected transient DoubleDequeIterator descendingIterator2;
 
 	/**
@@ -1455,7 +1451,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code double}, containing all the elements in this collection
 	 */
-	public double @NotNull [] toArray() {
+	public double[] toArray() {
 		double[] next = new double[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -2702,7 +2698,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 *                   order of double items when double implements Comparable of double
 	 */
 	@Override
-	public void sort(@Nullable DoubleComparator comparator) {
+	public void sort(DoubleComparator comparator) {
 		if (comparator == null) {
 			sort();
 		} else if (head <= tail) {
@@ -2716,7 +2712,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	}
 
 	@Override
-	public void sort(int from, int to, @Nullable DoubleComparator comparator) {
+	public void sort(int from, int to, DoubleComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (comparator == null) {

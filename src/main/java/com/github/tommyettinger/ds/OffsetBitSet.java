@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.BitConversion;
 
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -57,9 +56,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 */
 	protected int offset = 0;
 
-	@Nullable
 	protected transient OffsetBitSetIterator iterator1;
-	@Nullable
 	protected transient OffsetBitSetIterator iterator2;
 
 	/**

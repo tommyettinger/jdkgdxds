@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.ds.Utilities;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -799,13 +798,10 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 	}
 
 	public static class Entry<K, V> implements Map.Entry<K, V> {
-		@Nullable
 		public K key;
-		@Nullable
 		public V value;
 
 		@Override
-		@Nullable
 		public String toString() {
 			return key + "=" + value;
 		}
@@ -835,7 +831,6 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		 *                               removed from the backing map.
 		 */
 		@Override
-		@Nullable
 		public V getValue() {
 			return value;
 		}
@@ -861,7 +856,6 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		 *                                       removed from the backing map.
 		 */
 		@Override
-		@Nullable
 		public V setValue(V value) {
 			V old = this.value;
 			this.value = value;
@@ -869,7 +863,7 @@ public class ObjectObjectCuckooMap<K, V> implements Map<K, V> {
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}

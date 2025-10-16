@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,9 +46,7 @@ import java.util.Random;
  */
 public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedCollection<T>, Arrangeable.ArrangeableList<T> {
 
-	@Nullable
 	protected transient ObjectListIterator<T> iterator1;
-	@Nullable
 	protected transient ObjectListIterator<T> iterator2;
 
 	/**
@@ -156,7 +153,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	}
 
 	@Override
-	public void add(int index, @Nullable T element) {
+	public void add(int index, T element) {
 		super.add(index, element);
 	}
 
@@ -166,12 +163,11 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param index   index at which the specified element is to be inserted
 	 * @param element element to be inserted
 	 */
-	public void insert(int index, @Nullable T element) {
+	public void insert(int index, T element) {
 		super.add(index, element);
 	}
 
 	@Override
-	@Nullable
 	public T remove(int index) {
 		return super.remove(index);
 	}
@@ -182,7 +178,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param index must be non-negative and less than {@link #size()}
 	 * @return the previously-held item at the given index
 	 */
-	@Nullable
 	public T removeAt(int index) {
 		return super.remove(index);
 	}
@@ -475,7 +470,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	/**
 	 * Removes and returns the last item.
 	 */
-	@Nullable
 	public T pop() {
 		int n = size();
 		if (n == 0) {
@@ -487,7 +481,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	/**
 	 * Returns the last item.
 	 */
-	@Nullable
 	public T peek() {
 		int n = size();
 		if (n == 0) {
@@ -499,7 +492,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	/**
 	 * Returns the first item.
 	 */
-	@Nullable
 	public T first() {
 		if (size() == 0) {
 			throw new IllegalStateException("ObjectList is empty.");
@@ -597,7 +589,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
-	public boolean replaceFirst(@Nullable T find, @Nullable T replace) {
+	public boolean replaceFirst(T find, T replace) {
 		if (find == null) {
 			if(replace != null) {
 				for (int i = 0, n = size(); i < n; i++) {
@@ -627,7 +619,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
 	 */
-	public int replaceAll(@Nullable T find, @Nullable T replace) {
+	public int replaceAll(T find, T replace) {
 		int replacements = 0;
 		if (find == null) {
 			if(replace != null) {
@@ -805,7 +797,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		@Nullable
 		public T next() {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
@@ -861,7 +852,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 *                                element
 		 */
 		@Override
-		@Nullable
 		public T previous() {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
@@ -948,7 +938,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void set(@Nullable T t) {
+		public void set(T t) {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
@@ -979,7 +969,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 *                                       prevents it from being added to this list
 		 */
 		@Override
-		public void add(@Nullable T t) {
+		public void add(T t) {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
@@ -1058,7 +1048,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @return a pseudo-randomly selected item from this ObjectLists
 	 */
 	@Override
-	public @Nullable T random(Random random) {
+	public T random(Random random) {
 		final int n = size();
 		if (n == 0) return null;
 		return get(random.nextInt(n));
@@ -1135,7 +1125,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 *
 	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 */
-	public void sort(@Nullable Comparator<? super T> c) {
+	public void sort(Comparator<? super T> c) {
 		ObjectComparators.sort(this, c);
 	}
 
@@ -1162,7 +1152,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 */
-	public void sort(int from, int to, @Nullable Comparator<? super T> c) {
+	public void sort(int from, int to, Comparator<? super T> c) {
 		final int size = size();
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
@@ -1204,7 +1194,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 * @see #sort(Comparator) Use sort() or use an ObjectDeque and its sortJDK().
 	 */
-	public void sortJDK(@Nullable Comparator<? super T> c) {
+	public void sortJDK(Comparator<? super T> c) {
 		sort(c);
 	}
 
@@ -1219,7 +1209,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 * @see #sort(int, int, Comparator) Use sort() or use an ObjectDeque and its sortJDK().
 	 */
-	public void sortJDK(int from, int to, @Nullable Comparator<? super T> c) {
+	public void sortJDK(int from, int to, Comparator<? super T> c) {
 		sort(from, to, c);
 	}
 

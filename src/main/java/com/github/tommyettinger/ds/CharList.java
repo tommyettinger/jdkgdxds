@@ -21,7 +21,6 @@ import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.function.CharToCharFunction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -50,9 +49,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	public char[] items;
 	protected int size;
-	@Nullable
 	protected transient CharListIterator iterator1;
-	@Nullable
 	protected transient CharListIterator iterator2;
 
 	/**
@@ -1056,7 +1053,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @param c the comparator to determine the order of the CharList
 	 */
-	public void sort(final @Nullable CharComparator c) {
+	public void sort(final CharComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -1074,7 +1071,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the CharList
 	 */
-	public void sort(int from, int to, final @Nullable CharComparator c) {
+	public void sort(int from, int to, final CharComparator c) {
 		if (c == null) {
 			sort(from, to);
 		} else {
@@ -1257,7 +1254,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	@Override
-	public CharList append(@Nullable CharSequence csq) {
+	public CharList append(CharSequence csq) {
 		if(csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
@@ -1271,7 +1268,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	@Override
-	public CharList append(@Nullable CharSequence csq, int start, int end) {
+	public CharList append(CharSequence csq, int start, int end) {
 		if(csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
@@ -1430,7 +1427,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return a positive number, zero, or a negative number if this is lexicographically greater than, equal to, or
 	 * less than other, respectively
 	 */
-	public int compareWith(@Nullable CharSequence other) {
+	public int compareWith(CharSequence other) {
 		if (other == null) return Integer.MAX_VALUE;
 		final int tLen = size(), oLen = other.length();
 		if (tLen == oLen) {
@@ -1461,7 +1458,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @return a positive number, zero, or a negative number if this is lexicographically greater than, equal to, or
 	 * less than other, respectively, using case-insensitive comparison
 	 */
-	public int compareWithIgnoreCase(@Nullable CharSequence other) {
+	public int compareWithIgnoreCase(CharSequence other) {
 		if (other == null) return Integer.MAX_VALUE;
 		final int tLen = size(), oLen = other.length();
 		if (tLen == oLen) {

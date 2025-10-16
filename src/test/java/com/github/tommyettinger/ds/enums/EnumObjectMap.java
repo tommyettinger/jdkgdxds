@@ -18,8 +18,6 @@ package com.github.tommyettinger.ds.enums;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.Utilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -100,7 +98,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		// As long as the capacity is sufficient, ordinals will never collide.
 		if (item instanceof Enum)
 			return ((Enum<?>) item).ordinal() & mask;
@@ -108,7 +106,7 @@ public class EnumObjectMap<K extends Enum<K>, V> extends ObjectObjectMap<K, V> {
 	}
 
 	@Override
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}

@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.HolderSet;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Tommy Ettinger on 10/26/2020.
@@ -28,16 +27,14 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("SuspiciousMethodCalls")
 public class HolderSetTest {
 	public static class Person {
-		@NotNull
 		private String name;
 		private int x, y;
 
-		@NotNull
 		public String getName() {
 			return name;
 		}
 
-		public void setName(@NotNull String name) {
+		public void setName(String name) {
 			this.name = name;
 		}
 
@@ -61,11 +58,11 @@ public class HolderSetTest {
 			this("Nihilus", 0, 0);
 		}
 
-		public Person(@NotNull String name) {
+		public Person(String name) {
 			this(name, 0, 0);
 		}
 
-		public Person(@NotNull String name, int x, int y) {
+		public Person(String name, int x, int y) {
 			this.name = name;
 			this.x = x;
 			this.y = y;

@@ -21,8 +21,6 @@ import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
 import com.github.tommyettinger.function.CharToCharFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -77,9 +75,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 */
 	protected int tail = 0;
 
-	@Nullable
 	protected transient CharDequeIterator descendingIterator1;
-	@Nullable
 	protected transient CharDequeIterator descendingIterator2;
 
 	/**
@@ -1471,7 +1467,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code char}, containing all the elements in this collection
 	 */
-	public char @NotNull [] toArray() {
+	public char[] toArray() {
 		char[] next = new char[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -2352,7 +2348,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public CharDeque append(@Nullable CharSequence csq) {
+	public CharDeque append(CharSequence csq) {
 		if(csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
@@ -2366,7 +2362,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public CharDeque append(@Nullable CharSequence csq, int start, int end) {
+	public CharDeque append(CharSequence csq, int start, int end) {
 		if(csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
@@ -2929,7 +2925,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 *                   order of char items when char implements Comparable of char
 	 */
 	@Override
-	public void sort(@Nullable CharComparator comparator) {
+	public void sort(CharComparator comparator) {
 		if (comparator == null) {
 			sort();
 		} else if (head <= tail) {
@@ -2943,7 +2939,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void sort(int from, int to, @Nullable CharComparator comparator) {
+	public void sort(int from, int to, CharComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (comparator == null) {

@@ -24,8 +24,6 @@ import com.github.tommyettinger.function.IntFloatBiConsumer;
 import com.github.tommyettinger.function.IntFloatToFloatBiFunction;
 import com.github.tommyettinger.function.IntToFloatFunction;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -105,17 +103,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 */
 	protected int hashMultiplier;
 
-	@Nullable
 	protected transient Entries entries1;
-	@Nullable
 	protected transient Entries entries2;
-	@Nullable
 	protected transient Values values1;
-	@Nullable
 	protected transient Values values2;
-	@Nullable
 	protected transient Keys keys1;
-	@Nullable
 	protected transient Keys keys2;
 
 	public float defaultValue = 0;
@@ -968,7 +960,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
 	 */
 	@Override
-	public @NotNull EntryIterator iterator() {
+	public EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 
@@ -1129,7 +1121,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}
@@ -1310,7 +1302,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		}
 
 		@Override
-		public @NotNull EntryIterator iterator() {
+		public EntryIterator iterator() {
 			return this;
 		}
 
@@ -1359,7 +1351,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public @NotNull EntryIterator iterator() {
+		public EntryIterator iterator() {
 			return iter;
 		}
 

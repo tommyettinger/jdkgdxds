@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IntIntOrderedMap;
 import com.github.tommyettinger.ds.support.sort.IntComparators;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -279,7 +278,7 @@ public class AllGoldenIntVectorHashTest {
 					int hm = 0xB7AD9447;//0xF1042721;// 0x9E3779B7;
 
 					@Override
-					protected int place(@NotNull Object item) {
+					protected int place(Object item) {
 //						final int h = BitConversion.imul(item.hashCode(), hm);
 //						return (h ^ h << 16) >>> shift;
 //						return BitConversion.imul(item.hashCode(), hm) & mask; // UNUSABLE FOR VECTORS
@@ -289,7 +288,7 @@ public class AllGoldenIntVectorHashTest {
 					}
 
 					@Override
-					protected void addResize(@NotNull Object key) {
+					protected void addResize(Object key) {
 						Object[] keyTable = this.keyTable;
 						for (int i = place(key), p = 0; ; i = i + 1 & mask) {
 							if (keyTable[i] == null) {

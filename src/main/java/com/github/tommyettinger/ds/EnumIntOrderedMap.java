@@ -23,8 +23,6 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -78,7 +76,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param type     either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                 use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumIntOrderedMap(Enum<?> @Nullable [] universe, OrderType type) {
+	public EnumIntOrderedMap(Enum<?>[] universe, OrderType type) {
 		if (universe == null) {
 			ordering = type == OrderType.BAG ? new ObjectBag<>() : new ObjectList<>();
 			return;
@@ -98,7 +96,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param type          either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *                      use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumIntOrderedMap(@Nullable Class<? extends Enum<?>> universeClass, OrderType type) {
+	public EnumIntOrderedMap(Class<? extends Enum<?>> universeClass, OrderType type) {
 		this(universeClass == null ? null : universeClass.getEnumConstants(), type);
 	}
 
@@ -157,7 +155,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param type   either {@link OrderType#BAG} to use unreliable ordering with faster deletion, or anything else to
 	 *               use a list type that takes longer to delete but maintains insertion order reliably
 	 */
-	public EnumIntOrderedMap(@NotNull EnumIntOrderedMap other, int offset, int count, OrderType type) {
+	public EnumIntOrderedMap(EnumIntOrderedMap other, int offset, int count, OrderType type) {
 		this(other.keys == null ? null : other.keys.universe, type);
 		putAll(0, other, offset, count);
 	}
@@ -181,7 +179,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 *
 	 * @param universe almost always, the result of calling {@code values()} on an Enum type; used directly, not copied
 	 */
-	public EnumIntOrderedMap(Enum<?> @Nullable [] universe) {
+	public EnumIntOrderedMap(Enum<?>[] universe) {
 		this(universe, OrderType.LIST);
 	}
 
@@ -193,7 +191,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 *
 	 * @param universeClass the Class of an Enum type that defines the universe of valid Enum items this can hold
 	 */
-	public EnumIntOrderedMap(@Nullable Class<? extends Enum<?>> universeClass) {
+	public EnumIntOrderedMap(Class<? extends Enum<?>> universeClass) {
 		this(universeClass, OrderType.LIST);
 	}
 
@@ -241,7 +239,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param offset the first index in other's ordering to draw an item from
 	 * @param count  how many items to copy from other
 	 */
-	public EnumIntOrderedMap(@NotNull EnumIntOrderedMap other, int offset, int count) {
+	public EnumIntOrderedMap(EnumIntOrderedMap other, int offset, int count) {
 		this(other.keys == null ? null : other.keys.universe, other.ordering instanceof ObjectBag ? OrderType.BAG : OrderType.LIST);
 		putAll(0, other, offset, count);
 	}
@@ -255,7 +253,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param value the int value to associate with {@code key}
 	 * @return the previous value associated with {@code key}, or {@link #getDefaultValue()} if the given key was not present
 	 */
-	public int put(@NotNull Enum<?> key, int value) {
+	public int put(Enum<?> key, int value) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -282,7 +280,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
-	public int put(@NotNull Enum<?> key, int value, int index) {
+	public int put(Enum<?> key, int value, int index) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -304,7 +302,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	}
 
 	@Override
-	public int putOrDefault(@NotNull Enum<?> key, int value, int defaultValue) {
+	public int putOrDefault(Enum<?> key, int value, int defaultValue) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -327,7 +325,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 *
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
-	public void putAll(@NotNull EnumIntOrderedMap map) {
+	public void putAll(EnumIntOrderedMap map) {
 		for (int i = 0, kl = map.size(); i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
 		}
@@ -341,7 +339,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param offset the first index in {@code other} to use
 	 * @param count  how many indices in {@code other} to use
 	 */
-	public void putAll(@NotNull EnumIntOrderedMap other, int offset, int count) {
+	public void putAll(EnumIntOrderedMap other, int offset, int count) {
 		putAll(size(), other, offset, count);
 	}
 
@@ -354,7 +352,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param offset         the first index in {@code other} to use
 	 * @param count          how many indices in {@code other} to use
 	 */
-	public void putAll(int insertionIndex, @NotNull EnumIntOrderedMap other, int offset, int count) {
+	public void putAll(int insertionIndex, EnumIntOrderedMap other, int offset, int count) {
 		int end = Math.min(offset + count, other.size());
 		for (int i = offset; i < end; i++) {
 			put(other.keyAt(i), other.getAt(i), insertionIndex++);
@@ -434,14 +432,14 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @throws IllegalArgumentException      if some property of a key or value in
 	 *                                       the specified map prevents it from being stored in this map
 	 */
-	public void putAll(@NotNull ObjectIntOrderedMap<Enum<?>> map) {
+	public void putAll(ObjectIntOrderedMap<Enum<?>> map) {
 		for (int i = 0, kl = map.size(); i < kl; i++) {
 			put(map.keyAt(i), map.getAt(i));
 		}
 	}
 
 	@Override
-	public int getAndIncrement(@NotNull Enum<?> key, int defaultValue, int increment) {
+	public int getAndIncrement(Enum<?> key, int defaultValue, int increment) {
 		if (key == null) return defaultValue;
 		Enum<?>[] universe = key.getDeclaringClass().getEnumConstants();
 		if (keys == null) keys = new EnumSet();
@@ -469,7 +467,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param after  a key that must not be in this map for this to succeed
 	 * @return true if {@code before} was removed and {@code after} was added, false otherwise
 	 */
-	public boolean alter(@NotNull Enum<?> before, @NotNull Enum<?> after) {
+	public boolean alter(Enum<?> before, Enum<?> after) {
 		if (before == null || after == null || containsKey(after)) {
 			return false;
 		}
@@ -491,7 +489,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param after the key that will replace the contents at {@code index}; this key must not be present for this to succeed
 	 * @return true if {@code after} successfully replaced the key at {@code index}, false otherwise
 	 */
-	public boolean alterAt(int index, @NotNull Enum<?> after) {
+	public boolean alterAt(int index, Enum<?> after) {
 		if (after == null || index < 0 || index >= size() || containsKey(after)) {
 			return false;
 		}
@@ -548,13 +546,13 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	}
 
 	@Override
-	public void clearToUniverse(Enum<?> @Nullable [] universe) {
+	public void clearToUniverse(Enum<?>[] universe) {
 		super.clearToUniverse(universe);
 		ordering.clear();
 	}
 
 	@Override
-	public void clearToUniverse(@Nullable Class<? extends Enum<?>> universe) {
+	public void clearToUniverse(Class<? extends Enum<?>> universe) {
 		super.clearToUniverse(universe);
 		ordering.clear();
 	}
@@ -584,7 +582,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 *
 	 * @param comp a Comparator that can compare two {@code Enum} keys, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable Comparator<? super Enum<?>> comp) {
+	public void sort(Comparator<? super Enum<?>> comp) {
 		ordering.sort(comp);
 	}
 
@@ -698,7 +696,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @return an {@link Iterator} over key-value pairs as {@link Entry} values
 	 */
 	@Override
-	public @NotNull EntryIterator iterator() {
+	public EntryIterator iterator() {
 		return entrySet().iterator();
 	}
 

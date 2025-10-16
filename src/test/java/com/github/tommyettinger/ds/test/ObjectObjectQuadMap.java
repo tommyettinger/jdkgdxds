@@ -21,7 +21,6 @@ import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.Ordered;
 import com.github.tommyettinger.ds.Utilities;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
@@ -96,24 +95,17 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * hash.
 	 */
 	protected int mask;
-	@Nullable
 	protected transient Entries<K, V> entries1;
-	@Nullable
 	protected transient Entries<K, V> entries2;
-	@Nullable
 	protected transient Values<K, V> values1;
-	@Nullable
 	protected transient Values<K, V> values2;
-	@Nullable
 	protected transient Keys<K, V> keys1;
-	@Nullable
 	protected transient Keys<K, V> keys2;
 
 	/**
 	 * Returned by {@link #get(Object)} when no value exists for the given key, as well as some other methods to indicate that
 	 * no value in the Map could be returned.
 	 */
-	@Nullable
 	public V defaultValue = null;
 
 	/**
@@ -276,7 +268,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param right may be null; typically a key being compared, but can often be null for an empty key slot, or some other type
 	 * @return true if left and right are considered equal for the purposes of this class
 	 */
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		return left.equals(right);
 	}
 
@@ -302,8 +294,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * Returns the old value associated with the specified key, or this map's {@link #defaultValue} if there was no prior value.
 	 */
 	@Override
-	@Nullable
-	public V put(K key, @Nullable V value) {
+	public V put(K key, V value) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -319,8 +310,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		return defaultValue;
 	}
 
-	@Nullable
-	public V putOrDefault(K key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(K key, V value, V defaultValue) {
 		int i = locateKey(key);
 		if (i >= 0) { // Existing key was found.
 			V oldValue = valueTable[i];
@@ -400,7 +390,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	/**
 	 * Skips checks for existing keys, doesn't increment size.
 	 */
-	protected void putResize(K key, @Nullable V value) {
+	protected void putResize(K key, V value) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			if (keyTable[i] == null) {
@@ -420,7 +410,6 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param key a non-null Object that should almost always be a {@code K} (or an instance of a subclass of {@code K})
 	 */
 	@Override
-	@Nullable
 	public V get(Object key) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
@@ -436,8 +425,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * Returns the value for the specified key, or the given default value if the key is not in the map.
 	 */
 	@Override
-	@Nullable
-	public V getOrDefault(Object key, @Nullable V defaultValue) {
+	public V getOrDefault(Object key, V defaultValue) {
 		K[] keyTable = this.keyTable;
 		for (int i = place(key), dist = 0; ; i = i + ++dist & mask) {
 			K other = keyTable[i];
@@ -449,7 +437,6 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	}
 
 	@Override
-	@Nullable
 	public V remove(Object key) {
 		int i = locateKey(key);
 		if (i < 0) {
@@ -538,7 +525,6 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @return the current default value
 	 */
-	@Nullable
 	public V getDefaultValue() {
 		return defaultValue;
 	}
@@ -550,7 +536,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 *
 	 * @param defaultValue may be any V object or null; should usually be one that doesn't occur as a typical value
 	 */
-	public void setDefaultValue(@Nullable V defaultValue) {
+	public void setDefaultValue(V defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -599,7 +585,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
 	 *                 {@link #equals(Object)}.
 	 */
-	public boolean containsValue(@Nullable Object value, boolean identity) {
+	public boolean containsValue(Object value, boolean identity) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
 			K[] keyTable = this.keyTable;
@@ -666,8 +652,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	 * @param identity If true, uses == to compare the specified value with values in the map. If false, uses
 	 *                 {@link #equals(Object)}.
 	 */
-	@Nullable
-	public K findKey(@Nullable Object value, boolean identity) {
+	public K findKey(Object value, boolean identity) {
 		V[] valueTable = this.valueTable;
 		if (value == null) {
 			K[] keyTable = this.keyTable;
@@ -799,7 +784,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	/**
 	 * Uses == for comparison of each value.
 	 */
-	public boolean equalsIdentity(@Nullable Object obj) {
+	public boolean equalsIdentity(Object obj) {
 		if (obj == this) {
 			return true;
 		}
@@ -999,13 +984,10 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 	}
 
 	public static class Entry<K, V> implements Map.Entry<K, V> {
-		@Nullable
 		public K key;
-		@Nullable
 		public V value;
 
 		@Override
-		@Nullable
 		public String toString() {
 			return key + "=" + value;
 		}
@@ -1035,7 +1017,6 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		 *                               removed from the backing map.
 		 */
 		@Override
-		@Nullable
 		public V getValue() {
 			return value;
 		}
@@ -1061,7 +1042,6 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		 *                                       removed from the backing map.
 		 */
 		@Override
-		@Nullable
 		public V setValue(V value) {
 			V old = this.value;
 			this.value = value;
@@ -1069,7 +1049,7 @@ public class ObjectObjectQuadMap<K, V> implements Map<K, V>, Iterable<Map.Entry<
 		}
 
 		@Override
-		public boolean equals(@Nullable Object o) {
+		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
 			}

@@ -20,8 +20,6 @@ import com.github.tommyettinger.ds.support.sort.ByteComparator;
 import com.github.tommyettinger.ds.support.sort.ByteComparators;
 import com.github.tommyettinger.ds.support.util.ByteIterator;
 import com.github.tommyettinger.function.ByteToByteFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -75,9 +73,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 */
 	protected int tail = 0;
 
-	@Nullable
 	protected transient ByteDequeIterator descendingIterator1;
-	@Nullable
 	protected transient ByteDequeIterator descendingIterator2;
 
 	/**
@@ -1453,7 +1449,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * @return an array, whose {@linkplain Class#getComponentType runtime component
 	 * type} is {@code byte}, containing all the elements in this collection
 	 */
-	public byte @NotNull [] toArray() {
+	public byte[] toArray() {
 		byte[] next = new byte[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -2539,7 +2535,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 *                   order of byte items when byte implements Comparable of byte
 	 */
 	@Override
-	public void sort(@Nullable ByteComparator comparator) {
+	public void sort(ByteComparator comparator) {
 		if (comparator == null) {
 			sort();
 		} else if (head <= tail) {
@@ -2553,7 +2549,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	}
 
 	@Override
-	public void sort(int from, int to, @Nullable ByteComparator comparator) {
+	public void sort(int from, int to, ByteComparator comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (comparator == null) {

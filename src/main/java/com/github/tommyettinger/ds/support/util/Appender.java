@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds.support.util;
 
 import com.github.tommyettinger.digital.Base;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -51,6 +50,27 @@ public interface Appender<T> {
 	static <S extends CharSequence & Appendable, T> S append(S sb, T item) {
 		try {
 			sb.append(Objects.toString(item));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return sb;
+	}
+
+	/**
+	 * Appends the {@link Enum#name()} to the given Appendable CharSequence, so {@code valueOf} can be used to look up
+	 * an enum constant when reading.
+	 * <br>
+	 * Similar to {@link #append(CharSequence, Object)}, but not intended to be used as a method reference; use
+	 * {@link #ENUM_NAME_APPENDER} if you need an Appender instance (it should perform identically, but works around a
+	 * bug in GWT that would make a method reference fail to compile).
+	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param item the Enum item to append the {@link Enum#name()} of
+	 * @return {@code sb}, after modification
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	static <S extends CharSequence & Appendable> S appendEnumName(S sb, Enum<?> item) {
+		try {
+			sb.append(item == null ? "null" : item.name());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

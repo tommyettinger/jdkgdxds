@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -111,7 +110,7 @@ public final class FloatComparators {
 		return new FloatComparator() {
 			@Override
 			public int compare(float x, float y) {
-				return c.compare(Float.valueOf(x), Float.valueOf(y));
+				return c.compare(x, y);
 			}
 
 			@SuppressWarnings("deprecation")
@@ -297,7 +296,7 @@ public final class FloatComparators {
 	 * @param items the float array to be sorted
 	 * @param c     a FloatComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(float[] items, final @Nullable FloatComparator c) {
+	public static void sort(float[] items, final FloatComparator c) {
 		sort(items, 0, items.length, c);
 	}
 
@@ -319,7 +318,7 @@ public final class FloatComparators {
 	 * @param to    the index of the last element (exclusive) to be sorted.
 	 * @param c     a FloatComparator to alter the sort order; if null, the natural order will be used
 	 */
-	public static void sort(float[] items, final int from, final int to, final @Nullable FloatComparator c) {
+	public static void sort(float[] items, final int from, final int to, final FloatComparator c) {
 		if (to <= 0) {
 			return;
 		}

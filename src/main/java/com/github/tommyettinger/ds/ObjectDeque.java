@@ -18,8 +18,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractList;
 import java.util.ArrayDeque;
@@ -77,12 +75,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * The value returned when nothing can be obtained from this deque and an exception is not meant to be thrown,
 	 * such as when calling {@link #peek()} on an empty deque.
 	 */
-	@Nullable
 	public T defaultValue = null;
 	/**
 	 * Contains the values in the deque. Head and tail indices go in a circle around this array, wrapping at the end.
 	 */
-	protected @Nullable T[] items;
+	protected T[] items;
 
 	/**
 	 * Index of first element. Logically smaller than tail. Unless empty, it points to a valid element inside the deque.
@@ -100,10 +97,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 */
 	public int size = 0;
 
-	protected transient @Nullable ObjectDequeIterator<T> iterator1;
-	protected transient @Nullable ObjectDequeIterator<T> iterator2;
-	protected transient @Nullable ObjectDequeIterator<T> descendingIterator1;
-	protected transient @Nullable ObjectDequeIterator<T> descendingIterator2;
+	protected transient ObjectDequeIterator<T> iterator1;
+	protected transient ObjectDequeIterator<T> iterator2;
+	protected transient ObjectDequeIterator<T> descendingIterator1;
+	protected transient ObjectDequeIterator<T> descendingIterator2;
 
 	/**
 	 * Creates a new ObjectDeque which can hold 16 values without needing to resize the backing array.
@@ -194,7 +191,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *
 	 * @return the current default value
 	 */
-	@Nullable
 	public T getDefaultValue() {
 		return defaultValue;
 	}
@@ -206,7 +202,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *
 	 * @param defaultValue any T object this can return instead of throwing an Exception, or {@code null}
 	 */
-	public void setDefaultValue(@Nullable T defaultValue) {
+	public void setDefaultValue(T defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
@@ -216,8 +212,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param value can be null
 	 */
 	@Override
-	public void addLast(@Nullable T value) {
-		@Nullable T[] items = this.items;
+	public void addLast(T value) {
+		T[] items = this.items;
 
 		if (size == items.length) {
 			resize(items.length << 1);
@@ -230,8 +226,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		modCount++;
 	}
 
-	public void addLast(@Nullable T value1, @Nullable T value2) {
-		@Nullable T[] items = this.items;
+	public void addLast(T value1, T value2) {
+		T[] items = this.items;
 
 		if (size + 2 > items.length) {
 			resize(size + 2 << 1);
@@ -247,8 +243,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		modCount += 2;
 	}
 
-	public void addLast(@Nullable T value1, @Nullable T value2, @Nullable T value3) {
-		@Nullable T[] items = this.items;
+	public void addLast(T value1, T value2, T value3) {
+		T[] items = this.items;
 
 		if (size + 3 > items.length) {
 			resize(size + 3 << 1);
@@ -265,8 +261,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		modCount += 3;
 	}
 
-	public void addLast(@Nullable T value1, @Nullable T value2, @Nullable T value3, @Nullable T value4) {
-		@Nullable T[] items = this.items;
+	public void addLast(T value1, T value2, T value3, T value4) {
+		T[] items = this.items;
 
 		if (size + 4 > items.length) {
 			resize(size + 4 << 1);
@@ -291,8 +287,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param value can be null
 	 * @see #addLast(Object)
 	 */
-	public void addFirst(@Nullable T value) {
-		@Nullable T[] items = this.items;
+	public void addFirst(T value) {
+		T[] items = this.items;
 
 		if (size == items.length) {
 			resize(size << 1);
@@ -307,8 +303,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		modCount++;
 	}
 
-	public void addFirst(@Nullable T value1, @Nullable T value2) {
-		@Nullable T[] items = this.items;
+	public void addFirst(T value1, T value2) {
+		T[] items = this.items;
 
 		if (size + 2 > items.length) {
 			resize(size + 2 << 1);
@@ -327,8 +323,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		modCount += 2;
 	}
 
-	public void addFirst(@Nullable T value1, @Nullable T value2, @Nullable T value3) {
-		@Nullable T[] items = this.items;
+	public void addFirst(T value1, T value2, T value3) {
+		T[] items = this.items;
 
 		if (size + 3 > items.length) {
 			resize(size + 3 << 1);
@@ -348,8 +344,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		modCount += 3;
 	}
 
-	public void addFirst(@Nullable T value1, @Nullable T value2, @Nullable T value3, @Nullable T value4) {
-		@Nullable T[] items = this.items;
+	public void addFirst(T value1, T value2, T value3, T value4) {
+		T[] items = this.items;
 
 		if (size + 4 > items.length) {
 			resize(size + 4 << 1);
@@ -383,7 +379,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			if (head <= tail) {
 				items = Arrays.copyOfRange(items, head, tail + 1);
 			} else {
-				@Nullable T[] next = Arrays.copyOf(items, size);
+				T[] next = Arrays.copyOf(items, size);
 				System.arraycopy(items, head, next, 0, items.length - head);
 				System.arraycopy(items, 0, next, items.length - head, tail + 1);
 				items = next;
@@ -422,11 +418,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	public void resize(int newSize) {
 		if (newSize < size)
 			newSize = size;
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 		final int head = this.head;
 		final int tail = this.tail;
 
-		@SuppressWarnings("unchecked") final @Nullable T[] newArray = (T[]) new Object[Math.max(1, newSize)];
+		@SuppressWarnings("unchecked") final T[] newArray = (T[]) new Object[Math.max(1, newSize)];
 
 		if (size > 0) {
 			if (head <= tail) {
@@ -509,7 +505,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			}
 		}
 
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 		final int head = this.head;
 		final int tail = this.tail;
 		final int newSize = Math.max(size + gapSize, items.length);
@@ -542,7 +538,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 				}
 			}
 		} else {
-			@SuppressWarnings("unchecked") final @Nullable T[] newArray = (T[]) new Object[newSize];
+			@SuppressWarnings("unchecked") final T[] newArray = (T[]) new Object[newSize];
 
 			if (head <= tail) {
 				// Continuous
@@ -598,7 +594,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return removed object
 	 * @throws NoSuchElementException when the deque is empty
 	 */
-	@Nullable
 	@Override
 	public T removeFirst() {
 		if (size == 0) {
@@ -606,7 +601,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 
 		final T result = items[head];
 		items[head] = null;
@@ -627,14 +622,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #removeFirst()
 	 */
-	@Nullable
 	@Override
 	public T removeLast() {
 		if (size == 0) {
 			throw new NoSuchElementException("ObjectDeque is empty.");
 		}
 
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 		int tail = this.tail;
 		final T result = items[tail];
 		items[tail] = null;
@@ -683,7 +677,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean offerFirst(@Nullable T t) {
+	public boolean offerFirst(T t) {
 		addFirst(t);
 		return true;
 	}
@@ -705,7 +699,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean offerLast(@Nullable T t) {
+	public boolean offerLast(T t) {
 		addLast(t);
 		return true;
 	}
@@ -719,14 +713,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @see #removeFirst() the alternative removeFirst() throws an Exception if the deque is empty
 	 */
 	@Override
-	@Nullable
 	public T pollFirst() {
 		if (size == 0) {
 			// Underflow
 			return defaultValue;
 		}
 
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 
 		final T result = items[head];
 		items[head] = null;
@@ -749,13 +742,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @see #removeLast() the alternative removeLast() throws an Exception if the deque is empty
 	 */
 	@Override
-	@Nullable
 	public T pollLast() {
 		if (size == 0) {
 			return defaultValue;
 		}
 
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 		int tail = this.tail;
 		final T result = items[tail];
 		items[tail] = null;
@@ -783,7 +775,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NoSuchElementException if this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T getFirst() {
 		return first();
 	}
@@ -797,7 +788,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NoSuchElementException if this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T getLast() {
 		return last();
 	}
@@ -809,7 +799,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return the head of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T peekFirst() {
 		if (size == 0) {
 			// Underflow
@@ -825,7 +814,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return the tail of this deque, or {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T peekLast() {
 		if (size == 0) {
 			// Underflow
@@ -852,7 +840,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean removeFirstOccurrence(@Nullable Object o) {
+	public boolean removeFirstOccurrence(Object o) {
 		return removeValue(o, false);
 	}
 
@@ -874,7 +862,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean removeLastOccurrence(@Nullable Object o) {
+	public boolean removeLastOccurrence(Object o) {
 		return removeLastValue(o, false);
 	}
 
@@ -901,7 +889,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean add(@Nullable T t) {
+	public boolean add(T t) {
 		addLast(t);
 		return true;
 	}
@@ -934,13 +922,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param item  a T item to insert; may be null
 	 */
 	@Override
-	public void add(int index, @Nullable T item) {
+	public void add(int index, T item) {
 		if (index <= 0)
 			addFirst(item);
 		else if (index >= size)
 			addLast(item);
 		else {
-			@Nullable T[] items = this.items;
+			T[] items = this.items;
 
 			if (++size > items.length) {
 				resize(items.length << 1);
@@ -985,7 +973,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param item  element to be inserted
 	 * @return true if this was modified, which should always happen
 	 */
-	public boolean insert(int index, @Nullable T item) {
+	public boolean insert(int index, T item) {
 		add(index, item);
 		return true;
 	}
@@ -1012,7 +1000,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public boolean offer(@Nullable T t) {
+	public boolean offer(T t) {
 		addLast(t);
 		return true;
 	}
@@ -1029,7 +1017,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NoSuchElementException if this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T remove() {
 		return removeFirst();
 	}
@@ -1045,7 +1032,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T poll() {
 		return pollFirst();
 	}
@@ -1062,7 +1048,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NoSuchElementException if this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T element() {
 		return first();
 	}
@@ -1078,7 +1063,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * {@link #getDefaultValue() defaultValue} if this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T peek() {
 		return peekFirst();
 	}
@@ -1108,7 +1092,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                                  specified collection prevents it from being added to this deque
 	 */
 	@Override
-	public boolean addAll(Collection<@Nullable ? extends T> c) {
+	public boolean addAll(Collection<? extends T> c) {
 		final int cs = c.size();
 		if (cs == 0) return false;
 		int oldSize = size;
@@ -1140,7 +1124,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllLast(Collection<@Nullable ? extends T> c) {
+	public boolean addAllLast(Collection<? extends T> c) {
 		return addAll(c);
 	}
 
@@ -1151,7 +1135,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param c the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean addAllFirst(Collection<@Nullable ? extends T> c) {
+	public boolean addAllFirst(Collection<? extends T> c) {
 		final int cs = c.size();
 		if (cs == 0) return false;
 		int oldSize = size;
@@ -1202,12 +1186,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param c     collection containing elements to be added to this list
 	 * @return {@code true} if this list changed as a result of the call
 	 */
-	public boolean insertAll(int index, Collection<@Nullable ? extends T> c) {
+	public boolean insertAll(int index, Collection<? extends T> c) {
 		return addAll(index, c);
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<@Nullable ? extends T> c) {
+	public boolean addAll(int index, Collection<? extends T> c) {
 		int oldSize = size;
 		if (index <= 0)
 			addAllFirst(c);
@@ -1217,7 +1201,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			final int cs = c.size();
 			if (c.isEmpty()) return false;
 			int place = ensureGap(index, cs);
-			@Nullable T[] items = this.items;
+			T[] items = this.items;
 			if (c == this) {
 				System.arraycopy(items, head, items, place, place - head);
 				System.arraycopy(items, place + cs, items, place + place - head, tail + 1 - place - cs);
@@ -1240,7 +1224,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #addAll(Collection)
 	 */
-	public boolean addAll(@Nullable T[] array) {
+	public boolean addAll(T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
@@ -1253,7 +1237,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #addAll(Object[])
 	 */
-	public boolean addAll(@Nullable T[] array, int offset, int length) {
+	public boolean addAll(T[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
 		if (cs <= 0) return false;
 		int place = ensureGap(size, cs);
@@ -1270,7 +1254,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #addAll(Object[])
 	 */
-	public boolean addAllLast(@Nullable T[] array) {
+	public boolean addAllLast(T[] array) {
 		return addAll(array, 0, array.length);
 	}
 
@@ -1283,7 +1267,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #addAll(Object[], int, int)
 	 */
-	public boolean addAllLast(@Nullable T[] array, int offset, int length) {
+	public boolean addAllLast(T[] array, int offset, int length) {
 		return addAll(array, offset, length);
 	}
 
@@ -1294,7 +1278,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #addAllFirst(Collection)
 	 */
-	public boolean addAllFirst(@Nullable T[] array) {
+	public boolean addAllFirst(T[] array) {
 		return addAllFirst(array, 0, array.length);
 	}
 
@@ -1308,7 +1292,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #addAllFirst(Object[])
 	 */
-	public boolean addAllFirst(@Nullable T[] array, int offset, int length) {
+	public boolean addAllFirst(T[] array, int offset, int length) {
 		final int cs = Math.min(array.length - offset, length);
 		if (cs <= 0) return false;
 		int place = ensureGap(0, cs);
@@ -1325,7 +1309,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param array the elements to be inserted into this deque
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, @Nullable T[] array) {
+	public boolean insertAll(int index, T[] array) {
 		return addAll(index, array, 0, array.length);
 	}
 
@@ -1338,7 +1322,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param length how many items, at most, to add from array into this
 	 * @return {@code true} if this deque changed as a result of the call
 	 */
-	public boolean insertAll(int index, @Nullable T[] array, int offset, int length) {
+	public boolean insertAll(int index, T[] array, int offset, int length) {
 		return addAll(index, array, offset, length);
 	}
 
@@ -1352,7 +1336,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #addAll(Object[])
 	 */
-	public boolean addAll(int index, @Nullable T[] array) {
+	public boolean addAll(int index, T[] array) {
 		return addAll(index, array, 0, array.length);
 	}
 
@@ -1369,7 +1353,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #addAll(Object[])
 	 */
-	public boolean addAll(int index, @Nullable T[] array, int offset, int length) {
+	public boolean addAll(int index, T[] array, int offset, int length) {
 		int oldSize = size;
 		if (index <= 0)
 			addAllFirst(array, offset, length);
@@ -1405,7 +1389,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                                  element prevents it from being added to this deque
 	 */
 	@Override
-	public void push(@Nullable T t) {
+	public void push(T t) {
 		addFirst(t);
 	}
 
@@ -1420,7 +1404,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NoSuchElementException if this deque is empty
 	 */
 	@Override
-	@Nullable
 	public T pop() {
 		return removeFirst();
 	}
@@ -1445,7 +1428,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean remove(@Nullable Object o) {
+	public boolean remove(Object o) {
 		return removeFirstOccurrence(o);
 	}
 
@@ -1464,7 +1447,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                              (<a href="{@docRoot}/java.base/java/util/Collection.html#optional-restrictions">optional</a>)
 	 */
 	@Override
-	public boolean contains(@Nullable Object o) {
+	public boolean contains(Object o) {
 		return indexOf(o, false) != -1;
 	}
 
@@ -1494,7 +1477,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * type} is {@code Object}, containing all the elements in this collection
 	 */
 	@Override
-	public Object @NotNull [] toArray() {
+	public Object[] toArray() {
 		Object[] next = new Object[size];
 		if (head <= tail) {
 			System.arraycopy(items, head, next, 0, tail - head + 1);
@@ -1533,12 +1516,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NullPointerException if the specified array is null
 	 */
 	@Override
-	public <E> @Nullable E @NotNull [] toArray(@Nullable E @NotNull [] a) {
+	public <E> E[] toArray(E[] a) {
 		int oldSize = size;
 		if (a.length < oldSize) {
 			a = Arrays.copyOf(a, oldSize);
 		}
-		@Nullable Object[] result = a;
+		Object[] result = a;
 		Iterator<T> it = iterator();
 		for (int i = 0; i < oldSize; ++i) {
 			result[i] = it.next();
@@ -1790,13 +1773,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #retainAll(Collection)
 	 */
-	public boolean retainAll(@Nullable Object[] array) {
+	public boolean retainAll(Object[] array) {
 		Objects.requireNonNull(array);
 		boolean modified = false;
 		ListIterator<T> it = iterator();
 		OUTER:
 		while (it.hasNext()) {
-			@Nullable T check = it.next();
+			T check = it.next();
 			for (int i = 0, n = array.length; i < n; i++) {
 				if (Objects.equals(array[i], check))
 					continue OUTER;
@@ -1816,7 +1799,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return {@code true} if this deque changed as a result of the call
 	 * @see #retainAll(Object[])
 	 */
-	public boolean retainAll(@Nullable Object[] array, int offset, int length) {
+	public boolean retainAll(Object[] array, int offset, int length) {
 		Objects.requireNonNull(array);
 		boolean modified = false;
 		ListIterator<T> it = iterator();
@@ -2014,7 +1997,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return An index of the first occurrence of value in the deque or -1 if no such value exists
 	 */
 	@Override
-	public int indexOf(@Nullable Object value) {
+	public int indexOf(Object value) {
 		return indexOf(value, false);
 	}
 
@@ -2027,7 +2010,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int indexOf(@Nullable Object value, int fromIndex) {
+	public int indexOf(Object value, int fromIndex) {
 		return indexOf(value, fromIndex, false);
 	}
 
@@ -2039,7 +2022,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return An index of first occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int indexOf(@Nullable Object value, boolean identity) {
+	public int indexOf(Object value, boolean identity) {
 		return indexOf(value, 0, identity);
 	}
 
@@ -2054,10 +2037,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param identity  If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int indexOf(@Nullable Object value, int fromIndex, boolean identity) {
+	public int indexOf(Object value, int fromIndex, boolean identity) {
 		if (size == 0)
 			return -1;
-		@Nullable T[] items = this.items;
+		T[] items = this.items;
 		final int head = this.head, tail = this.tail;
 		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
 		if (i >= items.length)
@@ -2101,7 +2084,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
 	@Override
-	public int lastIndexOf(@Nullable Object value) {
+	public int lastIndexOf(Object value) {
 		return lastIndexOf(value, false);
 	}
 
@@ -2115,7 +2098,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int lastIndexOf(@Nullable Object value, int fromIndex) {
+	public int lastIndexOf(Object value, int fromIndex) {
 		return lastIndexOf(value, fromIndex, false);
 	}
 
@@ -2126,7 +2109,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return An index of the last occurrence of value in the deque or -1 if no such value exists
 	 */
-	public int lastIndexOf(@Nullable Object value, boolean identity) {
+	public int lastIndexOf(Object value, boolean identity) {
 		return lastIndexOf(value, size - 1, identity);
 	}
 
@@ -2141,10 +2124,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param identity  If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return An index of last occurrence of value at or before fromIndex in the deque, or -1 if no such value exists
 	 */
-	public int lastIndexOf(@Nullable Object value, int fromIndex, boolean identity) {
+	public int lastIndexOf(Object value, int fromIndex, boolean identity) {
 		if (size == 0)
 			return -1;
-		@Nullable T[] items = this.items;
+		T[] items = this.items;
 		final int head = this.head, tail = this.tail;
 		int i = head + Math.min(Math.max(fromIndex, 0), size - 1);
 		if (i >= items.length)
@@ -2235,7 +2218,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeValue(@Nullable Object value, boolean identity) {
+	public boolean removeValue(Object value, boolean identity) {
 		int index = indexOf(value, identity);
 		if (index == -1)
 			return false;
@@ -2249,7 +2232,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param identity If true, == comparison will be used. If false, .equals() comparison will be used.
 	 * @return true if value was found and removed, false otherwise
 	 */
-	public boolean removeLastValue(@Nullable Object value, boolean identity) {
+	public boolean removeLastValue(Object value, boolean identity) {
 		int index = lastIndexOf(value, identity);
 		if (index == -1)
 			return false;
@@ -2269,7 +2252,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param index the index of the element to be removed
 	 * @return the element previously at the specified position
 	 */
-	@Nullable
 	public T removeAt(int index) {
 		return remove(index);
 	}
@@ -2284,14 +2266,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return the element previously at the specified position
 	 */
 	@Override
-	@Nullable
 	public T remove(int index) {
 		if (index <= 0)
 			return removeFirst();
 		if (index >= size)
 			return removeLast();
 
-		@Nullable T[] items = this.items;
+		T[] items = this.items;
 		int head = this.head, tail = this.tail;
 		index += head;
 		T value;
@@ -2338,7 +2319,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param index the index of the element to be removed
 	 * @return the element previously at the specified position
 	 */
-	@Nullable
 	public T pollAt(int index) {
 		return poll(index);
 	}
@@ -2355,7 +2335,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param index the index of the element to be removed
 	 * @return the element previously at the specified position
 	 */
-	@Nullable
 	public T poll(int index) {
 		if (index <= 0)
 			return pollFirst();
@@ -2363,7 +2342,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			return pollLast();
 		// No need to check for size to be 0 because the above checks will already do that, and one will run.
 
-		@Nullable T[] items = this.items;
+		T[] items = this.items;
 		int head = this.head, tail = this.tail;
 		index += head;
 		T value;
@@ -2417,7 +2396,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @see #removeFirst()
 	 */
 	@Override
-	public @Nullable T first() {
+	public T first() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
@@ -2431,7 +2410,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @throws NoSuchElementException when the deque is empty
 	 * @see #peekLast() peeking won't throw an exception, and will return the ObjectDeque's default value if empty
 	 */
-	public @Nullable T last() {
+	public T last() {
 		if (size == 0) {
 			// Underflow
 			throw new NoSuchElementException("ObjectDeque is empty.");
@@ -2452,12 +2431,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @return the element at the specified position in this deque
 	 * @throws NoSuchElementException if the deque is empty
 	 */
-	public @Nullable T get(int index) {
+	public T get(int index) {
 		if (index <= 0)
 			return getFirst();
 		if (index >= size - 1)
 			return getLast();
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 
 		int i = head + index;
 		if (i >= items.length)
@@ -2478,12 +2457,12 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param index index of the element to return
 	 * @return the element at the specified position in this deque
 	 */
-	public @Nullable T peekAt(int index) {
+	public T peekAt(int index) {
 		if (index <= 0)
 			return peekFirst();
 		if (index >= size - 1)
 			return peekLast();
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 
 		int i = head + index;
 		if (i >= items.length)
@@ -2505,7 +2484,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                            prevents it from being put in this list
 	 */
 	@Override
-	public @Nullable T set(int index, @Nullable T item) {
+	public T set(int index, T item) {
 		if (size <= 0 || index >= size) {
 			addLast(item);
 			return defaultValue;
@@ -2514,7 +2493,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			addFirst(item);
 			return defaultValue;
 		}
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 
 		int i = head + Math.max(Math.min(index, size - 1), 0);
 		if (i >= items.length)
@@ -2533,7 +2512,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	public void clear() {
 		if (size == 0)
 			return;
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 		final int head = this.head;
 		final int tail = this.tail;
 
@@ -2561,10 +2540,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
-	public boolean replaceFirst(@Nullable T find, @Nullable T replace) {
+	public boolean replaceFirst(T find, T replace) {
 		if(find == null) return replaceFirstIdentity(null, replace);
 		if (!find.equals(replace)) {
-			@Nullable T[] items = this.items;
+			T[] items = this.items;
 			if (head <= tail) {
 				for (int i = head, n = tail; i <= n; i++) {
 					if (find.equals(items[i])) {
@@ -2598,11 +2577,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
 	 */
-	public int replaceAll(@Nullable T find, @Nullable T replace) {
+	public int replaceAll(T find, T replace) {
 		if(find == null) return replaceAllIdentity(null, replace);
 		int replacements = 0;
 		if (!find.equals(replace)) {
-			@Nullable T[] items = this.items;
+			T[] items = this.items;
 			if (head <= tail) {
 				for (int i = head, n = tail; i <= n; i++) {
 					if (find.equals(items[i])) {
@@ -2638,9 +2617,9 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
-	public boolean replaceFirstIdentity(@Nullable T find, @Nullable T replace) {
+	public boolean replaceFirstIdentity(T find, T replace) {
 		if (find != replace) {
-			@Nullable T[] items = this.items;
+			T[] items = this.items;
 			if (head <= tail) {
 				for (int i = head, n = tail; i <= n; i++) {
 					if (items[i] == find) {
@@ -2676,10 +2655,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
 	 */
-	public int replaceAllIdentity(@Nullable T find, @Nullable T replace) {
+	public int replaceAllIdentity(T find, T replace) {
 		int replacements = 0;
 		if (find != replace) {
-			@Nullable T[] items = this.items;
+			T[] items = this.items;
 			if (head <= tail) {
 				for (int i = head, n = tail; i <= n; i++) {
 					if (items[i] == find) {
@@ -2712,7 +2691,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque)}.
 	 */
 	@Override
-	public @NotNull ObjectDequeIterator<T> iterator() {
+	public ObjectDequeIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectDequeIterator<>(this);
 			iterator2 = new ObjectDequeIterator<>(this);
@@ -2739,7 +2718,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public @NotNull ObjectDequeIterator<T> descendingIterator() {
+	public ObjectDequeIterator<T> descendingIterator() {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ObjectDequeIterator<>(this, true);
 			descendingIterator2 = new ObjectDequeIterator<>(this, true);
@@ -2767,7 +2746,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
-	public @NotNull ObjectDequeIterator<T> descendingIterator(int index) {
+	public ObjectDequeIterator<T> descendingIterator(int index) {
 		if (descendingIterator1 == null || descendingIterator2 == null) {
 			descendingIterator1 = new ObjectDequeIterator<>(this, index, true);
 			descendingIterator2 = new ObjectDequeIterator<>(this, index, true);
@@ -2797,7 +2776,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	@Override
 	public int hashCode() {
 		final int size = this.size;
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 		final int backingLength = items.length;
 		int index = this.head;
 
@@ -2891,7 +2870,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		if (second >= size)
 			throw new IndexOutOfBoundsException("second index can't be >= size: " + second + " >= " + size);
 		if (first == second) return;
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 
 		int f = head + first;
 		if (f >= items.length)
@@ -2913,7 +2892,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 */
 	@Override
 	public void reverse() {
-		final @Nullable T[] items = this.items;
+		final T[] items = this.items;
 		int f, s, len = items.length;
 		T fv;
 		for (int n = size >> 1, b = 0, t = size - 1; b <= n && b != t; b++, t--) {
@@ -2982,7 +2961,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 *                   order of T items when T implements Comparable of T
 	 */
 	@Override
-	public void sort(@Nullable Comparator<? super T> comparator) {
+	public void sort(Comparator<? super T> comparator) {
 		if (head <= tail) {
 			ObjectComparators.sort(items, head, tail + 1, comparator);
 		} else {
@@ -3007,7 +2986,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param comparator the Comparator to use for T items; may be null to use the natural
 	 *                   order of T items when T implements Comparable of T
 	 */
-	public void sort(int from, int to, @Nullable Comparator<? super T> comparator) {
+	public void sort(int from, int to, Comparator<? super T> comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (head + to <= items.length) {
@@ -3053,7 +3032,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param comparator the Comparator to use for T items; may be null to use the natural
 	 *                   order of T items when T implements Comparable of T
 	 */
-	public void sortJDK(@Nullable Comparator<? super T> comparator) {
+	public void sortJDK(Comparator<? super T> comparator) {
 		if (head <= tail) {
 			Arrays.sort(items, head, tail + 1, comparator);
 		} else {
@@ -3106,7 +3085,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param comparator the Comparator to use for T items; may be null to use the natural
 	 *                   order of T items when T implements Comparable of T
 	 */
-	public void sortJDK(int from, int to, @Nullable Comparator<? super T> comparator) {
+	public void sortJDK(int from, int to, Comparator<? super T> comparator) {
 		from = Math.max(Math.min(from, size - 1), 0);
 		to = Math.max(Math.min(to, size), from);
 		if (head + to <= items.length) {
@@ -3125,7 +3104,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque
 	 */
-	@Nullable
 	public T getRandom(Random random) {
 		if (size <= 0) {
 			throw new NoSuchElementException("ObjectDeque is empty.");
@@ -3140,7 +3118,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * @param random any Random or subclass of it, such as {@link com.github.tommyettinger.digital.AlternateRandom}.
 	 * @return a randomly selected item from this deque, or the default value if empty
 	 */
-	@Nullable
 	public T random(Random random) {
 		return peekAt(random.nextInt(size));
 	}
@@ -3194,7 +3171,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
-		@Nullable
 		public T next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
@@ -3252,7 +3228,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 *                                element
 		 */
 		@Override
-		@Nullable
 		public T previous() {
 			if (!hasPrevious()) {
 				throw new NoSuchElementException();
@@ -3343,7 +3318,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 *                                       {@code next} or {@code previous}
 		 */
 		@Override
-		public void set(@Nullable T t) {
+		public void set(T t) {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
@@ -3376,7 +3351,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 *                                       prevents it from being added to this list
 		 */
 		@Override
-		public void add(@Nullable T t) {
+		public void add(T t) {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
@@ -3411,7 +3386,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 * @return a ListIterator; really this same ObjectDequeIterator.
 		 */
 		@Override
-		public @NotNull ObjectDequeIterator<T> iterator() {
+		public ObjectDequeIterator<T> iterator() {
 			return this;
 		}
 	}

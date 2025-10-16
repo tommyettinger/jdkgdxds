@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongToLongFunction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -48,9 +47,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 
 	public long[] items;
 	protected int size;
-	@Nullable
 	protected transient LongListIterator iterator1;
-	@Nullable
 	protected transient LongListIterator iterator2;
 
 	/**
@@ -894,7 +891,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 *
 	 * @param c the comparator to determine the order of the LongList
 	 */
-	public void sort(final @Nullable LongComparator c) {
+	public void sort(final LongComparator c) {
 		if (c == null) {
 			sort();
 		} else {
@@ -912,7 +909,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * @param to   the index of the last element (exclusive) to be sorted
 	 * @param c    the comparator to determine the order of the LongList
 	 */
-	public void sort(int from, int to, final @Nullable LongComparator c) {
+	public void sort(int from, int to, final LongComparator c) {
 		if (c == null) {
 			sort(from, to);
 		} else {

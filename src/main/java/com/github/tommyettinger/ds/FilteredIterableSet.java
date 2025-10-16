@@ -20,8 +20,6 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.tommyettinger.function.ObjToSameFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -241,7 +239,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		if (item instanceof Iterable) {
 			return hashHelper((I) item) & mask;
 		}
@@ -259,7 +257,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 * @return true if left and right are equivalent according to the rules this filtered type uses
 	 */
 	@Override
-	public boolean equate(Object left, @Nullable Object right) {
+	public boolean equate(Object left, Object right) {
 		if (left == right)
 			return true;
 		if (right == null) return false;
@@ -299,9 +297,9 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	@Override
 	public int hashCode() {
 		int h = size;
-		@Nullable Object[] keyTable = this.keyTable;
+		Object[] keyTable = this.keyTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			@Nullable Object key = keyTable[i];
+			Object key = keyTable[i];
 			if (key != null) {
 				h += hashHelper((I) key);
 			}

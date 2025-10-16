@@ -17,8 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -236,14 +234,14 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	@Override
-	protected int place(@NotNull Object item) {
+	protected int place(Object item) {
 		if (item instanceof CharSequence)
 			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
 		return super.place(item);
 	}
 
 	@Override
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {
 			return Utilities.equalsIgnoreCase((CharSequence) left, (CharSequence) right);
 		}
@@ -253,10 +251,10 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	@Override
 	public int hashCode() {
 		int h = size;
-		@Nullable CharSequence[] keyTable = this.keyTable;
-		@Nullable V[] valueTable = this.valueTable;
+		CharSequence[] keyTable = this.keyTable;
+		V[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
-			@Nullable CharSequence key = keyTable[i];
+			CharSequence key = keyTable[i];
 			if (key != null) {
 				h ^= Utilities.hashCodeIgnoreCase(key);
 				V value = valueTable[i];
@@ -302,7 +300,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	}
 
 	@Override
-	public @NotNull Keys<CharSequence, V> keySet() {
+	public Keys<CharSequence, V> keySet() {
 		if (keys1 == null || keys2 == null) {
 			keys1 = new CaseInsensitiveKeys<>(this);
 			keys2 = new CaseInsensitiveKeys<>(this);

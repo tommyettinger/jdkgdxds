@@ -25,8 +25,6 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -250,7 +248,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	@Override
-	public V put(long key, @Nullable V value) {
+	public V put(long key, V value) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -289,8 +287,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or null otherwise
 	 */
-	@Nullable
-	public V put(long key, @Nullable V value, int index) {
+	public V put(long key, V value, int index) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -327,9 +324,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 		return null;
 	}
 
-	@Nullable
 	@Override
-	public V putOrDefault(long key, @Nullable V value, @Nullable V defaultValue) {
+	public V putOrDefault(long key, V value, V defaultValue) {
 		if (key == 0) {
 			V oldValue = defaultValue;
 			if (hasZeroValue) {
@@ -405,7 +401,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	}
 
 	@Override
-	@Nullable
 	public V remove(long key) {
 		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
 		if (!super.containsKey(key)) {
@@ -421,7 +416,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param index the index of the entry to remove; must be at least 0 and less than {@link #size()}
 	 * @return the value of the removed entry
 	 */
-	@Nullable
 	public V removeAt(int index) {
 		return super.remove(keys.removeAt(index));
 	}
@@ -524,7 +518,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param index the index in the iteration order to set {@code v} at
 	 * @return the previous value held at {@code index} in the iteration order, which may be null if the value was null or if {@code index} was invalid
 	 */
-	@Nullable
 	public V setAt(int index, V v) {
 		if (index < 0 || index >= size) {
 			return null;
@@ -542,7 +535,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @param index an index in the insertion order, between 0 (inclusive) and {@link #size()} (exclusive)
 	 * @return the value at the given index
 	 */
-	@Nullable
 	public V getAt(int index) {
 		return get(keys.get(index));
 	}
@@ -595,7 +587,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 *
 	 * @param comp a LongComparator, such as one from {@link LongComparators}, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable LongComparator comp) {
+	public void sort(LongComparator comp) {
 		keys.sort(comp);
 	}
 
@@ -608,7 +600,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 *
 	 * @param comp a Comparator that can compare {@code V} values; may be null to use natural order of Comparable values
 	 */
-	public void sortByValue(@Nullable Comparator<V> comp) {
+	public void sortByValue(Comparator<V> comp) {
 		if (comp == null)
 			//noinspection unchecked
 			keys.sort((a, b) -> ((Comparator<V>) ObjectComparators.NATURAL_COMPARATOR).compare(get(a), get(b)));
@@ -714,7 +706,7 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
-	public @NotNull EntryIterator<V> iterator() {
+	public EntryIterator<V> iterator() {
 		return entrySet().iterator();
 	}
 
@@ -867,7 +859,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 				}
 
 				@Override
-				@Nullable
 				public V next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();

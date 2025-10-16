@@ -18,7 +18,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -130,7 +129,7 @@ public final class Utilities {
 	private static final int COPY_THRESHOLD = 128;
 	private static final int NIL_ARRAY_SIZE = 1024;
 	@SuppressWarnings({"MismatchedReadAndWriteOfArray"})
-	private static final @Nullable Object[] NIL_ARRAY = new Object[NIL_ARRAY_SIZE];
+	private static final Object[] NIL_ARRAY = new Object[NIL_ARRAY_SIZE];
 
 	/**
 	 * Not instantiable.
@@ -209,7 +208,7 @@ public final class Utilities {
 	 * <br>
 	 * From Apache Fury's ObjectArray class.
 	 */
-	public static void clear(@Nullable Object[] objects) {
+	public static void clear(Object[] objects) {
 		clear(objects, 0, objects.length);
 	}
 
@@ -219,7 +218,7 @@ public final class Utilities {
 	 * <br>
 	 * From Apache Fury's ObjectArray class.
 	 */
-	public static void clear(@Nullable Object[] objects, int start, int size) {
+	public static void clear(Object[] objects, int start, int size) {
 		if (size < COPY_THRESHOLD) {
 			Arrays.fill(objects, start, start + size, null);
 		} else {

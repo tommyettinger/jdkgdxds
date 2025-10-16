@@ -18,8 +18,6 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * A small class that holds two functional-interface values used for filtering and editing characters, and a name they
@@ -56,15 +54,15 @@ public class CharFilter {
 	/**
 	 * The unique identifying name for this combination of filter and editor.
 	 */
-	public final @NotNull String name;
+	public final String name;
 	/**
 	 * A CharPredicate that should return true iff a character should be considered for equality/hashing.
 	 */
-	public final @NotNull CharPredicate filter;
+	public final CharPredicate filter;
 	/**
 	 * A CharToCharFunction that will take a char from a key String and return a potentially different char.
 	 */
-	public final @NotNull CharToCharFunction editor;
+	public final CharToCharFunction editor;
 
 	private static final HolderOrderedSet<CharFilter, String> REGISTRY = new HolderOrderedSet<>(CharFilter::getName);
 
@@ -72,7 +70,7 @@ public class CharFilter {
 		this("Identity", c -> true, c -> c);
 	}
 
-	protected CharFilter(@NotNull String name, @NotNull CharPredicate filter, @NotNull CharToCharFunction editor) {
+	protected CharFilter(String name, CharPredicate filter, CharToCharFunction editor) {
 		this.name = name;
 		this.filter = filter;
 		this.editor = editor;
@@ -89,7 +87,7 @@ public class CharFilter {
 	 * @param editor a CharToCharFunction that will take a char from a key String and return a potentially different char
 	 * @return a CharFilter, either one that already exists by the given name, or a newly-registered one that was just created
 	 */
-	public static CharFilter getOrCreate(@NotNull String name, @NotNull CharPredicate filter, @NotNull CharToCharFunction editor) {
+	public static CharFilter getOrCreate(String name, CharPredicate filter, CharToCharFunction editor) {
 		CharFilter existing = REGISTRY.get(name);
 		if (existing == null) {
 			return new CharFilter(name, filter, editor);
@@ -119,15 +117,15 @@ public class CharFilter {
 		return "CharFilter{'" + name + "'}";
 	}
 
-	public @NotNull String getName() {
+	public String getName() {
 		return name;
 	}
 
-	public @NotNull CharPredicate getFilter() {
+	public CharPredicate getFilter() {
 		return filter;
 	}
 
-	public @NotNull CharToCharFunction getEditor() {
+	public CharToCharFunction getEditor() {
 		return editor;
 	}
 
@@ -148,7 +146,7 @@ public class CharFilter {
 	 * @param name the name to look up
 	 * @return a registered CharFilter or null
 	 */
-	public static @Nullable CharFilter get(String name) {
+	public static CharFilter get(String name) {
 		return REGISTRY.get(name);
 	}
 
@@ -159,7 +157,7 @@ public class CharFilter {
 	 * @param defaultValue a CharFilter to return if none was found; may be null
 	 * @return a registered CharFilter or {@code defaultValue}
 	 */
-	public static @Nullable CharFilter getOrDefault(String name, @Nullable CharFilter defaultValue) {
+	public static CharFilter getOrDefault(String name, CharFilter defaultValue) {
 		return REGISTRY.getOrDefault(name, defaultValue);
 	}
 

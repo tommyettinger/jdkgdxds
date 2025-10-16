@@ -17,8 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -275,7 +273,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	@Override
-	public boolean remove(@NotNull Object key) {
+	public boolean remove(Object key) {
 		return super.remove(key) && items.remove(key);
 	}
 
@@ -366,7 +364,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @return the first item in the order, or null if this set is empty
 	 */
 	@Override
-	public @Nullable T first() {
+	public T first() {
 		return (size == 0) ? null : items.first();
 	}
 
@@ -407,7 +405,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 *
 	 * @param comp a Comparator that can compare two {@code T} keys, or null to use the keys' natural ordering
 	 */
-	public void sort(@Nullable Comparator<? super T> comp) {
+	public void sort(Comparator<? super T> comp) {
 		items.sort(comp);
 	}
 
@@ -451,7 +449,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
-	public @NotNull ObjectSetIterator<T> iterator() {
+	public ObjectSetIterator<T> iterator() {
 		if (iterator1 == null || iterator2 == null) {
 			iterator1 = new ObjectOrderedSetIterator<>(this);
 			iterator2 = new ObjectOrderedSetIterator<>(this);
@@ -489,7 +487,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	public int hashCode() {
 		int h = size;
 		// Iterating over the order rather than the key table avoids wasting time on empty entries.
-		ObjectList<@Nullable T> order = items;
+		ObjectList<T> order = items;
 		for (int i = 0, n = order.size(); i < n; i++) {
 			T key = order.get(i);
 			if (key != null) {

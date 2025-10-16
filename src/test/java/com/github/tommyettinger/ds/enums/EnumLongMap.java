@@ -19,7 +19,6 @@ package com.github.tommyettinger.ds.enums;
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.Utilities;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -96,7 +95,7 @@ public class EnumLongMap<K extends Enum<K>> extends ObjectLongMap<K> {
 	}
 
 	@Override
-	protected boolean equate(Object left, @Nullable Object right) {
+	protected boolean equate(Object left, Object right) {
 		// Enums can use reference equality.
 		return left == right;
 	}
