@@ -177,11 +177,43 @@ import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
  * Likely bad multipliers (base 16):
  * F16A6DCD EBE28BC7 9F45E6F1 FF54D7E7 C7C8533D E4F8CD59 AF439D51 8F405B2D DD51AB15 F3AEC9B5 EB1A2609 C4E985F9 82E63243 C79860D5 CE42682D C8FF67C7 C8FF67C7 AF2D17D7 A26FD4F7 A9288C65 E81D90D5 E81D90D5 B80947FD FAEFB6C3 D9EFDB5D EB65580F DFBF3899 AFA63E3F AFA63E3F DB41FBB9 83887061 83887061 B672ADC5 C5F768E7 CCE4C43F 82E28415
  * </pre>
+ * Manually rotating FUSED_MULTIPLIERS so the first has 0 pileup (we're only going to use one rotation).
+ * <pre>
+ * This used a THRESHOLD of 2000000, and LEN of 500000
+ * 27 problem multipliers in total, 485 likely good multipliers in total.
+ * Lowest collisions : 163957
+ * Highest collisions: 1928004
+ * Average collisions: 536011.8206185567
+ * Lowest pileup     : 0
+ * Highest pileup    : 30
+ * Likely bad multipliers (base 16):
+ * C5F768E7 FF54D7E7 6A3DC2CD DB41FBB9 AF2D17D7 A2DFA303 EBE28BC7 AFA63E3F AFA63E3F A03E58D5 C79860D5 7F28885B FAEFB6C3 A5DE22F3 E4F8CD59 F16A6DCD A26FD4F7 F3AEC9B5 BA7B6B01 BA7B6B01 F55C20BB AF439D51 83887061 83887061 91D8C35D CBA24E17 C8FF67C7
+ * </pre>
+ * Switching Utilities to use the rotated FUSED...
+ * <pre>
+ * This used a THRESHOLD of 2000000, and LEN of 500000
+ * 27 problem multipliers in total, 485 likely good multipliers in total.
+ * Lowest collisions : 163957
+ * Highest collisions: 1928004
+ * Average collisions: 536011.8206185567
+ * Lowest pileup     : 0
+ * Highest pileup    : 30
+ * Likely bad multipliers (base 16):
+ * C5F768E7 FF54D7E7 6A3DC2CD DB41FBB9 AF2D17D7 A2DFA303 EBE28BC7 AFA63E3F AFA63E3F A03E58D5 C79860D5 7F28885B FAEFB6C3 A5DE22F3 E4F8CD59 F16A6DCD A26FD4F7 F3AEC9B5 BA7B6B01 BA7B6B01 F55C20BB AF439D51 83887061 83887061 91D8C35D CBA24E17 C8FF67C7
+ * </pre>
+ * Just testing the old single rotation that was used in 1.12.4:
+ * <pre>
+ * 0000000000/0000000001: latest 0xBFA927CB gets total collisions: 802396, PILEUP: 2
+ * </pre>
+ * Versus the current one in Utilities:
+ * <pre>
+ * 0000000000/0000000001: latest 0xAA333A2D gets total collisions: 329595, PILEUP: 1
+ * </pre>
  */
 public class BroadSpectrumMultiplierTest {
 
 	public static void main(String[] args) throws IOException {
-//		Utilities2.replaceGoodMultipliers(Utilities2.FUSED_MULTIPLIERS);
+//		Utilities2.replaceGoodMultipliers(Utilities2.OLD_GOOD_MULTIPLIERS);
 		final Point2[] spiral = generatePointSpiral(LEN);
 		IntSet collisions = new IntSet(LEN);
 		for (int i = 0; i < LEN; i++) {
@@ -193,7 +225,7 @@ public class BroadSpectrumMultiplierTest {
 
 		final int[] problems = {0};
 		IntList likelyBad = new IntList(64);
-		final int COUNT = 512, MASK = COUNT - 1;
+		final int COUNT = 1, MASK = COUNT - 1;
 		IntLongOrderedMap good = new IntLongOrderedMap(COUNT);
 		int[] buffer = new int[Utilities.GOOD_MULTIPLIERS.length];
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
@@ -224,7 +256,7 @@ public class BroadSpectrumMultiplierTest {
 					threshold = (int) (newSize * loadFactor);
 					mask = newSize - 1;
 					shift = BitConversion.countLeadingZeros(mask) + 32;
-					hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift & MASK];
+					hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
 					Object[] oldKeyTable = keyTable;
 
 					keyTable = new Object[newSize];

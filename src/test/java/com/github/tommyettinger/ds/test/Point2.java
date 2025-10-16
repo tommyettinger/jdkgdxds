@@ -83,11 +83,11 @@ public class Point2 {
 
 		// Calculates a hash that won't overlap until very, very many Coords have been produced.
 		// the signs for x and y; each is either -1 or 0
-		int xs = this.x >> 31, ys = this.y >> 31;
+		int xs = x >> 31, ys = y >> 31;
 		// makes mx equivalent to -1 ^ this.x if this.x is negative; this means mx is never negative
-		int mx = this.x ^ xs;
+		int mx = x ^ xs;
 		// same for my; it is also never negative
-		int my = this.y ^ ys;
+		int my = y ^ ys;
 		// Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
 		final int max = Math.max(mx, my);
 		// imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT

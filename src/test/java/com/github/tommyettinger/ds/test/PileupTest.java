@@ -47,7 +47,7 @@ import com.github.tommyettinger.function.IntIntToIntBiFunction;
 
 @Ignore
 public class PileupTest {
-	public static final int LEN = 500000;//10000;//2000000;//1000000;//
+	public static final int LEN = 500000;//200000;//10000;//2000000;//1000000;//
 	public static final float LOAD = 0.7f; //0.6f
 
 	public static String[] generateUniqueWordsFibSet(int size) {
@@ -511,7 +511,7 @@ public class PileupTest {
 	 * The Quad classes use quadratic probing, and removal doesn't work in them yet.
 	 * Not ready for prime time currently, or any usage.
 	 */
-	@Test
+	@Ignore
 	public void testObjectQuadSet() {
 		final String[] words = generateUniqueWords(LEN, -123456789L);
 		long start = System.nanoTime();
@@ -597,7 +597,7 @@ public class PileupTest {
 		set.clear();
 	}
 
-	@Test
+	@Ignore
 	public void testObjectQuadSetExperimental() {
 		final String[] words = generateUniqueWords(LEN, -123456789L);
 		long start = System.nanoTime();
@@ -697,7 +697,7 @@ public class PileupTest {
 		set.clear();
 	}
 
-	@Test
+	@Ignore
 	public void testObjectQuadSetSimplePlace() {
 		final String[] words = generateUniqueWords(LEN, -123456789L);
 		long start = System.nanoTime();
