@@ -164,7 +164,8 @@ literal representation available, and appends that representation, such as `3.14
 This can be useful if you want some special representation for data, such as to print some particular number (or more likely, a
 number in some range that defies find-and-replace) you're looking for with exclamation points around it, like `!!!42!!!`, using a
 lambda that was made to check for `42`. Passing in user-definable functions hasn't been done much in jdkgdxds, but it may see much
-more use in the future.
+more use in the future. Note that this feature was expanded significantly in later releases (of both digital and 
+jdkgdxds), and now you can use more types, not just `StringBuilder`, to receive appended text.
 
 Starting in jdkgdxds 1.6.4, there's more support for receiving iterator types in any of the various data structures,
 and there are wrappers around iterators provided to change what these iterators can provide to a constructor or
@@ -177,6 +178,18 @@ and there are wrappers around iterators provided to change what these iterators 
 - LimitingIterator only returns at most a set amount of items, and terminates early if that amount has been reached. 
 - More iterator wrappers will probably be added in the future.
 
+Imitating the changes to `CharArray` in libGDX 1.14.0, the `CharList` class here implements `Appendable` and
+`CharSequence`, as well as several more (like `Comparable<CharList>`). This allows the appending methods in `Base` (from
+a library this depends on, digital) to append to a `CharList` as well as a libGDX `CharArray`, a `StringBuilder`, a
+`StringBuffer`, or even other char-based types here, like `CharDeque`. `Base` isn't unique there; most types here
+provide some way to append text to a type that implements both `Appendable` and `CharSequence`. You can implement custom
+`Appender` types, or use method references in many cases to `Base` methods, to customize how things are printed. Be
+advised that GWT has some deficiencies in how it handles method references and lambdas, and you may need to use the good
+old "anonymous inner class" technique if you target GWT and see compilation errors about captured types in generics.
+TeaVM hasn't shown any such deficiencies so far. Not all changes to `CharArray` have been made here; there's currently
+no ability to treat a `CharList` as a `Reader` or `Writer`, and no codepoint-aware methods have been added. These
+changes could be made in a future version if any interest is shown.
+
 ## How do I get it?
 
 You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
@@ -187,19 +200,12 @@ api "com.github.tommyettinger:jdkgdxds:1.12.4"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
-`mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on [digital](https://github.com/tommyettinger/digital)
-(which provides common math code meant for use by multiple projects), [funderby](https://github.com/tommyettinger/funderby)
-(Java 8 functional interfaces for primitive types), and for building jdkgdxds only (not at runtime),
-[JetBrains java-annotations](https://github.com/JetBrains/java-annotations) version 26.0.2-1 . The
+`mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on
+[digital](https://github.com/tommyettinger/digital)(which provides common math code meant for use by multiple projects)
+and [funderby](https://github.com/tommyettinger/funderby) (Java 8 functional interfaces for primitive types). The
 version for the `digital` dependency is 0.9.4 (you can specify it manually with the core dependency
 `api "com.github.tommyettinger:digital:0.9.4"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`).
-
-You can opt in to JB Annotations on a per-project level by adding `compileOnly "org.jetbrains:annotations:26.0.2-1"`,
-which only applies to the main (library or application) code. To apply JB annotations to tests in a project, use
-`testCompileOnly "org.jetbrains:annotations:$jbAnnotations"`. Using `compileOnly` means the dependency won't be required
-for any applications built using jdkgdxds, and also won't be available to other libraries that depend on jdkgdxds (they
-can opt in themselves).
 
 If you have an HTML module, add:
 ```
@@ -234,9 +240,10 @@ dependencies {
 }
 ```
 to whatever module uses an `android` or `com.android.application` plugin. You should avoid libGDX 1.13.5 , but 1.13.1 is
-fine, and later versions should also be fine for Android usage. In upcoming libGDX versions, multi-dex-related lines
-won't be needed in Gradle configuration. The `desugar_jdk_libs` version should only be updated if
-you have checked for compatibility with your Android Gradle Plugin version; see [Android docs](https://developer.android.com/studio/write/java8-support#library-desugaring-versions).
+fine, and later versions should also be fine for Android usage. In upcoming libGDX versions (1.14.0 and later),
+multi-dex-related lines won't be needed in Gradle configuration, though desugaring still is needed. The
+`desugar_jdk_libs` version should only be updated if you have checked for compatibility with your Android Gradle Plugin
+version; see [Android docs](https://developer.android.com/studio/write/java8-support#library-desugaring-versions).
 In short, if you use Android Gradle Plugin 7.4.0 or later (the default for gdx-liftoff projects is much newer), you
 should use `'com.android.tools:desugar_jdk_libs:2.1.5'`.
 
@@ -408,3 +415,18 @@ The version for `checker-qual` was 3.42.0 in the last version that used it. Earl
 instead of `checker-qual` or `java-annotations`, which had some potential problems on Java 9 and up (not to
 mention that JSR305 is currently unmaintained). You can manually specify a `checker-qual` version with
 `api "org.checkerframework:checker-qual:3.42.0"`, but this is only needed before version 1.12.3.
+
+In version 1.12.4 only, this depended on [JetBrains java-annotations](https://github.com/JetBrains/java-annotations)
+version 26.0.2-1 . As it turned out, this required significantly more work in end-user projects to get the compiler to
+stop complaining! A `compileOnly` and/or `testCompileOnly` dependency was needed in projects that wanted to use the
+annotations, and application projects that didn't want them still needed them to be compatible with GWT. Considering
+that the general design of the JVM won't actually track nullity at the type level at runtime... The annotations couldn't
+do much assurance that we weren't already doing anyway with sane null checks wherever possible. They also made the code
+quite a lot more verbose and, well, "uglier." This was true for Checker Framework ones as well!
+
+In 1.13.0, all nullity annotations, like `@NotNull`, `Nullable`, and the particularly-bad `NotNullByDefault`, have been
+removed. `NotNullByDefault` made some claims by default that most generic types didn't permit null items, which is only
+true for some types here, and can't be made as a blanket statement! Sets and Maps don't tolerate null keys here, though
+they could in a future version. Lists, Bags, and Deques do permit null being entered, potentially more than once! The
+rules for annotations on type arguments are also quite unclear, especially when using Java 8, GWT, Android, RoboVM, and
+other platforms that jdkgdxds is really meant to work with completely!
