@@ -25,6 +25,19 @@ and both projects are Apache-licensed. Note that FastUtil won't work on all plat
 
 [JavaDocs are here.](https://tommyettinger.github.io/jdkgdxds/apidocs/)
 
+# tl;dr Instructions
+
+Gradle dependency (for all platforms except GWT):
+```
+api "com.github.tommyettinger:jdkgdxds:1.13.0"
+```
+
+For GWT, see "How do I get it?" below, or use TeaVM instead.
+
+If you use libGDX, you can let gdx-liftoff set up the dependency by checking the `jdkgdxds` checkbox under third-party
+extensions. This also can optionally allow you to depend on `jdkgdxds-interop` for JSON saving/loading, `kryo-jdkgdxds`
+for Kryo saving/loading, or `tantrum-jdkgdxds` for Apache Fory saving/loading.
+
 ## What is this?
 
 Some background, first... libGDX has its own data structures, and they're mostly nice to work with. They have fast iteration by
@@ -194,7 +207,8 @@ changes could be made in a future version if any interest is shown.
 
 ## How do I get it?
 
-You have two options: Maven Central for stable releases, or JitPack to select a commit of your choice to build.
+You have two options: Maven Central for stable releases (recommended), or JitPack to select a commit of your choice to
+build (if you know you need some property of a particular commit).
 
 Maven Central uses the Gradle dependency:
 ```
@@ -202,10 +216,11 @@ api "com.github.tommyettinger:jdkgdxds:1.13.0"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
-`mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies on
-[digital](https://github.com/tommyettinger/digital)(which provides common math code meant for use by multiple projects)
-and [funderby](https://github.com/tommyettinger/funderby) (Java 8 functional interfaces for primitive types). The
-version for the `digital` dependency is 0.9.4 (you can specify it manually with the core dependency
+`mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies (which, on platforms other than GWT,
+are downloaded automatically by Gradle, Maven, or most other common JVM build tools) on
+[digital](https://github.com/tommyettinger/digital), which provides common math code meant for use by multiple projects,
+and [funderby](https://github.com/tommyettinger/funderby), which has Java 8 functional interfaces for primitive types.
+The version for the `digital` dependency is 0.9.4 (you can specify it manually with the core dependency
 `api "com.github.tommyettinger:digital:0.9.4"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`).
 
@@ -268,7 +283,16 @@ dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
 <inherits name="com.github.tommyettinger.jdkgdxds" />
 ```
 in with the other `inherits` lines. `1e8e71a629` is an example of a recent commit, and can be
-replaced with other commits shown on JitPack.
+replaced with other commits shown on JitPack. If you need a commit dependency on digital or (unlikely) Funderby, you may
+need to exclude the implicit dependency from jdkgdxds on digital and rely on your explicit version of digital:
+```
+implementation "com.github.tommyettinger:digital:$digitalCommitHashVersion"
+implementation('com.github.tommyettinger:jdkgdxds:1.13.0'){
+    exclude group: 'com.github.tommyettinger', module: 'digital'
+}
+```
+Where `digitalCommitHashVersion` is defined in `gradle.properties` or another Gradle file as a 10-digit commit hash for
+some specific commit of digital. 
 
 There is an optional dependency, [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop), that provides code to
 transfer libGDX data structures to and from jdkgdxds data structures, and more importantly, to store any`*` jdkgdxds classes using
