@@ -23,6 +23,8 @@ further by tools like R8 or ProGuard that perform dead code elimination.
 [FastUtil Core](https://github.com/vigna/fastutil/), if you want! This library uses some code from FastUtil for sorting,
 and both projects are Apache-licensed. Note that FastUtil won't work on all platforms jdkgdxds targets, such as RoboVM.
 
+[JavaDocs are here.](https://tommyettinger.github.io/jdkgdxds/apidocs/)
+
 ## What is this?
 
 Some background, first... libGDX has its own data structures, and they're mostly nice to work with. They have fast iteration by
