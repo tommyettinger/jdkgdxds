@@ -124,7 +124,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 		keyTable = (T[]) new Object[tableSize];
 	}
 
@@ -573,7 +573,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 
 		T[] oldKeyTable = keyTable;
 
@@ -592,7 +592,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	/**
 	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
+	 * {@link Utilities#HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *
 	 * @return the current hashMultiplier
 	 */

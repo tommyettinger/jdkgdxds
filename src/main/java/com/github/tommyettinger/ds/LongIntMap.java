@@ -145,7 +145,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 
 		keyTable = new long[tableSize];
 		valueTable = new int[tableSize];
@@ -631,7 +631,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 
 		long[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
@@ -652,7 +652,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	/**
 	 * Gets the current hashMultiplier, used in {@link #place(long)} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
+	 * {@link Utilities#HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *
 	 * @return the current hashMultiplier
 	 */
@@ -663,7 +663,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	/**
 	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
 	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
+	 * {@link Utilities#HASH_MULTIPLIERS} or something like it.
 	 *
 	 * @param hashMultiplier any int; will be made odd if even.
 	 */

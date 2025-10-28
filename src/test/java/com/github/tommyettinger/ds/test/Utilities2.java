@@ -2937,8 +2937,8 @@ public final class Utilities2 {
 	};
 
 	public static void replaceGoodMultipliers(int[] replacement) {
-		if(replacement == null || replacement.length < Utilities.GOOD_MULTIPLIERS.length)
+		if(replacement == null || replacement.length < Utilities.HASH_MULTIPLIERS.length)
 			throw new IllegalArgumentException();
-		System.arraycopy(replacement, 0, Utilities.GOOD_MULTIPLIERS, 0, Utilities.GOOD_MULTIPLIERS.length);
+		System.arraycopy(replacement, 0, Utilities.HASH_MULTIPLIERS, 0, Utilities.HASH_MULTIPLIERS.length);
 	}
 }

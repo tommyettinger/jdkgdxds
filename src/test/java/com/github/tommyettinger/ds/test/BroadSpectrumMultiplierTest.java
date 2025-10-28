@@ -226,7 +226,7 @@ public class BroadSpectrumMultiplierTest {
 		IntList likelyBad = new IntList(64);
 		final int COUNT = 1, MASK = COUNT - 1;
 		IntLongOrderedMap good = new IntLongOrderedMap(COUNT);
-		int[] buffer = new int[Utilities.GOOD_MULTIPLIERS.length];
+		int[] buffer = new int[Utilities.HASH_MULTIPLIERS.length];
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		for (int a = 0; a < COUNT; a++) {
 			final int finalA = a;
@@ -255,7 +255,7 @@ public class BroadSpectrumMultiplierTest {
 					threshold = (int) (newSize * loadFactor);
 					mask = newSize - 1;
 					shift = BitConversion.countLeadingZeros(mask) + 32;
-					hashMultiplier = Utilities.GOOD_MULTIPLIERS[64 - shift];
+					hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 					Object[] oldKeyTable = keyTable;
 
 					keyTable = new Object[newSize];
@@ -301,9 +301,9 @@ public class BroadSpectrumMultiplierTest {
 				System.out.println(finalA + " FAILURE");
 			}
 			// rotate multipliers by 1
-			System.arraycopy(Utilities.GOOD_MULTIPLIERS, 1, buffer, 0, Utilities.GOOD_MULTIPLIERS.length - 1);
-			System.arraycopy(Utilities.GOOD_MULTIPLIERS, 0, buffer, Utilities.GOOD_MULTIPLIERS.length - 1, 1);
-			System.arraycopy(buffer, 0, Utilities.GOOD_MULTIPLIERS, 0, buffer.length);
+			System.arraycopy(Utilities.HASH_MULTIPLIERS, 1, buffer, 0, Utilities.HASH_MULTIPLIERS.length - 1);
+			System.arraycopy(Utilities.HASH_MULTIPLIERS, 0, buffer, Utilities.HASH_MULTIPLIERS.length - 1, 1);
+			System.arraycopy(buffer, 0, Utilities.HASH_MULTIPLIERS, 0, buffer.length);
 
 		}
 		good.sortByValue(LongComparators.NATURAL_COMPARATOR);

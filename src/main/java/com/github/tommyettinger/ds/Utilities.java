@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 
 import java.util.Arrays;
 
@@ -30,33 +31,41 @@ import static com.github.tommyettinger.digital.Hasher.*;
  */
 public final class Utilities {
 	/**
-	 * A final array of 512 int multipliers that have shown to have few collisions in some kinds of
-	 * hash table. These multipliers aren't currently used within jdkgdxds except in
-	 * {@link #hashCodeIgnoreCase(CharSequence, int)}, the CaseInsensitive maps and sets, and the
-	 * Filtered maps and sets, but may still be used externally.
+	 * A final array of 32 int multipliers that have shown to have few collisions in some kinds of
+	 * hash table. These multipliers are used within jdkgdxds in a fixed order as the hash multiplier
+	 * to mix each hashCode in place() for most maps and sets. The multiplier changes each time the
+	 * hash table's size increases sufficiently; more specifically, whenever the variable
+	 * {@code shift} changes.
 	 * <br>
 	 * You can mutate this array, but you should only do so if you encounter high collision rates or
-	 * resizes with a particular multiplier from this table. Any int m you set into this array must
-	 * satisfy {@code (m & 0x80000001) == 0x80000001}, and should ideally have an "unpredictable" bit
-	 * pattern. This last quality is the hardest to define, but
-	 * generally dividing 2 to the 32 by an irrational number between 1 and 2 using BigDecimal or double
-	 * math gets such an unpredictable pattern. Not all irrational numbers work, and the ones here were
-	 * found empirically.
+	 * resizes with a particular multiplier from this table. Any int you set into this array must
+	 * be an odd number, and ideally should be produced by {@link #optimizeMultiplier(int, int)}
+	 * with a threshold of 1.
 	 * <br>
-	 * The specific numbers in this array were chosen because they performed well (that is, without
-	 * ever colliding more than about 25% over the average) on a data set of 200000 Vector2
-	 * objects. Vector2 is from libGDX, and it can have an extremely challenging hashCode() for hashed
-	 * data structures to handle if they don't adequately mix the hash's bits. On this data set, no
-	 * multiplier used recorded fewer than 600000 collisions, and any multipliers with collision counts
-	 * above a threshold of 677849 were rejected. That means these 512 are about as good as it gets.
-	 * When tested with an equivalent to GridPoint2 from libGDX, vastly more objects had identical
-	 * hashCode() results to a different GridPoint2 in the set. Only about a quarter as many hashCode()
-	 * values were returned as there would be with all-unique results. Even with that more-challenging
-	 * situation, this set did not have any multipliers that were significantly worse than average.
-	 * An earlier version of the multipliers did have 97 "problem multipliers" for GridPoint2.
-	 * The multipliers were also tested on a similar data set of 235970 English dictionary words
-	 * (including many proper nouns), with fewer collisions here (a little more than 1/20 as many).
-	 * All multipliers satisfied a threshold of 35000 collisions with the dictionary data set.
+	 * This is a small subset of {@link #GOOD_MULTIPLIERS}, which stores 512 int multipliers instead
+	 * of just 32 here. The full table of 512 GOOD_MULTIPLIERS is only needed in certain places, and
+	 * 32 ints may be more amenable to fitting in a processor cache.
+	 */
+	public static final int[] HASH_MULTIPLIERS = new int[]{
+		0xF0CFFC71, 0x1F2BD44D, 0xC143F257, 0x115583CF, 0xA4613217, 0x9645256D, 0xF0EE34C7, 0xF6C4F429,
+		0x854066D1, 0x9104FADF, 0x93A04925, 0x0AEF4329, 0xF58C4C35, 0x31A6C2EB, 0xE5182F73, 0xB26FABE5,
+		0xB520960B, 0x570B3F85, 0x83657DE7, 0x9980FAB9, 0x2F299C91, 0xB423727D, 0xAA333A2D, 0x8AE04AAD,
+		0x288FAD91, 0xD90AC247, 0xC5F768E7, 0x92317571, 0xD5FA5B15, 0xDB6B35F7, 0xCC8965C7, 0xE0503E4F,
+	};
+
+	/**
+	 * A final array of 512 int multipliers that have shown to have few collisions in some kinds of
+	 * hash table. These multipliers are used within jdkgdxds in the CaseInsensitive maps and sets
+	 * and by {@link #hashCodeIgnoreCase(CharSequence, int)}.
+	 * <br>
+	 * You can mutate this array, but you should only do so if you encounter high collision rates or
+	 * resizes with a particular multiplier from this table. Any int you set into this array must
+	 * be an odd number, and ideally should be produced by {@link #optimizeMultiplier(int, int)}
+	 * with a threshold of 1.
+	 * <br>
+	 * The specific numbers in this array have been changed a few times, and they have also gone from
+	 * {@code long} to {@code int}. The current set was drawn from a larger set of candidates and also
+	 * evaluated using {@link #optimizeMultiplier(int, int)} as a tool for most of them.
 	 */
 	public static final int[] GOOD_MULTIPLIERS = new int[]{
 		0xF0CFFC71, 0x1F2BD44D, 0xC143F257, 0x115583CF, 0xA4613217, 0x9645256D, 0xF0EE34C7, 0xF6C4F429,
@@ -125,6 +134,36 @@ public final class Utilities {
 		0xC262775B, 0x250BA8FB, 0x3867C535, 0xA3A55BE1, 0x2509EDA3, 0xF664655D, 0xE935C8D7, 0xF40F52B7,
 	};
 
+	/**
+	 * The recommended method to find potential replacements for entries in {@link #HASH_MULTIPLIERS}. This takes an
+	 * odd-number int as a candidate, and evaluates four criteria:
+	 * <ul>
+	 *     <li>The Hamming weight of {@code candidate}, determined by {@link Integer#bitCount(int)},</li>
+	 *     <li>The Hamming weight of {@code candidate}'s Gray code, which is {@code candidate ^ (candidate >>> 1)}</li>,
+	 *     <li>The Hamming weight of {@code candidate}'s {@link MathTools#modularMultiplicativeInverse(int)}</li>, and
+	 *     <li>The Hamming weight of the Gray code of {@code candidate}'s modular multiplicative inverse</li>.
+	 * </ul>
+	 * If all of these criteria are less than {@code threshold} different from 16 (the most central value possible), the
+	 * candidate is considered optimal by that threshold. If it isn't optimal, the candidate will be randomized to a
+	 * different odd number and evaluated again until it satisfies the threshold.
+	 *
+	 * @param candidate an odd-number int that will either be returned as-is if it is already considered optimal, or
+	 *                    changed until it is evaluated to fit the {@code threshold}
+	 * @param threshold recommended to be 1, the most stringest threshold allowed, but may be higher for a looser bound
+	 * @return {@code candidate} if it is already optimal by {@code threshold}, otherwise a different odd int that is
+	 */
+	public static int optimizeMultiplier(int candidate, int threshold) {
+		candidate |= 1;
+		threshold = Math.min(Math.max(threshold, 1), 24);
+		int inverse, add = 0;
+		while (Math.abs(Integer.bitCount(candidate) - 16) > threshold
+			|| Math.abs(Integer.bitCount(candidate ^ candidate >>> 1) - 16) > threshold
+			|| Math.abs(Integer.bitCount(inverse = MathTools.modularMultiplicativeInverse(candidate)) - 16) > threshold
+			|| Math.abs(Integer.bitCount(inverse ^ inverse >>> 1) - 16) > threshold) {
+			candidate = candidate * 0xDE82EF95 + (add += 2);
+		}
+		return candidate;
+	}
 
 	private static final int COPY_THRESHOLD = 128;
 	private static final int NIL_ARRAY_SIZE = 1024;
@@ -410,6 +449,7 @@ public final class Utilities {
 	 * @return an int hashCode; quality should be similarly good across any bits
 	 */
 	public static int hashCodeIgnoreCase(final CharSequence data, int seed) {
+		if(data == null) return seed;
 		final int len = data.length();
 		final int x = GOOD_MULTIPLIERS[(seed & 127)];
 		final int y = GOOD_MULTIPLIERS[(seed >>> 7 & 127) + 128];
