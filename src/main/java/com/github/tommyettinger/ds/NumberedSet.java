@@ -491,7 +491,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	/**
-	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
+	 * Gets the current hashMultiplier, used in {@link #place} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
 	 * {@link Utilities#HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *
@@ -502,8 +502,8 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	/**
-	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
-	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
+	 * Sets the hashMultiplier to the given int, which will be made odd if even (by OR-ing with
+	 * 1). This can be any odd int, but should almost always be drawn from
 	 * {@link Utilities#HASH_MULTIPLIERS} or something like it.
 	 *
 	 * @param hashMultiplier any int; will be made odd if even.

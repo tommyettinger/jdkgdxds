@@ -264,7 +264,7 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 	/**
 	 * Effectively does nothing here because the hashMultiplier is not used by identity hashing.
 	 * Subclasses can use this to set some kind of identifier or user data, though.
-	 * Unlike the superclass implementation, this does not alter the given int to make it negative or odd.
+	 * Unlike the superclass implementation, this does not alter the given int to make it odd.
 	 *
 	 * @param hashMultiplier any int; will not be used
 	 */

@@ -677,7 +677,7 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	}
 
 	/**
-	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
+	 * Gets the current hashMultiplier, used in {@link #place)} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
 	 * {@link Utilities#HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *
@@ -688,14 +688,13 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	}
 
 	/**
-	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
-	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
-	 * {@link Utilities#HASH_MULTIPLIERS} or something like it.
+	 * Sets the hashMultiplier to the given int, which will be made odd if even (by OR-ing with 1). This can be any odd
+	 * int, but should almost always be drawn from {@link Utilities#GOOD_MULTIPLIERS} or something like it.
 	 *
 	 * @param hashMultiplier any int; will be made odd if even.
 	 */
 	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 0x80000001;
+		this.hashMultiplier = hashMultiplier | 1;
 	}
 
 	/**

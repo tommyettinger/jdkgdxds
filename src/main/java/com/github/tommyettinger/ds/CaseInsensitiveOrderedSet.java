@@ -247,28 +247,6 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 		return super.place(item);
 	}
 
-	/**
-	 * Gets the current hashMultiplier, used in {@link #place(Object)} to mix hash codes.
-	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
-	 *
-	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
-	 */
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * Sets the hashMultiplier to the given int, which will be made odd if even and always negative (by OR-ing with
-	 * 0x80000001). This can be any negative, odd int, but should almost always be drawn from
-	 * {@link Utilities#GOOD_MULTIPLIERS} or something like it.
-	 *
-	 * @param hashMultiplier any int; will be made odd if even.
-	 */
-	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 0x80000001;
-	}
-
 	@Override
 	protected boolean equate(Object left, Object right) {
 		if ((left instanceof CharSequence) && (right instanceof CharSequence)) {

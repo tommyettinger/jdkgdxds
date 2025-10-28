@@ -98,7 +98,7 @@ public class ObjectSet<T> extends com.github.tommyettinger.ds.ObjectSet<T> {
 	}
 
 	/**
-	 * @return any int, though here it should be negative and odd
+	 * @return any int, though here it should be odd
 	 */
 	@Override
 	public int getHashMultiplier() {
@@ -106,10 +106,10 @@ public class ObjectSet<T> extends com.github.tommyettinger.ds.ObjectSet<T> {
 	}
 
 	/**
-	 * @param mul any int; will be made negative and odd if it isn't already both
+	 * @param mul any int; will be made odd if it isn't already
 	 */
 	@Override
 	public void setHashMultiplier(int mul) {
-		hashMultiplier = mul | 0x80000001;
+		hashMultiplier = mul | 1;
 	}
 }
