@@ -625,7 +625,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	}
 
 	/**
-	 * Gets the current hashMultiplier, used in {@link #place)} to mix hash codes.
+	 * Gets the current hashMultiplier, used in {@link #place} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
 	 * {@link Utilities#HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
 	 *

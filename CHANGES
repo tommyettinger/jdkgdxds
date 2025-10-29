@@ -1,3 +1,7 @@
+[1.13.1]
+- The dependency on digital has been updated to 0.9.5 . This is a small update that adds features to RoughMath and Distributor without changing existing code.
+- The smaller Utilities.HASH_MULTIPLIERS table is now used where possible instead of Utilities.GOOD_MULTIPLIERS, though GOOD_MULTIPLIERS is still here untouched. The larger table is still used in some places.
+
 [1.13.0]
 - [BREAKING] All nullity annotations have been removed. We were already doing substantial null-checking because the annotations aren't very effective at eliminating that, and forcing users to depend on an annotations dependency isn't a very good policy. Having nullity annotations on almost everything hampered readability, also.
 - Appender compiles again on GWT 2.11.0; in at least some earlier versions, a GWT bug or behavior difference prevented `ENUM_NAME_APPENDER` from compiling. TeaVM was unaffected, which is why the bug escaped notice.

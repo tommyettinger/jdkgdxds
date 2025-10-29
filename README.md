@@ -29,7 +29,7 @@ and both projects are Apache-licensed. Note that FastUtil won't work on all plat
 
 Gradle dependency (for all platforms except GWT):
 ```
-api "com.github.tommyettinger:jdkgdxds:1.13.0"
+api "com.github.tommyettinger:jdkgdxds:1.13.1"
 ```
 
 For GWT, see "How do I get it?" below, or use TeaVM instead.
@@ -212,7 +212,7 @@ build (if you know you need some property of a particular commit).
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.13.0"
+api "com.github.tommyettinger:jdkgdxds:1.13.1"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -220,15 +220,15 @@ It does not need any additional repository to be specified in most cases; if it 
 are downloaded automatically by Gradle, Maven, or most other common JVM build tools) on
 [digital](https://github.com/tommyettinger/digital), which provides common math code meant for use by multiple projects,
 and [funderby](https://github.com/tommyettinger/funderby), which has Java 8 functional interfaces for primitive types.
-The version for the `digital` dependency is 0.9.4 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.9.4"`). Funderby has only changed a bit since its initial release, and is on version
+The version for the `digital` dependency is 0.9.5 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.9.5"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`).
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.9.4:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.13.0:sources"
+implementation "com.github.tommyettinger:digital:0.9.5:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.13.:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -272,7 +272,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.9.4:sources"
+implementation "com.github.tommyettinger:digital:0.9.5:sources"
 implementation "com.github.tommyettinger:jdkgdxds:1e8e71a629:sources"
 ```
 to its
@@ -287,7 +287,7 @@ replaced with other commits shown on JitPack. If you need a commit dependency on
 need to exclude the implicit dependency from jdkgdxds on digital and rely on your explicit version of digital:
 ```
 implementation "com.github.tommyettinger:digital:$digitalCommitHashVersion"
-implementation('com.github.tommyettinger:jdkgdxds:1.13.0'){
+implementation('com.github.tommyettinger:jdkgdxds:1.13.1'){
     exclude group: 'com.github.tommyettinger', module: 'digital'
 }
 ```
