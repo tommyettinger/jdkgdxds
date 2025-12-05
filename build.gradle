@@ -18,11 +18,11 @@ buildscript {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+		maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
 		gradlePluginPortal()
 	}
 	dependencies {
-		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.34.0'
+		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.35.0'
 	}
 }
 
@@ -30,8 +30,8 @@ apply plugin: 'java-library'
 apply plugin: 'com.vanniktech.maven.publish'
 
 def projectName = 'jdkgdxds'
-version "$VERSION_NAME"
-group 'com.github.tommyettinger'
+version = "$VERSION_NAME"
+group = 'com.github.tommyettinger'
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
@@ -58,11 +58,12 @@ mavenPublishing {
 }
 plainJavadocJar.archiveBaseName.set("$projectName")
 
-java.sourceCompatibility = 1.8
-java.targetCompatibility = 1.8
+java.sourceCompatibility = "8"
+java.targetCompatibility = "8"
 
 if (JavaVersion.current().isJava9Compatible()) {
-	compileJava.targetCompatibility = 8
+	compileJava.sourceCompatibility = "8"
+	compileJava.targetCompatibility = "8"
 	allprojects {
 		tasks.withType(JavaCompile).tap {
 			configureEach {
@@ -73,8 +74,8 @@ if (JavaVersion.current().isJava9Compatible()) {
 }
 
 compileTestJava {
-	sourceCompatibility = 24
-	targetCompatibility = 24
+	sourceCompatibility = "24"
+	targetCompatibility = "24"
 	if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_24) ) {
 		options.setRelease(24)
 	}
@@ -98,8 +99,8 @@ jar {
 repositories {
 	mavenLocal()
 	mavenCentral()
-	maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
-	maven { url 'https://jitpack.io' }
+	maven { url = 'https://central.sonatype.com/repository/maven-snapshots/' }
+	maven { url = 'https://jitpack.io' }
 }
 
 dependencies {
