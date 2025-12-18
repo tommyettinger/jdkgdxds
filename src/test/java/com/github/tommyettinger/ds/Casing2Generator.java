@@ -77,8 +77,11 @@ public class Casing2Generator {
 				characterMismatch++;
 			}
 		}
+		// Shows 10 mismatches with Character on Java 17, but none on Java 25. Never shows mismatches with Casing.
 		System.out.println("There were " + casingMismatch + " mismatches with Casing and " + characterMismatch + " mismatches with Character.");
 
-		Files.write(Paths.get("casing.txt"), ("String k = \"" + keys + "\",\nv = \"" + vals + "\"").getBytes(StandardCharsets.UTF_8));
+		//TODO: uncomment when we want to write a new Casing allToUpper generator.
+		// This includes whenever there is a new JDK version with Unicode changes.
+//		Files.write(Paths.get("casing.txt"), ("String k = \"" + keys + "\",\nv = \"" + vals + "\"").getBytes(StandardCharsets.UTF_8));
 	}
 }
