@@ -74,10 +74,10 @@ if (JavaVersion.current().isJava9Compatible()) {
 }
 
 compileTestJava {
-	sourceCompatibility = "24"
-	targetCompatibility = "24"
-	if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_24) ) {
-		options.setRelease(24)
+	sourceCompatibility = 25
+	targetCompatibility = 25
+	if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_25) ) {
+		options.setRelease(25)
 	}
 }
 
