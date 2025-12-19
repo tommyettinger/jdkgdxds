@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025 See AUTHORS file.
+ * Copyright (c) 2025 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,33 +17,15 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
-
-import com.github.tommyettinger.ds.support.util.IntAppender;
-import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.util.CharAppender;
+import com.github.tommyettinger.ds.support.util.CharIterator;
+import com.github.tommyettinger.function.CharPredicate;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-/**
- * A bit set, which can be seen as a set of integer positions greater than some starting number,
- * that has changeable offset, or starting position. If you know the integer positions will all
- * be greater than or equal to some minimum value, such as -128, 0, or 1000, then you can use an offset
- * of that minimum value to save memory. This is important because every possible integer position, whether
- * contained in the bit set or not, takes up one bit of memory (rounded up to a multiple of 32), but
- * positions less than the offset simply aren't stored. The bit set can grow to fit positions arbitrarily
- * higher than the offset. Allows comparison via bitwise operators to other bit sets, as long as the offsets
- * are the same.
- * <br>
- * This was originally Bits in libGDX. Many methods have been renamed to more-closely match the Collection API.
- * This has also had the offset functionality added. It was changed from using {@code long} to store 64 bits in
- * one value, to {@code int} to store 32 bits in one value, because GWT is so slow at handling {@code long}.
- *
- * @author mzechner
- * @author jshapcott
- * @author tommyettinger
- */
-public class OffsetBitSet implements PrimitiveSet.OfInt {
+public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * The raw bits, each one representing the presence or absence of an integer at a position.
@@ -51,19 +33,19 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	protected int[] bits;
 
 	/**
-	 * This is the lowest integer position that this OffsetBitSet can store.
+	 * This is the lowest integer position that this CharBitSetResizable can store.
 	 * If all positions are at least equal to some value, using that for the offset can save space.
 	 */
 	protected int offset = 0;
 
-	protected transient OffsetBitSetIterator iterator1;
-	protected transient OffsetBitSetIterator iterator2;
+	protected transient CharBitSetResizableIterator iterator1;
+	protected transient CharBitSetResizableIterator iterator2;
 
 	/**
 	 * Creates a bit set with an initial size that can store positions between 0 and 31, inclusive, without
 	 * needing to resize. This has an offset of 0 and can resize to fit larger positions.
 	 */
-	public OffsetBitSet() {
+	public CharBitSetResizable() {
 		bits = new int[1];
 	}
 
@@ -73,7 +55,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 *
 	 * @param bitCapacity the initial size of the bit set
 	 */
-	public OffsetBitSet(int bitCapacity) {
+	public CharBitSetResizable(int bitCapacity) {
 		bits = new int[bitCapacity + 31 >>> 5];
 	}
 
@@ -84,7 +66,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @param start the lowest value that can be stored in the bit set
 	 * @param end   the initial end of the range of the bit set
 	 */
-	public OffsetBitSet(int start, int end) {
+	public CharBitSetResizable(char start, char end) {
 		offset = start;
 		bits = new int[end + 31 - start >>> 5];
 	}
@@ -94,27 +76,27 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 *
 	 * @param toCopy bitset to copy
 	 */
-	public OffsetBitSet(OffsetBitSet toCopy) {
+	public CharBitSetResizable(CharBitSetResizable toCopy) {
 		this.bits = new int[toCopy.bits.length];
 		System.arraycopy(toCopy.bits, 0, this.bits, 0, toCopy.bits.length);
 		this.offset = toCopy.offset;
 	}
 
 	/**
-	 * Creates a bit set from any primitive int collection, such as a {@link IntList} or {@link IntSet}.
-	 * The offset of the new bit set will be the lowest int in the collection, which you should be aware of
-	 * if you intend to use the bitwise methods such as {@link #and(OffsetBitSet)} and {@link #or(OffsetBitSet)}.
+	 * Creates a bit set from any primitive char collection, such as a {@link IntList} or {@link IntSet}.
+	 * The offset of the new bit set will be the lowest char in the collection, which you should be aware of
+	 * if you intend to use the bitwise methods such as {@link #and(CharBitSetResizable)} and {@link #or(CharBitSetResizable)}.
 	 *
-	 * @param toCopy the primitive int collection to copy
+	 * @param toCopy the primitive char collection to copy
 	 */
-	public OffsetBitSet(PrimitiveCollection.OfInt toCopy) {
+	public CharBitSetResizable(PrimitiveCollection.OfChar toCopy) {
 		if (toCopy.isEmpty()) {
 			offset = 0;
 			bits = new int[1];
 			return;
 		}
-		int start = Integer.MAX_VALUE, end = Integer.MIN_VALUE;
-		for (IntIterator it = toCopy.iterator(); it.hasNext(); ) {
+		int start = Character.MAX_VALUE, end = 0;
+		for (CharIterator it = toCopy.iterator(); it.hasNext(); ) {
 			int n = it.next();
 			start = Math.min(start, n);
 			end = Math.max(end, n + 1);
@@ -125,32 +107,30 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
-	 * Creates a bit set from an entire int array.
-	 * The offset of the new bit set will be the lowest int in the collection, which you should be aware of
-	 * if you intend to use the bitwise methods such as {@link #and(OffsetBitSet)} and {@link #or(OffsetBitSet)}.
+	 * Creates a bit set from an entire char array.
+	 * The offset of the new bit set will be the lowest char in the collection, which you should be aware of
+	 * if you intend to use the bitwise methods such as {@link #and(CharBitSetResizable)} and {@link #or(CharBitSetResizable)}.
 	 *
-	 * @param toCopy the non-null int array to copy
+	 * @param toCopy the non-null char array to copy
 	 */
-	public OffsetBitSet(int[] toCopy) {
+	public CharBitSetResizable(char[] toCopy) {
 		this(toCopy, 0, toCopy.length);
 	}
 
 	/**
-	 * Creates a bit set from an int array, starting reading at an offset and continuing for a given length.
-	 * The offset of the new bit set will be the lowest int in the collection, which you should be aware of
-	 * if you intend to use the bitwise methods such as {@link #and(OffsetBitSet)} and {@link #or(OffsetBitSet)}.
+	 * Creates a bit set from an char array, starting reading at an offset and continuing for a given length.
 	 *
-	 * @param toCopy the int array to copy
+	 * @param toCopy the char array to copy
 	 * @param off    which index to start copying from toCopy
 	 * @param length how many items to copy from toCopy
 	 */
-	public OffsetBitSet(int[] toCopy, int off, int length) {
+	public CharBitSetResizable(char[] toCopy, int off, int length) {
 		if (toCopy.length == 0) {
 			offset = 0;
 			bits = new int[1];
 			return;
 		}
-		int start = Integer.MAX_VALUE, end = Integer.MIN_VALUE;
+		int start = Character.MAX_VALUE, end = 0;
 		for (int i = off, e = off + length; i < e; i++) {
 			int n = toCopy[i];
 			start = Math.min(start, n);
@@ -162,7 +142,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
-	 * Gets the lowest integer position that this OffsetBitSet can store.
+	 * Gets the lowest integer position that this CharBitSetResizable can store.
 	 * If all positions are at least equal to some value, using that for the offset can save space.
 	 */
 	public int getOffset() {
@@ -220,12 +200,24 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @param index the index of the bit
 	 * @return whether the bit is set
 	 */
-	public boolean contains(int index) {
+	public boolean contains(char index) {
 		index -= offset;
-		if (index < 0) return false;
 		final int word = index >>> 5;
 		if (word >= bits.length) return false;
 		return (bits[word] & (1 << index)) != 0;
+	}
+
+	/**
+	 * Evaluates this predicate on the given argument.
+	 *
+	 * @param value the input argument
+	 * @return {@code true} if the input argument matches the predicate,
+	 * otherwise {@code false}
+	 */
+	public boolean test(char value) {
+		final int word = value >>> 5;
+		if (word >= bits.length) return false;
+		return (bits[word] & (1 << value)) != 0;
 	}
 
 	/**
@@ -236,9 +228,8 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @param index the index of the bit
 	 * @return true if this modified the bit set
 	 */
-	public boolean remove(int index) {
+	public boolean remove(char index) {
 		index -= offset;
-		if (index < 0) return false;
 		final int word = index >>> 5;
 		if (word >= bits.length) return false;
 		int oldBits = bits[word];
@@ -254,56 +245,13 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @param index the index of the bit
 	 * @return true if this modified the bit set
 	 */
-	public boolean add(int index) {
+	public boolean add(char index) {
 		index -= offset;
-		if (index < 0) return false;
 		final int word = index >>> 5;
 		checkCapacity(word);
 		int oldBits = bits[word];
 		bits[word] |= 1 << index;
 		return bits[word] != oldBits;
-	}
-
-	public boolean addAll(int[] indices) {
-		return addAll(indices, 0, indices.length);
-	}
-
-	public boolean addAll(int[] indices, int off, int length) {
-		if (length <= 0 || off < 0 || off + length > indices.length)
-			return false;
-		boolean changed = false;
-		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add(indices[i]);
-		}
-		return changed;
-	}
-
-	public boolean addAll(short[] indices) {
-		return addAll(indices, 0, indices.length);
-	}
-
-	public boolean addAll(short[] indices, int off, int length) {
-		if (length <= 0 || off < 0 || off + length > indices.length)
-			return false;
-		boolean changed = false;
-		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add(indices[i]);
-		}
-		return changed;
-	}
-
-	public boolean addAll(byte[] indices) {
-		return addAll(indices, 0, indices.length);
-	}
-
-	public boolean addAll(byte[] indices, int off, int length) {
-		if (length <= 0 || off < 0 || off + length > indices.length)
-			return false;
-		boolean changed = false;
-		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add(indices[i]);
-		}
-		return changed;
 	}
 
 	public boolean addAll(char[] indices) {
@@ -320,11 +268,11 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		return changed;
 	}
 
-	public boolean addAll(PrimitiveCollection.OfInt indices) {
-		IntIterator it = indices.iterator();
+	public boolean addAll(PrimitiveCollection.OfChar indices) {
+		CharIterator it = indices.iterator();
 		boolean changed = false;
 		while (it.hasNext()) {
-			changed |= add(it.nextInt());
+			changed |= add(it.nextChar());
 		}
 		return changed;
 	}
@@ -332,13 +280,13 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
-	 * Use the {@link OffsetBitSetIterator} constructor for nested or multithreaded iteration.
+	 * Use the {@link CharBitSetResizableIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
-	public OffsetBitSetIterator iterator() {
+	public CharBitSetResizableIterator iterator() {
 		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new OffsetBitSetIterator(this);
-			iterator2 = new OffsetBitSetIterator(this);
+			iterator1 = new CharBitSetResizableIterator(this);
+			iterator2 = new CharBitSetResizableIterator(this);
 		}
 		if (!iterator1.valid) {
 			iterator1.reset();
@@ -538,11 +486,11 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	/**
 	 * Performs a logical <b>AND</b> of this target bit set with the argument bit set. This bit set is modified so that each bit
 	 * in it has the value true if and only if it both initially had the value true and the corresponding bit in the bit set
-	 * argument also had the value true. Both this OffsetBitSet and {@code other} must have the same offset.
+	 * argument also had the value true. Both this CharBitSetResizable and {@code other} must have the same offset.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSetResizable; must have the same offset as this
 	 */
-	public void and(OffsetBitSet other) {
+	public void and(CharBitSetResizable other) {
 		if (offset == other.offset) {
 			int commonWords = Math.min(bits.length, other.bits.length);
 			for (int i = 0; commonWords > i; i++) {
@@ -555,24 +503,24 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 				}
 			}
 		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call and().");
+			throw new UnsupportedOperationException("The offset of both CharBitSetResizable objects must be the same to call and().");
 		}
 	}
 
 	/**
 	 * Clears all the bits in this bit set whose corresponding bit is set in the specified bit set.
 	 * This can be seen as an optimized version of {@link PrimitiveCollection.OfInt#removeAll(OfInt)} that only works if
-	 * both OffsetBitSet objects have the same {@link #offset}. Both this OffsetBitSet and {@code other} must have the same offset.
+	 * both CharBitSetResizable objects have the same {@link #offset}. Both this CharBitSetResizable and {@code other} must have the same offset.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSetResizable; must have the same offset as this
 	 */
-	public void andNot(OffsetBitSet other) {
+	public void andNot(CharBitSetResizable other) {
 		if (offset == other.offset) {
 			for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
 				bits[i] &= ~other.bits[i];
 			}
 		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call andNot().");
+			throw new UnsupportedOperationException("The offset of both CharBitSetResizable objects must be the same to call andNot().");
 		}
 
 	}
@@ -580,11 +528,11 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	/**
 	 * Performs a logical <b>OR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
 	 * the value true if and only if it either already had the value true or the corresponding bit in the bit set argument has the
-	 * value true. Both this OffsetBitSet and {@code other} must have the same offset.
+	 * value true. Both this CharBitSetResizable and {@code other} must have the same offset.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSetResizable; must have the same offset as this
 	 */
-	public void or(OffsetBitSet other) {
+	public void or(CharBitSetResizable other) {
 		if (offset == other.offset) {
 			int commonWords = Math.min(bits.length, other.bits.length);
 			for (int i = 0; commonWords > i; i++) {
@@ -598,7 +546,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 				}
 			}
 		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call or().");
+			throw new UnsupportedOperationException("The offset of both CharBitSetResizable objects must be the same to call or().");
 		}
 	}
 
@@ -609,11 +557,11 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * <li>The bit initially has the value true, and the corresponding bit in the argument has the value false.</li>
 	 * <li>The bit initially has the value false, and the corresponding bit in the argument has the value true.</li>
 	 * </ul>
-	 * Both this OffsetBitSet and {@code other} must have the same offset.
+	 * Both this CharBitSetResizable and {@code other} must have the same offset.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSetResizable; must have the same offset as this
 	 */
-	public void xor(OffsetBitSet other) {
+	public void xor(CharBitSetResizable other) {
 		if (offset == other.offset) {
 			int commonWords = Math.min(bits.length, other.bits.length);
 			for (int i = 0; commonWords > i; i++) {
@@ -626,18 +574,18 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 				}
 			}
 		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call xor().");
+			throw new UnsupportedOperationException("The offset of both CharBitSetResizable objects must be the same to call xor().");
 		}
 	}
 
 	/**
-	 * Returns true if the specified OffsetBitSet has any bits set to true that are also set to true in this OffsetBitSet.
-	 * Both this OffsetBitSet and {@code other} must have the same offset.
+	 * Returns true if the specified CharBitSetResizable has any bits set to true that are also set to true in this CharBitSetResizable.
+	 * Both this CharBitSetResizable and {@code other} must have the same offset.
 	 *
-	 * @param other another OffsetBitSet; must have the same offset as this
+	 * @param other another CharBitSetResizable; must have the same offset as this
 	 * @return boolean indicating whether this bit set intersects the specified bit set
 	 */
-	public boolean intersects(OffsetBitSet other) {
+	public boolean intersects(CharBitSetResizable other) {
 		if (offset == other.offset) {
 			int[] bits = this.bits;
 			int[] otherBits = other.bits;
@@ -648,19 +596,19 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 			}
 			return false;
 		} else {
-			throw new UnsupportedOperationException("The offset of both OffsetBitSet objects must be the same to call intersects().");
+			throw new UnsupportedOperationException("The offset of both CharBitSetResizable objects must be the same to call intersects().");
 		}
 	}
 
 	/**
 	 * Returns true if this bit set is a super set of the specified set, i.e. it has all bits set to true that are also set to
-	 * true in the specified OffsetBitSet. If this OffsetBitSet and {@code other} have the same offset, this is much more efficient, but
+	 * true in the specified CharBitSetResizable. If this CharBitSetResizable and {@code other} have the same offset, this is much more efficient, but
 	 * it will work even if the offsets are different.
 	 *
-	 * @param other another OffsetBitSet
+	 * @param other another CharBitSetResizable
 	 * @return boolean indicating whether this bit set is a super set of the specified set
 	 */
-	public boolean containsAll(OffsetBitSet other) {
+	public boolean containsAll(CharBitSetResizable other) {
 		if (offset == other.offset) {
 			int[] bits = this.bits;
 			int[] otherBits = other.bits;
@@ -678,7 +626,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 				}
 			}
 			return true;
-		} else return ((PrimitiveCollection.OfInt) this).containsAll(other);
+		} else return ((PrimitiveCollection.OfChar) this).containsAll(other);
 	}
 
 	@Override
@@ -696,7 +644,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 
-		OffsetBitSet other = (OffsetBitSet) obj;
+		CharBitSetResizable other = (CharBitSetResizable) obj;
 		if (offset != other.offset) return false;
 		int[] otherBits = other.bits;
 
@@ -721,8 +669,8 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
-	 * Given a StringBuilder, this appends part of the toString() representation of this OffsetBitSet, without allocating a String.
-	 * This does not include the opening {@code [} and closing {@code ]} chars, and only appends the int positions in this OffsetBitSet,
+	 * Given a StringBuilder, this appends part of the toString() representation of this CharBitSetResizable, without allocating a String.
+	 * This does not include the opening {@code [} and closing {@code ]} chars, and only appends the int positions in this CharBitSetResizable,
 	 * each pair separated by the given delimiter String. You can use this to choose a different delimiter from what toString() uses.
 	 *
 	 * @param builder   a StringBuilder that will be modified in-place and returned
@@ -739,7 +687,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
-	 * Given a StringBuilder, this appends the toString() representation of this OffsetBitSet, without allocating a String.
+	 * Given a StringBuilder, this appends the toString() representation of this CharBitSetResizable, without allocating a String.
 	 * This includes the opening {@code [} and closing {@code ]} chars; it uses {@code ", "} as its delimiter.
 	 *
 	 * @param builder a StringBuilder that will be modified in-place and returned
@@ -750,9 +698,9 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link IntAppender}
+	 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link CharAppender}
 	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
-	 * the default String representation, you can use {@link IntAppender#DEFAULT} as an appender.
+	 * the default String representation, you can use {@link CharAppender#DEFAULT} as an appender.
 	 *
 	 * @param sb        a StringBuilder that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
@@ -761,7 +709,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @return {@code sb}, with the appended items of this PrimitiveCollection
 	 */
 	@Override
-	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, IntAppender appender) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, CharAppender appender) {
 		try {
 			if (isEmpty()) {
 				if(brackets) sb.append("[]");
@@ -771,10 +719,10 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 				sb.append('[');
 			}
 			int curr = nextSetBit(offset);
-			appender.apply(sb, curr);
+			appender.apply(sb, (char)curr);
 			while ((curr = nextSetBit(curr + 1)) != offset - 1) {
 				sb.append(separator);
-				appender.apply(sb, curr);
+				appender.apply(sb, (char)curr);
 			}
 			if (brackets) {
 				sb.append(']');
@@ -791,16 +739,16 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 
-	public static class OffsetBitSetIterator implements IntIterator {
+	public static class CharBitSetResizableIterator implements CharIterator {
 		static private final int INDEX_ILLEGAL = -1, INDEX_ZERO = -1;
 
 		public boolean hasNext;
 
-		final OffsetBitSet set;
+		final CharBitSetResizable set;
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public OffsetBitSetIterator(OffsetBitSet set) {
+		public CharBitSetResizableIterator(CharBitSetResizable set) {
 			this.set = set;
 			reset();
 		}
@@ -841,7 +789,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		}
 
 		@Override
-		public int nextInt() {
+		public char nextChar() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
@@ -851,19 +799,37 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 			int key = nextIndex;
 			currentIndex = nextIndex;
 			findNextIndex();
-			return key;
+			return (char)key;
 		}
 
 		/**
 		 * Returns a new {@link IntList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public IntList toList() {
-			IntList list = new IntList(set.size());
+		public char[] toArray() {
+			char[] arr = new char[set.size()];
+			int currentIdx = currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
+			int i = 0;
+			while (hasNext) {
+				arr[i++] = nextChar();
+			}
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
+			return arr;
+		}
+
+		/**
+		 * Returns a new {@link IntList} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public CharList toList() {
+			CharList list = new CharList(set.size());
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
 			while (hasNext) {
-				list.add(nextInt());
+				list.add(nextChar());
 			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
@@ -872,17 +838,17 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		}
 
 		/**
-		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfInt.
+		 * Append the remaining items that this can iterate through into the given PrimitiveCollection.OfChar.
 		 * Does not change the position of this iterator.
 		 *
-		 * @param coll any modifiable PrimitiveCollection.OfInt; may have items appended into it
+		 * @param coll any modifiable PrimitiveCollection.OfChar; may have items appended into it
 		 * @return the given primitive collection
 		 */
-		public PrimitiveCollection.OfInt appendInto(PrimitiveCollection.OfInt coll) {
+		public PrimitiveCollection.OfChar appendInto(PrimitiveCollection.OfChar coll) {
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
 			while (hasNext) {
-				coll.add(nextInt());
+				coll.add(nextChar());
 			}
 			currentIndex = currentIdx;
 			nextIndex = nextIdx;
@@ -893,31 +859,29 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
-	 * Static builder for an OffsetBitSet; this overload does not allocate an
+	 * Static builder for an CharBitSetResizable; this overload does not allocate an
 	 * array for the index/indices, but only takes one index. This always has
 	 * an offset of 0.
 	 *
 	 * @param index the one position to place in the built bit set; must be non-negative
-	 * @return a new OffsetBitSet with the given item
+	 * @return a new CharBitSetResizable with the given item
 	 */
-	public static OffsetBitSet with(int index) {
-		OffsetBitSet s = new OffsetBitSet(index + 1);
+	public static CharBitSetResizable with(char index) {
+		CharBitSetResizable s = new CharBitSetResizable(index + 1);
 		s.add(index);
 		return s;
 	}
 
 	/**
-	 * Static builder for an OffsetBitSet; this overload allocates an array for
+	 * Static builder for an CharBitSetResizable; this overload allocates an array for
 	 * the indices unless given an array already, and can take many indices. This
 	 * always has an offset of 0.
 	 *
-	 * @param indices the positions to place in the built bit set; must be non-negative
-	 * @return a new OffsetBitSet with the given items
+	 * @param chars the positions to place in the built bit set; must be non-negative
+	 * @return a new CharBitSetResizable with the given items
 	 */
-	public static OffsetBitSet with(int... indices) {
-		OffsetBitSet s = new OffsetBitSet();
-		s.addAll(indices);
-		return s;
+	public static CharBitSetResizable with(char... chars) {
+		return new CharBitSetResizable(chars);
 	}
 
 	/**
@@ -926,7 +890,7 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
-	public static OffsetBitSet parse(String str, String delimiter) {
+	public static CharBitSetResizable parse(String str, String delimiter) {
 		return parse(str, delimiter, false);
 	}
 
@@ -939,8 +903,8 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @param brackets if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
-	public static OffsetBitSet parse(String str, String delimiter, boolean brackets) {
-		OffsetBitSet c = new OffsetBitSet();
+	public static CharBitSetResizable parse(String str, String delimiter, boolean brackets) {
+		CharBitSetResizable c = new CharBitSetResizable();
 		if(brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
 		else
@@ -957,9 +921,10 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 * @param length how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
-	public static OffsetBitSet parse(String str, String delimiter, int offset, int length) {
-		OffsetBitSet c = new OffsetBitSet();
+	public static CharBitSetResizable parse(String str, String delimiter, int offset, int length) {
+		CharBitSetResizable c = new CharBitSetResizable();
 		c.addLegible(str, delimiter, offset, length);
 		return c;
 	}
+
 }
