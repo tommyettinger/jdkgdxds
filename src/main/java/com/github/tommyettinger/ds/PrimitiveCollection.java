@@ -4127,7 +4127,7 @@ public interface PrimitiveCollection<T> {
 		 * that character, so all chars in the Unicode BMP can be present. No surrounding brackets should be
 		 * present in {@code cs} (they will be treated as items).
 		 *
-		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param cs a CharSequence containing arbitrary chars
 		 */
 		default void addDense(CharSequence cs) {
 			addDense(cs, 0, -1);
@@ -4161,7 +4161,7 @@ public interface PrimitiveCollection<T> {
 		 * This may be useful to parse the dense output of one primitive collection into an array to be given to a
 		 * map constructor or map's addAll() method, which may be able to take an array for keys and for values.
 		 *
-		 * @param cs a CharSequence containing only BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
+		 * @param cs a CharSequence that may contain any chars
 		 * @return a new array sized to {@code cs.length()} items, or sized to 0 if {@code cs} is null
 		 */
 		static char[] readArrayDense(CharSequence cs) {
@@ -4179,8 +4179,8 @@ public interface PrimitiveCollection<T> {
 		 *
 		 * @param buffer      an array that will be modified in-place; should not be null
 		 * @param bufferIndex the first index in {@code buffer} to assign to
-		 * @param cs          a CharSequence containing BASE90 chars (between {@code '%'} and {@code '~'}, both inclusive)
-		 * @param offset      the first position to read BASE90 chars from in {@code cs}
+		 * @param cs          a CharSequence that may contain any chars
+		 * @param offset      the first position to read chars from in {@code cs}
 		 * @param length      how many chars to read; -1 is treated as maximum length
 		 * @return {@code buffer}, potentially after modifications
 		 */
@@ -4199,8 +4199,8 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
-		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item will be the first char after an occurrence of a
+		 * delimiter. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
 		 *
@@ -4213,14 +4213,14 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Adds items to this PrimitiveCollection drawn from the result of {@link #toString(String)} or
-		 * {@link #appendTo(CharSequence, String, boolean)}. Each item can vary significantly in length, and should use
-		 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+		 * {@link #appendTo(CharSequence, String, boolean)}. Each item will be the first char after an occurrence of a
+		 * delimiter. Any brackets inside the given range
 		 * of characters will ruin the parsing, so increase offset by 1 and
 		 * reduce length by 2 if the original String had brackets added to it.
 		 *
-		 * @param str       a String containing BASE10 chars
+		 * @param str       a String containing chars separated by {@code delimiter}
 		 * @param delimiter the String separating every item in str
-		 * @param offset    the first position to read BASE10 chars from in {@code str}
+		 * @param offset    the first position to read chars from in {@code str}
 		 * @param length    how many chars to read; -1 is treated as maximum length
 		 */
 		default void addLegible(String str, String delimiter, int offset, int length) {
