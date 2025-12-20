@@ -31,6 +31,9 @@ import java.util.NoSuchElementException;
  * For the specific case of ASCII characters, this only uses an array of 4 ints. This is based on {@link OffsetBitSet},
  * but doesn't have an offset (it acts as if its offset was always 0). Like CharBitSet, this is a {@link CharPredicate}.
  * It is also a {@link PrimitiveCollection.OfChar} and {@link PrimitiveSet.SetOfChar}.
+ * <br>
+ * This is very similar to the {@code CharBitSet} in <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a>,
+ * but isn't compatible because RegExodus doesn't have the {@link PrimitiveSet.SetOfChar} class available to it.
  */
 public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicate {
 
@@ -594,6 +597,15 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		}
 
 		return true;
+	}
+
+	/**
+	 * Gets every char in this CharBitSetResizable, as a {@code char[]}.
+	 * This simply delegates to {@link #toArray()}.
+	 * @return a {@code char[]} of every char in this set, in ascending order
+	 */
+	public char[] contents() {
+		return toArray();
 	}
 
 	/**
