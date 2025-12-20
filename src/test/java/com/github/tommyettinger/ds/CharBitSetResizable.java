@@ -44,7 +44,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Creates a bit set with an initial size that can store positions between 0 and 31, inclusive, without
-	 * needing to resize. This has an offset of 0 and can resize to fit larger positions.
+	 * needing to resize. This can resize to fit larger positions.
 	 */
 	public CharBitSetResizable() {
 		bits = new int[1];
@@ -52,7 +52,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range 0 through
-	 * bitCapacity-1. This has an offset of 0 and can resize to fit larger positions.
+	 * bitCapacity-1. This can resize to fit larger positions.
 	 *
 	 * @param bitCapacity the initial size of the bit set
 	 */
@@ -81,9 +81,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Creates a bit set from any primitive char collection, such as a {@link IntList} or {@link IntSet}.
-	 * The offset of the new bit set will be the lowest char in the collection, which you should be aware of
-	 * if you intend to use the bitwise methods such as {@link #and(CharBitSetResizable)} and {@link #or(CharBitSetResizable)}.
+	 * Creates a bit set from any primitive char collection, such as a {@link CharList} or {@link CharBitSet}.
 	 *
 	 * @param toCopy the primitive char collection to copy
 	 */
@@ -103,8 +101,6 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Creates a bit set from an entire char array.
-	 * The offset of the new bit set will be the lowest char in the collection, which you should be aware of
-	 * if you intend to use the bitwise methods such as {@link #and(CharBitSetResizable)} and {@link #or(CharBitSetResizable)}.
 	 *
 	 * @param toCopy the non-null char array to copy
 	 */
@@ -229,6 +225,12 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		return changed;
 	}
 
+	/**
+	 * Adds another PrimitiveCollection.OfChar, such as a CharList, to this set.
+	 * If you have another CharBitSetResizable, you can use {@link #or(CharBitSetResizable)}, which is faster.
+	 * @param indices another primitive collection of char
+	 * @return true if this was modified
+	 */
 	public boolean addAll(PrimitiveCollection.OfChar indices) {
 		CharIterator it = indices.iterator();
 		boolean changed = false;
@@ -316,9 +318,9 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Gets the capacity in bits, including both true and false values, and including any false values that may be
-	 * after the last contained position, but does not include the offset. Runs in O(1) time.
+	 * after the last contained position. Runs in O(1) time.
 	 *
-	 * @return the number of bits currently stored, <b>not</b> the highest set bit; doesn't include offset either
+	 * @return the number of bits currently stored, <b>not</b> the highest set bit
 	 */
 	public int numBits() {
 		return bits.length << 5;
@@ -326,7 +328,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Returns the "logical extent" of this bitset: the index of the highest set bit in the bitset plus one. Returns zero if the
-	 * bitset contains no set bits. If this has any set bits, it will return an int at least equal to {@code offset}.
+	 * bitset contains no set bits. If this has any set bits, it will return an int at least equal to {@code 1}.
 	 * Runs in O(n) time.
 	 *
 	 * @return the logical extent of this bitset
@@ -442,7 +444,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	 * in it has the value true if and only if it both initially had the value true and the corresponding bit in the bit set
 	 * argument also had the value true.
 	 *
-	 * @param other another CharBitSetResizable; must have the same offset as this
+	 * @param other another CharBitSetResizable
 	 */
 	public void and(CharBitSetResizable other) {
 		int commonWords = Math.min(bits.length, other.bits.length);
@@ -459,9 +461,9 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Clears all the bits in this bit set whose corresponding bit is set in the specified bit set.
-	 * This can be seen as an optimized version of {@link PrimitiveCollection.OfInt#removeAll(OfInt)}.
+	 * This can be seen as an optimized version of {@link PrimitiveCollection.OfChar#removeAll(com.github.tommyettinger.ds.PrimitiveCollection.OfChar)}.
 	 *
-	 * @param other another CharBitSetResizable; must have the same offset as this
+	 * @param other another CharBitSetResizable
 	 */
 	public void andNot(CharBitSetResizable other) {
 		for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
@@ -472,9 +474,9 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	/**
 	 * Performs a logical <b>OR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
 	 * the value true if and only if it either already had the value true or the corresponding bit in the bit set argument has the
-	 * value true. Both this CharBitSetResizable and {@code other} must have the same offset.
+	 * value true.
 	 *
-	 * @param other another CharBitSetResizable; must have the same offset as this
+	 * @param other another CharBitSetResizable
 	 */
 	public void or(CharBitSetResizable other) {
 		int commonWords = Math.min(bits.length, other.bits.length);
@@ -497,9 +499,8 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	 * <li>The bit initially has the value true, and the corresponding bit in the argument has the value false.</li>
 	 * <li>The bit initially has the value false, and the corresponding bit in the argument has the value true.</li>
 	 * </ul>
-	 * Both this CharBitSetResizable and {@code other} must have the same offset.
 	 *
-	 * @param other another CharBitSetResizable; must have the same offset as this
+	 * @param other another CharBitSetResizable
 	 */
 	public void xor(CharBitSetResizable other) {
 		int commonWords = Math.min(bits.length, other.bits.length);
@@ -516,9 +517,8 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Returns true if the specified CharBitSetResizable has any bits set to true that are also set to true in this CharBitSetResizable.
-	 * Both this CharBitSetResizable and {@code other} must have the same offset.
 	 *
-	 * @param other another CharBitSetResizable; must have the same offset as this
+	 * @param other another CharBitSetResizable
 	 * @return boolean indicating whether this bit set intersects the specified bit set
 	 */
 	public boolean intersects(CharBitSetResizable other) {
@@ -534,8 +534,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Returns true if this bit set is a super set of the specified set, i.e. it has all bits set to true that are also set to
-	 * true in the specified CharBitSetResizable. If this CharBitSetResizable and {@code other} have the same offset, this is much more efficient, but
-	 * it will work even if the offsets are different.
+	 * true in the specified CharBitSetResizable.
 	 *
 	 * @param other another CharBitSetResizable
 	 * @return boolean indicating whether this bit set is a super set of the specified set
@@ -732,7 +731,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		}
 
 		/**
-		 * Returns a new {@link IntList} containing the remaining items.
+		 * Returns a new {@code char[]} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
 		public char[] toArray() {
@@ -750,7 +749,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		}
 
 		/**
-		 * Returns a new {@link IntList} containing the remaining items.
+		 * Returns a new {@link CharList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
 		public CharList toList() {
@@ -789,8 +788,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Static builder for an CharBitSetResizable; this overload does not allocate an
-	 * array for the index/indices, but only takes one index. This always has
-	 * an offset of 0.
+	 * array for the index/indices, but only takes one index.
 	 *
 	 * @param index the one position to place in the built bit set; must be non-negative
 	 * @return a new CharBitSetResizable with the given item
@@ -803,8 +801,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Static builder for an CharBitSetResizable; this overload allocates an array for
-	 * the indices unless given an array already, and can take many indices. This
-	 * always has an offset of 0.
+	 * the indices unless given an array already, and can take many indices.
 	 *
 	 * @param chars the positions to place in the built bit set; must be non-negative
 	 * @return a new CharBitSetResizable with the given items
