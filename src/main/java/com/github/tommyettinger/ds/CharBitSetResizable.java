@@ -602,6 +602,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	/**
 	 * Gets every char in this CharBitSetResizable, as a {@code char[]}.
 	 * This simply delegates to {@link #toArray()}.
+	 *
 	 * @return a {@code char[]} of every char in this set, in ascending order
 	 */
 	public char[] contents() {

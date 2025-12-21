@@ -84,7 +84,7 @@ compileTestJava {
 apply plugin: 'idea'
 idea.module.excludeDirs += [file("docs/")]
 
-javadoc.options.source("17")
+javadoc.options.source("21")
 javadoc.destinationDir = file("docs/apidocs")
 
 sourceSets.test.resources.srcDirs = [file('src/test/resources').path]
