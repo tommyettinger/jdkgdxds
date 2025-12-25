@@ -66,7 +66,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public CharBitSet(CharBitSet toCopy) {
 		this.bits = new int[2048];
-		System.arraycopy(toCopy.bits, 0, this.bits, 0, toCopy.bits.length);
+		System.arraycopy(toCopy.bits, 0, this.bits, 0, 2048);
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 			return false;
 		boolean changed = false;
 		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add(indices[i]);
+			changed |= add((char)indices[i]);
 		}
 		return changed;
 	}
@@ -291,7 +291,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 			return false;
 		boolean changed = false;
 		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add(indices[i]);
+			changed |= add((char)(indices[i] & 0xFF));
 		}
 		return changed;
 	}
@@ -377,9 +377,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public void activate(int index) {
 		if (index < 0 || index >= 65536) return;
-		final int word = index >>> 5;
-		checkCapacity(word);
-		bits[word] |= 1 << index;
+		bits[index >>> 5] |= 1 << index;
 	}
 
 	/**
@@ -390,9 +388,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public void deactivate(int index) {
 		if (index < 0 || index >= 65536) return;
-		final int word = index >>> 5;
-		if (word >= bits.length) return;
-		bits[word] &= ~(1 << index);
+		bits[index >>> 5] &= ~(1 << index);
 	}
 
 	/**
@@ -403,17 +399,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public void toggle(int index) {
 		if (index < 0 || index >= 65536) return;
-		final int word = index >>> 5;
-		checkCapacity(word);
-		bits[word] ^= 1 << index;
-	}
-
-	private void checkCapacity(int index) {
-		if (index >= bits.length) {
-			int[] newBits = new int[1 << -BitConversion.countLeadingZeros(index)]; // resizes to next power of two size that can fit index
-			System.arraycopy(bits, 0, newBits, 0, bits.length);
-			bits = newBits;
-		}
+		bits[index >>> 5] ^= 1 << index;
 	}
 
 	/**
@@ -441,7 +427,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public int length() {
 		int[] bits = this.bits;
-		for (int word = bits.length - 1; word >= 0; --word) {
+		for (int word = 2047; word >= 0; --word) {
 			int bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
 				return (word + 1 << 5) - BitConversion.countLeadingZeros(bitsAtWord);
@@ -452,15 +438,15 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * Returns the size of the set, or its cardinality; this is the count of distinct activated positions in the set.
-	 * Note that unlike most Collection types, which typically have O(1) size() runtime, this runs in O(n) time, where
-	 * n is on the order of the capacity.
+	 * Note that while this runs in O(1) time, there is a constant factor of 2048 there, because the size here is always
+	 * 2048.
 	 *
 	 * @return the count of distinct activated positions in the set.
 	 */
 	public int size() {
 		int[] bits = this.bits;
 		int count = 0;
-		for (int word = bits.length - 1; word >= 0; --word) {
+		for (int word = 0; word < 2048; word++) {
 			count += Integer.bitCount(bits[word]);
 		}
 		return count;
@@ -472,7 +458,13 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @return true if this bitset contains at least one bit set to true
 	 */
 	public boolean notEmpty() {
-		return !isEmpty();
+		int[] bits = this.bits;
+		for (int i = 0; i < 2048; i++) {
+			if (bits[i] != 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -482,8 +474,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public boolean isEmpty() {
 		int[] bits = this.bits;
-		int length = bits.length;
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < 2048; i++) {
 			if (bits[i] != 0) {
 				return false;
 			}
@@ -502,15 +493,14 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		if (fromIndex < 0) return -1;
 		int[] bits = this.bits;
 		int word = fromIndex >>> 5;
-		int bitsLength = bits.length;
-		if (word >= bitsLength)
+		if (word >= 2048)
 			return -1;
 		int bitsAtWord = bits[word] & -1 << fromIndex; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != 0) {
 			// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 			return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5);
 		}
-		for (word++; word < bitsLength; word++) {
+		for (word++; word < 2048; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
 				return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5);
@@ -527,17 +517,16 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @return the first position that is set to true that occurs on or after the specified starting index
 	 */
 	public int nextClearBit(int fromIndex) {
-		if (fromIndex < 0) return (bits.length << 5);
+		if (fromIndex < 0) return 65536;
 		int[] bits = this.bits;
 		int word = fromIndex >>> 5;
-		int bitsLength = bits.length;
-		if (word >= bitsLength) return (bits.length << 5);
+		if (word >= 2048) return 65536;
 		int bitsAtWord = bits[word] | (1 << fromIndex) - 1; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != -1) {
 			// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 			return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5);
 		}
-		for (word++; word < bitsLength; word++) {
+		for (word++; word < 2048; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != -1) {
 				// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
@@ -555,15 +544,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param other another CharBitSet
 	 */
 	public void and(CharBitSet other) {
-		int commonWords = Math.min(bits.length, other.bits.length);
-		for (int i = 0; commonWords > i; i++) {
+		for (int i = 0; i < 2048; i++) {
 			bits[i] &= other.bits[i];
-		}
-
-		if (bits.length > commonWords) {
-			for (int i = commonWords, s = bits.length; s > i; i++) {
-				bits[i] = 0;
-			}
 		}
 	}
 
@@ -574,7 +556,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param other another CharBitSet
 	 */
 	public void andNot(CharBitSet other) {
-		for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
+		for (int i = 0; i < 2048; i++) {
 			bits[i] &= ~other.bits[i];
 		}
 	}
@@ -588,16 +570,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param other another CharBitSet
 	 */
 	public void or(CharBitSet other) {
-		int commonWords = Math.min(bits.length, other.bits.length);
-		for (int i = 0; commonWords > i; i++) {
+		for (int i = 0; i < 2048; i++) {
 			bits[i] |= other.bits[i];
-		}
-
-		if (commonWords < other.bits.length) {
-			checkCapacity(other.bits.length);
-			for (int i = commonWords, s = other.bits.length; s > i; i++) {
-				bits[i] = other.bits[i];
-			}
 		}
 	}
 
@@ -612,15 +586,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param other another CharBitSet
 	 */
 	public void xor(CharBitSet other) {
-		int commonWords = Math.min(bits.length, other.bits.length);
-		for (int i = 0; commonWords > i; i++) {
+		for (int i = 0; i < 2048; i++) {
 			bits[i] ^= other.bits[i];
-		}
-		if (commonWords < other.bits.length) {
-			checkCapacity(other.bits.length);
-			for (int i = commonWords, s = other.bits.length; s > i; i++) {
-				bits[i] = other.bits[i];
-			}
 		}
 	}
 
@@ -634,7 +601,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public boolean intersects(CharBitSet other) {
 		int[] bits = this.bits;
 		int[] otherBits = other.bits;
-		for (int i = Math.min(bits.length, otherBits.length) - 1; i >= 0; i--) {
+		for (int i = 0; i < 2048; i++) {
 			if ((bits[i] & otherBits[i]) != 0) {
 				return true;
 			}
@@ -652,16 +619,10 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public boolean containsAll(CharBitSet other) {
 		int[] bits = this.bits;
 		int[] otherBits = other.bits;
-		int otherBitsLength = otherBits.length;
-		int bitsLength = bits.length;
 
-		for (int i = bitsLength; i < otherBitsLength; i++) {
-			if (otherBits[i] != 0) {
-				return false;
-			}
-		}
-		for (int i = Math.min(bitsLength, otherBitsLength) - 1; i >= 0; i--) {
-			if ((bits[i] & otherBits[i]) != otherBits[i]) {
+		for (int i = 0; i < 2048; i++) {
+			int o = otherBits[i];
+			if ((bits[i] & o) != o) {
 				return false;
 			}
 		}
@@ -671,7 +632,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	@Override
 	public int hashCode() {
 		int hash = 1;
-		for (int i = 0, n = bits.length; i < n; i++) {
+		for (int i = 0; i < 2048; i++) {
 			hash += bits[i];
 		}
 		return hash;
@@ -686,23 +647,9 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		CharBitSet other = (CharBitSet) obj;
 		int[] otherBits = other.bits;
 
-		int commonWords = Math.min(bits.length, otherBits.length);
-		for (int i = 0; i < commonWords; i++) {
+		for (int i = 0; i < 2048; i++) {
 			if (bits[i] != otherBits[i]) return false;
 		}
-
-		if (bits.length == otherBits.length) return true;
-
-		if(commonWords < otherBits.length) {
-			for (int i = commonWords, n = otherBits.length; i < n; i++) {
-				if (0 != otherBits[i]) return false;
-			}
-		} else {
-			for (int i = commonWords, n = bits.length; i < n; i++) {
-				if (0 != bits[i]) return false;
-			}
-		}
-
 		return true;
 	}
 
@@ -902,7 +849,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @return a new CharBitSet with the given item
 	 */
 	public static CharBitSet with(char index) {
-		CharBitSet s = new CharBitSet(index + 1);
+		CharBitSet s = new CharBitSet();
 		s.add(index);
 		return s;
 	}
