@@ -29,7 +29,9 @@ import java.util.NoSuchElementException;
 
 /**
  * A bit set, which can be seen as a set of char positions in the Unicode Basic Multilingual Plane (the first
- * 65536 chars in Unicode). Allows comparison via bitwise operators to other bit sets.
+ * 65536 chars in Unicode). Allows comparison via bitwise operators to other bit sets. This is similar to
+ * {@link CharBitSetResizable}, but this class always uses an internal table 8KiB in size (2048 ints), and can avoid
+ * some extra math as a result at the expense of (slightly) greater memory usage.
  * <br>
  * This was originally Bits in libGDX. Many methods have been renamed to more-closely match the Collection API.
  * This was changed from using {@code long} to store 64 bits in
@@ -58,22 +60,12 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range 0 through
-	 * bitCapacity-1. This can resize to fit larger positions.
-	 *
-	 * @param bitCapacity the initial size of the bit set
-	 */
-	public CharBitSet(int bitCapacity) {
-		bits = new int[Math.max(bitCapacity + 31 >>> 5, 1)];
-	}
-
-	/**
 	 * Creates a bit set from another bit set. This will copy the raw bits and will have the same offset.
 	 *
 	 * @param toCopy bitset to copy
 	 */
 	public CharBitSet(CharBitSet toCopy) {
-		this.bits = new int[toCopy.bits.length];
+		this.bits = new int[2048];
 		System.arraycopy(toCopy.bits, 0, this.bits, 0, toCopy.bits.length);
 	}
 
@@ -83,11 +75,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param toCopy the primitive int collection to copy
 	 */
 	public CharBitSet(CharSequence toCopy) {
-		if (toCopy.length() <= 0) {
-			bits = new int[1];
-			return;
-		}
 		bits = new int[2048];
+		if (toCopy.length() == 0) return;
 		addAll(toCopy);
 	}
 
@@ -108,11 +97,10 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param length how many items to copy from toCopy
 	 */
 	public CharBitSet(char[] toCopy, int off, int length) {
+		bits = new int[2048];
 		if (toCopy.length == 0) {
-			bits = new int[1];
 			return;
 		}
-		bits = new int[2048];
 		addAll(toCopy, off, length);
 	}
 
@@ -146,16 +134,18 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public CharBitSet(int[] ints, boolean useAsRawBits) {
 		if (ints != null) {
 			if (useAsRawBits) {
-				if (ints.length != 0) {
+				if (ints.length == 2048) {
 					this.bits = ints;
-				} else
-					this.bits = new int[1];
+				} else {
+					this.bits = new int[2048];
+					System.arraycopy(ints, 0, this.bits, 0, Math.min(2048, ints.length));
+				}
 			} else {
 				this.bits = new int[2048];
 				addAll(ints);
 			}
 		} else {
-			this.bits = new int[1];
+			this.bits = new int[2048];
 		}
 	}
 
