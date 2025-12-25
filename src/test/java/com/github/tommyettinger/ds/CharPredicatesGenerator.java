@@ -19,27 +19,27 @@ package com.github.tommyettinger.ds;
 public class CharPredicatesGenerator {
 	public static void main(String[] args) {
 		CharBitSet isLetter = new CharBitSet(Character::isLetter);
-		System.out.println("isLetter");
-		System.out.println(isLetter.toJavaCode());
+		System.out.print("private static CharBitSet isLetter() {\nreturn ");
+		System.out.println(isLetter.toJavaCode() + ";\n}");
 
 		CharBitSet isDigit = new CharBitSet(Character::isDigit);
-		System.out.println("isDigit");
-		System.out.println(isDigit.toJavaCode());
+		System.out.print("private static CharBitSet isDigit() {\nreturn ");
+		System.out.println(isDigit.toJavaCode() + ";\n}");
 
 		CharBitSet isAlphabetic = new CharBitSet(Character::isAlphabetic);
-		System.out.println("isAlphabetic");
-		System.out.println(isAlphabetic.toJavaCode());
+		System.out.print("private static CharBitSet isAlphabetic() {\nreturn ");
+		System.out.println(isAlphabetic.toJavaCode() + ";\n}");
 
 		CharBitSet isWhitespace = new CharBitSet(Character::isWhitespace);
-		System.out.println("isWhitespace");
-		System.out.println(isWhitespace.toJavaCode());
+		System.out.print("private static CharBitSet isWhitespace() {\nreturn ");
+		System.out.println(isWhitespace.toJavaCode() + ";\n}");
 
 		CharBitSet isJavaIdentifierStart = new CharBitSet(Character::isJavaIdentifierStart);
-		System.out.println("isJavaIdentifierStart");
-		System.out.println(isJavaIdentifierStart.toJavaCode());
+		System.out.print("private static CharBitSet isJavaIdentifierStart() {\nreturn ");
+		System.out.println(isJavaIdentifierStart.toJavaCode() + ";\n}");
 
 		CharBitSet isJavaIdentifierPart = new CharBitSet(Character::isJavaIdentifierPart);
-		System.out.println("isJavaIdentifierPart");
-		System.out.println(isJavaIdentifierPart.toJavaCode());
+		System.out.print("private static CharBitSet isJavaIdentifierPart() {\nreturn ");
+		System.out.println(isJavaIdentifierPart.toJavaCode() + ";\n}");
 	}
 }

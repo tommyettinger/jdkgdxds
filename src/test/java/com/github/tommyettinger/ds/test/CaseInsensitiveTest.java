@@ -34,19 +34,19 @@ public class CaseInsensitiveTest {
 		map.put("ATTACK!", "0");
 		map.put("attack!", "1");
 		map.put("Attack!", "2");
-		Assert.assertEquals(map.size(), 2);
-		Assert.assertEquals(map.get("attack!"), "2");
+		Assert.assertEquals(2, map.size());
+		Assert.assertEquals("2", map.get("attack!"));
 		map.remove("AtTaCk!");
-		Assert.assertEquals(map.size(), 1);
+		Assert.assertEquals(1, map.size());
 		map.put("Something else,", "42");
 		map.put("And more,", "23");
 		map.put("And even more.", "666");
-		Assert.assertEquals(map.size(), 4);
+		Assert.assertEquals(4, map.size());
 		map.put("A", "-1");
 		map.put("B", "-2");
 		map.put("C", "-3");
 		map.put("E", "-4");
-		Assert.assertEquals(map.size(), 8);
+		Assert.assertEquals(8, map.size());
 	}
 
 	/**
@@ -107,10 +107,10 @@ public class CaseInsensitiveTest {
 	public void testSet() {
 		String[] items = new String[]{"FOO", "foo", "BAR", "BAZ", "bar", "baz"};
 		CaseInsensitiveSet set = CaseInsensitiveSet.with(items);
-		Assert.assertEquals(set.size(), 3);
+		Assert.assertEquals(3, set.size());
 		CharFilter filter = CharFilter.getOrCreate("LetterOnlyCaseInsensitive", CharPredicates.IS_LETTER, Casing::caseUp);
 		FilteredStringSet fil = FilteredStringSet.with(filter, items);
-		Assert.assertEquals(fil.size(), 3);
+		Assert.assertEquals(3, fil.size());
 		Assert.assertEquals(set, fil);
 	}
 
@@ -118,10 +118,10 @@ public class CaseInsensitiveTest {
 	public void testOrderedSet() {
 		String[] items = new String[]{"FOO", "foo", "BAR", "BAZ", "bar", "baz"};
 		CaseInsensitiveOrderedSet set = CaseInsensitiveOrderedSet.with(items);
-		Assert.assertEquals(set.size(), 3);
+		Assert.assertEquals(3, set.size());
 		CharFilter filter = CharFilter.getOrCreate("LetterOnlyCaseInsensitive", CharPredicates.IS_LETTER, Casing::caseUp);
 		FilteredStringOrderedSet fil = FilteredStringOrderedSet.with(filter, items);
-		Assert.assertEquals(fil.size(), 3);
+		Assert.assertEquals(3, fil.size());
 		Assert.assertEquals(set, fil);
 	}
 }
