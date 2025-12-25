@@ -161,15 +161,21 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * This allows setting the internal {@code int[]} used to store bits in bulk. This is not meant for typical usage; it
-	 * may be useful for serialization or other code that would typically need reflection to access the internals here.
-	 * Be very careful with this method. If bits is null or empty, it is ignored; this is the only error validation this does.
+	 * This allows setting the internal {@code int[]} used to store bits in bulk. This is not meant for typical usage;
+	 * it may be useful for serialization or other code that would typically need reflection to access the internals
+	 * here. Be very careful with this method. If bits is null, it is ignored. If the length of bits is not exactly
+	 * 2048, it will not be used directly, but its contents will be copied into the bits here, up to the first reached
+	 * of 2048 ints or {@code bits.length}.
 	 *
-	 * @param bits a non-null, non-empty int array storing positions, typically obtained from {@link #getRawBits()}
+	 * @param bits a non-null, length-2048 int array storing positions, typically obtained from {@link #getRawBits()}
 	 */
 	public void setRawBits(int[] bits) {
-		if (bits != null && bits.length != 0) {
-			this.bits = bits;
+		if (bits != null) {
+			if (bits.length == 2048) {
+				this.bits = bits;
+			} else {
+				System.arraycopy(bits, 0, this.bits, 0, Math.min(2048, bits.length));
+			}
 		}
 	}
 
@@ -180,9 +186,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @return whether the bit is set
 	 */
 	public boolean contains(char index) {
-		final int word = index >>> 5;
-		if (word >= bits.length) return false;
-		return (bits[word] & (1 << index)) != 0;
+		return (bits[index >>> 5] & (1 << index)) != 0;
 	}
 
 	/**
@@ -193,9 +197,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public boolean contains(int index) {
 		if (index < 0 || index >= 65536) return false;
-		final int word = index >>> 5;
-		if (word >= bits.length) return false;
-		return (bits[word] & (1 << index)) != 0;
+		return (bits[index >>> 5] & (1 << index)) != 0;
 	}
 
 	/**
@@ -207,10 +209,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public boolean remove(char index) {
 		final int word = index >>> 5;
-		if (word >= bits.length) return false;
 		int oldBits = bits[word];
-		bits[word] &= ~(1 << index);
-		return bits[word] != oldBits;
+		return (bits[word] = oldBits & ~(1 << index)) != oldBits;
 	}
 
 	/**
@@ -223,10 +223,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public boolean remove(int index) {
 		if (index < 0 || index >= 65536) return false;
 		final int word = index >>> 5;
-		if (word >= bits.length) return false;
 		int oldBits = bits[word];
-		bits[word] &= ~(1 << index);
-		return bits[word] != oldBits;
+		return (bits[word] = oldBits & ~(1 << index)) != oldBits;
 	}
 
 	/**
@@ -238,10 +236,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public boolean add(char index) {
 		final int word = index >>> 5;
-		checkCapacity(word);
 		int oldBits = bits[word];
-		bits[word] |= 1 << index;
-		return bits[word] != oldBits;
+		return (bits[word] = oldBits | 1 << index) != oldBits;
 	}
 
 	/**
@@ -254,10 +250,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public boolean add(int index) {
 		if (index < 0 || index >= 65536) return false;
 		final int word = index >>> 5;
-		checkCapacity(word);
 		int oldBits = bits[word];
-		bits[word] |= 1 << index;
-		return bits[word] != oldBits;
+		return (bits[word] = oldBits | 1 << index) != oldBits;
 	}
 
 	public boolean addAll(int[] indices) {
