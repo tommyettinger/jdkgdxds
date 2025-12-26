@@ -53,14 +53,14 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * Creates a bit set with an initial size that can store positions between 0 and 65535, inclusive, without
-	 * needing to resize. This won't ever need to resize for any char input.
+	 * needing to resize. This won't ever resize.
 	 */
 	public CharBitSet() {
 		bits = new int[2048];
 	}
 
 	/**
-	 * Creates a bit set from another bit set. This will copy the raw bits and will have the same offset.
+	 * Creates a bit set from another bit set. This will copy the raw bits.
 	 *
 	 * @param toCopy bitset to copy
 	 */
@@ -398,15 +398,15 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Evaluates this predicate on the given argument.
+	 * Returns true if the given char is contained in this bit set, or false otherwise.
 	 *
-	 * @param value the input argument
-	 * @return {@code true} if the input argument matches the predicate,
-	 * otherwise {@code false}
+	 * @param value the char to check
+	 * @return true if the char is present, or false otherwise
 	 */
 	@Override
 	public boolean test(char value) {
-		return contains(value);
+		return (bits[value >>> 5] & (1 << value)) != 0;
+
 	}
 
 	/**
@@ -501,9 +501,9 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * Gets the capacity in bits, including both true and false values, and including any false values that may be
-	 * after the last contained position, but does not include the offset. Runs in O(1) time.
+	 * after the last contained position. Runs in O(1) time.
 	 *
-	 * @return the number of bits currently stored, <b>not</b> the highest set bit; doesn't include offset either
+	 * @return the number of bits currently stored, <b>not</b> the highest set bit
 	 */
 	public int numBits() {
 		return bits.length << 5;
@@ -950,8 +950,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * Static builder for a CharBitSet; this overload does not allocate an
-	 * array for the index/indices, but only takes one index. This always has
-	 * an offset of 0.
+	 * array for the index/indices, but only takes one index.
 	 *
 	 * @param index the one char to place in the built bit set
 	 * @return a new CharBitSet with the given item
@@ -964,8 +963,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * Static builder for a CharBitSet; this overload allocates an array for
-	 * the indices unless given an array already, and can take many indices. This
-	 * always has an offset of 0.
+	 * the indices unless given an array already, and can take many indices.
 	 *
 	 * @param indices the positions to place in the built bit set; must be non-negative
 	 * @return a new CharBitSet with the given items

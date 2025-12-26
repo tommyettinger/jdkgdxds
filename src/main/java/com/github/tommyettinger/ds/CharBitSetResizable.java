@@ -204,12 +204,10 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Evaluates this predicate on the given argument.
-	 * If the index is out of bounds, this returns false.
+	 * Returns true if the given char is contained in this bit set, or false otherwise.
 	 *
-	 * @param value the input argument
-	 * @return {@code true} if the input argument matches the predicate,
-	 * otherwise {@code false}
+	 * @param value the char to check
+	 * @return true if the char is present, or false otherwise
 	 */
 	public boolean test(char value) {
 		final int word = value >>> 5;
