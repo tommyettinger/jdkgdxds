@@ -46,7 +46,7 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * case-insensitive map that ignores any non-letter characters in a String, then CaseInsensitiveMap won't do,
  * but {@code new FilteredStringMap<>(CharPredicates.IS_LETTER, Casing::caseUp)} will. Note that GWT only handles
  * {@link Character#isLetter(char)} for ASCII letters; CharPredicates in this library provides cross-platform predicates
- * that use {@link CharBitSet} to store their data, and the library RegExodus offers replacements in Category for other
+ * that use {@link CharBitSetFixedSize} to store their data, and the library RegExodus offers replacements in Category for other
  * Unicode categories, such as upper-case letters, currency symbols, decimal digits, and so on.
  */
 public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {

@@ -48,7 +48,8 @@ import com.github.tommyettinger.function.CharToCharFunction;
  * {@code com.github.tommyettinger.ds.support.util.CharPredicates.IS_LETTER} is a CharPredicate you can use instead of
  * isLetter on any platform, and acts as {@link Character#isLetter(char)} does on Java 24, but on all Java versions and
  * target platforms (including GWT). Other fields in CharPredicates may also be useful, and you can create your own
- * {@link CharBitSet} objects to serve as predefined predicates that look up a char in an uncompressed bit set.
+ * {@link CharBitSet} or {@link CharBitSetFixedSize} objects to serve as predefined predicates that look up a char in an
+ * uncompressed bit set.
  */
 public class CharFilter {
 	/**

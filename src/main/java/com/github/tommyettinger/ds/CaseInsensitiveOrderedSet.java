@@ -50,7 +50,7 @@ import java.util.Iterator;
  * case-insensitive set that ignores any non-letter characters in a String, then CaseInsensitiveOrderedSet won't do,
  * but {@code new FilteredStringOrderedSet<>(CharPredicates.IS_LETTER, Casing::caseUp} will work. Note that GWT only
  * handles {@link Character#isLetter(char)} for ASCII letters; CharPredicates in this library provides cross-platform
- * predicates that use {@link CharBitSet} to store their data, and the library RegExodus offers replacements in
+ * predicates that use {@link CharBitSetFixedSize} to store their data, and the library RegExodus offers replacements in
  * Category for other Unicode categories, such as upper-case letters, currency symbols, decimal digits, and so on.
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {

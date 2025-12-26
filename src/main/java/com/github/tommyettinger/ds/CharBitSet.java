@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025 See AUTHORS file.
+ * Copyright (c) 2025 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.CharAppender;
 import com.github.tommyettinger.ds.support.util.CharIterator;
-import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.function.CharPredicate;
 
 import java.io.IOException;
@@ -28,23 +27,19 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 /**
- * A bit set, which can be seen as a set of char positions in the Unicode Basic Multilingual Plane (the first
- * 65536 chars in Unicode). Allows comparison via bitwise operators to other bit sets. This is similar to
- * {@link CharBitSetResizable}, but this class always uses an internal table 8KiB in size (2048 ints), and can avoid
- * some extra math as a result at the expense of (slightly) greater memory usage.
+ * A set of primitive char items, implicitly sorted in ascending order, that can resize based on its highest-value char.
+ * This is like {@link CharBitSetFixedSize}, but doesn't need 2048 ints in an array for smaller sets, such as ASCII
+ * characters. For the specific case of ASCII characters, this only uses an array of 4 ints. This is based on
+ * {@link OffsetBitSet}, but doesn't have an offset (it acts as if its offset was always 0). Like CharBitSetFixedSize,
+ * this is a {@link CharPredicate}. It is also a {@link PrimitiveCollection.OfChar} and {@link PrimitiveSet.SetOfChar}.
  * <br>
- * This was originally Bits in libGDX. Many methods have been renamed to more-closely match the Collection API.
- * This was changed from using {@code long} to store 64 bits in
- * one value, to {@code int} to store 32 bits in one value, because GWT is so slow at handling {@code long}.
- *
- * @author mzechner
- * @author jshapcott
- * @author tommyettinger
+ * This is very similar to the {@code CharBitSet} in <a href="https://github.com/tommyettinger/RegExodus">RegExodus</a>,
+ * but isn't compatible because RegExodus doesn't have the {@link PrimitiveSet.SetOfChar} class available to it.
  */
 public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
-	 * The raw bits, each one representing the presence or absence of a char at a position.
+	 * The raw bits, each one representing the presence or absence of an integer at a position.
 	 */
 	protected int[] bits;
 
@@ -52,11 +47,32 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	protected transient CharBitSetIterator iterator2;
 
 	/**
-	 * Creates a bit set with an initial size that can store positions between 0 and 65535, inclusive, without
-	 * needing to resize. This won't ever resize.
+	 * Creates a bit set with an initial size that can store positions between 0 and 31, inclusive, without
+	 * needing to resize. This can resize to fit larger positions.
 	 */
 	public CharBitSet() {
-		bits = new int[2048];
+		bits = new int[1];
+	}
+
+	/**
+	 * Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range 0 through
+	 * bitCapacity-1. This can resize to fit larger positions.
+	 *
+	 * @param bitCapacity the initial size of the bit set
+	 */
+	public CharBitSet(int bitCapacity) {
+		bits = new int[bitCapacity + 31 >>> 5];
+	}
+
+	/**
+	 * Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range
+	 * {@code 0} through {@code end-1}. This can resize to fit larger positions. This will not contain {@code end}
+	 * at the start, though it can be added without needing to resize.
+	 *
+	 * @param end   the initial end of the range of the bit set
+	 */
+	public CharBitSet(char end) {
+		bits = new int[end + 31 >>> 5];
 	}
 
 	/**
@@ -65,8 +81,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param toCopy bitset to copy
 	 */
 	public CharBitSet(CharBitSet toCopy) {
-		this.bits = new int[2048];
-		System.arraycopy(toCopy.bits, 0, this.bits, 0, 2048);
+		this.bits = new int[toCopy.bits.length];
+		System.arraycopy(toCopy.bits, 0, this.bits, 0, toCopy.bits.length);
 	}
 
 	/**
@@ -75,8 +91,9 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param toCopy the char sequence to copy
 	 */
 	public CharBitSet(CharSequence toCopy) {
-		bits = new int[2048];
-		if (toCopy.length() == 0) return;
+		int len = toCopy.length();
+		bits = new int[Math.min(2048, len >>> 5)];
+		if (len == 0) return;
 		activateSeq(toCopy);
 	}
 
@@ -90,17 +107,22 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Creates a bit set from a char array, starting reading at an offset and continuing for a given length.
+	 * Creates a bit set from an char array, starting reading at an offset and continuing for a given length.
 	 *
 	 * @param toCopy the char array to copy
 	 * @param off    which index to start copying from toCopy
 	 * @param length how many items to copy from toCopy
 	 */
 	public CharBitSet(char[] toCopy, int off, int length) {
-		bits = new int[2048];
 		if (toCopy.length == 0) {
+			bits = new int[1];
 			return;
 		}
+		int end = 0;
+		for (int i = off, e = off + length; i < e; i++) {
+			end = Math.max(end, toCopy[i] + 1);
+		}
+		bits = new int[end + 31 >>> 5];
 		activateAll(toCopy, off, length);
 	}
 
@@ -115,9 +137,9 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public CharBitSet(CharPredicate predicate) {
 		this();
 		if(predicate != null) {
-			for (int i = 0; i < 65536; i++) {
+			for (int i = 65535; i >= 0; i--) {
 				if (predicate.test((char) i))
-					bits[i >>> 5] |= 1 << i;
+					activate(i);
 			}
 		}
 	}
@@ -134,18 +156,13 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public CharBitSet(int[] ints, boolean useAsRawBits) {
 		if (ints != null) {
 			if (useAsRawBits) {
-				if (ints.length == 2048) {
-					this.bits = ints;
-				} else {
-					this.bits = new int[2048];
-					System.arraycopy(ints, 0, this.bits, 0, Math.min(2048, ints.length));
-				}
+				this.bits = ints;
 			} else {
-				this.bits = new int[2048];
+				this.bits = new int[8];
 				activateAll(ints);
 			}
 		} else {
-			this.bits = new int[2048];
+			this.bits = new int[1];
 		}
 	}
 
@@ -161,139 +178,87 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * This allows setting the internal {@code int[]} used to store bits in bulk. This is not meant for typical usage;
-	 * it may be useful for serialization or other code that would typically need reflection to access the internals
-	 * here. Be very careful with this method. If bits is null, it is ignored. If the length of bits is not exactly
-	 * 2048, it will not be used directly, but its contents will be copied into the bits here, up to the first reached
-	 * of 2048 ints or {@code bits.length}.
+	 * This allows setting the internal {@code int[]} used to store bits in bulk. This is not meant for typical usage; it
+	 * may be useful for serialization or other code that would typically need reflection to access the internals here.
+	 * Be very careful with this method. If bits is null or empty, it is ignored; this is the only error validation this does.
 	 *
-	 * @param bits a non-null, length-2048 int array storing positions, typically obtained from {@link #getRawBits()}
+	 * @param bits a non-null, non-empty int array storing positions, typically obtained from {@link #getRawBits()}
 	 */
 	public void setRawBits(int[] bits) {
-		if (bits != null) {
-			if (bits.length == 2048) {
-				this.bits = bits;
-			} else {
-				System.arraycopy(bits, 0, this.bits, 0, Math.min(2048, bits.length));
-			}
+		if (bits != null && bits.length != 0) {
+			this.bits = bits;
 		}
 	}
 
 	/**
-	 * Returns true if the given char is contained in this bit set.
+	 * Returns true if the given position is contained in this bit set.
+	 * If the index is out of bounds, this returns false.
 	 *
 	 * @param index the index of the bit
 	 * @return whether the bit is set
 	 */
 	public boolean contains(char index) {
-		return (bits[index >>> 5] & (1 << index)) != 0;
+		final int word = index >>> 5;
+		if (word >= bits.length) return false;
+		return (bits[word] & (1 << index)) != 0;
 	}
 
 	/**
-	 * Returns true if the given position is contained in this bit set.
+	 * Returns true if the given char is contained in this bit set, or false otherwise.
 	 *
-	 * @param index the index of the bit
-	 * @return whether the bit is set
+	 * @param value the char to check
+	 * @return true if the char is present, or false otherwise
 	 */
-	public boolean contains(int index) {
-		if (index < 0 || index >= 65536) return false;
-		return (bits[index >>> 5] & (1 << index)) != 0;
+	public boolean test(char value) {
+		final int word = value >>> 5;
+		if (word >= bits.length) return false;
+		return (bits[word] & (1 << value)) != 0;
 	}
 
 	/**
 	 * Deactivates the given position and returns true if the bit set was modified
-	 * in the process.
+	 * in the process. If the index is out of bounds,
+	 * this does not modify the bit set and returns false.
 	 *
 	 * @param index the index of the bit
 	 * @return true if this modified the bit set
 	 */
 	public boolean remove(char index) {
 		final int word = index >>> 5;
-		int oldBits = bits[word];
-		return (bits[word] = oldBits & ~(1 << index)) != oldBits;
-	}
-
-	/**
-	 * Deactivates the given position and returns true if the bit set was modified
-	 * in the process.
-	 *
-	 * @param index the index of the bit
-	 * @return true if this modified the bit set
-	 */
-	public boolean remove(int index) {
-		if (index < 0 || index >= 65536) return false;
-		final int word = index >>> 5;
+		if (word >= bits.length) return false;
 		int oldBits = bits[word];
 		return (bits[word] = oldBits & ~(1 << index)) != oldBits;
 	}
 
 	/**
 	 * Activates the given position and returns true if the bit set was modified
-	 * in the process.
+	 * in the process. If the index is out of bounds,
+	 * this does not modify the bit set and returns false.
 	 *
 	 * @param index the index of the bit
 	 * @return true if this modified the bit set
 	 */
 	public boolean add(char index) {
 		final int word = index >>> 5;
+		checkCapacity(word);
 		int oldBits = bits[word];
 		return (bits[word] = oldBits | 1 << index) != oldBits;
 	}
 
 	/**
 	 * Activates the given position and returns true if the bit set was modified
-	 * in the process.
+	 * in the process. If the index is out of bounds,
+	 * this does not modify the bit set and returns false.
 	 *
 	 * @param index the index of the bit
 	 * @return true if this modified the bit set
 	 */
 	public boolean add(int index) {
-		if (index < 0 || index >= 65536) return false;
+		if(index < 0 || index >= 65536) return false;
 		final int word = index >>> 5;
+		checkCapacity(word);
 		int oldBits = bits[word];
 		return (bits[word] = oldBits | 1 << index) != oldBits;
-	}
-
-	public boolean addAll(int[] indices) {
-		return addAll(indices, 0, indices.length);
-	}
-
-	public boolean addAll(int[] indices, int off, int length) {
-		if (length <= 0 || off < 0 || off + length > indices.length)
-			return false;
-		boolean changed = false;
-		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add(indices[i]);
-		}
-		return changed;
-	}
-
-	public boolean addAll(short[] indices) {
-		return addAll(indices, 0, indices.length);
-	}
-
-	public boolean addAll(short[] indices, int off, int length) {
-		if (length <= 0 || off < 0 || off + length > indices.length)
-			return false;
-		boolean changed = false;
-		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add((char)indices[i]);
-		}
-		return changed;
-	}
-
-	public boolean addAll(byte[] indices) {
-		return addAll(indices, 0, indices.length);
-	}
-
-	public boolean addAll(byte[] indices, int off, int length) {
-		if (length <= 0 || off < 0 || off + length > indices.length)
-			return false;
-		boolean changed = false;
-		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add((char)(indices[i] & 0xFF));
-		}
-		return changed;
 	}
 
 	public boolean addAll(char[] indices) {
@@ -310,10 +275,42 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		return changed;
 	}
 
+
+	public boolean addAll(int[] indices) {
+		return addAll(indices, 0, indices.length);
+	}
+
+	public boolean addAll(int[] indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length)
+			return false;
+		boolean changed = false;
+		for (int i = off, n = off + length; i < n; i++) {
+			changed |= add(indices[i]);
+		}
+		return changed;
+	}
+
+	/**
+	 * Like {@link #addAll(char[])}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #addAll(OfChar)} when a type is both a CharSequence and a
+	 * PrimitiveCollection.OfChar .
+	 * @param indices the CharSequence to read distinct chars from
+	 * @return true if this was modified, or false otherwise
+	 */
 	public boolean addSeq(CharSequence indices) {
 		return addSeq(indices, 0, indices.length());
 	}
 
+	/**
+	 * Like {@link #addAll(char[], int, int)}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #addAll(OfChar)} when a type is both a CharSequence and a
+	 * PrimitiveCollection.OfChar .
+	 * @param indices the CharSequence to read distinct chars from
+	 * @param off the first position to read from {@code indices}
+	 * @param length how many chars to read from {@code indices}; because the CharSequence may have duplicates, this is
+	 *                  not necessarily the length that will be added
+	 * @return true if this was modified, or false otherwise
+	 */
 	public boolean addSeq(CharSequence indices, int off, int length) {
 		if (length <= 0 || off < 0 || off + length > indices.length())
 			return false;
@@ -324,11 +321,17 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		return changed;
 	}
 
-	public boolean addAll(OfInt indices) {
-		IntIterator it = indices.iterator();
+	/**
+	 * Adds another PrimitiveCollection.OfChar, such as a CharList, to this set.
+	 * If you have another CharBitSet, you can use {@link #or(CharBitSet)}, which is faster.
+	 * @param indices another primitive collection of char
+	 * @return true if this was modified
+	 */
+	public boolean addAll(PrimitiveCollection.OfChar indices) {
+		CharIterator it = indices.iterator();
 		boolean changed = false;
 		while (it.hasNext()) {
-			changed |= add(it.nextInt());
+			changed |= add(it.nextChar());
 		}
 		return changed;
 	}
@@ -398,18 +401,6 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Returns true if the given char is contained in this bit set, or false otherwise.
-	 *
-	 * @param value the char to check
-	 * @return true if the char is present, or false otherwise
-	 */
-	@Override
-	public boolean test(char value) {
-		return (bits[value >>> 5] & (1 << value)) != 0;
-
-	}
-
-	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
 	 * Use the {@link CharBitSetIterator} constructor for nested or multithreaded iteration.
@@ -433,63 +424,83 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Sets the given int position to true.
+	 * Sets the given char position to true.
 	 *
 	 * @param index the index of the bit to set
 	 */
 	public void activate(char index) {
-		bits[index >>> 5] |= 1 << index;
+		final int word = index >>> 5;
+		checkCapacity(word);
+		bits[word] |= 1 << index;
 	}
 
 	/**
-	 * Sets the given int position to false.
+	 * Sets the given char position to false.
 	 *
 	 * @param index the index of the bit to clear
 	 */
 	public void deactivate(char index) {
-		bits[index >>> 5] &= ~(1 << index);
+		final int word = index >>> 5;
+		if (word >= bits.length) return;
+		bits[word] &= ~(1 << index);
 	}
 
 	/**
-	 * Changes the given int position from true to false, or from false to true.
+	 * Changes the given char position from true to false, or from false to true.
 	 *
 	 * @param index the index of the bit to flip
 	 */
 	public void toggle(char index) {
-		bits[index >>> 5] ^= 1 << index;
+		final int word = index >>> 5;
+		checkCapacity(word);
+		bits[word] ^= 1 << index;
 	}
 
+
 	/**
-	 * Sets the given int position to true, unless the position is outside char range
+	 * Sets the given int position to true, unless the position is negative or greater than 65535
 	 * (then it does nothing).
 	 *
 	 * @param index the index of the bit to set
 	 */
 	public void activate(int index) {
-		if (index < 0 || index >= 65536) return;
-		bits[index >>> 5] |= 1 << index;
+		if (index < 0) return;
+		final int word = index >>> 5;
+		checkCapacity(word);
+		bits[word] |= 1 << index;
 	}
 
 	/**
-	 * Sets the given int position to false, unless the position is outside char range
-	 * (then it does nothing).
+	 * Sets the given int position to false, unless the position is out of bounds (then it does nothing).
 	 *
 	 * @param index the index of the bit to clear
 	 */
 	public void deactivate(int index) {
-		if (index < 0 || index >= 65536) return;
-		bits[index >>> 5] &= ~(1 << index);
+		if (index < 0) return;
+		final int word = index >>> 5;
+		if (word >= bits.length) return;
+		bits[word] &= ~(1 << index);
 	}
 
 	/**
 	 * Changes the given int position from true to false, or from false to true,
-	 * unless the position is outside char range (then it does nothing).
+	 * unless the position is negative or greater than 65535 (then it does nothing).
 	 *
 	 * @param index the index of the bit to flip
 	 */
 	public void toggle(int index) {
-		if (index < 0 || index >= 65536) return;
-		bits[index >>> 5] ^= 1 << index;
+		if (index < 0) return;
+		final int word = index >>> 5;
+		checkCapacity(word);
+		bits[word] ^= 1 << index;
+	}
+
+	private void checkCapacity(int index) {
+		if (index >= bits.length) {
+			int[] newBits = new int[1 << -BitConversion.countLeadingZeros(index)]; // resizes to next power of two size that can fit index
+			System.arraycopy(bits, 0, newBits, 0, bits.length);
+			bits = newBits;
+		}
 	}
 
 	/**
@@ -511,13 +522,14 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * Returns the "logical extent" of this bitset: the index of the highest set bit in the bitset plus one. Returns zero if the
-	 * bitset contains no set bits. Runs in O(n) time.
+	 * bitset contains no set bits. If this has any set bits, it will return an int at least equal to {@code 1}.
+	 * Runs in O(n) time.
 	 *
 	 * @return the logical extent of this bitset
 	 */
 	public int length() {
 		int[] bits = this.bits;
-		for (int word = 2047; word >= 0; --word) {
+		for (int word = bits.length - 1; word >= 0; --word) {
 			int bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
 				return (word + 1 << 5) - BitConversion.countLeadingZeros(bitsAtWord);
@@ -528,15 +540,15 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * Returns the size of the set, or its cardinality; this is the count of distinct activated positions in the set.
-	 * Note that while this runs in O(1) time, there is a constant factor of 2048 there, because the size here is always
-	 * 2048.
+	 * Note that unlike most Collection types, which typically have O(1) size() runtime, this runs in O(n) time, where
+	 * n is on the order of the capacity.
 	 *
 	 * @return the count of distinct activated positions in the set.
 	 */
 	public int size() {
 		int[] bits = this.bits;
 		int count = 0;
-		for (int word = 0; word < 2048; word++) {
+		for (int word = bits.length - 1; word >= 0; --word) {
 			count += Integer.bitCount(bits[word]);
 		}
 		return count;
@@ -548,13 +560,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @return true if this bitset contains at least one bit set to true
 	 */
 	public boolean notEmpty() {
-		int[] bits = this.bits;
-		for (int i = 0; i < 2048; i++) {
-			if (bits[i] != 0) {
-				return true;
-			}
-		}
-		return false;
+		return !isEmpty();
 	}
 
 	/**
@@ -564,7 +570,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	public boolean isEmpty() {
 		int[] bits = this.bits;
-		for (int i = 0; i < 2048; i++) {
+		int length = bits.length;
+		for (int i = 0; i < length; i++) {
 			if (bits[i] != 0) {
 				return false;
 			}
@@ -573,8 +580,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Returns the index of the first bit that is set to true that occurs on or after the specified starting index.
-	 * If no such bit exists then {@code -1} is returned.
+	 * Returns the index of the first bit that is set to true that occurs on or after the specified starting index. If no such bit
+	 * exists then {@code getOffset() - 1} is returned.
 	 *
 	 * @param fromIndex the index to start looking at
 	 * @return the first position that is set to true that occurs on or after the specified starting index
@@ -583,14 +590,15 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		if (fromIndex < 0) return -1;
 		int[] bits = this.bits;
 		int word = fromIndex >>> 5;
-		if (word >= 2048)
+		int bitsLength = bits.length;
+		if (word >= bitsLength)
 			return -1;
 		int bitsAtWord = bits[word] & -1 << fromIndex; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != 0) {
-			// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 			return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5);
+			// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
-		for (word++; word < 2048; word++) {
+		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != 0) {
 				return BitConversion.countTrailingZeros(bitsAtWord) + (word << 5);
@@ -601,26 +609,25 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	/**
 	 * Returns the index of the first bit that is set to false that occurs on or after the specified starting index. If no such bit
-	 * exists then {@link #numBits()}  is returned.
+	 * exists then {@code numBits() + getOffset()}  is returned.
 	 *
 	 * @param fromIndex the index to start looking at
 	 * @return the first position that is set to true that occurs on or after the specified starting index
 	 */
 	public int nextClearBit(int fromIndex) {
-		if (fromIndex < 0) return 65536;
+		if (fromIndex < 0) return (bits.length << 5);
 		int[] bits = this.bits;
 		int word = fromIndex >>> 5;
-		if (word >= 2048) return 65536;
+		int bitsLength = bits.length;
+		if (word >= bitsLength) return (bits.length << 5);
 		int bitsAtWord = bits[word] | (1 << fromIndex) - 1; // shift implicitly is masked to bottom 31 bits
 		if (bitsAtWord != -1) {
-			// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
-			return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5);
+			return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5); // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 		}
-		for (word++; word < 2048; word++) {
+		for (word++; word < bitsLength; word++) {
 			bitsAtWord = bits[word];
 			if (bitsAtWord != -1) {
-				// countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
-				return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5);
+				return BitConversion.countTrailingZeros(~bitsAtWord) + (word << 5); // countTrailingZeros() uses an intrinsic candidate, and should be extremely fast
 			}
 		}
 		return (bits.length << 5);
@@ -634,40 +641,54 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param other another CharBitSet
 	 */
 	public void and(CharBitSet other) {
-		for (int i = 0; i < 2048; i++) {
+		int commonWords = Math.min(bits.length, other.bits.length);
+		for (int i = 0; commonWords > i; i++) {
 			bits[i] &= other.bits[i];
+		}
+
+		if (bits.length > commonWords) {
+			for (int i = commonWords, s = bits.length; s > i; i++) {
+				bits[i] = 0;
+			}
 		}
 	}
 
 	/**
 	 * Clears all the bits in this bit set whose corresponding bit is set in the specified bit set.
-	 * This can be seen as an optimized version of {@link OfInt#removeAll(OfInt)}.
+	 * This can be seen as an optimized version of {@link PrimitiveCollection.OfChar#removeAll(com.github.tommyettinger.ds.PrimitiveCollection.OfChar)}.
 	 *
 	 * @param other another CharBitSet
 	 */
 	public void andNot(CharBitSet other) {
-		for (int i = 0; i < 2048; i++) {
+		for (int i = 0, j = bits.length, k = other.bits.length; i < j && i < k; i++) {
 			bits[i] &= ~other.bits[i];
 		}
 	}
 
 	/**
-	 * Performs a logical <b>OR</b> of this bit set with the bit set argument.
-	 * This bit set is modified so that a bit in it has the value true if and only if
-	 * it either already had the value true or the corresponding bit in {@code other}
-	 * has the value true.
+	 * Performs a logical <b>OR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
+	 * the value true if and only if it either already had the value true or the corresponding bit in the bit set argument has the
+	 * value true.
 	 *
 	 * @param other another CharBitSet
 	 */
 	public void or(CharBitSet other) {
-		for (int i = 0; i < 2048; i++) {
+		int commonWords = Math.min(bits.length, other.bits.length);
+		for (int i = 0; commonWords > i; i++) {
 			bits[i] |= other.bits[i];
+		}
+
+		if (commonWords < other.bits.length) {
+			checkCapacity(other.bits.length);
+			for (int i = commonWords, s = other.bits.length; s > i; i++) {
+				bits[i] = other.bits[i];
+			}
 		}
 	}
 
 	/**
-	 * Performs a logical <b>XOR</b> of this bit set with the bit set argument. This bit set is modified so that
-	 * a bit in it has the value true if and only if one of the following statements holds:
+	 * Performs a logical <b>XOR</b> of this bit set with the bit set argument. This bit set is modified so that a bit in it has
+	 * the value true if and only if one of the following statements holds:
 	 * <ul>
 	 * <li>The bit initially has the value true, and the corresponding bit in the argument has the value false.</li>
 	 * <li>The bit initially has the value false, and the corresponding bit in the argument has the value true.</li>
@@ -676,22 +697,28 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * @param other another CharBitSet
 	 */
 	public void xor(CharBitSet other) {
-		for (int i = 0; i < 2048; i++) {
+		int commonWords = Math.min(bits.length, other.bits.length);
+		for (int i = 0; commonWords > i; i++) {
 			bits[i] ^= other.bits[i];
+		}
+		if (commonWords < other.bits.length) {
+			checkCapacity(other.bits.length);
+			for (int i = commonWords, s = other.bits.length; s > i; i++) {
+				bits[i] = other.bits[i];
+			}
 		}
 	}
 
 	/**
-	 * Returns true if the specified CharBitSet has any bits set to true that are also
-	 * set to true in this CharBitSet.
+	 * Returns true if the specified CharBitSet has any bits set to true that are also set to true in this CharBitSet.
 	 *
 	 * @param other another CharBitSet
-	 * @return true if this bit set shares any set bits with the specified bit set
+	 * @return boolean indicating whether this bit set intersects the specified bit set
 	 */
 	public boolean intersects(CharBitSet other) {
 		int[] bits = this.bits;
 		int[] otherBits = other.bits;
-		for (int i = 0; i < 2048; i++) {
+		for (int i = Math.min(bits.length, otherBits.length) - 1; i >= 0; i--) {
 			if ((bits[i] & otherBits[i]) != 0) {
 				return true;
 			}
@@ -700,8 +727,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Returns true if this bit set is a super set of the specified set, i.e. it has all bits set
-	 * to true that are also set to true in the specified CharBitSet.
+	 * Returns true if this bit set is a super set of the specified set, i.e. it has all bits set to true that are also set to
+	 * true in the specified CharBitSet.
 	 *
 	 * @param other another CharBitSet
 	 * @return boolean indicating whether this bit set is a super set of the specified set
@@ -709,10 +736,16 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public boolean containsAll(CharBitSet other) {
 		int[] bits = this.bits;
 		int[] otherBits = other.bits;
+		int otherBitsLength = otherBits.length;
+		int bitsLength = bits.length;
 
-		for (int i = 0; i < 2048; i++) {
-			int o = otherBits[i];
-			if ((bits[i] & o) != o) {
+		for (int i = bitsLength; i < otherBitsLength; i++) {
+			if (otherBits[i] != 0) {
+				return false;
+			}
+		}
+		for (int i = Math.min(bitsLength, otherBitsLength) - 1; i >= 0; i--) {
+			if ((bits[i] & otherBits[i]) != otherBits[i]) {
 				return false;
 			}
 		}
@@ -721,8 +754,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 	@Override
 	public int hashCode() {
-		int hash = 1;
-		for (int i = 0; i < 2048; i++) {
+		int hash = 0;
+		for (int i = 0, n = bits.length; i < n; i++) {
 			hash += bits[i];
 		}
 		return hash;
@@ -737,10 +770,34 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		CharBitSet other = (CharBitSet) obj;
 		int[] otherBits = other.bits;
 
-		for (int i = 0; i < 2048; i++) {
+		int commonWords = Math.min(bits.length, otherBits.length);
+		for (int i = 0; commonWords > i; i++) {
 			if (bits[i] != otherBits[i]) return false;
 		}
+
+		if (bits.length == otherBits.length) return true;
+
+		if(commonWords < otherBits.length) {
+			for (int i = commonWords, n = otherBits.length; i < n; i++) {
+				if (0 != otherBits[i]) return false;
+			}
+		} else {
+			for (int i = commonWords, n = bits.length; i < n; i++) {
+				if (0 != bits[i]) return false;
+			}
+		}
+
 		return true;
+	}
+
+	/**
+	 * Gets every char in this CharBitSet, as a {@code char[]}.
+	 * This simply delegates to {@link #toArray()}.
+	 *
+	 * @return a {@code char[]} of every char in this set, in ascending order
+	 */
+	public char[] contents() {
+		return toArray();
 	}
 
 	/**
@@ -794,10 +851,10 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 				sb.append('[');
 			}
 			int curr = nextSetBit(0);
-			appender.apply(sb, (char) curr);
+			appender.apply(sb, (char)curr);
 			while ((curr = nextSetBit(curr + 1)) != -1) {
 				sb.append(separator);
-				appender.apply(sb, (char) curr);
+				appender.apply(sb, (char)curr);
 			}
 			if (brackets) {
 				sb.append(']');
@@ -813,6 +870,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		return toString(", ", true);
 	}
 
+
 	/**
 	 * A convenience method that returns a String of Java source that constructs this CharBitSet directly from its raw
 	 * bits, without any extra steps involved.
@@ -821,7 +879,8 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 * such as {@link Character#isLetter(char)}, and to load those results on any platform without having to recalculate
 	 * the results (potentially with incorrect results on other platforms). Notably, GWT doesn't calculate many Unicode
 	 * queries correctly (at least according to their JVM documentation), and this can store their results for a recent
-	 * Unicode version by running on the most recent desktop JDK, and storing to be loaded on other platforms.
+	 * Unicode version by running on the most recent desktop JDK, and storing to be loaded on other platforms. Some
+	 * already-calculated bit sets are available in {@link com.github.tommyettinger.ds.support.util.CharPredicates}.
 	 *
 	 * @return a String of Java code that can be used to construct an exact copy of this CharBitSet
 	 */
@@ -886,10 +945,10 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 			if (!valid) {
 				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
-			char key = (char)nextIndex;
+			int key = nextIndex;
 			currentIndex = nextIndex;
 			findNextIndex();
-			return key;
+			return (char)key;
 		}
 
 		/**
@@ -934,7 +993,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		 * @param coll any modifiable PrimitiveCollection.OfChar; may have items appended into it
 		 * @return the given primitive collection
 		 */
-		public OfChar appendInto(OfChar coll) {
+		public PrimitiveCollection.OfChar appendInto(PrimitiveCollection.OfChar coll) {
 			int currentIdx = currentIndex, nextIdx = nextIndex;
 			boolean hn = hasNext;
 			while (hasNext) {
@@ -949,29 +1008,27 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Static builder for a CharBitSet; this overload does not allocate an
+	 * Static builder for an CharBitSet; this overload does not allocate an
 	 * array for the index/indices, but only takes one index.
 	 *
-	 * @param index the one char to place in the built bit set
+	 * @param index the one position to place in the built bit set; must be non-negative
 	 * @return a new CharBitSet with the given item
 	 */
 	public static CharBitSet with(char index) {
-		CharBitSet s = new CharBitSet();
+		CharBitSet s = new CharBitSet(index + 1);
 		s.add(index);
 		return s;
 	}
 
 	/**
-	 * Static builder for a CharBitSet; this overload allocates an array for
+	 * Static builder for an CharBitSet; this overload allocates an array for
 	 * the indices unless given an array already, and can take many indices.
 	 *
-	 * @param indices the positions to place in the built bit set; must be non-negative
+	 * @param chars the positions to place in the built bit set; must be non-negative
 	 * @return a new CharBitSet with the given items
 	 */
-	public static CharBitSet with(char... indices) {
-		CharBitSet s = new CharBitSet();
-		s.addAll(indices);
-		return s;
+	public static CharBitSet with(char... chars) {
+		return new CharBitSet(chars);
 	}
 
 	/**
@@ -1016,4 +1073,5 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		c.addLegible(str, delimiter, offset, length);
 		return c;
 	}
+
 }

@@ -18,28 +18,28 @@ package com.github.tommyettinger.ds;
 
 public class CharPredicatesGenerator {
 	public static void main(String[] args) {
-		CharBitSet isLetter = new CharBitSet(Character::isLetter);
-		System.out.print("private static CharBitSet isLetter() {\nreturn ");
+		CharBitSetFixedSize isLetter = new CharBitSetFixedSize(Character::isLetter);
+		System.out.print("private static CharBitSetFixedSize isLetter() {\nreturn ");
 		System.out.println(isLetter.toJavaCode() + ";\n}");
 
-		CharBitSet isDigit = new CharBitSet(Character::isDigit);
-		System.out.print("private static CharBitSet isDigit() {\nreturn ");
+		CharBitSetFixedSize isDigit = new CharBitSetFixedSize(Character::isDigit);
+		System.out.print("private static CharBitSetFixedSize isDigit() {\nreturn ");
 		System.out.println(isDigit.toJavaCode() + ";\n}");
 
-		CharBitSet isAlphabetic = new CharBitSet(Character::isAlphabetic);
-		System.out.print("private static CharBitSet isAlphabetic() {\nreturn ");
+		CharBitSetFixedSize isAlphabetic = new CharBitSetFixedSize(Character::isAlphabetic);
+		System.out.print("private static CharBitSetFixedSize isAlphabetic() {\nreturn ");
 		System.out.println(isAlphabetic.toJavaCode() + ";\n}");
 
-		CharBitSet isWhitespace = new CharBitSet(Character::isWhitespace);
-		System.out.print("private static CharBitSet isWhitespace() {\nreturn ");
+		CharBitSetFixedSize isWhitespace = new CharBitSetFixedSize(Character::isWhitespace);
+		System.out.print("private static CharBitSetFixedSize isWhitespace() {\nreturn ");
 		System.out.println(isWhitespace.toJavaCode() + ";\n}");
 
-		CharBitSet isJavaIdentifierStart = new CharBitSet(Character::isJavaIdentifierStart);
-		System.out.print("private static CharBitSet isJavaIdentifierStart() {\nreturn ");
+		CharBitSetFixedSize isJavaIdentifierStart = new CharBitSetFixedSize(Character::isJavaIdentifierStart);
+		System.out.print("private static CharBitSetFixedSize isJavaIdentifierStart() {\nreturn ");
 		System.out.println(isJavaIdentifierStart.toJavaCode() + ";\n}");
 
-		CharBitSet isJavaIdentifierPart = new CharBitSet(Character::isJavaIdentifierPart);
-		System.out.print("private static CharBitSet isJavaIdentifierPart() {\nreturn ");
+		CharBitSetFixedSize isJavaIdentifierPart = new CharBitSetFixedSize(Character::isJavaIdentifierPart);
+		System.out.print("private static CharBitSetFixedSize isJavaIdentifierPart() {\nreturn ");
 		System.out.println(isJavaIdentifierPart.toJavaCode() + ";\n}");
 	}
 }
