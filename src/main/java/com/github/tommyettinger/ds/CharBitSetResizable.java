@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.CharAppender;
 import com.github.tommyettinger.ds.support.util.CharIterator;
@@ -65,7 +66,8 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Creates a bit set whose initial size is large enough to explicitly represent bits with indices in the range
-	 * {@code 0} through {@code end-1}. This can resize to fit larger positions.
+	 * {@code 0} through {@code end-1}. This can resize to fit larger positions. This will not contain {@code end}
+	 * at the start, though it can be added without needing to resize.
 	 *
 	 * @param end   the initial end of the range of the bit set
 	 */
@@ -92,7 +94,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		int len = toCopy.length();
 		bits = new int[Math.min(2048, len >>> 5)];
 		if (len == 0) return;
-		addSeq(toCopy);
+		activateSeq(toCopy);
 	}
 
 	/**
@@ -121,8 +123,9 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 			end = Math.max(end, toCopy[i] + 1);
 		}
 		bits = new int[end + 31 >>> 5];
-		addAll(toCopy, off, length);
+		activateAll(toCopy, off, length);
 	}
+
 	/**
 	 * Meant primarily for offline use to store the results of a CharPredicate on one target platform so those results
 	 * can be recalled identically on all platforms. This can be relevant because of changing Unicode versions on newer
@@ -156,7 +159,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 				this.bits = ints;
 			} else {
 				this.bits = new int[8];
-				addAll(ints);
+				activateAll(ints);
 			}
 		} else {
 			this.bits = new int[1];
@@ -226,8 +229,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		final int word = index >>> 5;
 		if (word >= bits.length) return false;
 		int oldBits = bits[word];
-		bits[word] &= ~(1 << index);
-		return bits[word] != oldBits;
+		return (bits[word] = oldBits & ~(1 << index)) != oldBits;
 	}
 
 	/**
@@ -242,8 +244,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		final int word = index >>> 5;
 		checkCapacity(word);
 		int oldBits = bits[word];
-		bits[word] |= 1 << index;
-		return bits[word] != oldBits;
+		return (bits[word] = oldBits | 1 << index) != oldBits;
 	}
 
 	/**
@@ -337,6 +338,70 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		return changed;
 	}
 
+	public void activateAll(char[] indices) {
+		activateAll(indices, 0, indices.length);
+	}
+
+	public void activateAll(char[] indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length)
+			return;
+		for (int i = off, n = off + length; i < n; i++) {
+			activate(indices[i]);
+		}
+	}
+
+
+	public void activateAll(int[] indices) {
+		activateAll(indices, 0, indices.length);
+	}
+
+	public void activateAll(int[] indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length)
+			return;
+		for (int i = off, n = off + length; i < n; i++) {
+			activate(indices[i]);
+		}
+	}
+
+	/**
+	 * Like {@link #addAll(char[])}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #addAll(OfChar)} when a type is both a CharSequence and a
+	 * PrimitiveCollection.OfChar .
+	 * @param indices the CharSequence to read distinct chars from
+	 */
+	public void activateSeq(CharSequence indices) {
+		activateSeq(indices, 0, indices.length());
+	}
+
+	/**
+	 * Like {@link #addAll(char[], int, int)}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #addAll(OfChar)} when a type is both a CharSequence and a
+	 * PrimitiveCollection.OfChar .
+	 * @param indices the CharSequence to read distinct chars from
+	 * @param off the first position to read from {@code indices}
+	 * @param length how many chars to read from {@code indices}; because the CharSequence may have duplicates, this is
+	 *                  not necessarily the length that will be added
+	 */
+	public void activateSeq(CharSequence indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length())
+			return;
+		for (int i = off, n = off + length; i < n; i++) {
+			activate(indices.charAt(i));
+		}
+	}
+
+	/**
+	 * Adds another PrimitiveCollection.OfChar, such as a CharList, to this set.
+	 * If you have another CharBitSetResizable, you can use {@link #or(CharBitSetResizable)}, which is faster.
+	 * @param indices another primitive collection of char
+	 */
+	public void activateAll(PrimitiveCollection.OfChar indices) {
+		CharIterator it = indices.iterator();
+		while (it.hasNext()) {
+			activate(it.nextChar());
+		}
+	}
+
 	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
 	 * <p>
@@ -360,9 +425,43 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		return iterator2;
 	}
 
+	/**
+	 * Sets the given char position to true.
+	 *
+	 * @param index the index of the bit to set
+	 */
+	public void activate(char index) {
+		final int word = index >>> 5;
+		checkCapacity(word);
+		bits[word] |= 1 << index;
+	}
 
 	/**
-	 * Sets the given int position to true, unless the position is out of bounds (then it does nothing).
+	 * Sets the given char position to false.
+	 *
+	 * @param index the index of the bit to clear
+	 */
+	public void deactivate(char index) {
+		final int word = index >>> 5;
+		if (word >= bits.length) return;
+		bits[word] &= ~(1 << index);
+	}
+
+	/**
+	 * Changes the given char position from true to false, or from false to true.
+	 *
+	 * @param index the index of the bit to flip
+	 */
+	public void toggle(char index) {
+		final int word = index >>> 5;
+		checkCapacity(word);
+		bits[word] ^= 1 << index;
+	}
+
+
+	/**
+	 * Sets the given int position to true, unless the position is negative or greater than 65535
+	 * (then it does nothing).
 	 *
 	 * @param index the index of the bit to set
 	 */
@@ -387,7 +486,7 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Changes the given int position from true to false, or from false to true,
-	 * unless the position is out of bounds(then it does nothing).
+	 * unless the position is negative or greater than 65535 (then it does nothing).
 	 *
 	 * @param index the index of the bit to flip
 	 */
