@@ -84,22 +84,15 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Creates a bit set from any primitive char collection, such as a {@link CharList} or {@link CharBitSet}.
+	 * Creates a bit set from a CharSequence, such as a {@link CharList} or {@link String}.
 	 *
-	 * @param toCopy the primitive char collection to copy
+	 * @param toCopy the char sequence to copy
 	 */
-	public CharBitSetResizable(PrimitiveCollection.OfChar toCopy) {
-		if (toCopy.isEmpty()) {
-			bits = new int[1];
-			return;
-		}
-		int end = 0;
-		for (CharIterator it = toCopy.iterator(); it.hasNext(); ) {
-			int n = it.next();
-			end = Math.max(end, n + 1);
-		}
-		bits = new int[end + 31 >>> 5];
-		addAll(toCopy);
+	public CharBitSetResizable(CharSequence toCopy) {
+		int len = toCopy.length();
+		bits = new int[Math.min(2048, len >>> 5)];
+		if (len == 0) return;
+		addSeq(toCopy);
 	}
 
 	/**
@@ -224,6 +217,38 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		boolean changed = false;
 		for (int i = off, n = off + length; i < n; i++) {
 			changed |= add(indices[i]);
+		}
+		return changed;
+	}
+
+
+	/**
+	 * Like {@link #addAll(char[])}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #addAll(OfChar)} when a type is both a CharSequence and a
+	 * PrimitiveCollection.OfChar .
+	 * @param indices the CharSequence to read distinct chars from
+	 * @return true if this was modified, or false otherwise
+	 */
+	public boolean addSeq(CharSequence indices) {
+		return addSeq(indices, 0, indices.length());
+	}
+
+	/**
+	 * Like {@link #addAll(char[], int, int)}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #addAll(OfChar)} when a type is both a CharSequence and a
+	 * PrimitiveCollection.OfChar .
+	 * @param indices the CharSequence to read distinct chars from
+	 * @param off the first position to read from {@code indices}
+	 * @param length how many chars to read from {@code indices}; because the CharSequence may have duplicates, this is
+	 *                  not necessarily the length that will be added
+	 * @return true if this was modified, or false otherwise
+	 */
+	public boolean addSeq(CharSequence indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length())
+			return false;
+		boolean changed = false;
+		for (int i = off, n = off + length; i < n; i++) {
+			changed |= add(indices.charAt(i));
 		}
 		return changed;
 	}

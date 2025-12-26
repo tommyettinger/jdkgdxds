@@ -70,14 +70,14 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Creates a bit set from any primitive char collection, such as a {@link CharList} or {@link CharDeque}.
+	 * Creates a bit set from a CharSequence, such as a {@link CharList} or {@link String}.
 	 *
-	 * @param toCopy the primitive int collection to copy
+	 * @param toCopy the char sequence to copy
 	 */
 	public CharBitSet(CharSequence toCopy) {
 		bits = new int[2048];
 		if (toCopy.length() == 0) return;
-		addAll(toCopy);
+		addSeq(toCopy);
 	}
 
 	/**
@@ -310,11 +310,11 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		return changed;
 	}
 
-	public boolean addAll(CharSequence indices) {
-		return addAll(indices, 0, indices.length());
+	public boolean addSeq(CharSequence indices) {
+		return addSeq(indices, 0, indices.length());
 	}
 
-	public boolean addAll(CharSequence indices, int off, int length) {
+	public boolean addSeq(CharSequence indices, int off, int length) {
 		if (length <= 0 || off < 0 || off + length > indices.length())
 			return false;
 		boolean changed = false;
