@@ -333,6 +333,70 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		return changed;
 	}
 
+	public void activateAll(char[] indices) {
+		activateAll(indices, 0, indices.length);
+	}
+
+	public void activateAll(char[] indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length)
+			return;
+		for (int i = off, n = off + length; i < n; i++) {
+			activate(indices[i]);
+		}
+	}
+
+
+	public void activateAll(int[] indices) {
+		activateAll(indices, 0, indices.length);
+	}
+
+	public void activateAll(int[] indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length)
+			return;
+		for (int i = off, n = off + length; i < n; i++) {
+			activate(indices[i]);
+		}
+	}
+
+	/**
+	 * Like {@link #activateAll(char[])}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #activateAll(OfChar)} when a type is both a CharSequence and
+	 * a PrimitiveCollection.OfChar .
+	 * @param indices the CharSequence to read distinct chars from
+	 */
+	public void activateSeq(CharSequence indices) {
+		activateSeq(indices, 0, indices.length());
+	}
+
+	/**
+	 * Like {@link #activateAll(char[], int, int)}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #activateAll(OfChar)} when a type is both a CharSequence and
+	 * a PrimitiveCollection.OfChar .
+	 * @param indices the CharSequence to read distinct chars from
+	 * @param off the first position to read from {@code indices}
+	 * @param length how many chars to read from {@code indices}; because the CharSequence may have duplicates, this is
+	 *                  not necessarily the length that will be added
+	 */
+	public void activateSeq(CharSequence indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length())
+			return;
+		for (int i = off, n = off + length; i < n; i++) {
+			activate(indices.charAt(i));
+		}
+	}
+
+	/**
+	 * Adds another PrimitiveCollection.OfChar, such as a CharList, to this set.
+	 * If you have another CharBitSet, you can use {@link #or(CharBitSet)}, which is faster.
+	 * @param indices another primitive collection of char
+	 */
+	public void activateAll(PrimitiveCollection.OfChar indices) {
+		CharIterator it = indices.iterator();
+		while (it.hasNext()) {
+			activate(it.nextChar());
+		}
+	}
+
 	/**
 	 * Evaluates this predicate on the given argument.
 	 *

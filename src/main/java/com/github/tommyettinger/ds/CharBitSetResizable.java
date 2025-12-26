@@ -364,9 +364,9 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Like {@link #addAll(char[])}, but takes a CharSequence.
-	 * Named differently to avoid ambiguity between {@link #addAll(OfChar)} when a type is both a CharSequence and a
-	 * PrimitiveCollection.OfChar .
+	 * Like {@link #activateAll(char[])}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #activateAll(OfChar)} when a type is both a CharSequence and
+	 * a PrimitiveCollection.OfChar .
 	 * @param indices the CharSequence to read distinct chars from
 	 */
 	public void activateSeq(CharSequence indices) {
@@ -374,9 +374,9 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Like {@link #addAll(char[], int, int)}, but takes a CharSequence.
-	 * Named differently to avoid ambiguity between {@link #addAll(OfChar)} when a type is both a CharSequence and a
-	 * PrimitiveCollection.OfChar .
+	 * Like {@link #activateAll(char[], int, int)}, but takes a CharSequence.
+	 * Named differently to avoid ambiguity between {@link #activateAll(OfChar)} when a type is both a CharSequence and
+	 * a PrimitiveCollection.OfChar .
 	 * @param indices the CharSequence to read distinct chars from
 	 * @param off the first position to read from {@code indices}
 	 * @param length how many chars to read from {@code indices}; because the CharSequence may have duplicates, this is
