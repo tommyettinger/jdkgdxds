@@ -123,6 +123,45 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		bits = new int[end + 31 >>> 5];
 		addAll(toCopy, off, length);
 	}
+	/**
+	 * Meant primarily for offline use to store the results of a CharPredicate on one target platform so those results
+	 * can be recalled identically on all platforms. This can be relevant because of changing Unicode versions on newer
+	 * JDK versions, or partial implementations of JDK predicates like {@link Character#isLetter(char)} on GWT.
+	 *
+	 * @param predicate a CharPredicate, which could be a method reference like {@code Character::isLetter}
+	 * @see #toJavaCode() Once you have a CharBitSet on a working target platform, you can store it with toJavaCode().
+	 */
+	public CharBitSetResizable(CharPredicate predicate) {
+		this();
+		if(predicate != null) {
+			for (int i = 65535; i >= 0; i--) {
+				if (predicate.test((char) i))
+					activate(i);
+			}
+		}
+	}
+
+	/**
+	 * Allows passing an int array either to be treated as char contents to enter (ignoring any ints outside the valid
+	 * char range) or as the raw bits that are used internally (which can be accessed with {@link #getRawBits()}.
+	 * Note that {@code ints} should always have a length of 1 or more; otherwise, it won't be used directly (or if
+	 * {@code useAsRawBits} is false, it won't have any contents copied out).
+	 *
+	 * @param ints depending on {@code useAsRawBits}, this will be used as either char items or raw bits
+	 * @param useAsRawBits if true, {@code ints} will be used as raw bits and used directly, not copied as char items
+	 */
+	public CharBitSetResizable(int[] ints, boolean useAsRawBits) {
+		if (ints != null) {
+			if (useAsRawBits) {
+				this.bits = ints;
+			} else {
+				this.bits = new int[8];
+				addAll(ints);
+			}
+		} else {
+			this.bits = new int[1];
+		}
+	}
 
 	/**
 	 * This gets the internal {@code int[]} used to store bits in bulk. This is not meant for typical usage; it may be
@@ -207,6 +246,22 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		return bits[word] != oldBits;
 	}
 
+	/**
+	 * Activates the given position and returns true if the bit set was modified
+	 * in the process. If the index is out of bounds,
+	 * this does not modify the bit set and returns false.
+	 *
+	 * @param index the index of the bit
+	 * @return true if this modified the bit set
+	 */
+	public boolean add(int index) {
+		if(index < 0 || index >= 65536) return false;
+		final int word = index >>> 5;
+		checkCapacity(word);
+		int oldBits = bits[word];
+		return (bits[word] = oldBits | 1 << index) != oldBits;
+	}
+
 	public boolean addAll(char[] indices) {
 		return addAll(indices, 0, indices.length);
 	}
@@ -221,6 +276,20 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		return changed;
 	}
 
+
+	public boolean addAll(int[] indices) {
+		return addAll(indices, 0, indices.length);
+	}
+
+	public boolean addAll(int[] indices, int off, int length) {
+		if (length <= 0 || off < 0 || off + length > indices.length)
+			return false;
+		boolean changed = false;
+		for (int i = off, n = off + length; i < n; i++) {
+			changed |= add(indices[i]);
+		}
+		return changed;
+	}
 
 	/**
 	 * Like {@link #addAll(char[])}, but takes a CharSequence.
@@ -704,6 +773,23 @@ public class CharBitSetResizable implements PrimitiveSet.SetOfChar, CharPredicat
 		return toString(", ", true);
 	}
 
+
+	/**
+	 * A convenience method that returns a String of Java source that constructs this CharBitSet directly from its raw
+	 * bits, without any extra steps involved.
+	 * <br>
+	 * This is intended to allow tests on one platform to set up CharBitSet values that store the results of some test,
+	 * such as {@link Character#isLetter(char)}, and to load those results on any platform without having to recalculate
+	 * the results (potentially with incorrect results on other platforms). Notably, GWT doesn't calculate many Unicode
+	 * queries correctly (at least according to their JVM documentation), and this can store their results for a recent
+	 * Unicode version by running on the most recent desktop JDK, and storing to be loaded on other platforms. Some
+	 * already-calculated bit sets are available in {@link com.github.tommyettinger.ds.support.util.CharPredicates}.
+	 *
+	 * @return a String of Java code that can be used to construct an exact copy of this CharBitSet
+	 */
+	public String toJavaCode() {
+		return "new CharBitSetResizable(new int[]{" + Base.joinReadable(",", bits) + "}, true)";
+	}
 
 	public static class CharBitSetResizableIterator implements CharIterator {
 		static private final int INDEX_ILLEGAL = -1, INDEX_ZERO = -1;
