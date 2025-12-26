@@ -77,7 +77,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	public CharBitSet(CharSequence toCopy) {
 		bits = new int[2048];
 		if (toCopy.length() == 0) return;
-		addSeq(toCopy);
+		activateSeq(toCopy);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		if (toCopy.length == 0) {
 			return;
 		}
-		addAll(toCopy, off, length);
+		activateAll(toCopy, off, length);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 				}
 			} else {
 				this.bits = new int[2048];
-				addAll(ints);
+				activateAll(ints);
 			}
 		} else {
 			this.bits = new int[2048];
@@ -432,6 +432,32 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		return iterator2;
 	}
 
+	/**
+	 * Sets the given int position to true.
+	 *
+	 * @param index the index of the bit to set
+	 */
+	public void activate(char index) {
+		bits[index >>> 5] |= 1 << index;
+	}
+
+	/**
+	 * Sets the given int position to false.
+	 *
+	 * @param index the index of the bit to clear
+	 */
+	public void deactivate(char index) {
+		bits[index >>> 5] &= ~(1 << index);
+	}
+
+	/**
+	 * Changes the given int position from true to false, or from false to true.
+	 *
+	 * @param index the index of the bit to flip
+	 */
+	public void toggle(char index) {
+		bits[index >>> 5] ^= 1 << index;
+	}
 
 	/**
 	 * Sets the given int position to true, unless the position is outside char range
@@ -864,6 +890,24 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
+		}
+
+		/**
+		 * Returns a new {@code char[]} containing the remaining items.
+		 * Does not change the position of this iterator.
+		 */
+		public char[] toArray() {
+			char[] arr = new char[set.size()];
+			int currentIdx = currentIndex, nextIdx = nextIndex;
+			boolean hn = hasNext;
+			int i = 0;
+			while (hasNext) {
+				arr[i++] = nextChar();
+			}
+			currentIndex = currentIdx;
+			nextIndex = nextIdx;
+			hasNext = hn;
+			return arr;
 		}
 
 		/**
