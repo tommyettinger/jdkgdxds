@@ -29,7 +29,7 @@ and both projects are Apache-licensed. Note that FastUtil won't work on all plat
 
 Gradle dependency (for all platforms except GWT):
 ```
-api "com.github.tommyettinger:jdkgdxds:1.13.2"
+api "com.github.tommyettinger:jdkgdxds:1.14.0"
 ```
 
 For GWT, see "How do I get it?" below, or use TeaVM instead.
@@ -212,7 +212,7 @@ build (if you know you need some property of a particular commit).
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.13.2"
+api "com.github.tommyettinger:jdkgdxds:1.14.0"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -220,15 +220,15 @@ It does not need any additional repository to be specified in most cases; if it 
 are downloaded automatically by Gradle, Maven, or most other common JVM build tools) on
 [digital](https://github.com/tommyettinger/digital), which provides common math code meant for use by multiple projects,
 and [funderby](https://github.com/tommyettinger/funderby), which has Java 8 functional interfaces for primitive types.
-The version for the `digital` dependency is 0.9.7 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.9.7"`). Funderby has only changed a bit since its initial release, and is on version
+The version for the `digital` dependency is 0.9.8 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.9.8"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`).
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.9.7:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.13.2:sources"
+implementation "com.github.tommyettinger:digital:0.9.8:sources"
+implementation "com.github.tommyettinger:jdkgdxds:1.14.0:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -244,12 +244,12 @@ If you have an Android module, you may need to ensure that multi-dex and desugar
 gdx-liftoff that target Java 8 or higher have this already, but older projects made with gdx-setup or manually do not.
 If these aren't already enabled, add:
 ```
-android.defaultConfig.multiDexEnabled true
-android.compileOptions.coreLibraryDesugaringEnabled true
+android.defaultConfig.multiDexEnabled = true
+android.compileOptions.coreLibraryDesugaringEnabled = true
 
 // These can be higher versions, but typically no greater than JDK 11
-android.compileOptions.sourceCompatibility JavaVersion.VERSION_1_8
-android.compileOptions.targetCompatibility JavaVersion.VERSION_1_8
+android.compileOptions.sourceCompatibility = JavaVersion.VERSION_1_8
+android.compileOptions.targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
 	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
@@ -272,7 +272,7 @@ on what your other dependencies use, to your project or its core module (if ther
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.9.7:sources"
+implementation "com.github.tommyettinger:digital:0.9.8:sources"
 implementation "com.github.tommyettinger:jdkgdxds:1e8e71a629:sources"
 ```
 to its
@@ -287,7 +287,7 @@ replaced with other commits shown on JitPack. If you need a commit dependency on
 need to exclude the implicit dependency from jdkgdxds on digital and rely on your explicit version of digital:
 ```
 implementation "com.github.tommyettinger:digital:$digitalCommitHashVersion"
-implementation('com.github.tommyettinger:jdkgdxds:1.13.2'){
+implementation('com.github.tommyettinger:jdkgdxds:1.14.0'){
     exclude group: 'com.github.tommyettinger', module: 'digital'
 }
 ```
@@ -418,6 +418,16 @@ will only affect user code that extends classes such as ObjectSet, ObjectObjectM
 LongIntMap, and so on, and even then only if the subclass needs to access `hashMultiplier`. The getters and setters for
 `hashMultiplier` are still there, and can still be overridden to do something even if a class doesn't use a
 `hashMultiplier` at all.
+
+## Updating to 1.14.0
+
+It's unlikely that this affects many people, but the recently-added CharBitSet class is now called CharBitSetFixedSize,
+and the more-recently-added CharBitSetResizable class replaces it and is called CharBitSet now. This reflects the more
+normal usage of sets being resizable by default, and fixed-size collections being a special case. Some methods may be
+missing from CharBitSet now, though they may not have been good ideas to have in the first place (`addAll()` methods
+taking byte or short arrays). There's also one constructor that was present in CharBitSet that isn't present in
+CharBitSetFixedSize; it had allowed bit sets with different table sizes from the FixedSize one's hard-coded 2048 ints,
+so it was removed. You can use CharBitSet (the resizable one) if you want that behavior.
 
 # Historical Dependency Info
 
