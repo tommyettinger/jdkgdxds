@@ -27,12 +27,12 @@ import java.util.List;
 
 /**
  * Using initial capacity 235970 and load factor 0.6f...
- * 55636600 ns taken
  * Revision 3 map gets total collisions: 0, PILEUP: 0
+ * 9787047300 ns taken for 1000 ops
  * <br>
  * Using initial capacity 58992 and load factor 0.6f...
- * 77342000 ns taken
  * Revision 3 map gets total collisions: 50132, PILEUP: 12
+ * 21186230400 ns taken for 1000 ops
  */
 public class CaseInsensitiveIntMap3CollisionTest {
 	public static void main(String[] args) throws IOException {
@@ -42,12 +42,15 @@ public class CaseInsensitiveIntMap3CollisionTest {
 		final int CAPACITY = words.size() >> 2;
 		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.6f...");
 		long start = System.nanoTime();
-		CaseInsensitiveIntMap3 set = new CaseInsensitiveIntMap3(CAPACITY, 0.6f);
-		for (int i = 0, n = words.size(); i < n; i++) {
-			set.put(words.get(i), i);
+		for (int it = 0; it < 1000; it++) {
+			CaseInsensitiveIntMap3 set = new CaseInsensitiveIntMap3(CAPACITY, 0.6f);
+			for (int i = 0, n = words.size(); i < n; i++) {
+				set.put(words.get(i), i);
+			}
+			if(it == 0)
+				set.clear();
 		}
-		System.out.println((System.nanoTime() - start) + " ns taken");
-		set.clear();
+		System.out.println((System.nanoTime() - start) + " ns taken for 1000 ops");
 	}
 
 }

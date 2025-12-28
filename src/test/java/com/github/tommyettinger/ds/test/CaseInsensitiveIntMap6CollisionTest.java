@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.tommyettinger.textra.utils.CaseInsensitiveIntMap;
 import com.github.tommyettinger.textra.utils.CaseInsensitiveIntMap6;
 
 import java.io.IOException;
@@ -28,27 +27,30 @@ import java.util.List;
 
 /**
  * Using initial capacity 235970 and load factor 0.6f...
- * 57587200 ns taken
  * Revision 6 map gets total collisions: 0, PILEUP: 0
+ * 11430243800 ns taken for 1000 ops
  * <br>
  * Using initial capacity 58992 and load factor 0.6f...
- * 76342500 ns taken
  * Revision 6 map gets total collisions: 50889, PILEUP: 12
+ * 24682457900 ns taken for 1000 ops
  */
 public class CaseInsensitiveIntMap6CollisionTest {
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
-		final int CAPACITY = words.size();
+		final int CAPACITY = words.size() >> 2;
 		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.6f...");
 		long start = System.nanoTime();
-		CaseInsensitiveIntMap6 set = new CaseInsensitiveIntMap6(CAPACITY, 0.6f);
-		for (int i = 0, n = words.size(); i < n; i++) {
-			set.put(words.get(i), i);
+		for (int it = 0; it < 1000; it++) {
+			CaseInsensitiveIntMap6 set = new CaseInsensitiveIntMap6(CAPACITY, 0.6f);
+			for (int i = 0, n = words.size(); i < n; i++) {
+				set.put(words.get(i), i);
+			}
+			if(it == 0)
+				set.clear();
 		}
-		System.out.println((System.nanoTime() - start) + " ns taken");
-		set.clear();
+		System.out.println((System.nanoTime() - start) + " ns taken for 1000 ops");
 	}
 
 }

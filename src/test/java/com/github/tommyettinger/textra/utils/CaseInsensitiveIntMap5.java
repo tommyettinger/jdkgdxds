@@ -25,8 +25,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static com.github.tommyettinger.ds.Utilities.GOOD_MULTIPLIERS;
-
 /** An unordered map where the keys are case-insensitive Strings and the values are unboxed ints. Null keys are not
  * allowed. No allocation is done except when growing the table size.
  * <p>
@@ -54,17 +52,6 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 
 	public long collisionTotal = 0;
 	public int longestPileup = 0;
-
-
-	/**
-	 * Used by {@link #place(String)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and
-	 * &lt;= {@link #mask}). This class expects the shift to be &gt; 32 and &lt; 64, which, if used with an int, will
-	 * still move the upper bits of an int to the lower bits due to Java's implicit modulus on shifts.
-	 * <p>
-	 * Currently, shift isn't used to move bits in hashes, but it is updated and used to select different values for
-	 * {@link #hashSeed}, with the value changing when the map resizes.
-	 */
-	public int shift = 0;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1-bits in its low positions, ie a
@@ -126,7 +113,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask) + shift];
+		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -142,7 +129,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 		int tableSize = tableSize(len, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask) + shift];
+		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -320,7 +307,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 	}
 
 	public void clear () {
-		System.out.println("Revision 5 map with shift=" + shift + " gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+		System.out.println("Revision 5 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 
 		if (size == 0) return;
 		size = 0;
@@ -365,7 +352,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
 
-		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask) + shift];
+		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
 
 		String[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
@@ -673,6 +660,15 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 			return array;
 		}
 	}
+
+	private static final int[] GOOD_MULTIPLIERS = new int[]{
+
+		0x31A6C2EB, 0xE5182F73, 0xB26FABE5,
+		0xB520960B, 0x570B3F85, 0x83657DE7, 0x9980FAB9, 0x2F299C91, 0xB423727D, 0xAA333A2D, 0x8AE04AAD,
+		0x288FAD91, 0xD90AC247, 0xC5F768E7, 0x92317571, 0xD5FA5B15, 0xDB6B35F7, 0xCC8965C7, 0xE0503E4F,
+		0xFC92BDFB, 0xBCA43B89, 0x60BB491B, 0xE4E04137, 0xCCFC4B61, 0x9DCAF41B, 0xC2F8BBC7, 0x844BAB95,
+		0xFF54D7E7, 0xE2061CD3, 0xB76FD153, 0x9E55CBF3, 0x8EB221CD, 0x614C5CFD
+	};
 
 	/**
 	 * Simple 32-bit multiplicative hashing with a tiny mix at the end. This gets the hash as if all cased letters have
