@@ -705,11 +705,11 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 	public static int hashCodeIgnoreCase (final CharSequence data, int seed) {
 		if(data == null) return 0;
 		final int len = data.length();
-		int a = seed ^ len;
+		seed ^= len;
 		for (int p = 0; p < len; p++) {
-			a=(a<<13|a>>>19)^Category.caseUp(data.charAt(p));
+			seed=(seed<<12|seed>>>20)+Category.caseUp(data.charAt(p));
 		}
-		return a^(a<<27|a>>> 5)^(a<< 9|a>>>23);
+		return seed^(seed<<27|seed>>> 5)^(seed<< 9|seed>>>23);
 	}
 
 

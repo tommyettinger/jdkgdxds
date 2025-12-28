@@ -28,19 +28,19 @@ import java.util.List;
 
 /**
  * Using initial capacity 235970 and load factor 0.6f...
- * 54022700 ns taken
+ * 53571500 ns taken
  * Revision 5 map gets total collisions: 0, PILEUP: 0
  * <br>
  * Using initial capacity 58992 and load factor 0.6f...
- * 74359300 ns taken
- * Revision 5 map gets total collisions: 51423, PILEUP: 12
+ * 74503900 ns taken
+ * Revision 5 map gets total collisions: 50934, PILEUP: 12
  */
 public class CaseInsensitiveIntMap5CollisionTest {
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
-		final int CAPACITY = words.size();
+		final int CAPACITY = words.size() >> 2;
 		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.6f...");
 		long start = System.nanoTime();
 		CaseInsensitiveIntMap5 set = new CaseInsensitiveIntMap5(CAPACITY, 0.6f);
