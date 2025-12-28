@@ -106,6 +106,8 @@ repositories {
 dependencies {
 	api "com.github.tommyettinger:funderby:$funderbyVersion"
 	api "com.github.tommyettinger:digital:$digitalVersion"
+	testImplementation "com.github.tommyettinger:regexodus:0.1.20"
+	testImplementation "com.badlogicgames.gdx:gdx:1.14.0"
 	testImplementation "com.github.tommyettinger:juniper:$juniperVersion"
 	testImplementation "junit:junit:4.13.2"
 }
