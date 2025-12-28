@@ -679,7 +679,7 @@ public class CaseInsensitiveIntMap implements Iterable<CaseInsensitiveIntMap.Ent
 	/**
 	 * 512 multipliers, each 21 bits, that were tested and had few enough collisions here.
 	 */
-	private static final int[] GOOD_MULTIPLIERS = {
+	public static final int[] GOOD_MULTIPLIERS = {
 			0x00110427, 0x00144057, 0x001AFB2F, 0x001F1753, 0x00135205, 0x00176C45, 0x001E3A15, 0x001F406D,
 			0x001DEF1D, 0x0018BD49, 0x001DE7A9, 0x00117949, 0x001BDC1D, 0x00190A37, 0x0014A839, 0x00108EB9,
 			0x0019EB97, 0x0014A6B7, 0x001B3283, 0x001F890F, 0x001502ED, 0x00197DB1, 0x001A2447, 0x001F9159,

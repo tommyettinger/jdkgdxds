@@ -42,13 +42,16 @@ public class CaseInsensitiveIntMap5CollisionTest {
 		Collections.shuffle(words, rng);
 		final int CAPACITY = words.size() >> 2;
 		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.6f...");
-		long start = System.nanoTime();
-		CaseInsensitiveIntMap5 set = new CaseInsensitiveIntMap5(CAPACITY, 0.6f);
-		for (int i = 0, n = words.size(); i < n; i++) {
-			set.put(words.get(i), i);
+		for (int sh = 0; sh < 400; sh++) {
+			long start = System.nanoTime();
+			CaseInsensitiveIntMap5 set = new CaseInsensitiveIntMap5(CAPACITY, 0.6f);
+			set.shift = sh;
+			for (int i = 0, n = words.size(); i < n; i++) {
+				set.put(words.get(i), i);
+			}
+			System.out.println((System.nanoTime() - start) + " ns taken");
+			set.clear();
 		}
-		System.out.println((System.nanoTime() - start) + " ns taken");
-		set.clear();
 	}
 
 }

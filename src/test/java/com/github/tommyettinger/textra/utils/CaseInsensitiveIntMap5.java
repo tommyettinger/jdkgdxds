@@ -19,13 +19,13 @@ package com.github.tommyettinger.textra.utils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
-import com.github.tommyettinger.ds.Utilities;
 import regexodus.Category;
-import regexodus.Compatibility;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import static com.github.tommyettinger.ds.Utilities.GOOD_MULTIPLIERS;
 
 /** An unordered map where the keys are case-insensitive Strings and the values are unboxed ints. Null keys are not
  * allowed. No allocation is done except when growing the table size.
@@ -64,7 +64,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 	 * Currently, shift isn't used to move bits in hashes, but it is updated and used to select different values for
 	 * {@link #hashSeed}, with the value changing when the map resizes.
 	 */
-	protected int shift;
+	public int shift = 0;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1-bits in its low positions, ie a
@@ -75,7 +75,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 	 * Used by {@link #place(String)} to modify {@link #hashCodeIgnoreCase(CharSequence, int)} results.
 	 * Changes on every call to {@link #resize(int)} by default.
 	 * This only needs to be serialized if the full key and value tables are serialized. Unless this is changed by some
-	 * other code (which would need to be a subclass), hashSeed is fully determined by the {@link #shift} when the map
+	 * other code (which would need to be a subclass), hashSeed is fully determined by the {@link #mask} when the map
 	 * was constructed or last resized.
 	 */
 	protected int hashSeed;
@@ -126,8 +126,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask) + 32;
-		hashSeed = Utilities.GOOD_MULTIPLIERS[shift];
+		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask) + shift];
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -143,8 +142,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 		int tableSize = tableSize(len, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask) + 32;
-		hashSeed = Utilities.GOOD_MULTIPLIERS[shift];
+		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask) + shift];
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -322,7 +320,7 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 	}
 
 	public void clear () {
-		System.out.println("Revision 5 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+		System.out.println("Revision 5 map with shift=" + shift + " gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 
 		if (size == 0) return;
 		size = 0;
@@ -366,9 +364,8 @@ public class CaseInsensitiveIntMap5 implements Iterable<CaseInsensitiveIntMap5.E
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask) + 32;
 
-		hashSeed = Utilities.GOOD_MULTIPLIERS[shift];
+		hashSeed = GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask) + shift];
 
 		String[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
