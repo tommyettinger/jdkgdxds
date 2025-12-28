@@ -19,7 +19,8 @@ package com.github.tommyettinger.textra.utils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
-import com.github.tommyettinger.ds.Utilities;
+import regexodus.Category;
+import regexodus.Compatibility;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -43,7 +44,7 @@ import static com.github.tommyettinger.ds.Utilities.GOOD_MULTIPLIERS;
  * from jdkgdxds, such as the randomized hashing (and the case-insensitive matching in general).
  * @author Nathan Sweet
  * @author Tommy Ettinger */
-public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.Entry> {
+public class CaseInsensitiveIntMap7 implements Iterable<CaseInsensitiveIntMap7.Entry> {
 	public int size;
 
 	protected String[] keyTable;
@@ -72,7 +73,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	 */
 	protected int mask;
 	/**
-	 * Used by {@link #place(String)} to modify {@link Utilities#hashCodeIgnoreCase(CharSequence, int)} results.
+	 * Used by {@link #place(String)} to modify {@link #hashCodeIgnoreCase(CharSequence, int)} results.
 	 * Changes on every call to {@link #resize(int)} by default.
 	 * This only needs to be serialized if the full key and value tables are serialized. Unless this is changed by some
 	 * other code (which would need to be a subclass), hashSeed is fully determined by the {@link #shift} when the map
@@ -105,20 +106,20 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	}
 
 	/** Creates a new map with an initial capacity of 51 and a load factor of 0.6. */
-	public CaseInsensitiveIntMap2() {
+	public CaseInsensitiveIntMap7() {
 		this(51, 0.6f);
 	}
 
 	/** Creates a new map with a load factor of 0.6 .
 	 * @param initialCapacity The backing array size is initialCapacity / loadFactor, increased to the next power of two. */
-	public CaseInsensitiveIntMap2(int initialCapacity) {
+	public CaseInsensitiveIntMap7(int initialCapacity) {
 		this(initialCapacity, 0.6f);
 	}
 
 	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
 	 * growing the backing table.
 	 * @param initialCapacity The backing array size is initialCapacity / loadFactor, increased to the next power of two. */
-	public CaseInsensitiveIntMap2(int initialCapacity, float loadFactor) {
+	public CaseInsensitiveIntMap7(int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor >= 1f)
 			throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor);
 		this.loadFactor = loadFactor;
@@ -127,7 +128,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = Integer.numberOfLeadingZeros(mask) + 32;
-		hashSeed = GOOD_MULTIPLIERS[shift];
+		hashSeed = GOOD_MULTIPLIERS[shift] * GOOD_MULTIPLIERS[256 - shift] ^ 0x9E3779B9;
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -136,7 +137,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	/** Creates a new map and puts key-value pairs sequentially from the two given arrays until either array is
 	 * exhausted. The initial capacity will be the length of the shorter of the two arrays, and the load factor will be
 	 * 0.6 . */
-	public CaseInsensitiveIntMap2(String[] keys, int[] values) {
+	public CaseInsensitiveIntMap7(String[] keys, int[] values) {
 		this.loadFactor = 0.6f;
 		final int len = Math.min(keys.length, values.length);
 
@@ -144,7 +145,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = Integer.numberOfLeadingZeros(mask) + 32;
-		hashSeed = GOOD_MULTIPLIERS[shift];
+		hashSeed = GOOD_MULTIPLIERS[shift] * GOOD_MULTIPLIERS[256 - shift] ^ 0x9E3779B9;
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -157,7 +158,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	}
 
 	/** Creates a new map identical to the specified map. */
-	public CaseInsensitiveIntMap2(CaseInsensitiveIntMap2 map) {
+	public CaseInsensitiveIntMap7(CaseInsensitiveIntMap7 map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
 		hashSeed = map.hashSeed;
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
@@ -168,7 +169,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 */
 	protected int place (String item) {
-		return Utilities.hashCodeIgnoreCase(item, hashSeed) & mask;
+		return hashCodeIgnoreCase(item, hashSeed) & mask;
 	}
 
 	/** Returns the index of the key if already present, else ~index for the next empty index. This can be overridden in this
@@ -221,7 +222,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 		}
 	}
 
-	public void putAll (CaseInsensitiveIntMap2 map) {
+	public void putAll (CaseInsensitiveIntMap7 map) {
 		ensureCapacity(map.size);
 		String[] keyTable = map.keyTable;
 		int[] valueTable = map.valueTable;
@@ -322,7 +323,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	}
 
 	public void clear () {
-		System.out.println("Revision 2 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+		System.out.println("Revision 7 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 
 		if (size == 0) return;
 		size = 0;
@@ -393,15 +394,15 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 		int[] valueTable = this.valueTable;
 		for (int i = 0, n = keyTable.length; i < n; i++) {
 			String key = keyTable[i];
-			if (key != null) h ^= Utilities.hashCodeIgnoreCase(key) ^ valueTable[i];
+			if (key != null) h ^= hashCodeIgnoreCase(key) ^ valueTable[i];
 		}
 		return h;
 	}
 
 	public boolean equals (Object obj) {
 		if (obj == this) return true;
-		if (!(obj instanceof CaseInsensitiveIntMap2)) return false;
-		CaseInsensitiveIntMap2 other = (CaseInsensitiveIntMap2)obj;
+		if (!(obj instanceof CaseInsensitiveIntMap7)) return false;
+		CaseInsensitiveIntMap7 other = (CaseInsensitiveIntMap7)obj;
 		if (other.size != size) return false;
 		String[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
@@ -524,11 +525,11 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	private static class MapIterator {
 		public boolean hasNext;
 
-		final CaseInsensitiveIntMap2 map;
+		final CaseInsensitiveIntMap7 map;
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public MapIterator (CaseInsensitiveIntMap2 map) {
+		public MapIterator (CaseInsensitiveIntMap7 map) {
 			this.map = map;
 			reset();
 		}
@@ -576,7 +577,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	public static class Entries extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		Entry entry = new Entry();
 
-		public Entries (CaseInsensitiveIntMap2 map) {
+		public Entries (CaseInsensitiveIntMap7 map) {
 			super(map);
 		}
 
@@ -603,7 +604,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	}
 
 	public static class Values extends MapIterator {
-		public Values (CaseInsensitiveIntMap2 map) {
+		public Values (CaseInsensitiveIntMap7 map) {
 			super(map);
 		}
 
@@ -642,7 +643,7 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 	}
 
 	public static class Keys extends MapIterator implements Iterable<String>, Iterator<String> {
-		public Keys (CaseInsensitiveIntMap2 map) {
+		public Keys (CaseInsensitiveIntMap7 map) {
 			super(map);
 		}
 
@@ -676,4 +677,84 @@ public class CaseInsensitiveIntMap2 implements Iterable<CaseInsensitiveIntMap2.E
 			return array;
 		}
 	}
+
+
+	/**
+	 * Gets a 32-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
+	 * Uses <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a> version 4.2, but shrunk down to work on 16-bit
+	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
+	 * converted to upper case by {@link Category#caseUp(char)}; this should be correct for all alphabets in
+	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
+	 * would use this with {@code (hashCodeIgnoreCase(text) >>> shift)}.
+	 *
+	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
+	 * @return an int hashCode; quality should be similarly good across any bits
+	 */
+	public static int hashCodeIgnoreCase(final CharSequence data) {
+		return hashCodeIgnoreCase(data, 0x36299db9);
+	}
+
+	/**
+	 * Gets a 32-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
+	 * Uses <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a> version 4.2, but shrunk down to work on 16-bit
+	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
+	 * converted to upper case by {@link Category#caseUp(char)}; this should be correct for all alphabets in
+	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
+	 * would use this with {@code (hashCodeIgnoreCase(text, seed) >>> shift)}.
+	 *
+	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
+	 * @param seed any int; must be the same between calls if two equivalent values for {@code data} must be the same
+	 * @return an int hashCode; quality should be similarly good across any bits
+	 */
+	public static int hashCodeIgnoreCase(final CharSequence data, int seed) {
+		if(data == null) return seed;
+		final int len = data.length();
+		final int x = GOOD_MULTIPLIERS[(seed & 127)];
+		final int y = GOOD_MULTIPLIERS[(seed >>> 7 & 127) + 128];
+		final int z = GOOD_MULTIPLIERS[(seed >>> 14 & 255) + 256];
+		int a, b;
+		int p = 0;
+		if (len <= 2) {
+			if (len == 2) {
+				a = Category.caseUp(data.charAt(0));
+				b = Category.caseUp(data.charAt(1));
+			} else if (len == 1) {
+				a = Category.caseUp(data.charAt(0));
+				b = 0;
+			} else a = b = 0;
+		} else {
+			int i = len;
+			if (i >= 6) {
+				int see1 = seed, see2 = seed;
+				do {
+					seed = Compatibility.imul(Category.caseUp(data.charAt(p)) << 8 ^ x, Category.caseUp(data.charAt(p + 1)) << 8 ^ seed);
+					seed ^= seed >>> 19;
+					see1 = Compatibility.imul(Category.caseUp(data.charAt(p + 2)) << 8 ^ y, Category.caseUp(data.charAt(p + 3)) << 8 ^ see1);
+					see1 ^= see1 >>> 11;
+					see2 = Compatibility.imul(Category.caseUp(data.charAt(p + 4)) << 8 ^ z, Category.caseUp(data.charAt(p + 5)) << 8 ^ see2);
+					see2 ^= see2 >>> 15;
+					p += 6;
+					i -= 6;
+				} while (i >= 6);
+				seed ^= see1 ^ see2;
+			}
+			while ((i > 2)) {
+				seed = Compatibility.imul(Category.caseUp(data.charAt(p)) << 8 ^ x, Category.caseUp(data.charAt(p + 1)) << 8 ^ seed);
+				seed ^= seed >>> 14;
+				i -= 2;
+				p += 2;
+			}
+			a = Category.caseUp(data.charAt(len - 2));
+			b = Category.caseUp(data.charAt(len - 1));
+		}
+		a = Compatibility.imul(a, z);
+		b ^= seed + len;
+		b = (b << 3 | b >>> 29) ^ (a = (a << 24 | a >>> 8) + b ^ y) + (a << 7 | a >>> 25);
+		a = (a << 14 | a >>> 18) ^ (b = (b << 29 | b >>> 3) + a ^ x) + (b << 11 | b >>> 21);
+		// I don't know if we need this level of robust mixing.
+//		b=(b<<19|b>>>13)^(a=(a<< 5|a>>>27)+b^y)+(a<<29|a>>> 3);
+//		a=(a<<17|a>>>15)^(b=(b<<11|b>>>21)+a^z)+(b<<23|b>>> 9);
+		return a ^ (a << 27 | a >>> 5) ^ (a << 9 | a >>> 23);
+	}
+
 }

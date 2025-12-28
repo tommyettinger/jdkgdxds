@@ -28,12 +28,12 @@ import java.util.List;
 
 /**
  * Using initial capacity 235970 and load factor 0.6f...
- * 48283100 ns taken
+ * 44913700 ns taken
  * Revision 2 map gets total collisions: 0, PILEUP: 0
  * <br>
  * Using initial capacity 58992 and load factor 0.6f...
- * 68840200 ns taken
- * Revision 2 map gets total collisions: 50308, PILEUP: 12
+ * 61027400 ns taken
+ * Revision 2 map gets total collisions: 50668, PILEUP: 14
  */
 public class CaseInsensitiveIntMap2CollisionTest {
 	public static void main(String[] args) throws IOException {
