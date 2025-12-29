@@ -17,7 +17,7 @@
 package com.github.tommyettinger.ds.test;
 
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.tommyettinger.textra.utils.CaseInsensitiveIntMap;
+import com.github.tommyettinger.textra.utils.CaseInsensitiveIntMap228;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -47,7 +47,7 @@ public class CaseInsensitiveIntMap228CollisionTest {
 		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.6f...");
 		long start = System.nanoTime();
 		for (int it = 0; it < 1000; it++) {
-			CaseInsensitiveIntMap set = new CaseInsensitiveIntMap(CAPACITY, 0.6f);
+			CaseInsensitiveIntMap228 set = new CaseInsensitiveIntMap228(CAPACITY, 0.6f);
 			for (int i = 0, n = words.size(); i < n; i++) {
 				set.put(words.get(i), i);
 			}

@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
 import regexodus.Category;
-import regexodus.Compatibility;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -42,7 +41,7 @@ import java.util.NoSuchElementException;
  * from jdkgdxds, such as the randomized hashing (and the case-insensitive matching in general).
  * @author Nathan Sweet
  * @author Tommy Ettinger */
-public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.Entry> {
+public class CaseInsensitiveIntMap228 implements Iterable<CaseInsensitiveIntMap228.Entry> {
 	public int size;
 
 	protected String[] keyTable;
@@ -54,11 +53,30 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	public long collisionTotal = 0;
 	public int longestPileup = 0;
 
+
+	/**
+	 * Used by {@link #place(String)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and
+	 * &lt;= {@link #mask}). This class expects the shift to be &gt; 32 and &lt; 64, which, if used with an int, will
+	 * still move the upper bits of an int to the lower bits due to Java's implicit modulus on shifts.
+	 * <p>
+	 * Currently, shift isn't used to move bits in hashes, but it is updated and used to select different values for
+	 * {@link #hashSeed}, with the value changing when the map resizes.
+	 */
+	protected int shift;
+
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1-bits in its low positions, ie a
 	 * power of two minus 1. In {@link #place(String)}, this is used to get the relevant low bits of a hash.
 	 */
 	protected int mask;
+	/**
+	 * Used by {@link #place(String)} to modify {@link #hashCodeIgnoreCase(CharSequence, int)} results.
+	 * Changes on every call to {@link #resize(int)} by default.
+	 * This only needs to be serialized if the full key and value tables are serialized. Unless this is changed by some
+	 * other code (which would need to be a subclass), hashSeed is fully determined by the {@link #shift} when the map
+	 * was constructed or last resized.
+	 */
+	protected int hashSeed;
 
 	protected transient Entries entries1, entries2;
 	protected transient Values values1, values2;
@@ -85,20 +103,20 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	/** Creates a new map with an initial capacity of 51 and a load factor of 0.6. */
-	public CaseInsensitiveIntMap3() {
+	public CaseInsensitiveIntMap228() {
 		this(51, 0.6f);
 	}
 
 	/** Creates a new map with a load factor of 0.6 .
 	 * @param initialCapacity The backing array size is initialCapacity / loadFactor, increased to the next power of two. */
-	public CaseInsensitiveIntMap3(int initialCapacity) {
+	public CaseInsensitiveIntMap228(int initialCapacity) {
 		this(initialCapacity, 0.6f);
 	}
 
 	/** Creates a new map with the specified initial capacity and load factor. This map will hold initialCapacity items before
 	 * growing the backing table.
 	 * @param initialCapacity The backing array size is initialCapacity / loadFactor, increased to the next power of two. */
-	public CaseInsensitiveIntMap3(int initialCapacity, float loadFactor) {
+	public CaseInsensitiveIntMap228(int initialCapacity, float loadFactor) {
 		if (loadFactor <= 0f || loadFactor >= 1f)
 			throw new IllegalArgumentException("loadFactor must be > 0 and < 1: " + loadFactor);
 		this.loadFactor = loadFactor;
@@ -106,6 +124,8 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
+		shift = Integer.numberOfLeadingZeros(mask) + 32;
+		hashSeed = GOOD_MULTIPLIERS[shift] * GOOD_MULTIPLIERS[256 - shift] ^ 0x9E3779B9;
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -114,13 +134,15 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	/** Creates a new map and puts key-value pairs sequentially from the two given arrays until either array is
 	 * exhausted. The initial capacity will be the length of the shorter of the two arrays, and the load factor will be
 	 * 0.6 . */
-	public CaseInsensitiveIntMap3(String[] keys, int[] values) {
+	public CaseInsensitiveIntMap228(String[] keys, int[] values) {
 		this.loadFactor = 0.6f;
 		final int len = Math.min(keys.length, values.length);
 
 		int tableSize = tableSize(len, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
+		shift = Integer.numberOfLeadingZeros(mask) + 32;
+		hashSeed = GOOD_MULTIPLIERS[shift] * GOOD_MULTIPLIERS[256 - shift] ^ 0x9E3779B9;
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -133,8 +155,9 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	/** Creates a new map identical to the specified map. */
-	public CaseInsensitiveIntMap3(CaseInsensitiveIntMap3 map) {
+	public CaseInsensitiveIntMap228(CaseInsensitiveIntMap228 map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
+		hashSeed = map.hashSeed;
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -143,7 +166,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 */
 	protected int place (String item) {
-		return hashCodeIgnoreCase(item, mask) & mask;
+		return hashCodeIgnoreCase(item, hashSeed) & mask;
 	}
 
 	/** Returns the index of the key if already present, else ~index for the next empty index. This can be overridden in this
@@ -196,7 +219,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		}
 	}
 
-	public void putAll (CaseInsensitiveIntMap3 map) {
+	public void putAll (CaseInsensitiveIntMap228 map) {
 		ensureCapacity(map.size);
 		String[] keyTable = map.keyTable;
 		int[] valueTable = map.valueTable;
@@ -297,7 +320,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	public void clear () {
-		System.out.println("Revision 3 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+		System.out.println("2.2.8 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 
 		if (size == 0) return;
 		size = 0;
@@ -341,6 +364,9 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
+		shift = Integer.numberOfLeadingZeros(mask) + 32;
+
+		hashSeed = GOOD_MULTIPLIERS[shift] * GOOD_MULTIPLIERS[256 - shift] ^ 0x9E3779B9;
 
 		String[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
@@ -372,8 +398,8 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 
 	public boolean equals (Object obj) {
 		if (obj == this) return true;
-		if (!(obj instanceof CaseInsensitiveIntMap3)) return false;
-		CaseInsensitiveIntMap3 other = (CaseInsensitiveIntMap3)obj;
+		if (!(obj instanceof CaseInsensitiveIntMap228)) return false;
+		CaseInsensitiveIntMap228 other = (CaseInsensitiveIntMap228)obj;
 		if (other.size != size) return false;
 		String[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;
@@ -496,11 +522,11 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	private static class MapIterator {
 		public boolean hasNext;
 
-		final CaseInsensitiveIntMap3 map;
+		final CaseInsensitiveIntMap228 map;
 		int nextIndex, currentIndex;
 		boolean valid = true;
 
-		public MapIterator (CaseInsensitiveIntMap3 map) {
+		public MapIterator (CaseInsensitiveIntMap228 map) {
 			this.map = map;
 			reset();
 		}
@@ -548,7 +574,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	public static class Entries extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
 		Entry entry = new Entry();
 
-		public Entries (CaseInsensitiveIntMap3 map) {
+		public Entries (CaseInsensitiveIntMap228 map) {
 			super(map);
 		}
 
@@ -575,7 +601,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	public static class Values extends MapIterator {
-		public Values (CaseInsensitiveIntMap3 map) {
+		public Values (CaseInsensitiveIntMap228 map) {
 			super(map);
 		}
 
@@ -614,7 +640,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	public static class Keys extends MapIterator implements Iterable<String>, Iterator<String> {
-		public Keys (CaseInsensitiveIntMap3 map) {
+		public Keys (CaseInsensitiveIntMap228 map) {
 			super(map);
 		}
 
@@ -650,8 +676,80 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	/**
-	 * Simple 32-bit multiplicative hashing with a tiny mix at the end. This gets the hash as if all cased letters have
-	 * been converted to upper case by {@link Category#caseUp(char)}; this should be correct for all alphabets in
+	 * 512 multipliers, each 21 bits, that were tested and had few enough collisions here.
+	 */
+	public static final int[] GOOD_MULTIPLIERS = {
+			0x00110427, 0x00144057, 0x001AFB2F, 0x001F1753, 0x00135205, 0x00176C45, 0x001E3A15, 0x001F406D,
+			0x001DEF1D, 0x0018BD49, 0x001DE7A9, 0x00117949, 0x001BDC1D, 0x00190A37, 0x0014A839, 0x00108EB9,
+			0x0019EB97, 0x0014A6B7, 0x001B3283, 0x001F890F, 0x001502ED, 0x00197DB1, 0x001A2447, 0x001F9159,
+			0x001C8F59, 0x00115359, 0x00163683, 0x00121771, 0x001FC839, 0x001D782D, 0x0010B147, 0x0017A481,
+			0x00146285, 0x001CDEFD, 0x001853BF, 0x001F1921, 0x001CE9E7, 0x001A3CF7, 0x001D6E03, 0x00192469,
+			0x001746EF, 0x0013A80F, 0x00104C7B, 0x0012B54B, 0x00126351, 0x0010B375, 0x0014D59D, 0x00123A37,
+			0x0015F383, 0x00134417, 0x0017E00B, 0x0013CDC5, 0x0016141B, 0x001FE2B7, 0x00199397, 0x00188BF9,
+			0x0010BA01, 0x00145F47, 0x00197749, 0x001F55DF, 0x00128BA9, 0x001871B3, 0x0016B5DF, 0x00144577,
+			0x0013FEDB, 0x001EA4FB, 0x0015E779, 0x001EA353, 0x001CFB85, 0x001B66E9, 0x001DDD59, 0x001493AD,
+			0x0017EBF1, 0x00105079, 0x001D51C9, 0x0014BDFB, 0x001D41AD, 0x001B85D9, 0x0015E173, 0x00196513,
+			0x001F7329, 0x00175EB9, 0x00199109, 0x0018EE5D, 0x0013C2EF, 0x00137FA3, 0x0011DE3B, 0x00167B03,
+			0x00186BAF, 0x00174413, 0x00115527, 0x00155B3B, 0x00192E1F, 0x001262F1, 0x0015C417, 0x0016BC6D,
+			0x0012B161, 0x0016BF83, 0x001FD2AF, 0x00164C1D, 0x001FC9CD, 0x001B0351, 0x0015C3DD, 0x0019A535,
+			0x001C87D1, 0x001A5EFD, 0x001796CD, 0x001F8FFD, 0x00155AC7, 0x001B61A3, 0x0016A8C7, 0x0014598F,
+			0x001C2379, 0x0013CAE9, 0x001711A3, 0x001A3051, 0x001207DB, 0x00177419, 0x0015682D, 0x00197E5D,
+			0x001E71A3, 0x001FF6F7, 0x001D41F9, 0x001304B5, 0x001DAF93, 0x0010B893, 0x001D4F5F, 0x0011571B,
+			0x00146829, 0x00127DE3, 0x001DFAB3, 0x0015D6FB, 0x0014C823, 0x00118E35, 0x0011FFF3, 0x00163C87,
+			0x001EEAC1, 0x001774D9, 0x00178F45, 0x001A1355, 0x00163055, 0x001406AD, 0x001F837D, 0x001D7791,
+			0x00132189, 0x001AAF61, 0x001A5DA1, 0x00195339, 0x001C0959, 0x00118555, 0x001F5089, 0x0014F9AD,
+			0x0017AD03, 0x00149B21, 0x0015A77D, 0x0019598F, 0x001399E9, 0x0015F519, 0x0017B019, 0x0016DFCF,
+			0x001E3727, 0x0014E715, 0x001E00A7, 0x001D2923, 0x0019DA5B, 0x001E999D, 0x001692CD, 0x0011675F,
+			0x00154251, 0x001E1FD1, 0x001CA0E3, 0x00104C8F, 0x00172AEF, 0x001FB11D, 0x0011C82D, 0x00156639,
+			0x0019C547, 0x001313B1, 0x00111491, 0x001B2013, 0x001C9161, 0x00174255, 0x001B9E9D, 0x00136EED,
+			0x00180BB5, 0x0015CA1D, 0x001011B1, 0x001D4F13, 0x00167571, 0x0014C73D, 0x0013CE13, 0x0018AEFB,
+			0x001AA60D, 0x0010B4F7, 0x001177A1, 0x001CB051, 0x001AD93D, 0x0011EE1D, 0x0014AAEF, 0x00156D99,
+			0x00118A99, 0x001D4AB5, 0x0019386F, 0x001A6671, 0x001BB619, 0x0016AC51, 0x001A9B49, 0x001405C7,
+			0x001F8297, 0x001FAAA3, 0x00165A91, 0x00198B9D, 0x001FAE8D, 0x001A1161, 0x001BCC61, 0x001289EF,
+			0x0016359B, 0x0014A90D, 0x00116F1F, 0x001D1327, 0x00195907, 0x0010D205, 0x00160305, 0x00103CF9,
+			0x001E52B3, 0x001531E7, 0x0018214F, 0x0018BA45, 0x001224C3, 0x00172017, 0x0016E997, 0x001E11A9,
+			0x0018B621, 0x001C0415, 0x001FBD61, 0x0018F233, 0x001DFB27, 0x00149CA1, 0x0015727D, 0x001EDCFB,
+			0x00137A97, 0x0010470F, 0x00193EFB, 0x00186D09, 0x001D5457, 0x001FF939, 0x001A125B, 0x001FC2B9,
+			0x001DFED7, 0x0010E173, 0x001D8C45, 0x001A5F23, 0x001130B7, 0x001E7627, 0x001FFB7B, 0x00117FFB,
+			0x001CE8C5, 0x00194911, 0x001C755F, 0x001FA005, 0x001AB7E3, 0x001B2267, 0x0015E959, 0x0011E587,
+			0x0013A087, 0x0013E2FF, 0x001DEE81, 0x001E9C51, 0x0017582B, 0x001A987F, 0x0013110D, 0x00139D37,
+			0x0013E6E9, 0x00146573, 0x00150CDD, 0x001A6D23, 0x00173335, 0x001519A9, 0x0012AF31, 0x0011BC6D,
+			0x0012208B, 0x0015E777, 0x001D9D5B, 0x0010B5A3, 0x001D16C3, 0x001D747B, 0x001BAB07, 0x00110B4D,
+			0x00169F97, 0x001D9863, 0x0019A897, 0x00117281, 0x001171AD, 0x001CFC1D, 0x0017A8A3, 0x001E22E5,
+			0x0017FF21, 0x001BBED3, 0x00171397, 0x00141705, 0x001764F9, 0x001FD64D, 0x001E575F, 0x001AC54B,
+			0x00184525, 0x00167C85, 0x001D0467, 0x0014849F, 0x00142D4D, 0x001E466F, 0x001CF5F3, 0x0012BB2B,
+			0x00177A6D, 0x001F739D, 0x001E1CBB, 0x00110B4F, 0x001CCA97, 0x001A7A8B, 0x001EE27B, 0x001F10ED,
+			0x0015E8E7, 0x00127213, 0x001FA37D, 0x001A5CCF, 0x00174AED, 0x0013CDB3, 0x001D0285, 0x00160E77,
+			0x0012839D, 0x0019D48F, 0x00175D4B, 0x001EDD83, 0x001D28E9, 0x0019CD55, 0x0018A5B9, 0x001890DF,
+			0x0011AA71, 0x001F5B39, 0x00161E59, 0x00126B73, 0x0019F94B, 0x001EFB05, 0x0018D0DB, 0x00161CB1,
+			0x00172839, 0x0016A807, 0x0016DDB3, 0x001C29F3, 0x00130927, 0x00110933, 0x001D48AD, 0x001D771F,
+			0x0015F46B, 0x0012F029, 0x001D0FB1, 0x001F2203, 0x0019C823, 0x001D3083, 0x0014D7F3, 0x0010980F,
+			0x0012F39D, 0x0010973B, 0x001FE897, 0x001646C5, 0x0016B883, 0x00132743, 0x001BC7DD, 0x00177A59,
+			0x00125625, 0x00102159, 0x00198BD7, 0x001D5929, 0x0012DB15, 0x0013F511, 0x00120391, 0x00139CEB,
+			0x001DD079, 0x001C14A5, 0x00199D61, 0x0016AD25, 0x00189031, 0x00108961, 0x0012E565, 0x001C1FC9,
+			0x00165357, 0x001036CD, 0x001CBFF9, 0x001D1677, 0x00111F07, 0x0016F10B, 0x00135FCB, 0x001039E3,
+			0x0011AB31, 0x0018E81D, 0x001C5E1D, 0x0015E307, 0x001F24A5, 0x00133BA9, 0x001CBA2D, 0x0018AFF5,
+			0x00110C6F, 0x00194F51, 0x001F1489, 0x0010BB83, 0x0011C7DF, 0x0018AD79, 0x001DC40D, 0x00182C73,
+			0x001152D1, 0x00189D5D, 0x00135DE9, 0x0019E5CB, 0x0012D751, 0x00107A79, 0x001CFC6B, 0x0017874B,
+			0x001673B5, 0x001BFC07, 0x00134693, 0x001CCB7D, 0x0012FC0D, 0x001084C9, 0x00109195, 0x0017C81B,
+			0x001436DB, 0x00117511, 0x001B43AD, 0x0014A08B, 0x00110E77, 0x00198705, 0x001BF0A9, 0x0015B1A5,
+			0x00147C69, 0x0011A699, 0x001283AF, 0x00192D37, 0x001A258D, 0x001E7977, 0x0016DDFF, 0x001B6795,
+			0x00182DA7, 0x001FADDF, 0x0017708F, 0x0010CD6D, 0x001D6439, 0x001929E7, 0x0017A3BF, 0x001F8F4F,
+			0x0012DD43, 0x0016A42F, 0x0019D07D, 0x0014FC61, 0x00103C4B, 0x00193B71, 0x001515F9, 0x001FD01F,
+			0x001AABEB, 0x001D4B3B, 0x00163CC1, 0x001FFDBD, 0x00162D79, 0x001EBA0D, 0x001FDA6F, 0x00108105,
+			0x0011F17F, 0x00108697, 0x00102E71, 0x001B618F, 0x001FFF2B, 0x001366B7, 0x0019D359, 0x001A0F6B,
+			0x001790ED, 0x001CC927, 0x001E68E7, 0x0011B6DB, 0x0015E91F, 0x00155B4D, 0x00137107, 0x0011E479,
+			0x001E5339, 0x0011A12D, 0x0012F0D5, 0x0011C939, 0x001F87A1, 0x001CEEB7, 0x001DAFB9, 0x00199E47,
+			0x00162773, 0x00138E89, 0x001C365D, 0x001619D3, 0x001D56BF, 0x001405D9, 0x001D39D7, 0x00185F55,
+			0x00181C09, 0x0010C3DD, 0x0010D7E3, 0x00109497, 0x0018B4FF, 0x00112CB9, 0x001FBBE1, 0x001D05F9,
+			0x0018F571, 0x0011D957, 0x001CD6C9, 0x001D12DB, 0x001E982F, 0x001F2B93, 0x0015EF87, 0x0018A2DD,
+	};
+
+	/**
+	 * Gets a 32-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
+	 * Uses <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a> version 4.2, but shrunk down to work on 16-bit
+	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
+	 * converted to upper case by {@link Category#caseUp(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (hashCodeIgnoreCase(text) >>> shift)} or
 	 * {@code (hashCodeIgnoreCase(text) & mask)}.
@@ -664,8 +762,10 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	/**
-	 * Simple 32-bit multiplicative hashing with a tiny mix at the end. This gets the hash as if all cased letters have
-	 * been converted to upper case by {@link Category#caseUp(char)}; this should be correct for all alphabets in
+	 * Gets a 32-bit thoroughly-random hashCode from the given CharSequence, ignoring the case of any cased letters.
+	 * UUses <a href="https://github.com/wangyi-fudan/wyhash">wyhash</a> version 4.2, but shrunk down to work on 16-bit
+	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
+	 * converted to upper case by {@link Category#caseUp(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
 	 * would use this with {@code (hashCodeIgnoreCase(text, seed) >>> shift)} or
 	 * {@code (hashCodeIgnoreCase(text, seed) & mask)}.
@@ -677,12 +777,44 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	public static int hashCodeIgnoreCase (final CharSequence data, int seed) {
 		if(data == null) return 0;
 		final int len = data.length();
-		seed ^= len;
-		for (int p = 0; p < len; p++) {
-			seed = Compatibility.imul(-594347645, seed + Category.caseUp(data.charAt(p)));
+		int b0 = GOOD_MULTIPLIERS[(seed & 127)];
+		int b1 = GOOD_MULTIPLIERS[(seed >>>  8 & 127)+128];
+		int b2 = GOOD_MULTIPLIERS[(seed >>> 16 & 127)+256];
+		int b3 = GOOD_MULTIPLIERS[(seed >>> 24 & 127)+384];
+		int a, b;
+		int p = 0;
+		if(len<=2){
+			if(len==2){ a=Category.caseUp(data.charAt(0)); b=Category.caseUp(data.charAt(1)); }
+			else if(len==1){ a=Category.caseUp(data.charAt(0)); b=0;}
+			else a=b=0;
 		}
-		return seed^(seed<<27|seed>>> 5)^(seed<< 9|seed>>>23);
+		else{
+			int i=len;
+			if(i>=6){
+				int see1=seed, see2=seed;
+				do{
+					seed=(Category.caseUp(data.charAt(p  ))^b1)*(Category.caseUp(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
+					see1=(Category.caseUp(data.charAt(p+2))^b2)*(Category.caseUp(data.charAt(p+3))^see1);see1^=(see1<<21|see1>>>11)^(see1<<15|see1>>>19);
+					see2=(Category.caseUp(data.charAt(p+4))^b3)*(Category.caseUp(data.charAt(p+5))^see2);see2^=(see2<<26|see2>>> 6)^(see2<< 7|see2>>>25);
+					p+=6;i-=6;
+				}while(i>=6);
+				seed^=see1^see2;
+			}
+			while((i>2)){
+				seed=(Category.caseUp(data.charAt(p  ))^b1)*(Category.caseUp(data.charAt(p+1))^seed);seed^=(seed<< 3|seed>>>29)^(seed<<24|seed>>> 8);
+				i-=2; p+=2;
+			}
+			a=Category.caseUp(data.charAt(len-2));
+			b=Category.caseUp(data.charAt(len-1));
+		}
+		a*=b2;
+		b^=seed+len;
+		b=(b<< 3|b>>>29)^(a=(a<<24|a>>> 8)+b^b0)+(a<< 7|a>>>25);
+		a=(a<<14|a>>>18)^(b=(b<<29|b>>> 3)+a^b1)+(b<<11|b>>>21);
+		// I don't know if we need this level of robust mixing.
+//		b=(b<<19|b>>>13)^(a=(a<< 5|a>>>27)+b^b2)+(a<<29|a>>> 3);
+//		a=(a<<17|a>>>15)^(b=(b<<11|b>>>21)+a^b3)+(b<<23|b>>> 9);
+		return a^(a<<27|a>>> 5)^(a<< 9|a>>>23);
 	}
-
 
 }
