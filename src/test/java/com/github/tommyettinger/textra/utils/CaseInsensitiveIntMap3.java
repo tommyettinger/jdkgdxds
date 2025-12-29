@@ -55,17 +55,6 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	public long collisionTotal = 0;
 	public int longestPileup = 0;
 
-
-	/**
-	 * Used by {@link #place(String)} to bit shift the upper bits of a {@code long} into a usable range (&gt;= 0 and
-	 * &lt;= {@link #mask}). This class expects the shift to be &gt; 32 and &lt; 64, which, if used with an int, will
-	 * still move the upper bits of an int to the lower bits due to Java's implicit modulus on shifts.
-	 * <p>
-	 * Currently, shift isn't used to move bits in hashes, but it is updated and used to select different values for
-	 * {@link #hashSeed}, with the value changing when the map resizes.
-	 */
-	public int shift;
-
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1-bits in its low positions, ie a
 	 * power of two minus 1. In {@link #place(String)}, this is used to get the relevant low bits of a hash.
@@ -321,7 +310,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	public void clear () {
-		System.out.println("Revision 3 map with mul="+Utilities.GOOD_MULTIPLIERS[shift]+" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+		System.out.println("Revision 3 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 
 		if (size == 0) return;
 		size = 0;
@@ -703,10 +692,9 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	public int hashCodeIgnoreCase (final CharSequence data, int seed) {
 		if(data == null) return 0;
 		final int len = data.length();
-		int m = Utilities.GOOD_MULTIPLIERS[shift];
 		seed ^= len;
 		for (int p = 0; p < len; p++) {
-			seed = Compatibility.imul(m, seed + Category.caseUp(data.charAt(p)));
+			seed = Compatibility.imul(373526903, seed + Category.caseUp(data.charAt(p)));
 		}
 		return seed^(seed<<27|seed>>> 5)^(seed<< 9|seed>>>23);
 	}

@@ -28,28 +28,27 @@ import java.util.List;
 /**
  * Using initial capacity 235970 and load factor 0.6f...
  * Revision 3 map gets total collisions: 0, PILEUP: 0
- * 9787047300 ns taken for 1000 ops
+ * 9829011300 ns taken for 1000 ops
  * <br>
  * Using initial capacity 58992 and load factor 0.6f...
- * Revision 3 map gets total collisions: 50132, PILEUP: 12
- * 21186230400 ns taken for 1000 ops
+ * Revision 3 map gets total collisions: 50053, PILEUP: 10
+ * 20824207700 ns taken for 1000 ops
  */
 public class CaseInsensitiveIntMap3CollisionTest {
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
-		final int CAPACITY = words.size() >> 2;
+		final int CAPACITY = words.size();
 		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.6f...");
 		long start = System.nanoTime();
-		for (int sh = 0; sh < 512; sh++) {
-//		for (int it = 0; it < 1000; it++) {
+		for (int it = 0; it < 1000; it++) {
 			CaseInsensitiveIntMap3 set = new CaseInsensitiveIntMap3(CAPACITY, 0.6f);
-			set.shift = sh;
 			for (int i = 0, n = words.size(); i < n; i++) {
 				set.put(words.get(i), i);
 			}
-			set.clear();
+			if(it == 0)
+				set.clear();
 		}
 		System.out.println((System.nanoTime() - start) + " ns taken for 1000 ops");
 	}
