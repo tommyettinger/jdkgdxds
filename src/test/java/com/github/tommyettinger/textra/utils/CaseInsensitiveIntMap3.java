@@ -61,8 +61,6 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	 */
 	protected int mask;
 
-	public int shift = 0;
-
 	protected transient Entries entries1, entries2;
 	protected transient Values values1, values2;
 	protected transient Keys keys1, keys2;
@@ -300,7 +298,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	public void clear () {
-		System.out.println("Revision 3 map with m="+Utilities.GOOD_MULTIPLIERS[shift]+" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+		System.out.println("Revision 3 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 
 		if (size == 0) return;
 		size = 0;
@@ -680,10 +678,9 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	public int hashCodeIgnoreCase (final CharSequence data, int seed) {
 		if(data == null) return 0;
 		final int len = data.length();
-		final int m = Utilities.GOOD_MULTIPLIERS[shift];
 		seed ^= len;
 		for (int p = 0; p < len; p++) {
-			seed = Compatibility.imul(m, seed + Category.caseUp(data.charAt(p)));
+			seed = Compatibility.imul(-594347645, seed + Category.caseUp(data.charAt(p)));
 		}
 		return seed^(seed<<27|seed>>> 5)^(seed<< 9|seed>>>23);
 	}
