@@ -64,7 +64,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	 * Currently, shift isn't used to move bits in hashes, but it is updated and used to select different values for
 	 * {@link #hashSeed}, with the value changing when the map resizes.
 	 */
-	protected int shift;
+	public int shift;
 
 	/**
 	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1-bits in its low positions, ie a
@@ -75,7 +75,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	 * Used by {@link #place(String)} to modify {@link #hashCodeIgnoreCase(CharSequence, int)} results.
 	 * Changes on every call to {@link #resize(int)} by default.
 	 * This only needs to be serialized if the full key and value tables are serialized. Unless this is changed by some
-	 * other code (which would need to be a subclass), hashSeed is fully determined by the {@link #shift} when the map
+	 * other code (which would need to be a subclass), hashSeed is fully determined by the {@link #mask} when the map
 	 * was constructed or last resized.
 	 */
 	protected int hashSeed;
@@ -126,8 +126,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask) + 32;
-		hashSeed = Utilities.GOOD_MULTIPLIERS[shift];
+		hashSeed = Utilities.GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -143,8 +142,8 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		int tableSize = tableSize(len, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask) + 32;
-		hashSeed = Utilities.GOOD_MULTIPLIERS[shift];
+
+		hashSeed = Utilities.GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -322,7 +321,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	public void clear () {
-		System.out.println("Revision 3 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+		System.out.println("Revision 3 map with mul="+Utilities.GOOD_MULTIPLIERS[shift]+" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 
 		if (size == 0) return;
 		size = 0;
@@ -366,9 +365,8 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-		shift = Integer.numberOfLeadingZeros(mask) + 32;
 
-		hashSeed = Utilities.GOOD_MULTIPLIERS[shift];
+		hashSeed = Utilities.GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
 
 		String[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
@@ -687,7 +685,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
 	 * @return an int hashCode; quality should be similarly good across any bits
 	 */
-	public static int hashCodeIgnoreCase (final CharSequence data) {
+	public int hashCodeIgnoreCase (final CharSequence data) {
 		return hashCodeIgnoreCase(data, 908697017);
 	}
 
@@ -702,10 +700,10 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	 * @param seed any int; must be the same between calls if two equivalent values for {@code data} must be the same
 	 * @return an int hashCode; quality should be similarly good across any bits
 	 */
-	public static int hashCodeIgnoreCase (final CharSequence data, int seed) {
+	public int hashCodeIgnoreCase (final CharSequence data, int seed) {
 		if(data == null) return 0;
 		final int len = data.length();
-		int m = Utilities.GOOD_MULTIPLIERS[(seed & 511)];
+		int m = Utilities.GOOD_MULTIPLIERS[shift];
 		seed ^= len;
 		for (int p = 0; p < len; p++) {
 			seed = Compatibility.imul(m, seed + Category.caseUp(data.charAt(p)));

@@ -42,13 +42,14 @@ public class CaseInsensitiveIntMap3CollisionTest {
 		final int CAPACITY = words.size() >> 2;
 		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.6f...");
 		long start = System.nanoTime();
-		for (int it = 0; it < 1000; it++) {
+		for (int sh = 0; sh < 512; sh++) {
+//		for (int it = 0; it < 1000; it++) {
 			CaseInsensitiveIntMap3 set = new CaseInsensitiveIntMap3(CAPACITY, 0.6f);
+			set.shift = sh;
 			for (int i = 0, n = words.size(); i < n; i++) {
 				set.put(words.get(i), i);
 			}
-			if(it == 0)
-				set.clear();
+			set.clear();
 		}
 		System.out.println((System.nanoTime() - start) + " ns taken for 1000 ops");
 	}
