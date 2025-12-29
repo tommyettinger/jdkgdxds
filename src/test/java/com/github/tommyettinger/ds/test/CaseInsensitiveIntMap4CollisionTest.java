@@ -33,13 +33,17 @@ import java.util.List;
  * Using initial capacity 58992 and load factor 0.6f...
  * Revision 4 map gets total collisions: 50489, PILEUP: 12
  * 22358285800 ns taken for 1000 ops
+ * <br>
+ * Using initial capacity 230 and load factor 0.6f...
+ * Revision 4 map gets total collisions: 67379, PILEUP: 14
+ * 25071527200 ns taken for 1000 ops
  */
 public class CaseInsensitiveIntMap4CollisionTest {
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
-		final int CAPACITY = words.size() >> 2;
+		final int CAPACITY = words.size() >> 10;
 		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.6f...");
 		long start = System.nanoTime();
 		for (int it = 0; it < 1000; it++) {
