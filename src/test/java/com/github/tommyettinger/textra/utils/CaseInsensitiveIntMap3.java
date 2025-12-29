@@ -60,14 +60,8 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	 * power of two minus 1. In {@link #place(String)}, this is used to get the relevant low bits of a hash.
 	 */
 	protected int mask;
-	/**
-	 * Used by {@link #place(String)} to modify {@link #hashCodeIgnoreCase(CharSequence, int)} results.
-	 * Changes on every call to {@link #resize(int)} by default.
-	 * This only needs to be serialized if the full key and value tables are serialized. Unless this is changed by some
-	 * other code (which would need to be a subclass), hashSeed is fully determined by the {@link #mask} when the map
-	 * was constructed or last resized.
-	 */
-	protected int hashSeed;
+
+	public int shift = 0;
 
 	protected transient Entries entries1, entries2;
 	protected transient Values values1, values2;
@@ -115,7 +109,6 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		int tableSize = tableSize(initialCapacity, loadFactor);
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
-		hashSeed = Utilities.GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
 
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
@@ -132,8 +125,6 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		threshold = (int)(tableSize * loadFactor);
 		mask = tableSize - 1;
 
-		hashSeed = Utilities.GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
-
 		keyTable = new String[tableSize];
 		valueTable = new int[tableSize];
 
@@ -147,7 +138,6 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	/** Creates a new map identical to the specified map. */
 	public CaseInsensitiveIntMap3(CaseInsensitiveIntMap3 map) {
 		this((int)(map.keyTable.length * map.loadFactor), map.loadFactor);
-		hashSeed = map.hashSeed;
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -156,7 +146,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	/** Returns an index &gt;= 0 and &lt;= {@link #mask} for the specified {@code item}.
 	 */
 	protected int place (String item) {
-		return hashCodeIgnoreCase(item, hashSeed) & mask;
+		return hashCodeIgnoreCase(item, mask) & mask;
 	}
 
 	/** Returns the index of the key if already present, else ~index for the next empty index. This can be overridden in this
@@ -310,7 +300,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	}
 
 	public void clear () {
-		System.out.println("Revision 3 map gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+		System.out.println("Revision 3 map with m="+Utilities.GOOD_MULTIPLIERS[shift]+" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
 
 		if (size == 0) return;
 		size = 0;
@@ -354,8 +344,6 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 		int oldCapacity = keyTable.length;
 		threshold = (int)(newSize * loadFactor);
 		mask = newSize - 1;
-
-		hashSeed = Utilities.GOOD_MULTIPLIERS[Integer.numberOfLeadingZeros(mask)];
 
 		String[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;
@@ -692,9 +680,10 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 	public int hashCodeIgnoreCase (final CharSequence data, int seed) {
 		if(data == null) return 0;
 		final int len = data.length();
+		final int m = Utilities.GOOD_MULTIPLIERS[shift];
 		seed ^= len;
 		for (int p = 0; p < len; p++) {
-			seed = Compatibility.imul(373526903, seed + Category.caseUp(data.charAt(p)));
+			seed = Compatibility.imul(m, seed + Category.caseUp(data.charAt(p)));
 		}
 		return seed^(seed<<27|seed>>> 5)^(seed<< 9|seed>>>23);
 	}
