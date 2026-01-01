@@ -1,8 +1,12 @@
+[1.14.1]
+- The dependency on digital has been updated to 0.9.9 . This is a GWT bug-fix update, and allows the library to work on GWT again. (0.9.8 was broken on GWT.)
+
 [1.14.0]
 - [BREAKING] CharBitSet was renamed to CharBitSetFixedSize and now always uses a table with 2048 ints, as a way to avoid some extra checks at runtime.
 - [BREAKING] CharBitSetResizable was renamed to CharBitSet, since it acts more how a bit set is expected to act (and be resizable still).
 - There's better feature parity between CharBitSetFixedSize and CharBitSet now, and more methods are implemented in both.
 - CharPredicates uses Java 25's Character data now.
+- The dependency on digital has been updated to 0.9.8 . This includes TrigTools improvements and some additions to BitConversion.
 
 [1.13.2]
 - CharBitSetResizable was added, which acts a lot like CharBitSet but doesn't use 2048 ints in a table by default, and can be much smaller.
