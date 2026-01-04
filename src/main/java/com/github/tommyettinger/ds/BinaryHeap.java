@@ -40,9 +40,6 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	private Node[] nodes;
 	private final boolean isMaxHeap;
 
-	protected transient HeapIterator<T> iterator1 = null;
-	protected transient HeapIterator<T> iterator2 = null;
-
 	/**
 	 * Constructs a BinaryHeap with 16 starting capacity, sorting lowest-first (a min-heap).
 	 */
@@ -729,33 +726,19 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 	}
 
 	/**
-	 * Returns an iterator over the elements contained in this collection.
+	 * Returns a new iterator over the elements contained in this collection.
 	 *
-	 * @return an iterator over the elements contained in this collection
+	 * @return a new iterator over the elements contained in this collection
 	 */
 	@Override
 	public HeapIterator<T> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new HeapIterator<>(this);
-			iterator2 = new HeapIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new HeapIterator<>(this);
 
 	}
 
 	public static class HeapIterator<T extends Node> implements Iterator<T> {
 		private final BinaryHeap<T> heap;
 		private int index;
-		private boolean valid = true;
 
 		public HeapIterator(BinaryHeap<T> binaryHeap) {
 			heap = binaryHeap;
@@ -771,9 +754,6 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < heap.size;
 		}
 
@@ -784,9 +764,6 @@ public class BinaryHeap<T extends BinaryHeap.Node> extends AbstractQueue<T> impl
 		 */
 		@Override
 		public T next() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= heap.size) {
 				throw new NoSuchElementException();
 			}

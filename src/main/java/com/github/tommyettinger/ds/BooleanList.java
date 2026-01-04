@@ -918,30 +918,14 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this BooleanList. Iterates in order if
+	 * Returns a new primitive iterator over the items in this BooleanList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a BooleanList but not a BooleanBag.
-	 * <br>
-	 * This will reuse one of two iterators in this BooleanList; this does not allow nested iteration.
-	 * Use {@link BooleanListIterator#BooleanListIterator(BooleanList)} to nest iterators.
 	 *
 	 * @return a {@link BooleanIterator}; use its nextBoolean() method instead of next()
 	 */
 	@Override
 	public BooleanListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new BooleanListIterator(this);
-			iterator2 = new BooleanListIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new BooleanListIterator(this);
 	}
 
 	/**
@@ -951,12 +935,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	public static class BooleanListIterator implements BooleanIterator {
 		protected int index, latest = -1;
 		protected BooleanList list;
-		/**
-		 * Used to track if a reusable iterator can be used now.
-		 * This is public so subclasses of BooleanList (in other packages) can still access this
-		 * directly even though it belongs to BooleanListIterator, not BooleanList.
-		 */
-		public boolean valid = true;
 
 		public BooleanListIterator(BooleanList list) {
 			this.list = list;
@@ -977,9 +955,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 */
 		@Override
 		public boolean nextBoolean() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -995,9 +970,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < list.size();
 		}
 
@@ -1011,9 +983,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -1030,9 +999,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 *                                element
 		 */
 		public boolean previousBoolean() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || list.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -1081,9 +1047,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1113,9 +1076,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(boolean t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1143,9 +1103,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(boolean t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}
