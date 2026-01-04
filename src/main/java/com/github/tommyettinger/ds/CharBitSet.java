@@ -43,9 +43,6 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	 */
 	protected int[] bits;
 
-	protected transient CharBitSetIterator iterator1;
-	protected transient CharBitSetIterator iterator2;
-
 	/**
 	 * Creates a bit set with an initial size that can store positions between 0 and 31, inclusive, without
 	 * needing to resize. This can resize to fit larger positions.
@@ -401,26 +398,12 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 	}
 
 	/**
-	 * Returns an iterator for the keys in the set. Remove is supported.
-	 * <p>
-	 * Use the {@link CharBitSetIterator} constructor for nested or multithreaded iteration.
+	 * Returns a new iterator for the keys in the set; remove is supported.
+	 * @return a new iterator for the keys in the set; remove is supported
 	 */
 	@Override
 	public CharBitSetIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new CharBitSetIterator(this);
-			iterator2 = new CharBitSetIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new CharBitSetIterator(this);
 	}
 
 	/**
@@ -895,7 +878,6 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 
 		final CharBitSet set;
 		int nextIndex, currentIndex;
-		boolean valid = true;
 
 		public CharBitSetIterator(CharBitSet set) {
 			this.set = set;
@@ -922,9 +904,6 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -941,9 +920,6 @@ public class CharBitSet implements PrimitiveSet.SetOfChar, CharPredicate {
 		public char nextChar() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			int key = nextIndex;
 			currentIndex = nextIndex;

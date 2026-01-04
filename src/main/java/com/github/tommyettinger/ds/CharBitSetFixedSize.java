@@ -48,9 +48,6 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 */
 	protected int[] bits;
 
-	protected transient CharBitSetFixedSizeIterator iterator1;
-	protected transient CharBitSetFixedSizeIterator iterator2;
-
 	/**
 	 * Creates a bit set with an initial size that can store positions between 0 and 65535, inclusive, without
 	 * needing to resize. This won't ever resize.
@@ -410,26 +407,12 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Returns an iterator for the keys in the set. Remove is supported.
-	 * <p>
-	 * Use the {@link CharBitSetFixedSizeIterator} constructor for nested or multithreaded iteration.
+	 * Returns a new iterator for the keys in the set; remove is supported.
+	 * @return a new iterator for the keys in the set; remove is supported
 	 */
 	@Override
 	public CharBitSetFixedSizeIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new CharBitSetFixedSizeIterator(this);
-			iterator2 = new CharBitSetFixedSizeIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new CharBitSetFixedSizeIterator(this);
 	}
 
 	/**
@@ -838,7 +821,6 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 
 		final CharBitSetFixedSize set;
 		int nextIndex, currentIndex;
-		boolean valid = true;
 
 		public CharBitSetFixedSizeIterator(CharBitSetFixedSize set) {
 			this.set = set;
@@ -865,9 +847,6 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -884,9 +863,6 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 		public char nextChar() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			char key = (char)nextIndex;
 			currentIndex = nextIndex;
