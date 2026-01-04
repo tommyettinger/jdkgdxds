@@ -49,8 +49,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	public char[] items;
 	protected int size;
-	protected transient CharListIterator iterator1;
-	protected transient CharListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.
@@ -1227,30 +1225,14 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this CharList. Iterates in order if
+	 * Returns a new primitive iterator over the items in this CharList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a CharList but not a CharBag.
-	 * <br>
-	 * This will reuse one of two iterators in this CharList; this does not allow nested iteration.
-	 * Use {@link CharListIterator#CharListIterator(CharList)} to nest iterators.
 	 *
-	 * @return a {@link CharIterator}; use its nextChar() method instead of next()
+	 * @return a new {@link CharIterator}; use its nextChar() method instead of next()
 	 */
 	@Override
 	public CharListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new CharListIterator(this);
-			iterator2 = new CharListIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new CharListIterator(this);
 	}
 
 	@Override
@@ -1481,12 +1463,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	public static class CharListIterator implements CharIterator {
 		protected int index, latest = -1;
 		protected CharList list;
-		/**
-		 * Used to track if a reusable iterator can be used now.
-		 * This is public so subclasses of CharList (in other packages) can still access this
-		 * directly even though it belongs to CharListIterator, not CharList.
-		 */
-		public boolean valid = true;
 
 		public CharListIterator(CharList list) {
 			this.list = list;
@@ -1507,9 +1483,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 */
 		@Override
 		public char nextChar() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1525,9 +1498,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < list.size();
 		}
 
@@ -1541,9 +1511,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -1560,9 +1527,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 *                                element
 		 */
 		public char previousChar() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || list.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -1611,9 +1575,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1643,9 +1604,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(char t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1673,9 +1631,6 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(char t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}
