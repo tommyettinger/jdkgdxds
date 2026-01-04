@@ -47,8 +47,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 
 	public byte[] items;
 	protected int size;
-	protected transient ByteListIterator iterator1;
-	protected transient ByteListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.
@@ -1030,30 +1028,14 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this ByteList. Iterates in order if
+	 * Returns a new primitive iterator over the int items in this ByteList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a ByteList but not a ByteBag.
-	 * <br>
-	 * This will reuse one of two iterators in this ByteList; this does not allow nested iteration.
-	 * Use {@link ByteListIterator#ByteListIterator(ByteList)} to nest iterators.
 	 *
 	 * @return a {@link ByteIterator}; use its nextByte() method instead of next()
 	 */
 	@Override
 	public ByteListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ByteListIterator(this);
-			iterator2 = new ByteListIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new ByteListIterator(this);
 	}
 
 	/**
@@ -1063,12 +1045,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	public static class ByteListIterator implements ByteIterator {
 		protected int index, latest = -1;
 		protected ByteList list;
-		/**
-		 * Used to track if a reusable iterator can be used now.
-		 * This is public so subclasses of ByteList (in other packages) can still access this
-		 * directly even though it belongs to ByteListIterator, not ByteList.
-		 */
-		public boolean valid = true;
 
 		public ByteListIterator(ByteList list) {
 			this.list = list;
@@ -1089,9 +1065,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 */
 		@Override
 		public byte nextByte() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1107,9 +1080,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < list.size();
 		}
 
@@ -1123,9 +1093,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -1142,9 +1109,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 *                                element
 		 */
 		public byte previousByte() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || list.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -1193,9 +1157,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1225,9 +1186,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(byte t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1255,9 +1213,6 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(byte t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}
