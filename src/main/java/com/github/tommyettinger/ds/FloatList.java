@@ -1139,30 +1139,14 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this FloatList. Iterates in order if
+	 * Returns a new primitive iterator over the int items in this FloatList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a FloatList but not a FloatBag.
-	 * <br>
-	 * This will reuse one of two iterators in this FloatList; this does not allow nested iteration.
-	 * Use {@link FloatListIterator#FloatListIterator(FloatList)} to nest iterators.
 	 *
 	 * @return a {@link FloatIterator}; use its nextFloat() method instead of next()
 	 */
 	@Override
 	public FloatListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new FloatListIterator(this);
-			iterator2 = new FloatListIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new FloatListIterator(this);
 	}
 
 	/**
@@ -1172,12 +1156,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	public static class FloatListIterator implements FloatIterator {
 		protected int index, latest = -1;
 		protected FloatList list;
-		/**
-		 * Used to track if a reusable iterator can be used now.
-		 * This is public so subclasses of FloatList (in other packages) can still access this
-		 * directly even though it belongs to FloatListIterator, not FloatList.
-		 */
-		public boolean valid = true;
 
 		public FloatListIterator(FloatList list) {
 			this.list = list;
@@ -1198,9 +1176,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 */
 		@Override
 		public float nextFloat() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1216,9 +1191,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < list.size();
 		}
 
@@ -1232,9 +1204,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -1251,9 +1220,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 *                                element
 		 */
 		public float previousFloat() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || list.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -1302,9 +1268,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1334,9 +1297,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(float t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1364,9 +1324,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(float t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}

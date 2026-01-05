@@ -75,9 +75,6 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	protected int tail = 0;
 
-	protected transient FloatDequeIterator descendingIterator1;
-	protected transient FloatDequeIterator descendingIterator2;
-
 	/**
 	 * Creates a new FloatDeque which can hold 16 values without needing to resize the backing array.
 	 */
@@ -1695,43 +1692,17 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	}
 
 	public FloatListIterator listIterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new FloatDequeIterator(this);
-			iterator2 = new FloatDequeIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new FloatDequeIterator(this);
 	}
 
 	/**
-	 * Gets an iterator over this deque that starts at the given index.
+	 * Gets a new iterator over this deque that starts at the given index.
 	 *
 	 * @param index the index to start iterating from in this deque
-	 * @return a reused iterator starting at the given index
+	 * @return a new iterator starting at the given index
 	 */
 	public FloatListIterator listIterator(int index) {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new FloatDequeIterator(this, index, false);
-			iterator2 = new FloatDequeIterator(this, index, false);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset(index);
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset(index);
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new FloatDequeIterator(this, index, false);
 	}
 
 	/**
@@ -2443,81 +2414,35 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	}
 
 	/**
-	 * Returns an iterator for the items in the deque. Remove is supported.
-	 * <br>
-	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link FloatDequeIterator#FloatDequeIterator(FloatDeque)}.
+	 * Returns a new iterator for the items in the deque. Remove is supported.
+	 *
+	 * @return a new iterator for the items in the deque
 	 */
 	public FloatListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new FloatDequeIterator(this);
-			iterator2 = new FloatDequeIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new FloatDequeIterator(this);
 	}
 
 	/**
-	 * Returns an iterator over the elements in this deque in reverse
+	 * Returns a new iterator over the elements in this deque in reverse
 	 * sequential order. The elements will be returned in order from
-	 * last (tail) to first (head).
-	 * <br>
-	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link FloatDequeIterator#FloatDequeIterator(FloatDeque, boolean)}.
+	 * last (tail) to first (head). Remove is supported.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	public FloatListIterator descendingIterator() {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new FloatDequeIterator(this, true);
-			descendingIterator2 = new FloatDequeIterator(this, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset();
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset();
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
+		return new FloatDequeIterator(this, true);
 	}
 
 	/**
 	 * Returns an iterator over the elements in this deque in reverse
 	 * sequential order. The elements will be returned in order from
-	 * {@code index} backwards to first (head).
-	 * <br>
-	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link FloatDequeIterator#FloatDequeIterator(FloatDeque, boolean)}.
+	 * {@code index} backwards to first (head). Remove is supported.
 	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	public FloatListIterator descendingIterator(int index) {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new FloatDequeIterator(this, index, true);
-			descendingIterator2 = new FloatDequeIterator(this, index, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset(index);
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset(index);
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
+		return new FloatDequeIterator(this, index, true);
 	}
 
 	/**
@@ -2755,7 +2680,6 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	public static class FloatDequeIterator extends FloatListIterator implements FloatIterator {
 		protected int index, latest = -1;
-		protected boolean valid = true;
 		protected final int direction;
 
 		public FloatDequeIterator(FloatDeque deque) {
@@ -2797,9 +2721,6 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return direction == 1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2813,9 +2734,6 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return direction == -1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2882,9 +2800,6 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -2914,9 +2829,6 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(float t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -2944,9 +2856,6 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(float t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}

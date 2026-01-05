@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.support.util.FloatIterator;
 import java.util.List;
 
 /**
- * An unordered List of float items. This allows efficient iteration via a reused iterator or via index.
+ * An unordered List of float items. This allows efficient iteration via an iterator or via index.
  * This class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * Items are permitted to change position in the ordering when any item is removed or added.
  * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
