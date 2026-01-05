@@ -97,11 +97,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 */
 	public int size = 0;
 
-	protected transient ObjectDequeIterator<T> iterator1;
-	protected transient ObjectDequeIterator<T> iterator2;
-	protected transient ObjectDequeIterator<T> descendingIterator1;
-	protected transient ObjectDequeIterator<T> descendingIterator2;
-
 	/**
 	 * Creates a new ObjectDeque which can hold 16 values without needing to resize the backing array.
 	 */
@@ -2167,44 +2162,17 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 
 	@Override
 	public ListIterator<T> listIterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectDequeIterator<>(this);
-			iterator2 = new ObjectDequeIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new ObjectDequeIterator<>(this);	}
 
 	/**
-	 * Gets an iterator over this deque that starts at the given index.
+	 * Gets a new iterator over this deque that starts at the given index.
 	 *
 	 * @param index the index to start iterating from in this deque
-	 * @return a reused iterator starting at the given index
+	 * @return a new iterator starting at the given index
 	 */
 	@Override
 	public ListIterator<T> listIterator(int index) {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectDequeIterator<>(this, index, false);
-			iterator2 = new ObjectDequeIterator<>(this, index, false);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset(index);
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset(index);
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new ObjectDequeIterator<>(this, index, false);
 	}
 
 	@Override
@@ -2686,81 +2654,33 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 
 	/**
 	 * Returns an iterator for the items in the deque. Remove is supported.
-	 * <br>
-	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque)}.
+	 * @return an iterator for the items in the deque
 	 */
 	@Override
 	public ObjectDequeIterator<T> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectDequeIterator<>(this);
-			iterator2 = new ObjectDequeIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new ObjectDequeIterator<>(this);	}
 
 	/**
-	 * Returns an iterator over the elements in this deque in reverse
+	 * Returns a new iterator over the elements in this deque in reverse
 	 * sequential order. The elements will be returned in order from
-	 * last (tail) to first (head).
-	 * <br>
-	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque, boolean)}.
+	 * last (tail) to first (head). Remove is supported.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	public ObjectDequeIterator<T> descendingIterator() {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new ObjectDequeIterator<>(this, true);
-			descendingIterator2 = new ObjectDequeIterator<>(this, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset();
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset();
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
+		return new ObjectDequeIterator<>(this, true);
 	}
 
 	/**
-	 * Returns an iterator over the elements in this deque in reverse
+	 * Returns a new iterator over the elements in this deque in reverse
 	 * sequential order. The elements will be returned in order from
-	 * {@code index} backwards to first (head).
-	 * <br>
-	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ObjectDequeIterator#ObjectDequeIterator(ObjectDeque, boolean)}.
+	 * {@code index} backwards to first (head). Remove is supported.
 	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	public ObjectDequeIterator<T> descendingIterator(int index) {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new ObjectDequeIterator<>(this, index, true);
-			descendingIterator2 = new ObjectDequeIterator<>(this, index, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset(index);
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset(index);
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
+		return new ObjectDequeIterator<>(this, index, true);
 	}
 
 	/**
@@ -3130,7 +3050,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	public static class ObjectDequeIterator<T> implements Iterable<T>, ListIterator<T> {
 		public int index, latest = -1;
 		public ObjectDeque<T> deque;
-		public boolean valid = true;
 		public final int direction;
 		public int expectedModCount;
 
@@ -3192,9 +3111,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return direction == 1 ? index < deque.size() : index > 0 && deque.notEmpty();
 		}
 
@@ -3209,9 +3125,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 */
 		@Override
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return direction == -1 ? index < deque.size() : index > 0 && deque.notEmpty();
 		}
 
@@ -3284,9 +3197,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= deque.size()) {
 				throw new NoSuchElementException();
 			}
@@ -3319,9 +3229,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 */
 		@Override
 		public void set(T t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= deque.size()) {
 				throw new NoSuchElementException();
 			}
@@ -3352,9 +3259,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		 */
 		@Override
 		public void add(T t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > deque.size()) {
 				throw new NoSuchElementException();
 			}

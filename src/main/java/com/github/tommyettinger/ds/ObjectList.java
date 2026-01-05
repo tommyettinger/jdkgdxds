@@ -45,10 +45,6 @@ import java.util.Random;
  * @see ObjectBag ObjectBag is an unordered variant on ObjectList.
  */
 public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedCollection<T>, Arrangeable.ArrangeableList<T> {
-
-	protected transient ObjectListIterator<T> iterator1;
-	protected transient ObjectListIterator<T> iterator2;
-
 	/**
 	 * Returns true if this implementation retains order, which it does.
 	 *
@@ -701,20 +697,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 */
 	@Override
 	public ObjectListIterator<T> listIterator(int index) {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectListIterator<>(this, index);
-			iterator2 = new ObjectListIterator<>(this, index);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset(index);
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset(index);
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new ObjectListIterator<>(this, index);
 	}
 
 	/**
@@ -727,21 +710,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 */
 	@Override
 	public ObjectListIterator<T> listIterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectListIterator<>(this);
-			iterator2 = new ObjectListIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new ObjectListIterator<>(this);	}
 
 	/**
 	 * Returns an iterator over the elements in this list in proper sequence.
@@ -753,21 +722,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 */
 	@Override
 	public ObjectListIterator<T> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectListIterator<>(this);
-			iterator2 = new ObjectListIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new ObjectListIterator<>(this);	}
 
 	/**
 	 * An {@link Iterator} and {@link ListIterator} over the elements of an ObjectList, while also an {@link Iterable}.
@@ -777,7 +732,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	public static class ObjectListIterator<T> implements Iterable<T>, ListIterator<T> {
 		protected int index, latest = -1;
 		protected ObjectList<T> list;
-		protected boolean valid = true;
 
 		public ObjectListIterator(ObjectList<T> list) {
 			this.list = list;
@@ -798,9 +752,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 */
 		@Override
 		public T next() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -816,9 +767,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < list.size();
 		}
 
@@ -833,9 +781,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 */
 		@Override
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -853,9 +798,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 */
 		@Override
 		public T previous() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || list.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -906,9 +848,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -939,9 +878,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 */
 		@Override
 		public void set(T t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -970,9 +906,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		 */
 		@Override
 		public void add(T t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}
