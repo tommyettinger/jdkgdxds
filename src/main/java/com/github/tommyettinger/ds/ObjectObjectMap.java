@@ -96,13 +96,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 */
 	protected int hashMultiplier;
 
-	protected transient Entries<K, V> entries1;
-	protected transient Entries<K, V> entries2;
-	protected transient Values<K, V> values1;
-	protected transient Values<K, V> values2;
-	protected transient Keys<K, V> keys1;
-	protected transient Keys<K, V> keys2;
-
 	/**
 	 * Returned by {@link #get(Object)} when no value exists for the given key, as well as some other methods to indicate that
 	 * no value in the Map could be returned.
@@ -1006,12 +999,10 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	/**
-	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
-	 * does not permit nested iteration. Iterate over {@link Entries#Entries(ObjectObjectMap)} if you
-	 * need nested or multithreaded iteration. You can remove an Entry from this ObjectObjectMap
-	 * using this Iterator.
+	 * Creates a new {@link Entries} and gets its iterator.
+	 * You can remove an Entry from this ObjectObjectMap using this Iterator.
 	 *
-	 * @return an {@link Iterator} over {@link Map.Entry} key-value pairs; remove is supported.
+	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
 	 */
 	@Override
 	public MapIterator<K, V, Map.Entry<K, V>> iterator() {
@@ -1031,77 +1022,31 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * operations.  It does not support the {@code add} or {@code addAll}
 	 * operations.
 	 *
-	 * <p>Note that the same Collection instance is returned each time this
-	 * method is called. Use the {@link Keys} constructor for nested or
-	 * multithreaded iteration.
-	 *
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
 	public Keys<K, V> keySet() {
-		if (keys1 == null || keys2 == null) {
-			keys1 = new Keys<>(this);
-			keys2 = new Keys<>(this);
-		}
-		if (!keys1.iter.valid) {
-			keys1.iter.reset();
-			keys1.iter.valid = true;
-			keys2.iter.valid = false;
-			return keys1;
-		}
-		keys2.iter.reset();
-		keys2.iter.valid = true;
-		keys1.iter.valid = false;
-		return keys2;
+		return new Keys<>(this);
 	}
 
 	/**
-	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
-	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
+	 * Returns a Collection of the values in the map. Remove is supported.
 	 *
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
 	public Values<K, V> values() {
-		if (values1 == null || values2 == null) {
-			values1 = new Values<>(this);
-			values2 = new Values<>(this);
-		}
-		if (!values1.iter.valid) {
-			values1.iter.reset();
-			values1.iter.valid = true;
-			values2.iter.valid = false;
-			return values1;
-		}
-		values2.iter.reset();
-		values2.iter.valid = true;
-		values1.iter.valid = false;
-		return values2;
+		return new Values<>(this);
 	}
 
 	/**
 	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
-	 * Note that the same iterator instance is returned each time this method is called.
-	 * Use the {@link Entries} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
 	public Entries<K, V> entrySet() {
-		if (entries1 == null || entries2 == null) {
-			entries1 = new Entries<>(this);
-			entries2 = new Entries<>(this);
-		}
-		if (!entries1.iter.valid) {
-			entries1.iter.reset();
-			entries1.iter.valid = true;
-			entries2.iter.valid = false;
-			return entries1;
-		}
-		entries2.iter.reset();
-		entries2.iter.valid = true;
-		entries1.iter.valid = false;
-		return entries2;
+		return new Entries<>(this);
 	}
 
 	public static class Entry<K, V> implements Map.Entry<K, V> {
@@ -1212,7 +1157,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 		protected final ObjectObjectMap<K, V> map;
 		protected int nextIndex, currentIndex;
-		public boolean valid = true;
 
 		public MapIterator(ObjectObjectMap<K, V> map) {
 			this.map = map;
@@ -1286,9 +1230,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 					if (!hasNext) {
 						throw new NoSuchElementException();
 					}
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
-					}
 					K[] keyTable = map.keyTable;
 					entry.key = keyTable[nextIndex];
 					entry.value = map.valueTable[nextIndex];
@@ -1299,9 +1240,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 				@Override
 				public boolean hasNext() {
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
-					}
 					return hasNext;
 				}
 			};
@@ -1421,9 +1359,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 				@Override
 				public boolean hasNext() {
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
-					}
 					return hasNext;
 				}
 
@@ -1431,9 +1366,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 				public V next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();
-					}
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
 					}
 					V value = map.valueTable[nextIndex];
 					currentIndex = nextIndex;
@@ -1521,9 +1453,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 				@Override
 				public boolean hasNext() {
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
-					}
 					return hasNext;
 				}
 
@@ -1531,9 +1460,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 				public K next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();
-					}
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
 					}
 					K key = map.keyTable[nextIndex];
 					currentIndex = nextIndex;
