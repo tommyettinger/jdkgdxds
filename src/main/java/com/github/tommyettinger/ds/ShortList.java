@@ -1027,31 +1027,14 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the items in this ShortList. Iterates in order if
+	 * Returns a new primitive iterator over the items in this ShortList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a ShortList but not a ShortBag.
-	 * <br>
-	 * This will reuse one of two iterators in this ShortList; this does not allow nested iteration.
-	 * Use {@link ShortListIterator#ShortListIterator(ShortList)} to nest iterators.
 	 *
 	 * @return a {@link ShortIterator}; use its nextShort() method instead of next()
 	 */
 	@Override
 	public ShortListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ShortListIterator(this);
-			iterator2 = new ShortListIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new ShortListIterator(this);	}
 
 	/**
 	 * Returns a new primitive iterator over the items in this ShortList. Iterates in order if
@@ -1080,12 +1063,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	public static class ShortListIterator implements ShortIterator {
 		protected int index, latest = -1;
 		protected ShortList list;
-		/**
-		 * Used to track if a reusable iterator can be used now.
-		 * This is public so subclasses of ShortList (in other packages) can still access this
-		 * directly even though it belongs to ShortListIterator, not ShortList.
-		 */
-		public boolean valid = true;
 
 		public ShortListIterator(ShortList list) {
 			this.list = list;
@@ -1106,9 +1083,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		 */
 		@Override
 		public short nextShort() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1124,9 +1098,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < list.size();
 		}
 
@@ -1140,9 +1111,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -1159,9 +1127,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		 *                                element
 		 */
 		public short previousShort() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || list.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -1210,9 +1175,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1242,9 +1204,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(short t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1272,9 +1231,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(short t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}

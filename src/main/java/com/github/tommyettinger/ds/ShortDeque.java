@@ -73,9 +73,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	protected int tail = 0;
 
-	protected transient ShortDequeIterator descendingIterator1;
-	protected transient ShortDequeIterator descendingIterator2;
-
 	/**
 	 * Creates a new ShortDeque which can hold 16 values without needing to resize the backing array.
 	 */
@@ -1693,43 +1690,16 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	}
 
 	public ShortListIterator listIterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ShortDequeIterator(this);
-			iterator2 = new ShortDequeIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new ShortDequeIterator(this);	}
 
 	/**
-	 * Gets an iterator over this deque that starts at the given index.
+	 * Gets a new iterator over this deque that starts at the given index.
 	 *
 	 * @param index the index to start iterating from in this deque
-	 * @return a reused iterator starting at the given index
+	 * @return a new iterator starting at the given index
 	 */
 	public ShortListIterator listIterator(int index) {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ShortDequeIterator(this, index, false);
-			iterator2 = new ShortDequeIterator(this, index, false);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset(index);
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset(index);
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new ShortDequeIterator(this, index, false);
 	}
 
 	/**
@@ -2300,80 +2270,33 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 
 	/**
 	 * Returns an iterator for the items in the deque. Remove is supported.
-	 * <br>
-	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ShortDequeIterator#ShortDequeIterator(ShortDeque)}.
+	 *
+	 * @return an iterator for the items in the deque
 	 */
 	public ShortListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ShortDequeIterator(this);
-			iterator2 = new ShortDequeIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new ShortDequeIterator(this);	}
 
 	/**
 	 * Returns an iterator over the elements in this deque in reverse
 	 * sequential order. The elements will be returned in order from
-	 * last (tail) to first (head).
-	 * <br>
-	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ShortDequeIterator#ShortDequeIterator(ShortDeque, boolean)}.
+	 * last (tail) to first (head). Remove is supported.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	public ShortListIterator descendingIterator() {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new ShortDequeIterator(this, true);
-			descendingIterator2 = new ShortDequeIterator(this, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset();
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset();
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
+		return new ShortDequeIterator(this, true);
 	}
 
 	/**
 	 * Returns an iterator over the elements in this deque in reverse
 	 * sequential order. The elements will be returned in order from
-	 * {@code index} backwards to first (head).
-	 * <br>
-	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link ShortDequeIterator#ShortDequeIterator(ShortDeque, boolean)}.
+	 * {@code index} backwards to first (head). Remove is supported.
 	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	public ShortListIterator descendingIterator(int index) {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new ShortDequeIterator(this, index, true);
-			descendingIterator2 = new ShortDequeIterator(this, index, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset(index);
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset(index);
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
+		return new ShortDequeIterator(this, index, true);
 	}
 
 	/**
@@ -2593,7 +2516,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	public static class ShortDequeIterator extends ShortListIterator implements ShortIterator {
 		protected int index, latest = -1;
-		protected boolean valid = true;
 		protected final int direction;
 
 		public ShortDequeIterator(ShortDeque deque) {
@@ -2635,9 +2557,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return direction == 1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2651,9 +2570,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return direction == -1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2720,9 +2636,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -2752,9 +2665,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(short t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -2782,9 +2692,6 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(short t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}
