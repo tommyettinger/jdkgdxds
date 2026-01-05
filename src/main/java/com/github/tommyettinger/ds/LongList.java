@@ -1057,6 +1057,26 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
+	 * Returns a new primitive iterator over the items in this LongList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a LongList but not a LongBag.
+	 *
+	 * @return a {@link LongIterator}; use its nextLong() method instead of next()
+	 */
+	public LongListIterator listIterator() {
+		return new LongListIterator(this);
+	}
+
+	/**
+	 * Gets a new {@link LongIterator} over this list that starts at the given index.
+	 *
+	 * @param index the index to start iterating from in this list
+	 * @return a new {@link LongIterator} starting at the given index
+	 */
+	public LongListIterator listIterator(int index) {
+		return new LongListIterator(this, index);
+	}
+
+	/**
 	 * A {@link LongIterator}, plus {@link ListIterator} methods, over the elements of a LongList.
 	 * Use {@link #nextLong()} in preference to {@link #next()} to avoid allocating Long objects.
 	 */

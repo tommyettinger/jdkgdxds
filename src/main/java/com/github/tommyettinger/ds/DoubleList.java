@@ -1148,6 +1148,26 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
+	 * Returns a new primitive iterator over the items in this DoubleList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a DoubleList but not a DoubleBag.
+	 *
+	 * @return a {@link DoubleIterator}; use its nextDouble() method instead of next()
+	 */
+	public DoubleListIterator listIterator() {
+		return new DoubleListIterator(this);
+	}
+
+	/**
+	 * Gets a new {@link DoubleIterator} over this list that starts at the given index.
+	 *
+	 * @param index the index to start iterating from in this list
+	 * @return a new {@link DoubleIterator} starting at the given index
+	 */
+	public DoubleListIterator listIterator(int index) {
+		return new DoubleListIterator(this, index);
+	}
+
+	/**
 	 * A {@link DoubleIterator}, plus {@link ListIterator} methods, over the elements of a DoubleList.
 	 * Use {@link #nextDouble()} in preference to {@link #next()} to avoid allocating Double objects.
 	 */

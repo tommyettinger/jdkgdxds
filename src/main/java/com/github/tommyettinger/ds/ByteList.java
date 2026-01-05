@@ -1039,6 +1039,26 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
+	 * Returns a new primitive iterator over the items in this ByteList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a ByteList but not a ByteBag.
+	 *
+	 * @return a {@link ByteIterator}; use its nextByte() method instead of next()
+	 */
+	public ByteListIterator listIterator() {
+		return new ByteListIterator(this);
+	}
+
+	/**
+	 * Gets a new {@link ByteIterator} over this list that starts at the given index.
+	 *
+	 * @param index the index to start iterating from in this list
+	 * @return a new {@link ByteIterator} starting at the given index
+	 */
+	public ByteListIterator listIterator(int index) {
+		return new ByteListIterator(this, index);
+	}
+
+	/**
 	 * A {@link ByteIterator}, plus {@link ListIterator} methods, over the elements of a ByteList.
 	 * Use {@link #nextByte()} in preference to {@link #next()} to avoid allocating Byte objects.
 	 */

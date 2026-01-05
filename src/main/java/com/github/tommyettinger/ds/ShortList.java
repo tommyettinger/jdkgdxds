@@ -1054,6 +1054,26 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	}
 
 	/**
+	 * Returns a new primitive iterator over the items in this ShortList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a ShortList but not a ShortBag.
+	 *
+	 * @return a {@link ShortIterator}; use its nextShort() method instead of next()
+	 */
+	public ShortListIterator listIterator() {
+		return new ShortListIterator(this);
+	}
+
+	/**
+	 * Gets a new {@link ShortIterator} over this list that starts at the given index.
+	 *
+	 * @param index the index to start iterating from in this list
+	 * @return a new {@link ShortIterator} starting at the given index
+	 */
+	public ShortListIterator listIterator(int index) {
+		return new ShortListIterator(this, index);
+	}
+
+	/**
 	 * A {@link ShortIterator}, plus {@link ListIterator} methods, over the elements of a ShortList.
 	 * Use {@link #nextShort()} in preference to {@link #next()} to avoid allocating Short objects.
 	 */

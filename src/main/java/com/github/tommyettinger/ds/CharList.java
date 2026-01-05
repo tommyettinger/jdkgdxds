@@ -1235,6 +1235,26 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		return new CharListIterator(this);
 	}
 
+	/**
+	 * Returns a new primitive iterator over the items in this CharList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a CharList but not a CharBag.
+	 *
+	 * @return a {@link CharIterator}; use its nextChar() method instead of next()
+	 */
+	public CharListIterator listIterator() {
+		return new CharListIterator(this);
+	}
+
+	/**
+	 * Gets a new {@link CharIterator} over this list that starts at the given index.
+	 *
+	 * @param index the index to start iterating from in this list
+	 * @return a new {@link CharIterator} starting at the given index
+	 */
+	public CharListIterator listIterator(int index) {
+		return new CharListIterator(this, index);
+	}
+
 	@Override
 	public CharList append(CharSequence csq) {
 		if(csq == null) {

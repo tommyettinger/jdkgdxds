@@ -1150,6 +1150,26 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	}
 
 	/**
+	 * Returns a new primitive iterator over the items in this FloatList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a FloatList but not a FloatBag.
+	 *
+	 * @return a {@link FloatIterator}; use its nextFloat() method instead of next()
+	 */
+	public FloatListIterator listIterator() {
+		return new FloatListIterator(this);
+	}
+
+	/**
+	 * Gets a new {@link FloatIterator} over this list that starts at the given index.
+	 *
+	 * @param index the index to start iterating from in this list
+	 * @return a new {@link FloatIterator} starting at the given index
+	 */
+	public FloatListIterator listIterator(int index) {
+		return new FloatListIterator(this, index);
+	}
+
+	/**
 	 * A {@link FloatIterator}, plus {@link ListIterator} methods, over the elements of a FloatList.
 	 * Use {@link #nextFloat()} in preference to {@link #next()} to avoid allocating Float objects.
 	 */

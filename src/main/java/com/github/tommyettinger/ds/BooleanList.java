@@ -929,6 +929,26 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
+	 * Returns a new primitive iterator over the items in this BooleanList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a BooleanList but not a BooleanBag.
+	 *
+	 * @return a {@link BooleanIterator}; use its nextBoolean() method instead of next()
+	 */
+	public BooleanListIterator listIterator() {
+		return new BooleanListIterator(this);
+	}
+
+	/**
+	 * Gets a new {@link BooleanIterator} over this list that starts at the given index.
+	 *
+	 * @param index the index to start iterating from in this list
+	 * @return a new {@link BooleanIterator} starting at the given index
+	 */
+	public BooleanListIterator listIterator(int index) {
+		return new BooleanListIterator(this, index);
+	}
+
+	/**
 	 * A {@link BooleanIterator}, plus {@link ListIterator} methods, over the elements of a BooleanList.
 	 * Use {@link #nextBoolean()} in preference to {@link #next()} to avoid allocating Boolean objects.
 	 */

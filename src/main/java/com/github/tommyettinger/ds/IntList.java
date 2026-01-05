@@ -1057,6 +1057,26 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
+	 * Returns a new primitive iterator over the items in this IntList. Iterates in order if
+	 * {@link #keepsOrder()} returns true, which it does for a IntList but not a IntBag.
+	 *
+	 * @return a {@link IntIterator}; use its nextInt() method instead of next()
+	 */
+	public IntListIterator listIterator() {
+		return new IntListIterator(this);
+	}
+
+	/**
+	 * Gets a new {@link IntIterator} over this list that starts at the given index.
+	 *
+	 * @param index the index to start iterating from in this list
+	 * @return a new {@link IntIterator} starting at the given index
+	 */
+	public IntListIterator listIterator(int index) {
+		return new IntListIterator(this, index);
+	}
+
+	/**
 	 * A {@link IntIterator}, plus {@link ListIterator} methods, over the elements of a IntList.
 	 * Use {@link #nextInt()} in preference to {@link #next()} to avoid allocating Integer objects.
 	 */
