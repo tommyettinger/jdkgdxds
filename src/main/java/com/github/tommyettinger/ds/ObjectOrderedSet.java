@@ -443,27 +443,12 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
-	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link ObjectOrderedSetIterator#ObjectOrderedSetIterator(ObjectOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
 	public ObjectSetIterator<T> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectOrderedSetIterator<>(this);
-			iterator2 = new ObjectOrderedSetIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new ObjectOrderedSetIterator<>(this);
 	}
 
 	@Override
@@ -522,9 +507,6 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		public K next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			K key = items.get(nextIndex);
 			nextIndex++;

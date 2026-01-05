@@ -755,26 +755,10 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
-	 * <p>
-	 * Reuses one of two iterators for this set. For nested or multithreaded
-	 * iteration, use {@link ObjectSetIterator#ObjectSetIterator(ObjectSet)}.
 	 */
 	@Override
 	public ObjectSetIterator<T> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new ObjectSetIterator<>(this);
-			iterator2 = new ObjectSetIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new ObjectSetIterator<>(this);
 	}
 
 	public static class ObjectSetIterator<T> implements Iterable<T>, Iterator<T> {
@@ -792,10 +776,6 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		 * {@link #remove()} is called.
 		 */
 		protected int currentIndex;
-		/**
-		 * Internally employed by the iterator-reuse functionality.
-		 */
-		protected boolean valid = true;
 		/**
 		 * The set to iterate over.
 		 */
@@ -850,9 +830,6 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -860,9 +837,6 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		public T next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			T key = set.keyTable[nextIndex];
 			if (key == null)
