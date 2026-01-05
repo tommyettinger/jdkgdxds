@@ -762,7 +762,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Removes from this CharList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another CharList or a CharDeque
+	 * @param c a primitive collection of char items to remove fully, such as another CharList or a CharDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeAll(OfChar c) {
@@ -788,7 +788,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this CharList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another CharList or a CharDeque
+	 * @param c a primitive collection of char items to remove one-by-one, such as another CharList or a CharDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeEach(OfChar c) {
@@ -1476,9 +1476,9 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		}
 
 		/**
-		 * Returns the next {@code int} element in the iteration.
+		 * Returns the next {@code char} element in the iteration.
 		 *
-		 * @return the next {@code int} element in the iteration
+		 * @return the next {@code char} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override

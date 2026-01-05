@@ -616,7 +616,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	/**
 	 * Removes from this LongList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another LongList or a LongDeque
+	 * @param c a primitive collection of long items to remove fully, such as another LongList or a LongDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeAll(OfLong c) {
@@ -642,7 +642,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this LongList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another LongList or a LongDeque
+	 * @param c a primitive collection of long items to remove one-by-one, such as another LongList or a LongDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeEach(OfLong c) {
@@ -1030,7 +1030,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this LongList. Iterates in order if
+	 * Returns a Java 8 primitive iterator over the items in this LongList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a LongList but not a LongBag.
 	 * <br>
 	 * This will reuse one of two iterators in this LongList; this does not allow nested iteration.
@@ -1082,9 +1082,9 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 		}
 
 		/**
-		 * Returns the next {@code int} element in the iteration.
+		 * Returns the next {@code long} element in the iteration.
 		 *
-		 * @return the next {@code int} element in the iteration
+		 * @return the next {@code long} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override

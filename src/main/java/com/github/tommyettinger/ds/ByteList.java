@@ -614,7 +614,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	/**
 	 * Removes from this ByteList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another ByteList or a ByteDeque
+	 * @param c a primitive collection of byte items to remove fully, such as another ByteList or a ByteDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeAll(OfByte c) {
@@ -640,7 +640,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this ByteList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another ByteList or a ByteDeque
+	 * @param c a primitive collection of byte items to remove one-by-one, such as another ByteList or a ByteDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeEach(OfByte c) {
@@ -1028,7 +1028,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	}
 
 	/**
-	 * Returns a new primitive iterator over the int items in this ByteList. Iterates in order if
+	 * Returns a new primitive iterator over the items in this ByteList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a ByteList but not a ByteBag.
 	 *
 	 * @return a {@link ByteIterator}; use its nextByte() method instead of next()
@@ -1058,9 +1058,9 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 		}
 
 		/**
-		 * Returns the next {@code int} element in the iteration.
+		 * Returns the next {@code byte} element in the iteration.
 		 *
-		 * @return the next {@code int} element in the iteration
+		 * @return the next {@code byte} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override

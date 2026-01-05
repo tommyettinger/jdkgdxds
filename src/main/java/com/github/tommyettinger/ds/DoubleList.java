@@ -618,7 +618,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	/**
 	 * Removes from this DoubleList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another DoubleList or a DoubleDeque
+	 * @param c a primitive collection of double items to remove fully, such as another DoubleList or a DoubleDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeAll(OfDouble c) {
@@ -644,7 +644,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this DoubleList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another DoubleList or a DoubleDeque
+	 * @param c a primitive collection of double items to remove one-by-one, such as another DoubleList or a DoubleDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeEach(OfDouble c) {
@@ -1137,7 +1137,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this DoubleList. Iterates in order if
+	 * Returns a new primitive iterator over the items in this DoubleList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a DoubleList but not a DoubleBag.
 	 *
 	 * @return a {@link DoubleIterator}; use its nextDouble() method instead of next()
@@ -1167,9 +1167,9 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		}
 
 		/**
-		 * Returns the next {@code int} element in the iteration.
+		 * Returns the next {@code double} element in the iteration.
 		 *
-		 * @return the next {@code int} element in the iteration
+		 * @return the next {@code double} element in the iteration
 		 * @throws NoSuchElementException if the iteration has no more elements
 		 */
 		@Override
