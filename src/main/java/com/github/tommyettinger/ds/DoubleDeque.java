@@ -75,9 +75,6 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	protected int tail = 0;
 
-	protected transient DoubleDequeIterator descendingIterator1;
-	protected transient DoubleDequeIterator descendingIterator2;
-
 	/**
 	 * Creates a new DoubleDeque which can hold 16 values without needing to resize the backing array.
 	 */
@@ -1695,43 +1692,17 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	}
 
 	public DoubleListIterator listIterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new DoubleDequeIterator(this);
-			iterator2 = new DoubleDequeIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new DoubleDequeIterator(this);
 	}
 
 	/**
-	 * Gets an iterator over this deque that starts at the given index.
+	 * Gets a new iterator over this deque that starts at the given index.
 	 *
 	 * @param index the index to start iterating from in this deque
-	 * @return a reused iterator starting at the given index
+	 * @return a new iterator starting at the given index
 	 */
 	public DoubleListIterator listIterator(int index) {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new DoubleDequeIterator(this, index, false);
-			iterator2 = new DoubleDequeIterator(this, index, false);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset(index);
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset(index);
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new DoubleDequeIterator(this, index, false);
 	}
 
 	/**
@@ -2443,81 +2414,34 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	}
 
 	/**
-	 * Returns an iterator for the items in the deque. Remove is supported.
-	 * <br>
-	 * Reuses one of two iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link DoubleDequeIterator#DoubleDequeIterator(DoubleDeque)}.
+	 * Returns a new iterator for the items in the deque. Remove is supported.
+	 * @return a new iterator for the items in the deque
 	 */
 	public DoubleListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new DoubleDequeIterator(this);
-			iterator2 = new DoubleDequeIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new DoubleDequeIterator(this);
 	}
 
 	/**
-	 * Returns an iterator over the elements in this deque in reverse
+	 * Returns a new iterator over the elements in this deque in reverse
 	 * sequential order. The elements will be returned in order from
-	 * last (tail) to first (head).
-	 * <br>
-	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link DoubleDequeIterator#DoubleDequeIterator(DoubleDeque, boolean)}.
+	 * last (tail) to first (head). Remove is supported.
 	 *
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	public DoubleListIterator descendingIterator() {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new DoubleDequeIterator(this, true);
-			descendingIterator2 = new DoubleDequeIterator(this, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset();
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset();
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
+		return new DoubleDequeIterator(this, true);
 	}
 
 	/**
-	 * Returns an iterator over the elements in this deque in reverse
+	 * Returns a new iterator over the elements in this deque in reverse
 	 * sequential order. The elements will be returned in order from
-	 * {@code index} backwards to first (head).
-	 * <br>
-	 * Reuses one of two descending iterators for this deque. For nested or multithreaded
-	 * iteration, use {@link DoubleDequeIterator#DoubleDequeIterator(DoubleDeque, boolean)}.
+	 * {@code index} backwards to first (head). Remove is supported.
 	 *
 	 * @param index the index to start iterating from in this deque
 	 * @return an iterator over the elements in this deque in reverse sequence
 	 */
 	public DoubleListIterator descendingIterator(int index) {
-		if (descendingIterator1 == null || descendingIterator2 == null) {
-			descendingIterator1 = new DoubleDequeIterator(this, index, true);
-			descendingIterator2 = new DoubleDequeIterator(this, index, true);
-		}
-		if (!descendingIterator1.valid) {
-			descendingIterator1.reset(index);
-			descendingIterator1.valid = true;
-			descendingIterator2.valid = false;
-			return descendingIterator1;
-		}
-		descendingIterator2.reset(index);
-		descendingIterator2.valid = true;
-		descendingIterator1.valid = false;
-		return descendingIterator2;
+		return new DoubleDequeIterator(this, index, true);
 	}
 
 	/**
@@ -2756,7 +2680,6 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	public static class DoubleDequeIterator extends DoubleListIterator implements DoubleIterator {
 		protected int index, latest = -1;
-		protected boolean valid = true;
 		protected final int direction;
 
 		public DoubleDequeIterator(DoubleDeque deque) {
@@ -2798,9 +2721,6 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return direction == 1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2814,9 +2734,6 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return direction == -1 ? index < list.size() : index > 0 && list.notEmpty();
 		}
 
@@ -2883,9 +2800,6 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -2915,9 +2829,6 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(double t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -2945,9 +2856,6 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(double t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}

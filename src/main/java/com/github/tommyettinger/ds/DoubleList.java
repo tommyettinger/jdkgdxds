@@ -50,8 +50,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 
 	public double[] items;
 	protected int size;
-	protected transient DoubleListIterator iterator1;
-	protected transient DoubleListIterator iterator2;
+
 
 	/**
 	 * Creates an ordered list with a capacity of 10.
@@ -1140,28 +1139,12 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	/**
 	 * Returns a Java 8 primitive iterator over the int items in this DoubleList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a DoubleList but not a DoubleBag.
-	 * <br>
-	 * This will reuse one of two iterators in this DoubleList; this does not allow nested iteration.
-	 * Use {@link DoubleListIterator#DoubleListIterator(DoubleList)} to nest iterators.
 	 *
 	 * @return a {@link DoubleIterator}; use its nextDouble() method instead of next()
 	 */
 	@Override
 	public DoubleListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new DoubleListIterator(this);
-			iterator2 = new DoubleListIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new DoubleListIterator(this);
 	}
 
 	/**
@@ -1171,12 +1154,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	public static class DoubleListIterator implements DoubleIterator {
 		protected int index, latest = -1;
 		protected DoubleList list;
-		/**
-		 * Used to track if a reusable iterator can be used now.
-		 * This is public so subclasses of DoubleList (in other packages) can still access this
-		 * directly even though it belongs to DoubleListIterator, not DoubleList.
-		 */
-		public boolean valid = true;
 
 		public DoubleListIterator(DoubleList list) {
 			this.list = list;
@@ -1197,9 +1174,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 */
 		@Override
 		public double nextDouble() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1215,9 +1189,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < list.size();
 		}
 
@@ -1231,9 +1202,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -1250,9 +1218,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 *                                element
 		 */
 		public double previousDouble() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || list.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -1301,9 +1266,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1333,9 +1295,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(double t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1363,9 +1322,6 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(double t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}
