@@ -47,8 +47,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	public int[] items;
 	protected int size;
-	protected transient IntListIterator iterator1;
-	protected transient IntListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.
@@ -94,7 +92,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * Creates a new list containing the elements in the specified array. The capacity is set to the number of elements,
 	 * so any subsequent elements added will cause the backing array to be grown.
 	 *
-	 * @param array a int array to copy from
+	 * @param array an int array to copy from
 	 */
 	public IntList(int[] array) {
 		this(array, 0, array.length);
@@ -523,7 +521,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * Returns the first index in this list that contains the specified value, or -1 if it is not present.
 	 *
-	 * @param value a int value to search for
+	 * @param value an int value to search for
 	 * @return the first index of the given value, or -1 if it is not present
 	 */
 	public int indexOf(int value) {
@@ -539,7 +537,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * Returns the last index in this list that contains the specified value, or -1 if it is not present.
 	 *
-	 * @param value a int value to search for
+	 * @param value an int value to search for
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
 	public int lastIndexOf(int value) {
@@ -982,7 +980,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * into {@code array} and returns it; otherwise, it allocates a new int array that can fit all
 	 * the items in this, and proceeds to copy into that and return that.
 	 *
-	 * @param array a int array that will be modified if it can fit {@link #size()} items
+	 * @param array an int array that will be modified if it can fit {@link #size()} items
 	 * @return {@code array}, if it had sufficient size, or a new array otherwise, either with a copy of this
 	 */
 	public int[] toArray(int[] array) {
@@ -1030,30 +1028,14 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * Returns a Java 8 primitive iterator over the int items in this IntList. Iterates in order if
+	 * Returns a new primitive iterator over the int items in this IntList. Iterates in order if
 	 * {@link #keepsOrder()} returns true, which it does for a IntList but not a IntBag.
-	 * <br>
-	 * This will reuse one of two iterators in this IntList; this does not allow nested iteration.
-	 * Use {@link IntListIterator#IntListIterator(IntList)} to nest iterators.
 	 *
 	 * @return a {@link IntIterator}; use its nextInt() method instead of next()
 	 */
 	@Override
 	public IntListIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new IntListIterator(this);
-			iterator2 = new IntListIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new IntListIterator(this);
 	}
 
 	/**
@@ -1083,12 +1065,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	public static class IntListIterator implements IntIterator {
 		protected int index, latest = -1;
 		protected IntList list;
-		/**
-		 * Used to track if a reusable iterator can be used now.
-		 * This is public so subclasses of IntList (in other packages) can still access this
-		 * directly even though it belongs to IntListIterator, not IntList.
-		 */
-		public boolean valid = true;
 
 		public IntListIterator(IntList list) {
 			this.list = list;
@@ -1109,9 +1085,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		 */
 		@Override
 		public int nextInt() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1127,9 +1100,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < list.size();
 		}
 
@@ -1143,9 +1113,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		 * traversing the list in the reverse direction
 		 */
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && list.notEmpty();
 		}
 
@@ -1162,9 +1129,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		 *                                element
 		 */
 		public int previousInt() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || list.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -1213,9 +1177,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1245,9 +1206,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		 *                                       {@code next} or {@code previous}
 		 */
 		public void set(int t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= list.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1275,9 +1233,6 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 		 *                                       prevents it from being added to this list
 		 */
 		public void add(int t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > list.size()) {
 				throw new NoSuchElementException();
 			}
