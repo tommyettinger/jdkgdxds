@@ -1007,12 +1007,13 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public static <V> EnumOrderedMap<V> parse(String str,
-									   String entrySeparator,
-									   String keyValueSeparator,
-									   PartialParser<Enum<?>> keyParser,
-									   PartialParser<V> valueParser) {
+											  String entrySeparator,
+											  String keyValueSeparator,
+											  PartialParser<Enum<?>> keyParser,
+											  PartialParser<V> valueParser) {
 		return parse(str, entrySeparator, keyValueSeparator, keyParser, valueParser, false);
 	}
+
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
 	 * chars) with the given PartialParser for keys and for values, with entries separated by {@code entrySeparator},
@@ -1031,13 +1032,13 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
 	public static <V> EnumOrderedMap<V> parse(String str,
-									   String entrySeparator,
-									   String keyValueSeparator,
-									   PartialParser<Enum<?>> keyParser,
-									   PartialParser<V> valueParser,
-									   boolean brackets) {
+											  String entrySeparator,
+											  String keyValueSeparator,
+											  PartialParser<Enum<?>> keyParser,
+											  PartialParser<V> valueParser,
+											  boolean brackets) {
 		EnumOrderedMap<V> m = new EnumOrderedMap<>();
-		if(brackets)
+		if (brackets)
 			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, 1, str.length() - 1);
 		else
 			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, 0, -1);
@@ -1063,12 +1064,12 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
 	public static <V> EnumOrderedMap<V> parse(String str,
-									   String entrySeparator,
-									   String keyValueSeparator,
-									   PartialParser<Enum<?>> keyParser,
-									   PartialParser<V> valueParser,
-									   int offset,
-									   int length) {
+											  String entrySeparator,
+											  String keyValueSeparator,
+											  PartialParser<Enum<?>> keyParser,
+											  PartialParser<V> valueParser,
+											  int offset,
+											  int length) {
 		EnumOrderedMap<V> m = new EnumOrderedMap<>();
 		m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, valueParser, offset, length);
 		return m;

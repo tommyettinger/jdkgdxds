@@ -376,7 +376,8 @@ public class IntBag extends IntList {
 
 	/**
 	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
@@ -388,14 +389,15 @@ public class IntBag extends IntList {
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} on either all of
 	 * {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if {@code brackets}
 	 * is true). Each item is expected to be separated by {@code delimiter}.
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 *
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static IntBag parse(String str, String delimiter, boolean brackets) {
 		IntBag c = new IntBag();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter);
@@ -405,10 +407,11 @@ public class IntBag extends IntList {
 	/**
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} with the given
 	 * four parameters as-is.
-	 * @param str a String that will have the given section parsed
+	 *
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static IntBag parse(String str, String delimiter, int offset, int length) {

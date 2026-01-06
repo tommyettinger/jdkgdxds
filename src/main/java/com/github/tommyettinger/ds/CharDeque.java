@@ -175,9 +175,10 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Creates a new CharDeque from part of another CharSequence; start is inclusive and end is exclusive.
+	 *
 	 * @param other a CharSequence to use part of, such as a String or a CharList
 	 * @param start first index in {@code other} to use, inclusive
-	 * @param end last index in {@code other} to use, exclusive
+	 * @param end   last index in {@code other} to use, exclusive
 	 */
 	public CharDeque(CharSequence other, int start, int end) {
 		this(end - start);
@@ -1634,7 +1635,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param search     the char to look for
+	 * @param search    the char to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
@@ -1683,7 +1684,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * This compares the given CharSequence as if both it and
 	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
 	 *
-	 * @param search     the char to look for
+	 * @param search    the char to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
@@ -1730,7 +1731,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param search     the CharSequence to look for
+	 * @param search    the CharSequence to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
@@ -1758,16 +1759,16 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		} else {
 			int st = tail - searchLen;
 			int n = items.length;
-			if(st < 0) n = st + items.length;
+			if (st < 0) n = st + items.length;
 			for (; i < n; i++) {
 				boolean found = true;
 				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
-					if(c >= items.length) c -= items.length;
+					if (c >= items.length) c -= items.length;
 					found = search.charAt(j) == items[c];
 				}
 				if (found) return i - head;
 			}
-			if(st >= 0) {
+			if (st >= 0) {
 				for (i = 0; i <= st; i++) {
 					boolean found = true;
 					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
@@ -1801,7 +1802,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * This compares the given CharSequence as if both it and
 	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
 	 *
-	 * @param search     the CharSequence to look for
+	 * @param search    the CharSequence to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of first occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
@@ -1829,16 +1830,16 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		} else {
 			int st = tail - searchLen;
 			int n = items.length;
-			if(st < 0) n = st + items.length;
+			if (st < 0) n = st + items.length;
 			for (; i < n; i++) {
 				boolean found = true;
 				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
-					if(c >= items.length) c -= items.length;
+					if (c >= items.length) c -= items.length;
 					found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[c]);
 				}
 				if (found) return i - head;
 			}
-			if(st >= 0) {
+			if (st >= 0) {
 				for (i = 0; i <= st; i++) {
 					boolean found = true;
 					for (int j = 0, c = i; j < searchLen && found; j++, c++) {
@@ -1917,7 +1918,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * This returns {@code fromIndex} if {@code value} is present at that point,
 	 * so if you chain calls to indexOf(), the subsequent fromIndex should be larger than the last-returned index.
 	 *
-	 * @param search     the CharSequence to look for
+	 * @param search    the CharSequence to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
@@ -1930,7 +1931,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		if (searchLen == 0) return fromIndex;
 		if (searchLen > size) return -1;
 		char[] items = this.items;
-		if(items.length == 0) return -1; // probably not necessary...
+		if (items.length == 0) return -1; // probably not necessary...
 		final int head = this.head, tail = this.tail;
 		int i = head + fromIndex + Math.min(Math.max(fromIndex, 0), size - searchLen);
 		while (i >= items.length)
@@ -1958,7 +1959,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 			for (i = items.length - 1; i >= head; i--) {
 				boolean found = true;
 				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
-					if(c >= items.length) c -= items.length;
+					if (c >= items.length) c -= items.length;
 					found = search.charAt(j) == items[c];
 				}
 				if (found) return i - head;
@@ -2039,7 +2040,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * This compares the given CharSequence as if both it and
 	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
 	 *
-	 * @param search     the CharSequence to look for
+	 * @param search    the CharSequence to look for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at the head, inclusive)
 	 * @return An index of last occurrence of value at or after fromIndex in the deque, or -1 if no such value exists
 	 */
@@ -2052,7 +2053,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		if (searchLen == 0) return fromIndex;
 		if (searchLen > size) return -1;
 		char[] items = this.items;
-		if(items.length == 0) return -1; // probably not necessary...
+		if (items.length == 0) return -1; // probably not necessary...
 		final int head = this.head, tail = this.tail;
 		int i = head + fromIndex + Math.min(Math.max(fromIndex, 0), size - searchLen);
 		while (i >= items.length)
@@ -2080,7 +2081,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 			for (i = items.length - 1; i >= head; i--) {
 				boolean found = true;
 				for (int j = 0, c = i; j < searchLen && found; j++, c++) {
-					if(c >= items.length) c -= items.length;
+					if (c >= items.length) c -= items.length;
 					found = Casing.caseUp(search.charAt(j)) == Casing.caseUp(items[c]);
 				}
 				if (found) return i - head;
@@ -2273,6 +2274,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Gets a new CharDeque from the given subrange, clamping start and end so that this will not throw any Exception.
+	 *
 	 * @param start the start index, inclusive; clamped
 	 * @param end   the end index, exclusive; clamped
 	 * @return a new CharDeque copied from the given subrange bounds
@@ -2320,7 +2322,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	@Override
 	public CharDeque append(CharSequence csq) {
-		if(csq == null) {
+		if (csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
 			final int len = csq.length();
@@ -2334,7 +2336,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	@Override
 	public CharDeque append(CharSequence csq, int start, int end) {
-		if(csq == null) {
+		if (csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
 			ensureCapacity(end - start);
@@ -2353,6 +2355,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Appends a literal newline (Unicode character u000A).
+	 *
 	 * @return this, for chaining.
 	 */
 	@Override
@@ -2363,6 +2366,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Appends a literal newline (Unicode character u000A).
 	 * This is identical to {@link #appendLine()} but is faster to type or recommend.
+	 *
 	 * @return this, for chaining.
 	 */
 	@Override
@@ -2373,6 +2377,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Appends the base-10 signed textual form of the given number, without allocating.
 	 * This uses {@link Base#appendSigned(CharSequence, int)}.
+	 *
 	 * @param number the int to append
 	 * @return this, for chaining
 	 */
@@ -2384,6 +2389,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Appends the base-10 signed textual form of the given number, without allocating.
 	 * This uses {@link Base#appendSigned(CharSequence, long)}. This does not append a trailing {@code 'L'}.
+	 *
 	 * @param number the long to append
 	 * @return this, for chaining
 	 */
@@ -2395,6 +2401,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
 	 * This uses {@link Base#appendGeneral(CharSequence, float)}. This does not append a trailing {@code 'f'}.
+	 *
 	 * @param number the float to append
 	 * @return this, for chaining
 	 */
@@ -2406,6 +2413,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
 	 * This uses {@link Base#appendGeneral(CharSequence, double)}.
+	 *
 	 * @param number the double to append
 	 * @return this, for chaining
 	 */
@@ -2417,12 +2425,13 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Appends either the four chars {@code 't', 'r', 'u', 'e'} if {@code value} is true, or the five chars
 	 * {@code 'f', 'a', 'l', 's', 'e'} if it is false.
+	 *
 	 * @param value either true or false
 	 * @return this, for chaining
 	 */
 	@Override
 	public CharDeque append(boolean value) {
-		if(value) {
+		if (value) {
 			add('t', 'r', 'u', 'e');
 		} else {
 			char[] items = this.items;
@@ -2905,12 +2914,13 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Adds {@code count} repetitions of {@code padWith} to the start (left) of this list.
-	 * @param count how many repetitions of {@code padWith} to add
+	 *
+	 * @param count   how many repetitions of {@code padWith} to add
 	 * @param padWith the item to pad with
 	 * @return this, for chaining
 	 */
 	public CharDeque padLeft(int count, char padWith) {
-		if(count > 0) {
+		if (count > 0) {
 			int gap = ensureGap(0, count);
 			Arrays.fill(items, gap, gap + count, padWith);
 			size += count;
@@ -2920,12 +2930,13 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Adds {@code count} repetitions of {@code padWith} to the end (right) of this list.
-	 * @param count how many repetitions of {@code padWith} to add
+	 *
+	 * @param count   how many repetitions of {@code padWith} to add
 	 * @param padWith the item to pad with
 	 * @return this, for chaining
 	 */
 	public CharDeque padRight(int count, char padWith) {
-		if(count > 0) {
+		if (count > 0) {
 			int gap = ensureGap(size, count);
 			Arrays.fill(items, gap, gap + count, padWith);
 			size += count;
@@ -3297,7 +3308,8 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
@@ -3309,14 +3321,15 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} on either all of
 	 * {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if {@code brackets}
 	 * is true). Each item is expected to be separated by {@code delimiter}.
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 *
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static CharDeque parse(String str, String delimiter, boolean brackets) {
 		CharDeque c = new CharDeque();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter);
@@ -3326,10 +3339,11 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} with the given
 	 * four parameters as-is.
-	 * @param str a String that will have the given section parsed
+	 *
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static CharDeque parse(String str, String delimiter, int offset, int length) {

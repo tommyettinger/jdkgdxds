@@ -81,10 +81,10 @@ public interface PartialParser<R> {
 	 * {@link ObjectList#addLegible(String, String, PartialParser, int, int)}, and returns the new collection.
 	 *
 	 * @param innerParser a PartialParser to read in each T item in the ObjectList this parses
-	 * @param delimiter the String that separates items in the expected text
-	 * @param brackets  if true, the text will be expected to be surrounded by one bracket char on each side, which will be ignored
+	 * @param delimiter   the String that separates items in the expected text
+	 * @param brackets    if true, the text will be expected to be surrounded by one bracket char on each side, which will be ignored
+	 * @param <T>         the type of items in the ObjectList this parses
 	 * @return a (typically new) ObjectList of T loaded from the given text
-	 * @param <T> the type of items in the ObjectList this parses
 	 */
 	static <T> PartialParser<ObjectList<T>> objectListParser(final PartialParser<T> innerParser,
 															 final String delimiter,
@@ -105,13 +105,13 @@ public interface PartialParser<R> {
 	 * given {@code supplier}, populates it with
 	 * {@link EnhancedCollection#addLegible(String, String, PartialParser, int, int)}, and returns the new collection.
 	 *
-	 * @param supplier  typically a constructor reference to {@code C}, which can be stored for better Android performance
+	 * @param supplier    typically a constructor reference to {@code C}, which can be stored for better Android performance
 	 * @param innerParser a PartialParser to read in each {@code T} item in the {@code C} this parses
-	 * @param delimiter the String that separates items in the expected text
-	 * @param brackets  if true, the text will be expected to be surrounded by one bracket char on each side, which will be ignored
+	 * @param delimiter   the String that separates items in the expected text
+	 * @param brackets    if true, the text will be expected to be surrounded by one bracket char on each side, which will be ignored
+	 * @param <T>         the type of items in the EnhancedCollection this parses
+	 * @param <C>         the type of EnhancedCollection of T, such as {@link ObjectDeque} or {@link ObjectOrderedSet}
 	 * @return a {@code C} (or EnhancedCollection of {@code T}) loaded from the given text
-	 * @param <T> the type of items in the EnhancedCollection this parses
-	 * @param <C> the type of EnhancedCollection of T, such as {@link ObjectDeque} or {@link ObjectOrderedSet}
 	 */
 	static <T, C extends EnhancedCollection<T>> PartialParser<C> collectionParser(ObjSupplier<C> supplier,
 																				  final PartialParser<T> innerParser,

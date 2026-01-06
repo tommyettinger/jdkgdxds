@@ -1067,6 +1067,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 												   PartialParser<V> valueParser) {
 		return parse(str, entrySeparator, keyValueSeparator, valueParser, false);
 	}
+
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
 	 * chars) with the given PartialParser for values, with entries separated by {@code entrySeparator},
@@ -1088,7 +1089,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 												   PartialParser<V> valueParser,
 												   boolean brackets) {
 		IntObjectOrderedMap<V> m = new IntObjectOrderedMap<>();
-		if(brackets)
+		if (brackets)
 			m.putLegible(str, entrySeparator, keyValueSeparator, valueParser, 1, str.length() - 1);
 		else
 			m.putLegible(str, entrySeparator, keyValueSeparator, valueParser, 0, -1);

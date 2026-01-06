@@ -429,7 +429,8 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 
 	/**
 	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
@@ -442,14 +443,14 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
 	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
 	 *
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static CaseInsensitiveOrderedSet parse(String str, String delimiter, boolean brackets) {
 		CaseInsensitiveOrderedSet c = new CaseInsensitiveOrderedSet();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, PartialParser.DEFAULT_CHAR_SEQUENCE, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter, PartialParser.DEFAULT_CHAR_SEQUENCE);
@@ -460,10 +461,10 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, PartialParser, int, int)}
 	 * with the given five parameters as-is.
 	 *
-	 * @param str a String that will have the given section parsed
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static CaseInsensitiveOrderedSet parse(String str, String delimiter, int offset, int length) {

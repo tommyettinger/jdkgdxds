@@ -1090,7 +1090,7 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 										  String keyValueSeparator,
 										  boolean brackets) {
 		IntLongOrderedMap m = new IntLongOrderedMap();
-		if(brackets)
+		if (brackets)
 			m.putLegible(str, entrySeparator, keyValueSeparator, 1, str.length() - 1);
 		else
 			m.putLegible(str, entrySeparator, keyValueSeparator, 0, -1);

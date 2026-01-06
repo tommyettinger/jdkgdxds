@@ -111,7 +111,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 */
 	public CharBitSetFixedSize(CharPredicate predicate) {
 		this();
-		if(predicate != null) {
+		if (predicate != null) {
 			for (int i = 0; i < 65536; i++) {
 				if (predicate.test((char) i))
 					bits[i >>> 5] |= 1 << i;
@@ -125,7 +125,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 * Note that {@code ints} should always have a length of 1 or more; otherwise, it won't be used directly (or if
 	 * {@code useAsRawBits} is false, it won't have any contents copied out).
 	 *
-	 * @param ints depending on {@code useAsRawBits}, this will be used as either char items or raw bits
+	 * @param ints         depending on {@code useAsRawBits}, this will be used as either char items or raw bits
 	 * @param useAsRawBits if true, {@code ints} will be used as raw bits and used directly, not copied as char items
 	 */
 	public CharBitSetFixedSize(int[] ints, boolean useAsRawBits) {
@@ -274,7 +274,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 			return false;
 		boolean changed = false;
 		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add((char)indices[i]);
+			changed |= add((char) indices[i]);
 		}
 		return changed;
 	}
@@ -288,7 +288,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 			return false;
 		boolean changed = false;
 		for (int i = off, n = off + length; i < n; i++) {
-			changed |= add((char)(indices[i] & 0xFF));
+			changed |= add((char) (indices[i] & 0xFF));
 		}
 		return changed;
 	}
@@ -359,6 +359,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 * Like {@link #activateAll(char[])}, but takes a CharSequence.
 	 * Named differently to avoid ambiguity between {@link #activateAll(OfChar)} when a type is both a CharSequence and
 	 * a PrimitiveCollection.OfChar .
+	 *
 	 * @param indices the CharSequence to read distinct chars from
 	 */
 	public void activateSeq(CharSequence indices) {
@@ -369,10 +370,11 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 * Like {@link #activateAll(char[], int, int)}, but takes a CharSequence.
 	 * Named differently to avoid ambiguity between {@link #activateAll(OfChar)} when a type is both a CharSequence and
 	 * a PrimitiveCollection.OfChar .
+	 *
 	 * @param indices the CharSequence to read distinct chars from
-	 * @param off the first position to read from {@code indices}
-	 * @param length how many chars to read from {@code indices}; because the CharSequence may have duplicates, this is
-	 *                  not necessarily the length that will be added
+	 * @param off     the first position to read from {@code indices}
+	 * @param length  how many chars to read from {@code indices}; because the CharSequence may have duplicates, this is
+	 *                not necessarily the length that will be added
 	 */
 	public void activateSeq(CharSequence indices, int off, int length) {
 		if (length <= 0 || off < 0 || off + length > indices.length())
@@ -385,6 +387,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	/**
 	 * Adds another PrimitiveCollection.OfChar, such as a CharList, to this set.
 	 * If you have another CharBitSetFixedSize, you can use {@link #or(CharBitSetFixedSize)}, which is faster.
+	 *
 	 * @param indices another primitive collection of char
 	 */
 	public void activateAll(PrimitiveCollection.OfChar indices) {
@@ -408,6 +411,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Returns a new iterator for the keys in the set; remove is supported.
+	 *
 	 * @return a new iterator for the keys in the set; remove is supported
 	 */
 	@Override
@@ -771,7 +775,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, CharAppender appender) {
 		try {
 			if (isEmpty()) {
-				if(brackets) sb.append("[]");
+				if (brackets) sb.append("[]");
 				return sb;
 			}
 			if (brackets) {
@@ -864,7 +868,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
-			char key = (char)nextIndex;
+			char key = (char) nextIndex;
 			currentIndex = nextIndex;
 			findNextIndex();
 			return key;
@@ -954,7 +958,8 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 
 	/**
 	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
@@ -966,14 +971,15 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} on either all of
 	 * {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if {@code brackets}
 	 * is true). Each item is expected to be separated by {@code delimiter}.
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 *
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static CharBitSetFixedSize parse(String str, String delimiter, boolean brackets) {
 		CharBitSetFixedSize c = new CharBitSetFixedSize();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter);
@@ -983,10 +989,11 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	/**
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} with the given
 	 * four parameters as-is.
-	 * @param str a String that will have the given section parsed
+	 *
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static CharBitSetFixedSize parse(String str, String delimiter, int offset, int length) {

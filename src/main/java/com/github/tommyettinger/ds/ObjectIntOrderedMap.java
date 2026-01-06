@@ -1031,6 +1031,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 												   PartialParser<K> keyParser) {
 		return parse(str, entrySeparator, keyValueSeparator, keyParser, false);
 	}
+
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
 	 * chars) with the given PartialParser for keys, with entries separated by {@code entrySeparator},
@@ -1052,7 +1053,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 												   PartialParser<K> keyParser,
 												   boolean brackets) {
 		ObjectIntOrderedMap<K> m = new ObjectIntOrderedMap<>();
-		if(brackets)
+		if (brackets)
 			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 1, str.length() - 1);
 		else
 			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 0, -1);

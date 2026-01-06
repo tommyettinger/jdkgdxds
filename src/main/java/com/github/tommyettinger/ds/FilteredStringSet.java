@@ -432,8 +432,9 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param filter    a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
@@ -447,15 +448,15 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
 	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param filter    a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static FilteredStringSet parse(CharFilter filter, String str, String delimiter, boolean brackets) {
 		FilteredStringSet c = new FilteredStringSet(filter);
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, PartialParser.DEFAULT_STRING, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter, PartialParser.DEFAULT_STRING);
@@ -467,11 +468,11 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * {@link #addLegible(String, String, PartialParser, int, int)}, using {@link PartialParser#DEFAULT_STRING} and
 	 * with the other four parameters as-is.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
-	 * @param str a String that will have the given section parsed
+	 * @param filter    a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static FilteredStringSet parse(CharFilter filter, String str, String delimiter, int offset, int length) {

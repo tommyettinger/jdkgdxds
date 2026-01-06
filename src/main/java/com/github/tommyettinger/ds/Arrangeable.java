@@ -41,7 +41,7 @@ public interface Arrangeable {
 	/**
 	 * Pseudo-randomly shuffles the order of this Arrangeable in-place, using {@link ArrayTools#RANDOM} as the unseeded
 	 * random number generator.
- 	 */
+	 */
 	default void shuffle() {
 		shuffle(ArrayTools.RANDOM);
 	}

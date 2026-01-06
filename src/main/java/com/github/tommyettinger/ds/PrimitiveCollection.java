@@ -476,8 +476,8 @@ public interface PrimitiveCollection<T> {
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, IntAppender.DEFAULT);
@@ -493,13 +493,13 @@ public interface PrimitiveCollection<T> {
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes an Appendable CharSequence and an int, and returns the modified sequence
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, IntAppender appender) {
 			try {
-				if (isEmpty()){
-					if(brackets) sb.append("[]");
+				if (isEmpty()) {
+					if (brackets) sb.append("[]");
 					return sb;
 				}
 				if (brackets) sb.append('[');
@@ -1085,8 +1085,8 @@ public interface PrimitiveCollection<T> {
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, LongAppender.DEFAULT);
@@ -1102,13 +1102,13 @@ public interface PrimitiveCollection<T> {
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes an Appendable CharSequence and a long, and returns the modified sequence
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, LongAppender appender) {
 			try {
-				if (isEmpty()){
-					if(brackets) sb.append("[]");
+				if (isEmpty()) {
+					if (brackets) sb.append("[]");
 					return sb;
 				}
 				if (brackets) sb.append('[');
@@ -1673,8 +1673,8 @@ public interface PrimitiveCollection<T> {
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, FloatAppender.DEFAULT);
@@ -1690,13 +1690,13 @@ public interface PrimitiveCollection<T> {
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes an Appendable CharSequence and a float, and returns the modified sequence
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, FloatAppender appender) {
 			try {
-				if (isEmpty()){
-					if(brackets) sb.append("[]");
+				if (isEmpty()) {
+					if (brackets) sb.append("[]");
 					return sb;
 				}
 				if (brackets) sb.append('[');
@@ -2256,8 +2256,8 @@ public interface PrimitiveCollection<T> {
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, DoubleAppender.DEFAULT);
@@ -2273,13 +2273,13 @@ public interface PrimitiveCollection<T> {
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes an Appendable CharSequence and a double, and returns the modified sequence
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, DoubleAppender appender) {
 			try {
-				if (isEmpty()){
-					if(brackets) sb.append("[]");
+				if (isEmpty()) {
+					if (brackets) sb.append("[]");
 					return sb;
 				}
 				if (brackets) sb.append('[');
@@ -2844,8 +2844,8 @@ public interface PrimitiveCollection<T> {
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, ShortAppender.DEFAULT);
@@ -2861,13 +2861,13 @@ public interface PrimitiveCollection<T> {
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes an Appendable CharSequence and a short, and returns the modified sequence
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, ShortAppender appender) {
 			try {
-				if (isEmpty()){
-					if(brackets) sb.append("[]");
+				if (isEmpty()) {
+					if (brackets) sb.append("[]");
 					return sb;
 				}
 				if (brackets) sb.append('[');
@@ -3423,8 +3423,8 @@ public interface PrimitiveCollection<T> {
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, ByteAppender.DEFAULT);
@@ -3440,13 +3440,13 @@ public interface PrimitiveCollection<T> {
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes an Appendable CharSequence and a byte, and returns the modified sequence
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, ByteAppender appender) {
 			try {
-				if (isEmpty()){
-					if(brackets) sb.append("[]");
+				if (isEmpty()) {
+					if (brackets) sb.append("[]");
 					return sb;
 				}
 				if (brackets) sb.append('[');
@@ -4027,8 +4027,8 @@ public interface PrimitiveCollection<T> {
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, CharAppender.DEFAULT);
@@ -4044,13 +4044,13 @@ public interface PrimitiveCollection<T> {
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes an Appendable CharSequence and a char, and returns the modified sequence
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, CharAppender appender) {
 			try {
-				if (isEmpty()){
-					if(brackets) sb.append("[]");
+				if (isEmpty()) {
+					if (brackets) sb.append("[]");
 					return sb;
 				}
 				if (brackets) sb.append('[');
@@ -4607,8 +4607,8 @@ public interface PrimitiveCollection<T> {
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 			return appendTo(sb, separator, brackets, BooleanAppender.DEFAULT);
@@ -4624,13 +4624,13 @@ public interface PrimitiveCollection<T> {
 		 * @param separator how to separate items, such as {@code ", "}
 		 * @param brackets  true to wrap the output in square brackets, or false to omit them
 		 * @param appender  a function that takes an Appendable CharSequence and a boolean, and returns the modified sequence
+		 * @param <S>       any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 * @return {@code sb}, with the appended items of this PrimitiveCollection
-		 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 		 */
 		default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, BooleanAppender appender) {
 			try {
-				if (isEmpty()){
-					if(brackets) sb.append("[]");
+				if (isEmpty()) {
+					if (brackets) sb.append("[]");
 					return sb;
 				}
 				if (brackets) sb.append('[');

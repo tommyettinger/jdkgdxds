@@ -29,10 +29,10 @@ public interface BooleanAppender {
 	/**
 	 * Appends {@code item} to {@code sb} and returns {@code sb} for chaining.
 	 *
-	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param sb   an Appendable CharSequence that will be modified, such as a StringBuilder
 	 * @param item the item to append
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 * @return {@code first}, after modification
-	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	<S extends CharSequence & Appendable> S apply(S sb, boolean item);
 

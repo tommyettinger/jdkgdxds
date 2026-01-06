@@ -178,9 +178,10 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Creates a new CharList from part of another CharSequence; start is inclusive and end is exclusive.
+	 *
 	 * @param other a CharSequence to use part of, such as a String or a CharList
 	 * @param start first index in {@code other} to use, inclusive
-	 * @param end last index in {@code other} to use, exclusive
+	 * @param end   last index in {@code other} to use, exclusive
 	 */
 	public CharList(CharSequence other, int start, int end) {
 		this(end - start);
@@ -389,6 +390,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Simply calls {@link #indexOf(CharSequence)} and checks that it doesn't return {@code -1}.
+	 *
 	 * @param csq a CharSequence, such as a String or another CharList
 	 * @return true if this CharList contains the chars in {@code csq} consecutively and in order
 	 */
@@ -398,6 +400,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Simply calls {@link #indexOfIgnoreCase(CharSequence)} and checks that it doesn't return {@code -1}.
+	 *
 	 * @param csq a CharSequence, such as a String or another CharList
 	 * @return true if this CharList contains the chars in {@code csq} consecutively and in order, ignoring case
 	 */
@@ -437,11 +440,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Tries to return the first index {@code search} appears at in this list, starting at {@code fromIndex};
 	 * if {@code search} is not present, this returns -1.
 	 *
-	 * @param search the char to search for
+	 * @param search    the char to search for
 	 * @param fromIndex the initial index in this list to start searching (inclusive)
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int indexOf (char search, int fromIndex) {
+	public int indexOf(char search, int fromIndex) {
 		if (fromIndex < 0 || fromIndex >= size) return -1;
 		char[] items = this.items;
 		for (int i = fromIndex, n = size; i < n; i++)
@@ -466,11 +469,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * if {@code search} is not present, this returns -1. This compares the given char as if both it and
 	 * this CharSequence have had every character converted to upper case by {@link Casing#caseUp(char)}.
 	 *
-	 * @param search the char to search for
+	 * @param search    the char to search for
 	 * @param fromIndex the initial index in this list to start searching (inclusive)
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int indexOfIgnoreCase (char search, int fromIndex) {
+	public int indexOfIgnoreCase(char search, int fromIndex) {
 		if (fromIndex < 0 || fromIndex >= size) return -1;
 		char[] items = this.items;
 		final char upperSearch = Casing.caseUp(search);
@@ -486,7 +489,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param search the CharSequence (such as a String or another CharList) to search for
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int indexOf (CharSequence search) {
+	public int indexOf(CharSequence search) {
 		return indexOf(search, 0);
 	}
 
@@ -497,11 +500,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Mostly copied from libGDX, like the rest of this class, but from the latest version instead of a
 	 * much-older version.
 	 *
-	 * @param search the CharSequence (such as a String or another CharList) to search for
+	 * @param search    the CharSequence (such as a String or another CharList) to search for
 	 * @param fromIndex the initial index in this list to start searching (inclusive)
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int indexOf (CharSequence search, int fromIndex) {
+	public int indexOf(CharSequence search, int fromIndex) {
 		if (search == null) throw new IllegalArgumentException("search cannot be null.");
 		if (fromIndex < 0 || fromIndex >= size) return -1;
 		int searchLen = search.length();
@@ -527,7 +530,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param search the CharSequence (such as a String or another CharList) to search for
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int indexOfIgnoreCase (CharSequence search) {
+	public int indexOfIgnoreCase(CharSequence search) {
 		return indexOfIgnoreCase(search, 0);
 	}
 
@@ -539,11 +542,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Mostly copied from libGDX, like the rest of this class, but from the latest version instead of a
 	 * much-older version.
 	 *
-	 * @param search the CharSequence (such as a String or another CharList) to search for
+	 * @param search    the CharSequence (such as a String or another CharList) to search for
 	 * @param fromIndex the initial index in this list to start searching (inclusive)
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int indexOfIgnoreCase (CharSequence search, int fromIndex) {
+	public int indexOfIgnoreCase(CharSequence search, int fromIndex) {
 		if (search == null) throw new IllegalArgumentException("search cannot be null.");
 		if (fromIndex < 0 || fromIndex >= size) return -1;
 		int searchLen = search.length();
@@ -570,11 +573,12 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	public int lastIndexOf(char search) {
 		return lastIndexOf(search, size - 1);
 	}
+
 	/**
 	 * Returns the last index in this list that contains {@code search}, starting the search at
 	 * {@code fromIndex} (inclusive) and moving toward the start, or -1 if it is not present.
 	 *
-	 * @param search a char to search for
+	 * @param search    a char to search for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at 0, inclusive)
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
@@ -595,7 +599,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param search the CharSequence (such as a String or another CharList) to search for
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int lastIndexOf (CharSequence search) {
+	public int lastIndexOf(CharSequence search) {
 		return lastIndexOf(search, size - 1);
 	}
 
@@ -603,11 +607,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Tries to return the first index {@code search} appears at in this list, starting the search at {@code fromIndex}
 	 * and working toward the start; if {@code search} is not present, this returns -1.
 	 *
-	 * @param search the CharSequence (such as a String or another CharList) to search for
+	 * @param search    the CharSequence (such as a String or another CharList) to search for
 	 * @param fromIndex the initial index in this list to start searching (zero-indexed, starts at 0, inclusive)
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int lastIndexOf (CharSequence search, int fromIndex) {
+	public int lastIndexOf(CharSequence search, int fromIndex) {
 		if (search == null) throw new IllegalArgumentException("search cannot be null.");
 		if (fromIndex < 0 || fromIndex >= size) return -1;
 		int searchLen = search.length();
@@ -636,13 +640,14 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	public int lastIndexOfIgnoreCase(char search) {
 		return lastIndexOfIgnoreCase(search, size - 1);
 	}
+
 	/**
 	 * Returns the last index in this list that contains {@code search}, starting the search at
 	 * {@code fromIndex} (inclusive) and moving toward the start, or -1 if it is not present.
 	 * This compares the given char as if both it and this CharSequence have had every character converted
 	 * to upper case by {@link Casing#caseUp(char)}.
 	 *
-	 * @param search a char to search for
+	 * @param search    a char to search for
 	 * @param fromIndex the initial index to check (zero-indexed, starts at 0, inclusive)
 	 * @return the last index of the given value, or -1 if it is not present
 	 */
@@ -666,7 +671,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * @param search the CharSequence (such as a String or another CharList) to search for
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int lastIndexOfIgnoreCase (CharSequence search) {
+	public int lastIndexOfIgnoreCase(CharSequence search) {
 		return lastIndexOfIgnoreCase(search, size - 1);
 	}
 
@@ -676,11 +681,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * This compares the given CharSequence as if both it and this CharSequence have had every character converted
 	 * to upper case by {@link Casing#caseUp(char)}.
 	 *
-	 * @param search the CharSequence (such as a String or another CharList) to search for
+	 * @param search    the CharSequence (such as a String or another CharList) to search for
 	 * @param fromIndex the initial index in this list to start searching (zero-indexed, starts at 0, inclusive)
 	 * @return the index {@code search} was found at, or -1 if it was not found
 	 */
-	public int lastIndexOfIgnoreCase (CharSequence search, int fromIndex) {
+	public int lastIndexOfIgnoreCase(CharSequence search, int fromIndex) {
 		if (search == null) throw new IllegalArgumentException("search cannot be null.");
 		if (fromIndex < 0 || fromIndex >= size) return -1;
 		int searchLen = search.length();
@@ -909,6 +914,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Gets a new CharList from the given subrange, clamping start and end so they will not throw any Exception.
+	 *
 	 * @param start the start index, inclusive; clamped
 	 * @param end   the end index, exclusive; clamped
 	 * @return a new CharList copied from the given subrange bounds
@@ -1257,7 +1263,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	@Override
 	public CharList append(CharSequence csq) {
-		if(csq == null) {
+		if (csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
 			final int len = csq.length();
@@ -1271,7 +1277,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	@Override
 	public CharList append(CharSequence csq, int start, int end) {
-		if(csq == null) {
+		if (csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
 			ensureCapacity(end - start);
@@ -1290,6 +1296,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Appends a literal newline (Unicode character u000A).
+	 *
 	 * @return this, for chaining.
 	 */
 	public CharList appendLine() {
@@ -1299,6 +1306,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Appends a literal newline (Unicode character u000A).
 	 * This is identical to {@link #appendLine()} but is faster to type or recommend.
+	 *
 	 * @return this, for chaining.
 	 */
 	public CharList line() {
@@ -1308,6 +1316,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Appends the base-10 signed textual form of the given number, without allocating.
 	 * This uses {@link Base#appendSigned(CharSequence, int)}.
+	 *
 	 * @param number the int to append
 	 * @return this, for chaining
 	 */
@@ -1318,6 +1327,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Appends the base-10 signed textual form of the given number, without allocating.
 	 * This uses {@link Base#appendSigned(CharSequence, long)}. This does not append a trailing {@code 'L'}.
+	 *
 	 * @param number the long to append
 	 * @return this, for chaining
 	 */
@@ -1328,6 +1338,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
 	 * This uses {@link Base#appendGeneral(CharSequence, float)}. This does not append a trailing {@code 'f'}.
+	 *
 	 * @param number the float to append
 	 * @return this, for chaining
 	 */
@@ -1338,6 +1349,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
 	 * This uses {@link Base#appendGeneral(CharSequence, double)}.
+	 *
 	 * @param number the double to append
 	 * @return this, for chaining
 	 */
@@ -1348,11 +1360,12 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Appends either the four chars {@code 't', 'r', 'u', 'e'} if {@code value} is true, or the five chars
 	 * {@code 'f', 'a', 'l', 's', 'e'} if it is false.
+	 *
 	 * @param value either true or false
 	 * @return this, for chaining
 	 */
 	public CharList append(boolean value) {
-		if(value) {
+		if (value) {
 			add('t', 'r', 'u', 'e');
 		} else {
 			char[] items = this.items;
@@ -1371,12 +1384,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Adds {@code count} repetitions of {@code padWith} to the start (left) of this list.
-	 * @param count how many repetitions of {@code padWith} to add
+	 *
+	 * @param count   how many repetitions of {@code padWith} to add
 	 * @param padWith the item to pad with
 	 * @return this, for chaining
 	 */
 	public CharList padLeft(int count, char padWith) {
-		if(count > 0) {
+		if (count > 0) {
 			ensureCapacity(count);
 			System.arraycopy(items, 0, items, count, size);
 			Arrays.fill(items, 0, count, padWith);
@@ -1387,12 +1401,13 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Adds {@code count} repetitions of {@code padWith} to the end (right) of this list.
-	 * @param count how many repetitions of {@code padWith} to add
+	 *
+	 * @param count   how many repetitions of {@code padWith} to add
 	 * @param padWith the item to pad with
 	 * @return this, for chaining
 	 */
 	public CharList padRight(int count, char padWith) {
-		if(count > 0) {
+		if (count > 0) {
 			ensureCapacity(count);
 			Arrays.fill(items, size, size + count, padWith);
 			size += count;
@@ -1859,7 +1874,8 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 
 	/**
 	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
@@ -1871,14 +1887,15 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} on either all of
 	 * {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if {@code brackets}
 	 * is true). Each item is expected to be separated by {@code delimiter}.
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 *
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static CharList parse(String str, String delimiter, boolean brackets) {
 		CharList c = new CharList();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter);
@@ -1888,10 +1905,11 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	/**
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} with the given
 	 * four parameters as-is.
-	 * @param str a String that will have the given section parsed
+	 *
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static CharList parse(String str, String delimiter, int offset, int length) {

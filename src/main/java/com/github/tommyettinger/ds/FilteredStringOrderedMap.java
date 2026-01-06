@@ -630,7 +630,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
 	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param filter            a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param str               a String containing parseable text
 	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
@@ -643,6 +643,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 														PartialParser<V> valueParser) {
 		return parse(filter, str, entrySeparator, keyValueSeparator, valueParser, false);
 	}
+
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
 	 * chars) with the given PartialParser for values, with entries separated by {@code entrySeparator},
@@ -652,7 +653,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
 	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param filter            a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param str               a String containing parseable text
 	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value
@@ -666,7 +667,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 														PartialParser<V> valueParser,
 														boolean brackets) {
 		FilteredStringOrderedMap<V> m = new FilteredStringOrderedMap<>(filter);
-		if(brackets)
+		if (brackets)
 			m.putLegible(str, entrySeparator, keyValueSeparator, PartialParser.DEFAULT_STRING, valueParser, 1, str.length() - 1);
 		else
 			m.putLegible(str, entrySeparator, keyValueSeparator, PartialParser.DEFAULT_STRING, valueParser, 0, -1);
@@ -682,7 +683,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 * {@link PartialParser#DEFAULT_STRING}, and others can be created by static methods in PartialParser, such as
 	 * {@link PartialParser#objectListParser(PartialParser, String, boolean)}.
 	 *
-	 * @param filter a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
+	 * @param filter            a CharFilter that can be obtained with {@link CharFilter#getOrCreate(String, CharPredicate, CharToCharFunction)}
 	 * @param str               a String containing parseable text
 	 * @param entrySeparator    the String separating every key-value pair
 	 * @param keyValueSeparator the String separating every key from its corresponding value

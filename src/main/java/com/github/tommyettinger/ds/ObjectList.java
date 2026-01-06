@@ -581,13 +581,14 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
 	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
 	 * This compares T items by {@link Object#equals(Object)}, unless an item is null.
-	 * @param find the item to search for
+	 *
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
 	public boolean replaceFirst(T find, T replace) {
 		if (find == null) {
-			if(replace != null) {
+			if (replace != null) {
 				for (int i = 0, n = size(); i < n; i++) {
 					if (get(i) == null) {
 						set(i, replace);
@@ -595,7 +596,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 					}
 				}
 			}
-		} else if (!find.equals(replace)){
+		} else if (!find.equals(replace)) {
 			for (int i = 0, n = size(); i < n; i++) {
 				if (find.equals(get(i))) {
 					set(i, replace);
@@ -611,14 +612,15 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
 	 * if nothing was found or in the case that find and replace are the same.
 	 * This compares T items by {@link Object#equals(Object)}, unless an item is null.
-	 * @param find the item to search for
+	 *
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
 	 */
 	public int replaceAll(T find, T replace) {
 		int replacements = 0;
 		if (find == null) {
-			if(replace != null) {
+			if (replace != null) {
 				for (int i = 0, n = size(); i < n; i++) {
 					if (get(i) == null) {
 						set(i, replace);
@@ -626,7 +628,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 					}
 				}
 			}
-		} else if(!find.equals(replace)) {
+		} else if (!find.equals(replace)) {
 			for (int i = 0, n = size(); i < n; i++) {
 				if (find.equals(get(i))) {
 					set(i, replace);
@@ -643,7 +645,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
 	 * This compares T items by identity, not with {@link Object#equals(Object)} ! This may be useful to replace
 	 * occurrences of {@code null} by a given {@code replace} value.
-	 * @param find the item to search for
+	 *
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
@@ -665,7 +668,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * This compares T items by identity, not with {@link Object#equals(Object)} ! This may be useful to replace
 	 * an occurrence of {@code null} by a given {@code replace} value.
 	 *
-	 * @param find the item to search for
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
 	 */
@@ -704,7 +707,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 */
 	@Override
 	public ObjectListIterator<T> listIterator() {
-		return new ObjectListIterator<>(this);	}
+		return new ObjectListIterator<>(this);
+	}
 
 	/**
 	 * Returns an iterator over the elements in this list in proper sequence.
@@ -713,7 +717,8 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 */
 	@Override
 	public ObjectListIterator<T> iterator() {
-		return new ObjectListIterator<>(this);	}
+		return new ObjectListIterator<>(this);
+	}
 
 	/**
 	 * An {@link Iterator} and {@link ListIterator} over the elements of an ObjectList, while also an {@link Iterable}.
@@ -1074,7 +1079,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 *
 	 * @param from the index of the first element (inclusive) to be sorted
 	 * @param to   the index of the last element (exclusive) to be sorted
-	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
+	 * @param c    a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 */
 	public void sort(int from, int to, Comparator<? super T> c) {
 		final int size = size();
@@ -1130,7 +1135,7 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 *
 	 * @param from the index of the first element (inclusive) to be sorted
 	 * @param to   the index of the last element (exclusive) to be sorted
-	 * @param c a Comparator that can compare T items, or null to use the natural order of Comparable T items
+	 * @param c    a Comparator that can compare T items, or null to use the natural order of Comparable T items
 	 * @see #sort(int, int, Comparator) Use sort() or use an ObjectDeque and its sortJDK().
 	 */
 	public void sortJDK(int from, int to, Comparator<? super T> c) {
@@ -1301,9 +1306,10 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 
 	/**
 	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectList<T> parse(String str, String delimiter, PartialParser<T> parser) {
@@ -1315,15 +1321,15 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
 	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
 	 *
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectList<T> parse(String str, String delimiter, PartialParser<T> parser, boolean brackets) {
 		ObjectList<T> c = new ObjectList<>();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter, parser);
@@ -1334,11 +1340,11 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, PartialParser, int, int)}
 	 * with the given five parameters as-is.
 	 *
-	 * @param str a String that will have the given section parsed
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectList<T> parse(String str, String delimiter, PartialParser<T> parser, int offset, int length) {

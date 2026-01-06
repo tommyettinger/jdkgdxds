@@ -135,9 +135,10 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Creates a new CharBag from part of another CharSequence; start is inclusive and end is exclusive.
+	 *
 	 * @param other a CharSequence to use part of, such as a String or a CharList
 	 * @param start first index in {@code other} to use, inclusive
-	 * @param end last index in {@code other} to use, exclusive
+	 * @param end   last index in {@code other} to use, exclusive
 	 */
 	public CharBag(CharSequence other, int start, int end) {
 		this(end - start);
@@ -209,6 +210,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Gets a new CharBag from the given subrange, clamping start and end so that this will not throw any Exception.
+	 *
 	 * @param start the start index, inclusive; clamped
 	 * @param end   the end index, exclusive; clamped
 	 * @return a new CharBag copied from the given subrange bounds
@@ -220,7 +222,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	@Override
 	public CharBag append(CharSequence csq) {
-		if(csq == null) {
+		if (csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
 			final int len = csq.length();
@@ -234,7 +236,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	@Override
 	public CharBag append(CharSequence csq, int start, int end) {
-		if(csq == null) {
+		if (csq == null) {
 			add('n', 'u', 'l', 'l');
 		} else {
 			ensureCapacity(end - start);
@@ -253,6 +255,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Appends a literal newline (Unicode character u000A).
+	 *
 	 * @return this, for chaining.
 	 */
 	@Override
@@ -263,6 +266,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	/**
 	 * Appends a literal newline (Unicode character u000A).
 	 * This is identical to {@link #appendLine()} but is faster to type or recommend.
+	 *
 	 * @return this, for chaining.
 	 */
 	@Override
@@ -273,6 +277,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	/**
 	 * Appends the base-10 signed textual form of the given number, without allocating.
 	 * This uses {@link Base#appendSigned(CharSequence, int)}.
+	 *
 	 * @param number the int to append
 	 * @return this, for chaining
 	 */
@@ -284,6 +289,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	/**
 	 * Appends the base-10 signed textual form of the given number, without allocating.
 	 * This uses {@link Base#appendSigned(CharSequence, long)}. This does not append a trailing {@code 'L'}.
+	 *
 	 * @param number the long to append
 	 * @return this, for chaining
 	 */
@@ -295,6 +301,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	/**
 	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
 	 * This uses {@link Base#appendGeneral(CharSequence, float)}. This does not append a trailing {@code 'f'}.
+	 *
 	 * @param number the float to append
 	 * @return this, for chaining
 	 */
@@ -306,6 +313,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	/**
 	 * Appends the base-10 decimal or engineering textual form of the given number, without allocating.
 	 * This uses {@link Base#appendGeneral(CharSequence, double)}.
+	 *
 	 * @param number the double to append
 	 * @return this, for chaining
 	 */
@@ -313,9 +321,11 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	public CharBag append(double number) {
 		return Base.BASE10.appendGeneral(this, number);
 	}
+
 	/**
 	 * Appends either the four chars {@code 't', 'r', 'u', 'e'} if {@code value} is true, or the five chars
 	 * {@code 'f', 'a', 'l', 's', 'e'} if it is false.
+	 *
 	 * @param value either true or false
 	 * @return this, for chaining
 	 */
@@ -341,12 +351,12 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * Note that because the order of a bag is unreliable, this could conceivably pad to any point
 	 * in the order, but this does actually move all elements to the right and prepend padWith count times.
 	 *
-	 * @param count how many repetitions of {@code padWith} to add
+	 * @param count   how many repetitions of {@code padWith} to add
 	 * @param padWith the item to pad with
 	 * @return this, for chaining
 	 */
 	public CharBag padLeft(int count, char padWith) {
-		if(count > 0) {
+		if (count > 0) {
 			ensureCapacity(count);
 			System.arraycopy(items, 0, items, count, size);
 			Arrays.fill(items, 0, count, padWith);
@@ -357,12 +367,13 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Adds {@code count} repetitions of {@code padWith} to the end (right) of this list.
-	 * @param count how many repetitions of {@code padWith} to add
+	 *
+	 * @param count   how many repetitions of {@code padWith} to add
 	 * @param padWith the item to pad with
 	 * @return this, for chaining
 	 */
 	public CharBag padRight(int count, char padWith) {
-		if(count > 0) {
+		if (count > 0) {
 			ensureCapacity(count);
 			Arrays.fill(items, size, size + count, padWith);
 			size += count;
@@ -548,7 +559,8 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 
 	/**
 	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
@@ -560,14 +572,15 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} on either all of
 	 * {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if {@code brackets}
 	 * is true). Each item is expected to be separated by {@code delimiter}.
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 *
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static CharBag parse(String str, String delimiter, boolean brackets) {
 		CharBag c = new CharBag();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter);
@@ -577,10 +590,11 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	/**
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} with the given
 	 * four parameters as-is.
-	 * @param str a String that will have the given section parsed
+	 *
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static CharBag parse(String str, String delimiter, int offset, int length) {

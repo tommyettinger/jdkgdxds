@@ -661,20 +661,21 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 
 	/**
 	 * Calls {@link #parse(ObjPredicate, ObjToSameFunction, String, String, PartialParser, boolean)} with brackets set to false.
-	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param filter    a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor    a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns an {@code I} item from a section of {@code str}
-	 * @return a new collection parsed from str
+	 * @param parser    a PartialParser that returns an {@code I} item from a section of {@code str}
 	 * @param <T>       the type of item in each Iterable
 	 * @param <I>       the Iterable of T type this holds
+	 * @return a new collection parsed from str
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> parse(ObjPredicate<T> filter,
-																				   ObjToSameFunction<T> editor,
-																				   String str,
-																				   String delimiter,
-																				   PartialParser<I> parser) {
+																					ObjToSameFunction<T> editor,
+																					String str,
+																					String delimiter,
+																					PartialParser<I> parser) {
 		return parse(filter, editor, str, delimiter, parser, false);
 	}
 
@@ -684,22 +685,22 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
 	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
 	 *
-	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param filter    a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor    a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns an {@code I} item from a section of {@code str}
-	 * @param brackets if true, the first and last chars in str will be ignored
-	 * @return a new collection parsed from str
+	 * @param parser    a PartialParser that returns an {@code I} item from a section of {@code str}
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @param <T>       the type of item in each Iterable
 	 * @param <I>       the Iterable of T type this holds
+	 * @return a new collection parsed from str
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> parse(ObjPredicate<T> filter,
-																				   ObjToSameFunction<T> editor,
-																				   String str,
-																				   String delimiter,
-																				   PartialParser<I> parser,
-																				   boolean brackets) {
+																					ObjToSameFunction<T> editor,
+																					String str,
+																					String delimiter,
+																					PartialParser<I> parser,
+																					boolean brackets) {
 		FilteredIterableOrderedSet<T, I> c = new FilteredIterableOrderedSet<>(filter, editor);
 		if (brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
@@ -713,24 +714,24 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 * {@link #addLegible(String, String, PartialParser, int, int)}
 	 * with the other five parameters as-is.
 	 *
-	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
-	 * @param editor a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
-	 * @param str a String that will have the given section parsed
+	 * @param filter    a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
+	 * @param editor    a {@code ObjToSameFunction<T>} that will be given a sub-item and may return a potentially different {@code T} sub-item
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns an {@code I} item from a section of {@code str}
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
-	 * @return a new collection parsed from str
+	 * @param parser    a PartialParser that returns an {@code I} item from a section of {@code str}
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @param <T>       the type of item in each Iterable
 	 * @param <I>       the Iterable of T type this holds
+	 * @return a new collection parsed from str
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> parse(ObjPredicate<T> filter,
-																				   ObjToSameFunction<T> editor,
-																				   String str,
-																				   String delimiter,
-																				   PartialParser<I> parser,
-																				   int offset,
-																				   int length) {
+																					ObjToSameFunction<T> editor,
+																					String str,
+																					String delimiter,
+																					PartialParser<I> parser,
+																					int offset,
+																					int length) {
 		FilteredIterableOrderedSet<T, I> c = new FilteredIterableOrderedSet<>(filter, editor);
 		c.addLegible(str, delimiter, parser, offset, length);
 		return c;

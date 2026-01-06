@@ -26,26 +26,28 @@ import java.util.Objects;
  * a {@code T} item to it.
  * This is not typically a method reference to anything in {@link Base}, which is different from other Appender types. This will frequently
  * use a lambda.
+ *
  * @param <T> the type of items that can be appended by this functional interface
  */
 public interface Appender<T> {
 	/**
 	 * Appends {@code item} to {@code sb} and returns {@code sb} for chaining.
 	 *
-	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param sb   an Appendable CharSequence that will be modified, such as a StringBuilder
 	 * @param item the item to append
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 * @return {@code sb}, after modification
-	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	<S extends CharSequence & Appendable> S apply(S sb, T item);
 
 	/**
 	 * Commonly used as a method reference where a generic Appender is needed.
-	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 *
+	 * @param sb   an Appendable CharSequence that will be modified, such as a StringBuilder
 	 * @param item the item to append
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 * @param <T>  the type of {@code item}, which will be run through {@link Objects#toString(Object)} to get a String representation
 	 * @return {@code sb}, after modification
-	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
-	 * @param <T> the type of {@code item}, which will be run through {@link Objects#toString(Object)} to get a String representation
 	 */
 	static <S extends CharSequence & Appendable, T> S append(S sb, T item) {
 		try {
@@ -63,10 +65,11 @@ public interface Appender<T> {
 	 * Similar to {@link #append(CharSequence, Object)}, but not intended to be used as a method reference; use
 	 * {@link #ENUM_NAME_APPENDER} if you need an Appender instance (it should perform identically, but works around a
 	 * bug in GWT that would make a method reference fail to compile).
-	 * @param sb an Appendable CharSequence that will be modified, such as a StringBuilder
+	 *
+	 * @param sb   an Appendable CharSequence that will be modified, such as a StringBuilder
 	 * @param item the Enum item to append the {@link Enum#name()} of
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 * @return {@code sb}, after modification
-	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	static <S extends CharSequence & Appendable> S appendEnumName(S sb, Enum<?> item) {
 		try {

@@ -1774,11 +1774,12 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param keyParser         a PartialParser that returns an {@link Enum} key from a section of {@code str}
 	 */
 	public static EnumFloatMap parse(String str,
-									String entrySeparator,
-									String keyValueSeparator,
-									PartialParser<Enum<?>> keyParser) {
+									 String entrySeparator,
+									 String keyValueSeparator,
+									 PartialParser<Enum<?>> keyParser) {
 		return parse(str, entrySeparator, keyValueSeparator, keyParser, false);
 	}
+
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
 	 * chars) with the given PartialParser for keys, with entries separated by {@code entrySeparator},
@@ -1793,12 +1794,12 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
 	public static EnumFloatMap parse(String str,
-									String entrySeparator,
-									String keyValueSeparator,
-									PartialParser<Enum<?>> keyParser,
-									boolean brackets) {
+									 String entrySeparator,
+									 String keyValueSeparator,
+									 PartialParser<Enum<?>> keyParser,
+									 boolean brackets) {
 		EnumFloatMap m = new EnumFloatMap();
-		if(brackets)
+		if (brackets)
 			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 1, str.length() - 1);
 		else
 			m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, 0, -1);
@@ -1820,11 +1821,11 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
 	public static EnumFloatMap parse(String str,
-									String entrySeparator,
-									String keyValueSeparator,
-									PartialParser<Enum<?>> keyParser,
-									int offset,
-									int length) {
+									 String entrySeparator,
+									 String keyValueSeparator,
+									 PartialParser<Enum<?>> keyParser,
+									 int offset,
+									 int length) {
 		EnumFloatMap m = new EnumFloatMap();
 		m.putLegible(str, entrySeparator, keyValueSeparator, keyParser, offset, length);
 		return m;

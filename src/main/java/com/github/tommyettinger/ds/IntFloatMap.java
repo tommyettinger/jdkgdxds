@@ -2000,8 +2000,8 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @param keyValueSeparator the String separating every key from its corresponding value
 	 */
 	public static IntFloatMap parse(String str,
-										   String entrySeparator,
-										   String keyValueSeparator) {
+									String entrySeparator,
+									String keyValueSeparator) {
 		return parse(str, entrySeparator, keyValueSeparator, false);
 	}
 
@@ -2016,11 +2016,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
 	public static IntFloatMap parse(String str,
-										   String entrySeparator,
-										   String keyValueSeparator,
-										   boolean brackets) {
+									String entrySeparator,
+									String keyValueSeparator,
+									boolean brackets) {
 		IntFloatMap m = new IntFloatMap();
-		if(brackets)
+		if (brackets)
 			m.putLegible(str, entrySeparator, keyValueSeparator, 1, str.length() - 1);
 		else
 			m.putLegible(str, entrySeparator, keyValueSeparator, 0, -1);
@@ -2039,10 +2039,10 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
 	public static IntFloatMap parse(String str,
-										   String entrySeparator,
-										   String keyValueSeparator,
-										   int offset,
-										   int length) {
+									String entrySeparator,
+									String keyValueSeparator,
+									int offset,
+									int length) {
 		IntFloatMap m = new IntFloatMap();
 		m.putLegible(str, entrySeparator, keyValueSeparator, offset, length);
 		return m;

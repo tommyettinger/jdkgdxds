@@ -441,11 +441,12 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param valueParser       a PartialParser that returns a {@code V} value from a section of {@code str}
 	 */
 	public static <V> CaseInsensitiveOrderedMap<V> parse(String str,
-												  String entrySeparator,
-												  String keyValueSeparator,
-												  PartialParser<V> valueParser) {
+														 String entrySeparator,
+														 String keyValueSeparator,
+														 PartialParser<V> valueParser) {
 		return parse(str, entrySeparator, keyValueSeparator, valueParser, false);
 	}
+
 	/**
 	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
 	 * chars) with the given PartialParser for values, with entries separated by {@code entrySeparator},
@@ -462,12 +463,12 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
 	 */
 	public static <V> CaseInsensitiveOrderedMap<V> parse(String str,
-												  String entrySeparator,
-												  String keyValueSeparator,
-												  PartialParser<V> valueParser,
-												  boolean brackets) {
+														 String entrySeparator,
+														 String keyValueSeparator,
+														 PartialParser<V> valueParser,
+														 boolean brackets) {
 		CaseInsensitiveOrderedMap<V> m = new CaseInsensitiveOrderedMap<>();
-		if(brackets)
+		if (brackets)
 			m.putLegible(str, entrySeparator, keyValueSeparator, PartialParser.DEFAULT_CHAR_SEQUENCE, valueParser, 1, str.length() - 1);
 		else
 			m.putLegible(str, entrySeparator, keyValueSeparator, PartialParser.DEFAULT_CHAR_SEQUENCE, valueParser, 0, -1);
@@ -491,11 +492,11 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 * @param length            how many chars to read; -1 is treated as maximum length
 	 */
 	public static <V> CaseInsensitiveOrderedMap<V> parse(String str,
-												  String entrySeparator,
-												  String keyValueSeparator,
-												  PartialParser<V> valueParser,
-												  int offset,
-												  int length) {
+														 String entrySeparator,
+														 String keyValueSeparator,
+														 PartialParser<V> valueParser,
+														 int offset,
+														 int length) {
 		CaseInsensitiveOrderedMap<V> m = new CaseInsensitiveOrderedMap<>();
 		m.putLegible(str, entrySeparator, keyValueSeparator, PartialParser.DEFAULT_CHAR_SEQUENCE, valueParser, offset, length);
 		return m;

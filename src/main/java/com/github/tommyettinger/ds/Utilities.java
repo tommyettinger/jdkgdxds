@@ -148,7 +148,7 @@ public final class Utilities {
 	 * different odd number and evaluated again until it satisfies the threshold.
 	 *
 	 * @param candidate an odd-number int that will either be returned as-is if it is already considered optimal, or
-	 *                    changed until it is evaluated to fit the {@code threshold}
+	 *                  changed until it is evaluated to fit the {@code threshold}
 	 * @param threshold recommended to be 1, the most stringest threshold allowed, but may be higher for a looser bound
 	 * @return {@code candidate} if it is already optimal by {@code threshold}, otherwise a different odd int that is
 	 */
@@ -449,7 +449,7 @@ public final class Utilities {
 	 * @return an int hashCode; quality should be similarly good across any bits
 	 */
 	public static int hashCodeIgnoreCase(final CharSequence data, int seed) {
-		if(data == null) return seed;
+		if (data == null) return seed;
 		final int len = data.length();
 		final int x = GOOD_MULTIPLIERS[(seed & 127)];
 		final int y = GOOD_MULTIPLIERS[(seed >>> 7 & 127) + 128];

@@ -830,9 +830,9 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * <br>
 	 * The {@code parser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
 	 *
-	 *  @param str a String that will be parsed in full
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns an {@link Enum} item from a section of {@code str}
+	 * @param parser    a PartialParser that returns an {@link Enum} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 */
 	public static EnumSet parse(String str, String delimiter, PartialParser<Enum<?>> parser) {
@@ -846,15 +846,15 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * <br>
 	 * The {@code parser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
 	 *
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns an {@link Enum} item from a section of {@code str}
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param parser    a PartialParser that returns an {@link Enum} item from a section of {@code str}
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static EnumSet parse(String str, String delimiter, PartialParser<Enum<?>> parser, boolean brackets) {
 		EnumSet c = new EnumSet();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter, parser);
@@ -867,11 +867,11 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 * <br>
 	 * The {@code parser} is often produced by {@link PartialParser#enumParser(ObjToObjFunction)}.
 	 *
-	 * @param str a String that will have the given section parsed
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns an {@link Enum} item from a section of {@code str}
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param parser    a PartialParser that returns an {@link Enum} item from a section of {@code str}
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static EnumSet parse(String str, String delimiter, PartialParser<Enum<?>> parser, int offset, int length) {

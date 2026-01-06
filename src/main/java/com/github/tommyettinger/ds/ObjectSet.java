@@ -1049,9 +1049,10 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	/**
 	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectSet<T> parse(String str, String delimiter, PartialParser<T> parser) {
@@ -1063,15 +1064,15 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
 	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
 	 *
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectSet<T> parse(String str, String delimiter, PartialParser<T> parser, boolean brackets) {
 		ObjectSet<T> c = new ObjectSet<>();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter, parser);
@@ -1082,11 +1083,11 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, PartialParser, int, int)}
 	 * with the given five parameters as-is.
 	 *
-	 * @param str a String that will have the given section parsed
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectSet<T> parse(String str, String delimiter, PartialParser<T> parser, int offset, int length) {

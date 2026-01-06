@@ -2168,7 +2168,8 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
 	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
-	 * @param find the item to search for
+	 *
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
@@ -2204,7 +2205,8 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
 	 * if nothing was found or in the case that find and replace are the same.
-	 * @param find the item to search for
+	 *
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
 	 */
@@ -2875,7 +2877,8 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 
 	/**
 	 * Calls {@link #parse(String, String, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
 	 * @return a new collection parsed from str
 	 */
@@ -2887,14 +2890,15 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} on either all of
 	 * {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if {@code brackets}
 	 * is true). Each item is expected to be separated by {@code delimiter}.
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 *
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static ByteDeque parse(String str, String delimiter, boolean brackets) {
 		ByteDeque c = new ByteDeque();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter);
@@ -2904,10 +2908,11 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	/**
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, int, int)} with the given
 	 * four parameters as-is.
-	 * @param str a String that will have the given section parsed
+	 *
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static ByteDeque parse(String str, String delimiter, int offset, int length) {

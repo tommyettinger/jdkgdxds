@@ -2162,7 +2162,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 
 	@Override
 	public ListIterator<T> listIterator() {
-		return new ObjectDequeIterator<>(this);	}
+		return new ObjectDequeIterator<>(this);
+	}
 
 	/**
 	 * Gets a new iterator over this deque that starts at the given index.
@@ -2504,12 +2505,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * Replaces the first occurrence of {@code find} with {@code replace}. Returns true if it performed the replacement,
 	 * or false if there was nothing to replace. This also returns false if find and replace are the same.
 	 * This compares T items by {@link Object#equals(Object)}, unless an item is null.
-	 * @param find the item to search for
+	 *
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
 	public boolean replaceFirst(T find, T replace) {
-		if(find == null) return replaceFirstIdentity(null, replace);
+		if (find == null) return replaceFirstIdentity(null, replace);
 		if (!find.equals(replace)) {
 			T[] items = this.items;
 			if (head <= tail) {
@@ -2541,12 +2543,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * Replaces every occurrence of {@code find} with {@code replace}. Returns the number of changed items, which is 0
 	 * if nothing was found or in the case that find and replace are the same.
 	 * This compares T items by {@link Object#equals(Object)}, unless an item is null.
-	 * @param find the item to search for
+	 *
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
 	 */
 	public int replaceAll(T find, T replace) {
-		if(find == null) return replaceAllIdentity(null, replace);
+		if (find == null) return replaceAllIdentity(null, replace);
 		int replacements = 0;
 		if (!find.equals(replace)) {
 			T[] items = this.items;
@@ -2581,7 +2584,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * This compares T items by identity, not with {@link Object#equals(Object)} ! This may be useful to replace
 	 * an occurrence of {@code null} by a given {@code replace} value.
 	 *
-	 * @param find the item to search for
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return true if this changed, or false otherwise
 	 */
@@ -2619,7 +2622,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * This compares T items by identity, not with {@link Object#equals(Object)} ! This may be useful to replace
 	 * occurrences of {@code null} by a given {@code replace} value.
 	 *
-	 * @param find the item to search for
+	 * @param find    the item to search for
 	 * @param replace the item to replace {@code find} with, if possible
 	 * @return the number of replacements that occurred; 0 if nothing was found or replaced
 	 */
@@ -2654,11 +2657,13 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 
 	/**
 	 * Returns an iterator for the items in the deque. Remove is supported.
+	 *
 	 * @return an iterator for the items in the deque
 	 */
 	@Override
 	public ObjectDequeIterator<T> iterator() {
-		return new ObjectDequeIterator<>(this);	}
+		return new ObjectDequeIterator<>(this);
+	}
 
 	/**
 	 * Returns a new iterator over the elements in this deque in reverse
@@ -3000,8 +3005,8 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * for {@code comparator} if T implements {@link Comparable} of T, which will make this
 	 * use the natural ordering for T.
 	 *
-	 * @param from first index to use, inclusive
-	 * @param to   last index to use, exclusive
+	 * @param from       first index to use, inclusive
+	 * @param to         last index to use, exclusive
 	 * @param comparator the Comparator to use for T items; may be null to use the natural
 	 *                   order of T items when T implements Comparable of T
 	 */
@@ -3460,9 +3465,10 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 
 	/**
 	 * Calls {@link #parse(String, String, PartialParser, boolean)} with brackets set to false.
-	 * @param str a String that will be parsed in full
+	 *
+	 * @param str       a String that will be parsed in full
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectDeque<T> parse(String str, String delimiter, PartialParser<T> parser) {
@@ -3474,15 +3480,15 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * either all of {@code str} (if {@code brackets} is false) or {@code str} without its first and last chars (if
 	 * {@code brackets} is true). Each item is expected to be separated by {@code delimiter}.
 	 *
-	 * @param str a String that will be parsed in full (depending on brackets)
+	 * @param str       a String that will be parsed in full (depending on brackets)
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
-	 * @param brackets if true, the first and last chars in str will be ignored
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param brackets  if true, the first and last chars in str will be ignored
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectDeque<T> parse(String str, String delimiter, PartialParser<T> parser, boolean brackets) {
 		ObjectDeque<T> c = new ObjectDeque<>();
-		if(brackets)
+		if (brackets)
 			c.addLegible(str, delimiter, parser, 1, str.length() - 1);
 		else
 			c.addLegible(str, delimiter, parser);
@@ -3493,11 +3499,11 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 * Creates a new collection and fills it by calling {@link #addLegible(String, String, PartialParser, int, int)}
 	 * with the given five parameters as-is.
 	 *
-	 * @param str a String that will have the given section parsed
+	 * @param str       a String that will have the given section parsed
 	 * @param delimiter the delimiter between items in str
-	 * @param parser a PartialParser that returns a {@code T} item from a section of {@code str}
-	 * @param offset the first position to parse in str, inclusive
-	 * @param length how many chars to parse, starting from offset
+	 * @param parser    a PartialParser that returns a {@code T} item from a section of {@code str}
+	 * @param offset    the first position to parse in str, inclusive
+	 * @param length    how many chars to parse, starting from offset
 	 * @return a new collection parsed from str
 	 */
 	public static <T> ObjectDeque<T> parse(String str, String delimiter, PartialParser<T> parser, int offset, int length) {
