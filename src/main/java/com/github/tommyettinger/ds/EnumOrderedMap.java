@@ -640,89 +640,38 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * operations. It does not support the {@code add} or {@code addAll}
 	 * operations.
 	 *
-	 * <p>Note that the same Collection instance is returned each time this
-	 * method is called. Use the {@link OrderedMapKeys#OrderedMapKeys(EnumOrderedMap)}
-	 * constructor for nested or multithreaded iteration.
-	 *
 	 * @return a set view of the keys contained in this map
 	 */
 	@Override
 	public Keys keySet() {
-		if (keys1 == null || keys2 == null) {
-			keys1 = new OrderedMapKeys(this);
-			keys2 = new OrderedMapKeys(this);
-		}
-		if (!keys1.iter.valid) {
-			keys1.iter.reset();
-			keys1.iter.valid = true;
-			keys2.iter.valid = false;
-			return keys1;
-		}
-		keys2.iter.reset();
-		keys2.iter.valid = true;
-		keys1.iter.valid = false;
-		return keys2;
+		return new OrderedMapKeys(this);
 	}
 
 	/**
 	 * Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
-	 * <p>Note that the same Collection instance is returned each time this method is called. Use the
-	 * {@link OrderedMapValues#OrderedMapValues(EnumOrderedMap)} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Collection} of V values
 	 */
 	@Override
 	public Values<V> values() {
-		if (values1 == null || values2 == null) {
-			values1 = new OrderedMapValues<>(this);
-			values2 = new OrderedMapValues<>(this);
-		}
-		if (!values1.iter.valid) {
-			values1.iter.reset();
-			values1.iter.valid = true;
-			values2.iter.valid = false;
-			return values1;
-		}
-		values2.iter.reset();
-		values2.iter.valid = true;
-		values1.iter.valid = false;
-		return values2;
+		return new OrderedMapValues<>(this);
 	}
 
 	/**
 	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
 	 *
-	 * <p>Note that the same iterator instance is returned each time this method is called.
-	 * Use the {@link OrderedMapEntries#OrderedMapEntries(EnumOrderedMap)} constructor for nested or multithreaded iteration.
-	 *
 	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
 	 */
 	@Override
 	public Entries<V> entrySet() {
-		if (entries1 == null || entries2 == null) {
-			entries1 = new OrderedMapEntries<>(this);
-			entries2 = new OrderedMapEntries<>(this);
-		}
-		if (!entries1.iter.valid) {
-			entries1.iter.reset();
-			entries1.iter.valid = true;
-			entries2.iter.valid = false;
-			return entries1;
-		}
-		entries2.iter.reset();
-		entries2.iter.valid = true;
-		entries1.iter.valid = false;
-		return entries2;
+		return new OrderedMapEntries<>(this);
 	}
 
 	/**
-	 * Reuses the iterator of the reused {@link Entries}
-	 * produced by {@link #entrySet()}; does not permit nested iteration. Iterate over
-	 * {@link OrderedMapEntries#OrderedMapEntries(EnumOrderedMap)} if you need nested or
-	 * multithreaded iteration. You can remove an Entry from this EnumOrderedMap
-	 * using this Iterator.
+	 * Creates a new {@link OrderedMapEntries} and gets its iterator.
+	 * You can remove an Entry from this map using this Iterator.
 	 *
-	 * @return an {@link Iterator} over key-value pairs as {@link Map.Entry} values
+	 * @return an {@link Iterator} over key-value pairs as {@link Entry} values
 	 */
 	@Override
 	public MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
@@ -794,9 +743,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 				@Override
 				public boolean hasNext() {
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
-					}
 					return hasNext;
 				}
 
@@ -804,9 +750,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				public Entry<V> next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();
-					}
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
 					}
 					currentIndex = nextIndex;
 					entry.key = keys.get(nextIndex);
@@ -845,9 +788,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 				@Override
 				public boolean hasNext() {
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
-					}
 					return hasNext;
 				}
 
@@ -862,9 +802,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				public Enum<?> next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();
-					}
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
 					}
 					Enum<?> key = ordering.get(nextIndex);
 					currentIndex = nextIndex;
@@ -901,9 +838,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 
 				@Override
 				public boolean hasNext() {
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
-					}
 					return hasNext;
 				}
 
@@ -918,9 +852,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				public V next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();
-					}
-					if (!valid) {
-						throw new RuntimeException("#iterator() cannot be used nested.");
 					}
 					V value = map.get(keys.get(nextIndex));
 					currentIndex = nextIndex;
