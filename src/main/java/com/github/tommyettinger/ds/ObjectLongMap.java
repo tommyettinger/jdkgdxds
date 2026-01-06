@@ -94,13 +94,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 */
 	protected int hashMultiplier;
 
-	protected transient Entries<K> entries1;
-	protected transient Entries<K> entries2;
-	protected transient Values<K> values1;
-	protected transient Values<K> values2;
-	protected transient Keys<K> keys1;
-	protected transient Keys<K> keys2;
-
 	public long defaultValue = 0L;
 
 	/**
@@ -841,12 +834,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	/**
-	 * Reuses the iterator of the reused {@link Entries} produced by {@link #entrySet()};
-	 * does not permit nested iteration. Iterate over {@link Entries#Entries(ObjectLongMap)} if you
-	 * need nested or multithreaded iteration. You can remove an Entry from this ObjectLongMap
-	 * using this Iterator.
+	 * Creates a new {@link Entries} and gets its iterator.
+	 * You can remove an Entry from this map using this Iterator.
 	 *
-	 * @return an {@link Iterator} over {@link Entry} key-value pairs; remove is supported.
+	 * @return an {@link Iterator} over key-value pairs as {@link Entry} values
 	 */
 	@Override
 	public EntryIterator<K> iterator() {
@@ -866,74 +857,28 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * operations.  It does not support the {@code add} or {@code addAll}
 	 * operations.
 	 *
-	 * <p>Note that the same Collection instance is returned each time this
-	 * method is called. Use the {@link Keys} constructor for nested or
-	 * multithreaded iteration.
-	 *
 	 * @return a set view of the keys contained in this map
 	 */
 	public Keys<K> keySet() {
-		if (keys1 == null || keys2 == null) {
-			keys1 = new Keys<>(this);
-			keys2 = new Keys<>(this);
-		}
-		if (!keys1.iter.valid) {
-			keys1.iter.reset();
-			keys1.iter.valid = true;
-			keys2.iter.valid = false;
-			return keys1;
-		}
-		keys2.iter.reset();
-		keys2.iter.valid = true;
-		keys1.iter.valid = false;
-		return keys2;
+		return new Keys<>(this);
 	}
 
 	/**
-	 * Returns a Collection of the values in the map. Remove is supported. Note that the same Collection instance is returned each
-	 * time this method is called. Use the {@link Values} constructor for nested or multithreaded iteration.
+	 * Returns a Collection of the values in the map. Remove is supported.
 	 *
 	 * @return a {@link Collection} of long values
 	 */
 	public Values<K> values() {
-		if (values1 == null || values2 == null) {
-			values1 = new Values<>(this);
-			values2 = new Values<>(this);
-		}
-		if (!values1.iter.valid) {
-			values1.iter.reset();
-			values1.iter.valid = true;
-			values2.iter.valid = false;
-			return values1;
-		}
-		values2.iter.reset();
-		values2.iter.valid = true;
-		values1.iter.valid = false;
-		return values2;
+		return new Values<>(this);
 	}
 
 	/**
 	 * Returns a Set of Entry, containing the entries in the map. Remove is supported by the Set's iterator.
-	 * Note that the same iterator instance is returned each time this method is called.
-	 * Use the {@link Entries} constructor for nested or multithreaded iteration.
 	 *
 	 * @return a {@link Set} of {@link Entry} key-value pairs
 	 */
 	public Entries<K> entrySet() {
-		if (entries1 == null || entries2 == null) {
-			entries1 = new Entries<>(this);
-			entries2 = new Entries<>(this);
-		}
-		if (!entries1.iter.valid) {
-			entries1.iter.reset();
-			entries1.iter.valid = true;
-			entries2.iter.valid = false;
-			return entries1;
-		}
-		entries2.iter.reset();
-		entries2.iter.valid = true;
-		entries1.iter.valid = false;
-		return entries2;
+		return new Entries<>(this);
 	}
 
 	public static class Entry<K> {
@@ -1038,7 +983,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		protected final ObjectLongMap<K> map;
 		protected int nextIndex, currentIndex;
-		public boolean valid = true;
 
 		public MapIterator(ObjectLongMap<K> map) {
 			this.map = map;
@@ -1103,9 +1047,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -1113,9 +1054,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		public K next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			K key = map.keyTable[nextIndex];
 			currentIndex = nextIndex;
@@ -1140,9 +1078,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			long value = map.valueTable[nextIndex];
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -1151,9 +1086,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 	}
@@ -1178,9 +1110,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			K[] keyTable = map.keyTable;
 			entry.key = keyTable[nextIndex];
 			entry.value = map.valueTable[nextIndex];
@@ -1191,9 +1120,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 	}
