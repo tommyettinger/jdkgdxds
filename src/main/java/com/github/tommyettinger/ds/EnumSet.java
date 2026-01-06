@@ -191,7 +191,8 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	 */
 	@Override
 	public Iterator<Enum<?>> iterator() {
-		return new EnumSetIterator(this);	}
+		return new EnumSetIterator(this);
+	}
 
 	/**
 	 * Adds the specified element to this set if it is not already present

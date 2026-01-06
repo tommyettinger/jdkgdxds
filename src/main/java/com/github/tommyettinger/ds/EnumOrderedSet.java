@@ -583,7 +583,8 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 */
 	@Override
 	public EnumSetIterator iterator() {
-		return new EnumOrderedSetIterator(this);	}
+		return new EnumOrderedSetIterator(this);
+	}
 
 	@Override
 	public String toString(String itemSeparator) {

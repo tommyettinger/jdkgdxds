@@ -56,9 +56,6 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	 */
 	protected int offset = 0;
 
-	protected transient OffsetBitSetIterator iterator1;
-	protected transient OffsetBitSetIterator iterator2;
-
 	/**
 	 * Creates a bit set with an initial size that can store positions between 0 and 31, inclusive, without
 	 * needing to resize. This has an offset of 0 and can resize to fit larger positions.
@@ -331,25 +328,10 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
-	 * <p>
-	 * Use the {@link OffsetBitSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
 	public OffsetBitSetIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new OffsetBitSetIterator(this);
-			iterator2 = new OffsetBitSetIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new OffsetBitSetIterator(this);
 	}
 
 
@@ -798,7 +780,6 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 
 		final OffsetBitSet set;
 		int nextIndex, currentIndex;
-		boolean valid = true;
 
 		public OffsetBitSetIterator(OffsetBitSet set) {
 			this.set = set;
@@ -825,9 +806,6 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -844,9 +822,6 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		public int nextInt() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			int key = nextIndex;
 			currentIndex = nextIndex;
