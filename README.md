@@ -40,18 +40,19 @@ for Kryo saving/loading, or `tantrum-jdkgdxds` for Apache Fory saving/loading.
 
 ## What is this?
 
-Some background, first... libGDX has its own data structures, and they're mostly nice to work with. They have fast iteration by
-reusing iterators, they are designed to use low memory (both in the way the hashed maps and sets are designed and by allowing
-primitive data types for many data structures), and they have some nice features that aren't present in all standard libraries,
-like optional insertion-ordering. The problem with libGDX's data structures is that they are extremely limited in what interfaces
-they implement, typically implementing no more than `java.io.Serializable` and `java.lang.Iterable`. They also are limited to Java
-6 or 7 features, despite Java 8 features being available on Android and GWT for some time now, and even reaching iOS soon, if not
-already. So what is this? It is a redo of libGDX's data structures so that they implement common JDK interfaces like
-`java.util.Map`, `java.util.List`, and `java.util.Set`, plus their parts that can't implement generic interfaces use interfaces
-defined here, such as `PrimitiveCollection`, `Ordered`, `FloatIterator`, `LongComparator`, and so on. It also sharply increases
-the number of primitive-backed maps; they don't implement `java.util.Map`, but often implement other interfaces here. As an
-example, `com.github.tommyettinger.ds.IntLongOrderedMap` implements `com.github.tommyettinger.ds.Ordered.OfInt`, which specifies
-that the order of items (keys here) is represented by a `com.github.tommyettinger.ds.IntList` containing those keys.
+Some background, first... libGDX has its own data structures, and they're mostly nice to work with. They are designed to
+use low memory (both in the way the hashed maps and sets are designed and by allowing primitive data types for many data
+structures), and they have some nice features that aren't present in all standard libraries, like optional
+insertion-ordering. The problem with libGDX's data structures is that they are extremely limited in what interfaces they
+implement, typically implementing no more than `java.io.Serializable` and `java.lang.Iterable`. They also are limited to
+Java 6 or 7 features, despite Java 8 features being available on Android and GWT for some time now, and even reaching
+iOS soon, if not already. So what is this? It is a redo of libGDX's data structures so that they implement common JDK
+interfaces like `java.util.Map`, `java.util.List`, and `java.util.Set`, plus their parts that can't implement generic
+interfaces use interfaces defined here, such as `PrimitiveCollection`, `Ordered`, `FloatIterator`, `LongComparator`, and
+so on. It also sharply increases the number of primitive-backed maps; they don't implement `java.util.Map`, but often
+implement other interfaces here. As an example, `com.github.tommyettinger.ds.IntLongOrderedMap` implements
+`com.github.tommyettinger.ds.Ordered.OfInt`, which specifies that the order of items (keys here) is represented by a
+`com.github.tommyettinger.ds.IntList` containing those keys.
 
 ## OK, how do I use it?
 
