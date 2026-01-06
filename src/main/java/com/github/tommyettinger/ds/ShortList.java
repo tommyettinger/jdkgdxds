@@ -45,8 +45,6 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 
 	public short[] items;
 	protected int size;
-	protected transient ShortListIterator iterator1;
-	protected transient ShortListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.

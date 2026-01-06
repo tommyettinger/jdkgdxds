@@ -689,9 +689,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 	 * returned by an initial call to {@link ListIterator#next next}.
 	 * An initial call to {@link ListIterator#previous previous} would
 	 * return the element with the specified index minus one.
-	 * <br>
-	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
-	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList, int)} to create a ListIterator if you need nested iteration.
 	 *
 	 * @param index the index to start the iterator at
 	 */
@@ -702,9 +699,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 
 	/**
 	 * Returns a list iterator over the elements in this list (in proper sequence).
-	 * <br>
-	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
-	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList)} to create a ListIterator if you need nested iteration.
 	 *
 	 * @see #listIterator(int)
 	 */
@@ -714,9 +708,6 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 
 	/**
 	 * Returns an iterator over the elements in this list in proper sequence.
-	 * <br>
-	 * The returned iterator is reused by this ObjectList, so it is likely unsuitable for nested iteration.
-	 * Use {@link ObjectListIterator#ObjectListIterator(ObjectList)} to create an Iterator if you need nested iteration.
 	 *
 	 * @return an iterator over the elements in this list in proper sequence
 	 */

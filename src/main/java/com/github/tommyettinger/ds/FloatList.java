@@ -49,8 +49,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 
 	public float[] items;
 	protected int size;
-	protected transient FloatListIterator iterator1;
-	protected transient FloatListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.

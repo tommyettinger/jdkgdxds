@@ -73,9 +73,6 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 */
 	protected int tail = 0;
 
-	protected transient BooleanDequeIterator descendingIterator1;
-	protected transient BooleanDequeIterator descendingIterator2;
-
 	/**
 	 * Creates a new BooleanDeque which can hold 16 values without needing to resize the backing array.
 	 */

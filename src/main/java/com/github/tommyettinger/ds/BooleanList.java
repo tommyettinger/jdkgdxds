@@ -46,8 +46,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 
 	public boolean[] items;
 	protected int size;
-	protected transient BooleanListIterator iterator1;
-	protected transient BooleanListIterator iterator2;
 
 	/**
 	 * Creates an ordered list with a capacity of 10.

@@ -21,7 +21,7 @@ import com.github.tommyettinger.ds.support.util.LongIterator;
 import java.util.List;
 
 /**
- * An unordered List of long items. This allows efficient iteration via a reused iterator or via index.
+ * An unordered List of long items. This allows efficient iteration via an iterator or via index.
  * This class avoids a memory copy when removing elements (the last element is moved to the removed element's position).
  * Items are permitted to change position in the ordering when any item is removed or added.
  * Although this won't keep an order during modifications, you can {@link #sort()} the bag to ensure,
@@ -39,14 +39,14 @@ public class LongBag extends LongList {
 	}
 
 	/**
-	 * Creates an ordered bag with a capacity of 10.
+	 * Creates an unordered bag with a capacity of 10.
 	 */
 	public LongBag() {
 		super();
 	}
 
 	/**
-	 * Creates an ordered bag with the specified capacity.
+	 * Creates an unordered bag with the specified capacity.
 	 *
 	 * @param capacity
 	 */

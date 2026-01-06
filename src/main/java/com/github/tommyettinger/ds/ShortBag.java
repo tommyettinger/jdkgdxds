@@ -39,14 +39,14 @@ public class ShortBag extends ShortList {
 	}
 
 	/**
-	 * Creates an ordered bag with a capacity of 10.
+	 * Creates an unordered bag with a capacity of 10.
 	 */
 	public ShortBag() {
 		super();
 	}
 
 	/**
-	 * Creates an ordered bag with the specified capacity.
+	 * Creates an unordered bag with the specified capacity.
 	 *
 	 * @param capacity
 	 */

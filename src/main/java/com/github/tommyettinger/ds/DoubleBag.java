@@ -40,14 +40,14 @@ public class DoubleBag extends DoubleList {
 	}
 
 	/**
-	 * Creates an ordered bag with a capacity of 10.
+	 * Creates an unordered bag with a capacity of 10.
 	 */
 	public DoubleBag() {
 		super();
 	}
 
 	/**
-	 * Creates an ordered bag with the specified capacity.
+	 * Creates an unordered bag with the specified capacity.
 	 *
 	 * @param capacity
 	 */
