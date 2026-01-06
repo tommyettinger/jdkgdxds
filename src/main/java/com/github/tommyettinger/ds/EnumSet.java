@@ -50,8 +50,6 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	protected int size;
 	protected int[] table;
 	protected Enum<?>[] universe;
-	protected transient EnumSetIterator iterator1;
-	protected transient EnumSetIterator iterator2;
 
 	/**
 	 * Empty constructor; using this will postpone allocating any internal arrays until {@link #add(Enum)} is first called
@@ -190,26 +188,10 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 	/**
 	 * Returns an iterator for the items in the set. The elements are
 	 * returned in the order of their {@link Enum#ordinal()} values. Remove is supported.
-	 * <p>
-	 * Use the {@link EnumSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
 	public Iterator<Enum<?>> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new EnumSetIterator(this);
-			iterator2 = new EnumSetIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new EnumSetIterator(this);	}
 
 	/**
 	 * Adds the specified element to this set if it is not already present
@@ -595,7 +577,6 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 
 		final EnumSet set;
 		int nextIndex, currentIndex;
-		boolean valid = true;
 
 		public EnumSetIterator(EnumSet set) {
 			this.set = set;
@@ -622,9 +603,6 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -641,9 +619,6 @@ public class EnumSet extends AbstractSet<Enum<?>> implements Set<Enum<?>>, Itera
 		public Enum<?> next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			currentIndex = nextIndex;
 			findNextIndex();

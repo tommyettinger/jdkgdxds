@@ -456,28 +456,12 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
-	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link IntOrderedSetIterator#IntOrderedSetIterator(IntOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
 	public IntSetIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new IntOrderedSetIterator(this);
-			iterator2 = new IntOrderedSetIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new IntOrderedSetIterator(this);	}
 
 	@Override
 	public int hashCode() {
@@ -511,9 +495,6 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		public int nextInt() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			int key = items.get(nextIndex);
 			nextIndex++;

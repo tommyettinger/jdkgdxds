@@ -85,9 +85,6 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	 */
 	protected int hashMultiplier;
 
-	protected transient IntSetIterator iterator1;
-	protected transient IntSetIterator iterator2;
-
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
@@ -544,26 +541,10 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 
 	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
-	 * <p>
-	 * Use the {@link IntSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
 	public IntSetIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new IntSetIterator(this);
-			iterator2 = new IntSetIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new IntSetIterator(this);	}
 
 	@Override
 	public int size() {
@@ -588,10 +569,6 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		 * {@link #remove()} is called.
 		 */
 		protected int currentIndex;
-		/**
-		 * Internally employed by the iterator-reuse functionality.
-		 */
-		protected boolean valid = true;
 		/**
 		 * The set to iterate over.
 		 */
@@ -632,9 +609,6 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -669,9 +643,6 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		public int nextInt() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			int key = nextIndex == INDEX_ZERO ? 0 : set.keyTable[nextIndex];
 			currentIndex = nextIndex;

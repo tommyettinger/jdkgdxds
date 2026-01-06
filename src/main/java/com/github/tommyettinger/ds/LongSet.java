@@ -85,9 +85,6 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 	 */
 	protected int hashMultiplier;
 
-	protected transient LongSetIterator iterator1;
-	protected transient LongSetIterator iterator2;
-
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
@@ -560,26 +557,10 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 
 	/**
 	 * Returns an iterator for the keys in the set. Remove is supported.
-	 * <p>
-	 * Use the {@link LongSetIterator} constructor for nested or multithreaded iteration.
 	 */
 	@Override
 	public LongSetIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new LongSetIterator(this);
-			iterator2 = new LongSetIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new LongSetIterator(this);	}
 
 	public static class LongSetIterator implements LongIterator {
 		static private final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
@@ -599,10 +580,6 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		 * {@link #remove()} is called.
 		 */
 		protected int currentIndex;
-		/**
-		 * Internally employed by the iterator-reuse functionality.
-		 */
-		protected boolean valid = true;
 		/**
 		 * The set to iterate over.
 		 */
@@ -643,9 +620,6 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -682,9 +656,6 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		public long nextLong() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			long key = nextIndex == INDEX_ZERO ? 0 : set.keyTable[nextIndex];
 			currentIndex = nextIndex;

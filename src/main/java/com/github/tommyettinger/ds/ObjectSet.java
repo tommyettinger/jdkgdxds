@@ -88,9 +88,6 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 */
 	protected int hashMultiplier;
 
-	protected transient ObjectSetIterator<T> iterator1;
-	protected transient ObjectSetIterator<T> iterator2;
-
 	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */

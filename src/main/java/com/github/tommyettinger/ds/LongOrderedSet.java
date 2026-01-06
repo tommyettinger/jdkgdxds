@@ -433,28 +433,12 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
-	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link LongOrderedSetIterator#LongOrderedSetIterator(LongOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
 	public LongSetIterator iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new LongOrderedSetIterator(this);
-			iterator2 = new LongOrderedSetIterator(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new LongOrderedSetIterator(this);	}
 
 	@Override
 	public int hashCode() {
@@ -518,9 +502,6 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		public long nextLong() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			long key = items.get(nextIndex);
 			nextIndex++;

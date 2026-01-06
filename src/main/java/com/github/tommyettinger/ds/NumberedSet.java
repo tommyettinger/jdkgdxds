@@ -90,8 +90,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	protected transient InternalMap map;
-	protected transient NumberedSetIterator<T> iterator1;
-	protected transient NumberedSetIterator<T> iterator2;
 
 	public NumberedSet() {
 		this(Utilities.getDefaultTableCapacity(), Utilities.getDefaultLoadFactor());
@@ -668,21 +666,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 */
 	@Override
 	public NumberedSetIterator<T> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new NumberedSetIterator<>(this);
-			iterator2 = new NumberedSetIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new NumberedSetIterator<>(this);	}
 
 	/**
 	 * Returns a {@link ListIterator} starting at index 0.
@@ -694,21 +678,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
 	 */
 	public NumberedSetIterator<T> listIterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new NumberedSetIterator<>(this);
-			iterator2 = new NumberedSetIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new NumberedSetIterator<>(this);	}
 
 	/**
 	 * Returns a {@link ListIterator} starting at the specified index.
@@ -722,20 +692,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @return a ListIterator, or more specifically a {@link NumberedSetIterator} over this set
 	 */
 	public NumberedSetIterator<T> listIterator(int index) {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new NumberedSetIterator<>(this, index);
-			iterator2 = new NumberedSetIterator<>(this, index);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset(index);
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset(index);
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
+		return new NumberedSetIterator<>(this, index);
 	}
 
 	/**
@@ -908,7 +865,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	public static class NumberedSetIterator<T> implements Iterable<T>, ListIterator<T> {
 		protected int index, latest = -1;
 		protected NumberedSet<T> ns;
-		protected boolean valid = true;
 
 		public NumberedSetIterator(NumberedSet<T> ns) {
 			this.ns = ns;
@@ -929,9 +885,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		public T next() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index >= ns.size()) {
 				throw new NoSuchElementException();
 			}
@@ -947,9 +900,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index < ns.size();
 		}
 
@@ -964,9 +914,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		public boolean hasPrevious() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return index > 0 && ns.notEmpty();
 		}
 
@@ -984,9 +931,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		public T previous() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index <= 0 || ns.isEmpty()) {
 				throw new NoSuchElementException();
 			}
@@ -1037,9 +981,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		public void remove() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= ns.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1070,9 +1011,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		public void set(T t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (latest == -1 || latest >= ns.size()) {
 				throw new NoSuchElementException();
 			}
@@ -1101,9 +1039,6 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		 */
 		@Override
 		public void add(T t) {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			if (index > ns.size()) {
 				throw new NoSuchElementException();
 			}

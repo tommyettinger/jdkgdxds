@@ -83,8 +83,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 */
 	protected int hashMultiplier;
 
-	protected transient HolderSetIterator<T, K> iterator1;
-	protected transient HolderSetIterator<T, K> iterator2;
 	protected transient ObjToObjFunction<T, K> extractor;
 
 	/**
@@ -824,35 +822,17 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	}
 
 	/**
-	 * Returns an iterator for the keys in the set. Remove is supported.
-	 * <p>
-	 * Reuses one of two iterators for this set. For nested or multithreaded
-	 * iteration, use {@link HolderSetIterator#HolderSetIterator(HolderSet)}.
+	 * Returns an iterator for the T items in the set. Remove is supported.
 	 */
 	@Override
 	public HolderSetIterator<T, K> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new HolderSetIterator<>(this);
-			iterator2 = new HolderSetIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new HolderSetIterator<>(this);	}
 
 	public static class HolderSetIterator<T, K> implements Iterable<T>, Iterator<T> {
 		public boolean hasNext;
 
 		protected final HolderSet<T, K> set;
 		protected int nextIndex, currentIndex;
-		protected boolean valid = true;
 
 		public HolderSetIterator(HolderSet<T, K> set) {
 			this.set = set;
@@ -904,9 +884,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 
 		@Override
 		public boolean hasNext() {
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
-			}
 			return hasNext;
 		}
 
@@ -914,9 +891,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		public T next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			T key = set.keyTable[nextIndex];
 			currentIndex = nextIndex;

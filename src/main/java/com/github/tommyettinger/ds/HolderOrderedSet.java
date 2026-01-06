@@ -532,28 +532,12 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 
 	/**
 	 * Iterates through items in the same order as {@link #order()}.
-	 * Reuses one of two iterators, and does not permit nested iteration;
-	 * use {@link HolderOrderedSetIterator#HolderOrderedSetIterator(HolderOrderedSet)} to nest iterators.
 	 *
 	 * @return an {@link Iterator} over the T items in this, in order
 	 */
 	@Override
 	public HolderSetIterator<T, K> iterator() {
-		if (iterator1 == null || iterator2 == null) {
-			iterator1 = new HolderOrderedSetIterator<>(this);
-			iterator2 = new HolderOrderedSetIterator<>(this);
-		}
-		if (!iterator1.valid) {
-			iterator1.reset();
-			iterator1.valid = true;
-			iterator2.valid = false;
-			return iterator1;
-		}
-		iterator2.reset();
-		iterator2.valid = true;
-		iterator1.valid = false;
-		return iterator2;
-	}
+		return new HolderOrderedSetIterator<>(this);	}
 
 	@Override
 	public int hashCode() {
@@ -610,9 +594,6 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 		public T next() {
 			if (!hasNext) {
 				throw new NoSuchElementException();
-			}
-			if (!valid) {
-				throw new RuntimeException("#iterator() cannot be used nested.");
 			}
 			T key = items.get(nextIndex);
 			nextIndex++;
