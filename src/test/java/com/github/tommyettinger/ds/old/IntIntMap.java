@@ -1107,7 +1107,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	}
 
 	public static abstract class MapIterator {
-		static protected final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
+		protected static final int INDEX_ILLEGAL = -2, INDEX_ZERO = -1;
 
 		public boolean hasNext;
 
