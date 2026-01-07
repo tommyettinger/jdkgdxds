@@ -1327,20 +1327,20 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		 * Append the remaining items that this can iterate through into the given Map.
 		 * Does not change the position of this iterator. Note that a Map is not a Collection.
 		 *
-		 * @param coll any modifiable Map; may have items appended into it
+		 * @param map any modifiable Map; may have items appended into it
 		 * @return the given map
 		 */
-		public Map<K, V> appendInto(Map<K, V> coll) {
+		public Map<K, V> appendInto(Map<K, V> map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				coll.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				map.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 	}
 
