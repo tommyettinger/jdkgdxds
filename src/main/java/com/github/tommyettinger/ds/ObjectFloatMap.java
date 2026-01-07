@@ -954,7 +954,6 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		 *                               removed from the backing map.
 		 */
 		public K getKey() {
-			assert key != null;
 			return key;
 		}
 
@@ -1014,7 +1013,6 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 
 		@Override
 		public int hashCode() {
-			assert key != null;
 			return key.hashCode() * 31 + BitConversion.floatToRawIntBits(value);
 		}
 	}
@@ -1150,8 +1148,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
-			K[] keyTable = map.keyTable;
-			Entry<K> entry = new Entry<>(keyTable[nextIndex], map.valueTable[nextIndex]);
+			Entry<K> entry = new Entry<>(map.keyTable[nextIndex], map.valueTable[nextIndex]);
 			currentIndex = nextIndex;
 			findNextIndex();
 			return entry;

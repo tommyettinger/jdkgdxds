@@ -914,7 +914,6 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		 *                               removed from the backing map.
 		 */
 		public K getKey() {
-			assert key != null;
 			return key;
 		}
 
@@ -974,7 +973,6 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 
 		@Override
 		public int hashCode() {
-			assert key != null;
 			return key.hashCode() * 31 + value;
 		}
 	}
@@ -1092,7 +1090,6 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	}
 
 	public static class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
-		protected Entry<K> entry = new Entry<>();
 
 		public EntryIterator(ObjectIntMap<K> map) {
 			super(map);
@@ -1111,9 +1108,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
-			K[] keyTable = map.keyTable;
-			entry.key = keyTable[nextIndex];
-			entry.value = map.valueTable[nextIndex];
+			Entry<K> entry = new Entry<>(map.keyTable[nextIndex], map.valueTable[nextIndex]);
 			currentIndex = nextIndex;
 			findNextIndex();
 			return entry;
@@ -1209,24 +1204,23 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		}
 
 		/**
-		 * Append the remaining items that this can iterate through into the given Map.
-		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 * Append the remaining items that this can iterate through into the given ObjectIntMap.
+		 * Does not change the position of this iterator.
 		 *
-		 * @param coll any modifiable Map; may have items appended into it
+		 * @param map a modifiable ObjectIntMap; may have items appended into it
 		 * @return the given map
 		 */
-		public ObjectIntMap<K> appendInto(ObjectIntMap<K> coll) {
+		public ObjectIntMap<K> appendInto(ObjectIntMap<K> map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				assert iter.entry.key != null;
-				coll.put(iter.entry.key, iter.entry.value);
+				map.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 	}
 

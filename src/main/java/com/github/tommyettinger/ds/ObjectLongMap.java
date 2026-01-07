@@ -912,7 +912,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 *                               removed from the backing map.
 		 */
 		public K getKey() {
-			assert key != null;
 			return key;
 		}
 
@@ -972,7 +971,6 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		@Override
 		public int hashCode() {
-			assert key != null;
 			long result = key.hashCode() * 31L + value;
 			return (int) (result ^ result >>> 32);
 		}
@@ -1109,8 +1107,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
-			K[] keyTable = map.keyTable;
-			Entry<K> entry = new Entry<>(keyTable[nextIndex], map.valueTable[nextIndex]);
+			Entry<K> entry = new Entry<>(map.keyTable[nextIndex], map.valueTable[nextIndex]);
 			currentIndex = nextIndex;
 			findNextIndex();
 			return entry;
