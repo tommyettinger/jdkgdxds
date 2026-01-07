@@ -195,6 +195,15 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	}
 
 	public static class Entry<V> extends ObjectObjectMap.Entry<CharSequence, V> {
+
+		public Entry() {
+			super();
+		}
+
+		public Entry(CharSequence key, V value) {
+			super(key, value);
+		}
+
 		@Override
 		public boolean equals(Object o) {
 			if (this == o) {

@@ -702,8 +702,8 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 						throw new NoSuchElementException();
 					}
 					currentIndex = nextIndex;
-					entry.key = keys.get(nextIndex);
-					entry.value = map.get(entry.key);
+					K k = keys.get(nextIndex);
+					Entry<K, V> entry = new Entry<>(k, map.get(k));
 					nextIndex++;
 					hasNext = nextIndex < map.size;
 					return entry;
@@ -714,8 +714,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 					if (currentIndex < 0) {
 						throw new IllegalStateException("next must be called before remove.");
 					}
-					assert entry.key != null;
-					map.remove(entry.key);
+					map.remove(keys.get(nextIndex));
 					nextIndex--;
 					currentIndex = -1;
 				}

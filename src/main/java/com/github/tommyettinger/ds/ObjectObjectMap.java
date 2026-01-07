@@ -1210,7 +1210,6 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	}
 
 	public static class Entries<K, V> extends AbstractSet<Map.Entry<K, V>> implements EnhancedCollection<Map.Entry<K, V>> {
-		protected Entry<K, V> entry = new Entry<>();
 		protected MapIterator<K, V, Map.Entry<K, V>> iter;
 
 		public Entries(ObjectObjectMap<K, V> map) {
@@ -1221,18 +1220,16 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 				}
 
 				/**
-				 * Note: the same entry instance is returned each time this method is called.
+				 * This allocates and returns a new Entry every time it is called.
 				 *
-				 * @return a reused Entry that will have its key and value set to the next pair
+				 * @return a new Entry that will have its key and value set to the next pair
 				 */
 				@Override
 				public Map.Entry<K, V> next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();
 					}
-					K[] keyTable = map.keyTable;
-					entry.key = keyTable[nextIndex];
-					entry.value = map.valueTable[nextIndex];
+					Entry<K, V> entry = new Entry<>(map.keyTable[nextIndex], map.valueTable[nextIndex]);
 					currentIndex = nextIndex;
 					findNextIndex();
 					return entry;
@@ -1337,8 +1334,8 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				coll.put(entry.key, entry.value);
+				coll.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
