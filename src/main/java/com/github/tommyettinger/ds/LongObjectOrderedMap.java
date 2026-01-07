@@ -756,7 +756,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
 			return map;
-
 		}
 	}
 

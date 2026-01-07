@@ -745,8 +745,8 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 						throw new NoSuchElementException();
 					}
 					currentIndex = nextIndex;
-					entry.key = keys.get(nextIndex);
-					entry.value = map.get(entry.key);
+					long k = keys.get(nextIndex);
+					Entry entry = new Entry(k, map.get(k));
 					nextIndex++;
 					hasNext = nextIndex < map.size;
 					return entry;
@@ -757,13 +757,27 @@ public class LongFloatOrderedMap extends LongFloatMap implements Ordered.OfLong 
 					if (currentIndex < 0) {
 						throw new IllegalStateException("next must be called before remove.");
 					}
-					map.remove(entry.key);
+					map.remove(keys.get(currentIndex));
 					nextIndex--;
 					currentIndex = -1;
 				}
 			};
 		}
 
+		@Override
+		public LongFloatMap appendInto(LongFloatMap map) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				long k = keys.get(iter.nextIndex);
+				map.put(k, iter.map.get(k));
+				iter.findNextIndex();
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return map;
+		}
 	}
 
 	public static class OrderedMapKeys extends Keys {
