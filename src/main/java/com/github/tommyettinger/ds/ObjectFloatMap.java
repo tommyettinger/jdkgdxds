@@ -1132,7 +1132,6 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public static class EntryIterator<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
-		protected Entry<K> entry = new Entry<>();
 
 		public EntryIterator(ObjectFloatMap<K> map) {
 			super(map);
@@ -1152,8 +1151,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 				throw new NoSuchElementException();
 			}
 			K[] keyTable = map.keyTable;
-			entry.key = keyTable[nextIndex];
-			entry.value = map.valueTable[nextIndex];
+			Entry<K> entry = new Entry<>(keyTable[nextIndex], map.valueTable[nextIndex]);
 			currentIndex = nextIndex;
 			findNextIndex();
 			return entry;
@@ -1249,24 +1247,23 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 
 		/**
-		 * Append the remaining items that this can iterate through into the given Map.
-		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 * Append the remaining items that this can iterate through into the given ObjectFloatMap.
+		 * Does not change the position of this iterator.
 		 *
-		 * @param coll any modifiable Map; may have items appended into it
+		 * @param map a modifiable ObjectFloatMap; may have items appended into it
 		 * @return the given map
 		 */
-		public ObjectFloatMap<K> appendInto(ObjectFloatMap<K> coll) {
+		public ObjectFloatMap<K> appendInto(ObjectFloatMap<K> map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				assert iter.entry.key != null;
-				coll.put(iter.entry.key, iter.entry.value);
+				map.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 	}
 
