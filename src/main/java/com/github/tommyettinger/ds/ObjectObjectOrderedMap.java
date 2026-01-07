@@ -714,7 +714,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 					if (currentIndex < 0) {
 						throw new IllegalStateException("next must be called before remove.");
 					}
-					map.remove(keys.get(nextIndex));
+					map.remove(keys.get(currentIndex));
 					nextIndex--;
 					currentIndex = -1;
 				}
