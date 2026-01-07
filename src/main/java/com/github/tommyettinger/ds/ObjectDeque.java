@@ -3065,6 +3065,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		public ObjectDequeIterator(ObjectDeque<T> deque, boolean descendingOrder) {
 			this.deque = deque;
 			direction = descendingOrder ? -1 : 1;
+			expectedModCount = deque.modCount;
 		}
 
 		public ObjectDequeIterator(ObjectDeque<T> deque, int index, boolean descendingOrder) {
