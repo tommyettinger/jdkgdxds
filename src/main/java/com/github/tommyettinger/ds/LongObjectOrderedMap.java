@@ -724,8 +724,8 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 						throw new NoSuchElementException();
 					}
 					currentIndex = nextIndex;
-					entry.key = keys.get(nextIndex);
-					entry.value = map.get(entry.key);
+					long k = keys.get(nextIndex);
+					Entry<V> entry = new Entry<>(k, map.get(k));
 					nextIndex++;
 					hasNext = nextIndex < map.size;
 					return entry;
@@ -736,13 +736,28 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 					if (currentIndex < 0) {
 						throw new IllegalStateException("next must be called before remove.");
 					}
-					map.remove(entry.key);
+					map.remove(keys.get(currentIndex));
 					nextIndex--;
 					currentIndex = -1;
 				}
 			};
 		}
 
+		@Override
+		public LongObjectMap<V> appendInto(LongObjectMap<V> map) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				long k = keys.get(iter.nextIndex);
+				map.put(k, iter.map.get(k));
+				iter.findNextIndex();
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return map;
+
+		}
 	}
 
 	public static class OrderedMapKeys<V> extends Keys<V> {
