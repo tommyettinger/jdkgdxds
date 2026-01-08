@@ -1180,7 +1180,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	}
 
 	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
-		
+
 		public EntryIterator(IntIntMap map) {
 			super(map);
 		}
