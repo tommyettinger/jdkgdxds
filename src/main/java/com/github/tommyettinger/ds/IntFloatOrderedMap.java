@@ -778,7 +778,6 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 			iter.hasNext = hn;
 			return map;
 		}
-
 	}
 
 	public static class OrderedMapKeys extends Keys {

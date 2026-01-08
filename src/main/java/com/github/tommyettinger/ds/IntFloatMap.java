@@ -1224,8 +1224,6 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
-		protected Entry entry = new Entry();
-
 		public EntryIterator(IntFloatMap map) {
 			super(map);
 		}
