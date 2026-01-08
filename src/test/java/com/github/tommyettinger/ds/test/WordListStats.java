@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds.test;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -25,49 +26,59 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntList;
 
 /**
+ * Good multipliers for simpleHash(): [2913, 4637, 6197, 8663, 9865]
  * Good seeds for hash(): [14, 276, 1562, 2327, 2713, 2750, 2765, 2785]
  * Good seeds for hashBulk(): [17, 564, 1127, 1663, 1859, 2269, 4345, 4827, 4919]
  */
 public class WordListStats {
+	public static class SimpleHasher {
+		public final int mul;
+		public SimpleHasher(int seed){
+			mul = seed * 2 + 1;
+		}
+		public int simpleHash(String s) {
+			final int len = s.length();
+			int h = 0;
+			for (int i = 0; i < len; i++) {
+				h = h * mul + s.charAt(i);
+			}
+			return h;
+		}
+	}
+
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		int wordCount = words.size();
 		System.out.printf("Number of words   : %d\n", wordCount);
+		IntList goodSimpleHashMultipliers = new IntList();
 		IntList goodHashSeeds = new IntList();
 		IntList goodHashBulkSeeds = new IntList();
+		for (int i = 1; i <= 5000; i++) {
+			SimpleHasher op = new SimpleHasher(i);
+			long collisionCount = wordCount - words.parallelStream().mapToInt(op::simpleHash).distinct().count();
+			if(collisionCount == 0) {
+				System.out.print("SimpleHasher.simpleHash() with mul " + op.mul);
+				System.out.println(BigInteger.valueOf(op.mul).isProbablePrime(9) ? " (PRIME!)" : "");
+				goodSimpleHashMultipliers.add(op.mul);
+			}
+		}
+		System.out.println("Good multipliers for simpleHash(): " + goodSimpleHashMultipliers);
 		for (int i = 0; i < 5000; i++) {
 			Hasher op = new Hasher(i);
-//			System.out.println("Working with new Hasher(" + i + ").hash()");
-//			long sum = words.parallelStream().mapToLong(op::hash).sum();
-//			double averageHashCode = sum / (double) wordCount;
-//			double averageBitCount = words.parallelStream().mapToLong((s) -> Integer.bitCount(op.hash(s))).sum() / (double) wordCount;
-//			double averageExtent = words.parallelStream().mapToLong((s) -> 32 - Integer.numberOfLeadingZeros(op.hash(s))).sum() / (double) wordCount;
 			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hash).distinct().count();
-//			System.out.printf("Number of words   : %d\n", wordCount);
-//			System.out.printf("Collision count   : %d\n", collisionCount);
-//			System.out.printf("hashCode() sum    : %d\n", sum);
-//			System.out.printf("hashCode() average: %10.8f\n", averageHashCode);
-//			System.out.printf("bitCount() average: %10.8f\n", averageBitCount);
-//			System.out.printf("extent average    : %10.8f\n", averageExtent);
-
-			if(collisionCount == 0) goodHashSeeds.add(i);
+			if(collisionCount == 0) {
+				System.out.println("Hasher.hash() with seed " + i);
+				goodHashSeeds.add(i);
+			}
 		}
 		System.out.println("Good seeds for hash(): " + goodHashSeeds);
 		for (int i = 0; i < 5000; i++) {
 			Hasher op = new Hasher(i);
-//			System.out.println("Working with new Hasher(" + i + ").hashBulk()");
-//			long sum = words.parallelStream().mapToLong(op::hashBulk).sum();
-//			double averageHashCode = sum / (double) wordCount;
-//			double averageBitCount = words.parallelStream().mapToLong((s) -> Integer.bitCount(op.hashBulk(s))).sum() / (double) wordCount;
-//			double averageExtent = words.parallelStream().mapToLong((s) -> 32 - Integer.numberOfLeadingZeros(op.hashBulk(s))).sum() / (double) wordCount;
 			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hashBulk).distinct().count();
-//			System.out.printf("Number of words   : %d\n", wordCount);
-//			System.out.printf("Collision count   : %d\n", collisionCount);
-//			System.out.printf("hashCode() sum    : %d\n", sum);
-//			System.out.printf("hashCode() average: %10.8f\n", averageHashCode);
-//			System.out.printf("bitCount() average: %10.8f\n", averageBitCount);
-//			System.out.printf("extent average    : %10.8f\n", averageExtent);
-			if(collisionCount == 0) goodHashBulkSeeds.add(i);
+			if(collisionCount == 0) {
+				System.out.println("Hasher.hashBulk() with seed " + i);
+				goodHashBulkSeeds.add(i);
+			}
 		}
 		System.out.println("Good seeds for hashBulk(): " + goodHashBulkSeeds);
 	}
