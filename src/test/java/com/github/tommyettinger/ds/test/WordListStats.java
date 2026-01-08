@@ -26,8 +26,15 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntList;
 
 /**
+ * With h = 0:
  * Good multipliers for simpleHash(): [2913, 4637, 6197, 8663, 9865]
+ * With h = len:
+ * Good multipliers for simpleHash(): [541, 2357, 2733, 3927, 5983, 6123]
+ * With h = len, and XOR instead of add:
+ * Good multipliers for simpleHash(): [809, 877, 1399, 2083, 3185, 3529, 4397, 4733, 4873, 5273, 9925]
+ * <br>
  * Good seeds for hash(): [14, 276, 1562, 2327, 2713, 2750, 2765, 2785]
+ * <br>
  * Good seeds for hashBulk(): [17, 564, 1127, 1663, 1859, 2269, 4345, 4827, 4919]
  */
 public class WordListStats {
@@ -38,9 +45,9 @@ public class WordListStats {
 		}
 		public int simpleHash(String s) {
 			final int len = s.length();
-			int h = 0;
+			int h = len;
 			for (int i = 0; i < len; i++) {
-				h = h * mul + s.charAt(i);
+				h = h * mul ^ s.charAt(i);
 			}
 			return h;
 		}
@@ -63,23 +70,25 @@ public class WordListStats {
 			}
 		}
 		System.out.println("Good multipliers for simpleHash(): " + goodSimpleHashMultipliers);
-		for (int i = 0; i < 5000; i++) {
-			Hasher op = new Hasher(i);
-			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hash).distinct().count();
-			if(collisionCount == 0) {
-				System.out.println("Hasher.hash() with seed " + i);
-				goodHashSeeds.add(i);
-			}
-		}
-		System.out.println("Good seeds for hash(): " + goodHashSeeds);
-		for (int i = 0; i < 5000; i++) {
-			Hasher op = new Hasher(i);
-			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hashBulk).distinct().count();
-			if(collisionCount == 0) {
-				System.out.println("Hasher.hashBulk() with seed " + i);
-				goodHashBulkSeeds.add(i);
-			}
-		}
-		System.out.println("Good seeds for hashBulk(): " + goodHashBulkSeeds);
+
+//		for (int i = 0; i < 5000; i++) {
+//			Hasher op = new Hasher(i);
+//			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hash).distinct().count();
+//			if(collisionCount == 0) {
+//				System.out.println("Hasher.hash() with seed " + i);
+//				goodHashSeeds.add(i);
+//			}
+//		}
+//		System.out.println("Good seeds for hash(): " + goodHashSeeds);
+//
+//		for (int i = 0; i < 5000; i++) {
+//			Hasher op = new Hasher(i);
+//			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hashBulk).distinct().count();
+//			if(collisionCount == 0) {
+//				System.out.println("Hasher.hashBulk() with seed " + i);
+//				goodHashBulkSeeds.add(i);
+//			}
+//		}
+//		System.out.println("Good seeds for hashBulk(): " + goodHashBulkSeeds);
 	}
 }
