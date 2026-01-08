@@ -16,34 +16,36 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.function.IntToIntFunction;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import com.github.tommyettinger.digital.Hasher;
+public class WordListWorsenedStats {
+	public static final IntToIntFunction[] worse = {
+		h -> h, // hash 0, identity
+		h -> h & (h ^ h >>> 1), // hash 1, mask with its own gray code
+		h -> h & (h << 21 | h >>> 11) & (h << 13 | h >>> 19), // hash 2, ARR
+		h -> h & BitConversion.imul(h, h), // hash 3, AQ
+		h -> h & (h ^ h << 1), // hash 4, mask with a sort of gray-ish code
+		h -> h << 16, // hash 5, imitating float hash behavior in Vector2
+		h -> Float.floatToIntBits(h), // hash 6, current BadString behavior
+	};
 
-/**
- * Working with new Hasher(17)
- * Number of words   : 235970
- * Collision count   : 0
- * hashCode() sum    : 395565059237
- * hashCode() average: 1676336.22594821
- * bitCount() average: 15.99386786
- * extent average    : 31.00211468
- */
-public class WordListStats {
 	public static void main(String[] args) throws IOException {
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		int wordCount = words.size();
-		for (int i = 0; i < 500; i++) {
-			Hasher op = new Hasher(i);
-			System.out.println("Working with new Hasher(" + i + ")");
-			long sum = words.parallelStream().mapToLong(op::hashBulk).sum();
+		for (int i = 0; i < worse.length; i++) {
+			IntToIntFunction op = worse[i];
+			System.out.println("Working with hash-worsening operator " + i);
+			long sum = words.parallelStream().mapToLong(s -> op.applyAsInt(s.hashCode())).sum();
 			double averageHashCode = sum / (double) wordCount;
-			double averageBitCount = words.parallelStream().mapToLong((s) -> Integer.bitCount(op.hashBulk(s))).sum() / (double) wordCount;
-			double averageExtent = words.parallelStream().mapToLong((s) -> 32 - Integer.numberOfLeadingZeros(op.hashBulk(s))).sum() / (double) wordCount;
-			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hashBulk).distinct().count();
+			double averageBitCount = words.parallelStream().mapToLong((s) -> Integer.bitCount(op.applyAsInt(s.hashCode()))).sum() / (double) wordCount;
+			double averageExtent = words.parallelStream().mapToLong((s) -> 32 - Integer.numberOfLeadingZeros(op.applyAsInt(s.hashCode()))).sum() / (double) wordCount;
+			long collisionCount = wordCount - words.parallelStream().mapToInt((s) -> op.applyAsInt(s.hashCode())).distinct().count();
 			System.out.printf("Number of words   : %d\n", wordCount);
 			System.out.printf("Collision count   : %d\n", collisionCount);
 			System.out.printf("hashCode() sum    : %d\n", sum);
