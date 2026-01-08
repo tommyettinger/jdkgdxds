@@ -1243,12 +1243,11 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
+			Entry entry;
 			if (nextIndex == INDEX_ZERO) {
-				entry.key = 0;
-				entry.value = map.zeroValue;
+				entry = new Entry(0, map.zeroValue);
 			} else {
-				entry.key = map.keyTable[nextIndex];
-				entry.value = map.valueTable[nextIndex];
+				entry = new Entry(map.keyTable[nextIndex], map.valueTable[nextIndex]);
 			}
 			currentIndex = nextIndex;
 			findNextIndex();
@@ -1345,23 +1344,23 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		}
 
 		/**
-		 * Append the remaining items that this can iterate through into the given Map.
-		 * Does not change the position of this iterator. Note that a Map is not a Collection.
+		 * Append the remaining items that this can iterate through into the given IntFloatMap.
+		 * Does not change the position of this iterator.
 		 *
-		 * @param coll any modifiable Map; may have items appended into it
+		 * @param map a modifiable IntFloatMap; may have items appended into it
 		 * @return the given map
 		 */
-		public IntFloatMap appendInto(IntFloatMap coll) {
+		public IntFloatMap appendInto(IntFloatMap map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				coll.put(iter.entry.key, iter.entry.value);
+				map.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 	}
 
