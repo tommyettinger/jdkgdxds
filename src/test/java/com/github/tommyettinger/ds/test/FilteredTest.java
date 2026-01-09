@@ -54,7 +54,8 @@ public class FilteredTest {
 		fil.add("tss tss");
 		fil.add("wub wub");
 		fil.add("WRRRRR");
-		fil.addAll(ArrayTools.chemicalElements(0, 100, false));
+		fil.addAll(ArrayTools.chemicalElements(0, 20, false));
+		fil.addAll(ArrayTools.chemicalElements(0, 100, true));
 	}
 
 	@Test

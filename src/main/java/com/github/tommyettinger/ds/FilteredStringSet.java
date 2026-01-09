@@ -53,6 +53,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 */
 	public FilteredStringSet() {
 		super();
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -64,6 +65,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 */
 	public FilteredStringSet(int initialCapacity) {
 		super(initialCapacity);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -76,6 +78,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 */
 	public FilteredStringSet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -87,6 +90,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	public FilteredStringSet(CharFilter filter) {
 		super();
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -100,6 +104,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	public FilteredStringSet(CharFilter filter, int initialCapacity) {
 		super(initialCapacity);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -114,6 +119,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	public FilteredStringSet(CharFilter filter, int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -200,10 +206,10 @@ public class FilteredStringSet extends ObjectSet<String> {
 		for (int i = 0, len = s.length(); i < len; i++) {
 			final char c = s.charAt(i);
 			if (filter.filter.test(c)) {
-				hash = BitConversion.imul((hash << 13 | hash >>> 19), hm) ^ filter.editor.applyAsChar(c);
+				hash = ((hash << 13 | hash >>> 19) * hm) ^ filter.editor.applyAsChar(c);
 			}
 		}
-		hash = BitConversion.imul(hash, hm);
+		hash *= hm;
 		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
 	}
 
@@ -268,6 +274,28 @@ public class FilteredStringSet extends ObjectSet<String> {
 			}
 		}
 		return h ^ h >>> 16;
+	}
+
+	@Override
+	protected void resize(int newSize) {
+		int oldCapacity = getTableSize();
+		threshold = (int) (newSize * loadFactor);
+		mask = newSize - 1;
+		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+
+		Object[] oldKeyTable = keyTable;
+
+		keyTable = new String[newSize];
+
+		if (size > 0) {
+			for (int i = 0; i < oldCapacity; i++) {
+				String key = (String) oldKeyTable[i];
+				if (key != null) {
+					addResize(key);
+				}
+			}
+		}
 	}
 
 	/**
