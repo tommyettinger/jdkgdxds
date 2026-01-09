@@ -54,6 +54,12 @@ import com.github.tommyettinger.ds.Utilities;
  * <br>
  * Good multipliers for filterHash(): []
  * Average collision count for filterHash(): 6.28125
+ * <br>
+ * Finding 0-collision multipliers:
+ * <br>
+ * <code>
+ * Good multipliers for filterHash(): new int[]{1817, 2191, 3155, 3909, 4527, 5661, 9067, 10683, 10999, 14533, 16987, 19765, 20837, 20913, 21197, 22657, 23255, 24013, 27265, 28407, 29565, 30867, 30929, 32361, 35765, 36021, 39327, 40057, 40207, 41313, 42561, 43053}
+ * </code>
  */
 public class WordListStats {
 	public static class SimpleHasher {
@@ -86,7 +92,7 @@ public class WordListStats {
 	}
 
 	public static void main(String[] args) throws IOException {
-		final int TRIALS = 1024;
+		final int TRIALS = 50000;
 
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		int wordCount = words.size();
@@ -120,18 +126,21 @@ public class WordListStats {
 
 		StringBuilder goodFilterHashMultipliers = new StringBuilder();
 		averageCollisions = 0;
-		for (int i = 0; i < Utilities.HASH_MULTIPLIERS.length; i++) {
-			FilterHasher op = new FilterHasher(Utilities.HASH_MULTIPLIERS[i]);
+		int goodCount = 0, done = 1;
+		for (done = 1; goodCount < 32 && done <= TRIALS; done++) {
+			FilterHasher op = new FilterHasher(done << 1 | 1);
 			long collisionCount = wordCount - words.parallelStream().mapToInt(op::filterHash).distinct().count();
 			averageCollisions += collisionCount;
 //			System.out.printf("0x%08X has %d collisions.\n", op.mul, collisionCount);
 			if(collisionCount == 0) {
 				goodFilterHashMultipliers.append(op.mul);
 				goodFilterHashMultipliers.append(", ");
+				goodCount++;
 			}
 		}
-		System.out.println("Good multipliers for filterHash(): [" + goodFilterHashMultipliers + "]");
-		System.out.println("Average collision count for filterHash(): " + (averageCollisions / Utilities.HASH_MULTIPLIERS.length));
+		System.out.println("There are " + goodCount + " good multipliers.");
+		System.out.println("Good multipliers for filterHash(): new int[]{" + goodFilterHashMultipliers + "}");
+		System.out.println("Average collision count for filterHash(): " + (averageCollisions / (done+1.0)));
 
 //		StringBuilder goodHashSeeds = new StringBuilder();
 //		averageCollisions = 0;
