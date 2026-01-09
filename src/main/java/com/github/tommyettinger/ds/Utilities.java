@@ -135,6 +135,18 @@ public final class Utilities {
 	};
 
 	/**
+	 * Like {@link #HASH_MULTIPLIERS}, but specifically chosen to have no full collisions on a large list of English
+	 * words (235970 of them) when used with the hashing function for FilteredString data structures like
+	 * {@link FilteredStringSet} and {@link FilteredStringMap}.
+	 */
+	public static final int[] FILTERED_HASH_MULTIPLIERS = new int[]{
+		0x00000719, 0x0000088F, 0x00000C53, 0x00000F45, 0x000011AF, 0x0000161D, 0x0000236B, 0x000029BB,
+		0x00002AF7, 0x000038C5, 0x0000425B, 0x00004D35, 0x00005165, 0x000051B1, 0x000052CD, 0x00005881,
+		0x00005AD7, 0x00005DCD, 0x00006A81, 0x00006EF7, 0x0000737D, 0x00007893, 0x000078D1, 0x00007E69,
+		0x00008BB5, 0x00008CB5, 0x0000999F, 0x00009C79, 0x00009D0F, 0x0000A161, 0x0000A641, 0x0000A82D,
+	};
+
+	/**
 	 * The recommended method to find potential replacements for entries in {@link #HASH_MULTIPLIERS}. This takes an
 	 * odd-number int as a candidate, and evaluates four criteria:
 	 * <ul>
