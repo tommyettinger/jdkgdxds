@@ -65,6 +65,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 */
 	public FilteredStringOrderedSet(OrderType type) {
 		super(type);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -78,6 +79,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 */
 	public FilteredStringOrderedSet(int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -92,6 +94,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 */
 	public FilteredStringOrderedSet(int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -105,6 +108,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	public FilteredStringOrderedSet(CharFilter filter, OrderType type) {
 		super(type);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -120,6 +124,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	public FilteredStringOrderedSet(CharFilter filter, int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -136,6 +141,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	public FilteredStringOrderedSet(CharFilter filter, int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -219,6 +225,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 */
 	public FilteredStringOrderedSet() {
 		super();
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -230,6 +237,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 */
 	public FilteredStringOrderedSet(int initialCapacity) {
 		super(initialCapacity);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -242,6 +250,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	 */
 	public FilteredStringOrderedSet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -253,6 +262,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	public FilteredStringOrderedSet(CharFilter filter) {
 		super();
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -266,6 +276,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	public FilteredStringOrderedSet(CharFilter filter, int initialCapacity) {
 		super(initialCapacity);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -280,6 +291,7 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 	public FilteredStringOrderedSet(CharFilter filter, int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -448,6 +460,28 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 			}
 		}
 		return h ^ h >>> 16;
+	}
+
+	@Override
+	protected void resize(int newSize) {
+		int oldCapacity = getTableSize();
+		threshold = (int) (newSize * loadFactor);
+		mask = newSize - 1;
+		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+
+		Object[] oldKeyTable = keyTable;
+
+		keyTable = new String[newSize];
+
+		if (size > 0) {
+			for (int i = 0; i < oldCapacity; i++) {
+				String key = (String) oldKeyTable[i];
+				if (key != null) {
+					addResize(key);
+				}
+			}
+		}
 	}
 
 	/**

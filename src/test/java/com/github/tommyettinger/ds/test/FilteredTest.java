@@ -59,6 +59,26 @@ public class FilteredTest {
 	}
 
 	@Test
+	public void testStringOrderedSet() {
+		FilteredStringOrderedSet fil = FilteredStringOrderedSet.with(
+			CharFilter.getOrCreate("CAPS", (c) -> true, Character::toUpperCase),
+			"zzz", "bee", "binturong",
+			"hm?", "bee", "BINTURONG");
+		Assert.assertEquals(4, fil.size());
+
+		fil.add("let's");
+		fil.add("get this");
+		fil.add("party");
+		fil.add("started");
+		fil.add("nn nn");
+		fil.add("tss tss");
+		fil.add("wub wub");
+		fil.add("WRRRRR");
+		fil.addAll(ArrayTools.chemicalElements(0, 20, false));
+		fil.addAll(ArrayTools.chemicalElements(0, 100, true));
+	}
+
+	@Test
 	public void testStringMap() {
 		FilteredStringMap<String> fil = FilteredStringMap.with(
 			CharFilter.getOrCreate("CAPS", (c) -> true, Casing::caseUp),
