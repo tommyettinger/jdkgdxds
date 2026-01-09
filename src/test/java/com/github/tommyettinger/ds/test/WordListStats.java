@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025 See AUTHORS file.
+ * Copyright (c) 2022-2026 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.ds.IntList;
 
 /**
+ * With TRIALS set to 5000, except the long line, where it is set to 1048576:
  * With h = 0:
  * Good multipliers for simpleHash(): [2913, 4637, 6197, 8663, 9865]
  * With h = len:
@@ -37,6 +36,18 @@ import com.github.tommyettinger.ds.IntList;
  * Good seeds for hash(): [14, 276, 1562, 2327, 2713, 2750, 2765, 2785]
  * <br>
  * Good seeds for hashBulk(): [17, 564, 1127, 1663, 1859, 2269, 4345, 4827, 4919]
+ * <br>
+ * With TRIALS set to 1024:
+ * <br>
+ * Collision count for String.hashCode(): 6.0
+ * Good multipliers for simpleHash(): [809 (P), 877 (P), 1399 (P), ]
+ * Average collision count for simpleHash(): 80.291015625
+ * Good multipliers for filterHash(): [1817, ]
+ * Average collision count for filterHash(): 6.67578125
+ * Good seeds for hash(): [14, 276, ]
+ * Average collision count for hash(): 7.3125
+ * Good seeds for hash(): [17, 564, ]
+ * Average collision count for hashBulk(): 6.68359375
  */
 public class WordListStats {
 	public static class SimpleHasher {
@@ -54,50 +65,104 @@ public class WordListStats {
 		}
 	}
 
+	public static class FilterHasher {
+		public final int mul;
+		public FilterHasher(int seed){
+			mul = seed * 2 + 1;
+		}
+		public int filterHash(String s) {
+			int hash = mul;
+			for (int i = 0, len = s.length(); i < len; i++) {
+				hash = ((hash << 13 | hash >>> 19) * mul) ^ s.charAt(i);
+			}
+			return hash * mul;
+		}
+	}
+
 	public static void main(String[] args) throws IOException {
+		final int TRIALS = 1024;
+
 		final List<String> words = Files.readAllLines(Paths.get("src/test/resources/word_list.txt"));
 		int wordCount = words.size();
+		double averageCollisions;
 		System.out.printf("Number of words   : %d\n", wordCount);
+
+		averageCollisions = 0;
+		{
+			long collisionCount = wordCount - words.parallelStream().mapToInt(String::hashCode).distinct().count();
+			averageCollisions += collisionCount;
+		}
+		System.out.println("Collision count for String.hashCode(): " + (averageCollisions));
+
+
 		StringBuilder goodSimpleHashMultipliers = new StringBuilder();
-		for (int i = 1; i < 0x100000; i++) {
+		averageCollisions = 0;
+		for (int i = 1; i <= TRIALS; i++) {
 			SimpleHasher op = new SimpleHasher(i);
 			long collisionCount = wordCount - words.parallelStream().mapToInt(op::simpleHash).distinct().count();
+			averageCollisions += collisionCount;
 			if(collisionCount == 0) {
 				boolean prime = BigInteger.valueOf(op.mul).isProbablePrime(9);
-				System.out.print("SimpleHasher.simpleHash() with mul " + op.mul
-					+ " 0x" + Integer.toHexString(op.mul)
-				);
-				System.out.println(prime ? " (PRIME!)" : "");
+//				System.out.print("SimpleHasher.simpleHash() with mul " + op.mul
+//					+ " 0x" + Integer.toHexString(op.mul)
+//				);
+//				System.out.println(prime ? " (PRIME!)" : "");
 				goodSimpleHashMultipliers.append(op.mul);
-//				goodSimpleHashMultipliers.append(" 0x");
-//				Base.BASE16.appendSigned(goodSimpleHashMultipliers, op.mul);
 				if(prime)
 					goodSimpleHashMultipliers.append(" (P)");
 				goodSimpleHashMultipliers.append(", ");
 			}
 		}
 		System.out.println("Good multipliers for simpleHash(): [" + goodSimpleHashMultipliers + "]");
+		System.out.println("Average collision count for simpleHash(): " + (averageCollisions / TRIALS));
 
-//		IntList goodHashSeeds = new IntList();
-//		for (int i = 0; i < 5000; i++) {
-//			Hasher op = new Hasher(i);
-//			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hash).distinct().count();
-//			if(collisionCount == 0) {
+		StringBuilder goodFilterHashMultipliers = new StringBuilder();
+		averageCollisions = 0;
+		for (int i = 1; i <= TRIALS; i++) {
+			FilterHasher op = new FilterHasher(i);
+			long collisionCount = wordCount - words.parallelStream().mapToInt(op::filterHash).distinct().count();
+			averageCollisions += collisionCount;
+			if(collisionCount == 0) {
+				boolean prime = BigInteger.valueOf(op.mul).isProbablePrime(9);
+//				System.out.print("FilterHasher.filterHash() with mul " + op.mul
+//					+ " 0x" + Integer.toHexString(op.mul)
+//				);
+//				System.out.println(prime ? " (PRIME!)" : "");
+				goodFilterHashMultipliers.append(op.mul);
+				if(prime)
+					goodFilterHashMultipliers.append(" (P)");
+				goodFilterHashMultipliers.append(", ");
+			}
+		}
+		System.out.println("Good multipliers for filterHash(): [" + goodFilterHashMultipliers + "]");
+		System.out.println("Average collision count for filterHash(): " + (averageCollisions / TRIALS));
+
+		StringBuilder goodHashSeeds = new StringBuilder();
+		averageCollisions = 0;
+		for (int i = 0; i < TRIALS; i++) {
+			Hasher op = new Hasher(i);
+			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hash).distinct().count();
+			averageCollisions += collisionCount;
+			if(collisionCount == 0) {
 //				System.out.println("Hasher.hash() with seed " + i);
-//				goodHashSeeds.add(i);
-//			}
-//		}
-//		System.out.println("Good seeds for hash(): " + goodHashSeeds);
-//
-//		IntList goodHashBulkSeeds = new IntList();
-//		for (int i = 0; i < 5000; i++) {
-//			Hasher op = new Hasher(i);
-//			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hashBulk).distinct().count();
-//			if(collisionCount == 0) {
+				goodHashSeeds.append(i).append(", ");
+			}
+		}
+		System.out.println("Good seeds for hash(): [" + goodHashSeeds + "]");
+		System.out.println("Average collision count for hash(): " + (averageCollisions / TRIALS));
+
+		StringBuilder goodHashBulkSeeds = new StringBuilder();
+		averageCollisions = 0;
+		for (int i = 0; i < TRIALS; i++) {
+			Hasher op = new Hasher(i);
+			long collisionCount = wordCount - words.parallelStream().mapToInt(op::hashBulk).distinct().count();
+			averageCollisions += collisionCount;
+			if(collisionCount == 0) {
 //				System.out.println("Hasher.hashBulk() with seed " + i);
-//				goodHashBulkSeeds.add(i);
-//			}
-//		}
-//		System.out.println("Good seeds for hashBulk(): " + goodHashBulkSeeds);
+				goodHashBulkSeeds.append(i).append(", ");
+			}
+		}
+		System.out.println("Good seeds for hash(): [" + goodHashBulkSeeds + "]");
+		System.out.println("Average collision count for hashBulk(): " + (averageCollisions / TRIALS));
 	}
 }
