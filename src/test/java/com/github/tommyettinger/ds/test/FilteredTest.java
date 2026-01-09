@@ -81,6 +81,30 @@ public class FilteredTest {
 		fil.putAll(ArrayTools.chemicalElements(0, 100, true), ArrayTools.chemicalElements(0, 10, true));
 	}
 
+	@Test
+	public void testStringOrderedMap() {
+		FilteredStringOrderedMap<String> fil = FilteredStringOrderedMap.with(
+			CharFilter.getOrCreate("CAPS", (c) -> true, Casing::caseUp),
+			"zzz", "sleep...",
+			"bee", "first",
+			"binturong", "lower",
+			"hm?", "punctuation",
+			"bee", "second",
+			"BINTURONG", "upper");
+		Assert.assertEquals(4, fil.size());
+
+		fil.put("let's", "let's");
+		fil.put("get this", "get this");
+		fil.put("party", "party");
+		fil.put("started", "started");
+		fil.put("nn nn", "nn nn");
+		fil.put("tss tss", "tss tss");
+		fil.put("wub wub", "wub wub");
+		fil.put("WRRRRR", "WRRRRR");
+		fil.putAll(ArrayTools.chemicalElements(0, 20, false), ArrayTools.chemicalElements(0, 20, false));
+		fil.putAll(ArrayTools.chemicalElements(0, 100, true), ArrayTools.chemicalElements(0, 10, true));
+	}
+
 	/**
 	 * This is a little odd... the key isn't updated but the value is... The keys are considered equivalent, though.
 	 */

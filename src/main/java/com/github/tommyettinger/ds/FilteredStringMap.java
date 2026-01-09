@@ -56,7 +56,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	public FilteredStringMap() {
 		super();
 		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
-
 	}
 
 	/**
@@ -68,7 +67,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 	public FilteredStringMap(int initialCapacity) {
 		super(initialCapacity);
 		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
-
 	}
 
 	/**
@@ -107,7 +105,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 		super(initialCapacity);
 		this.filter = filter;
 		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
-
 	}
 
 	/**
@@ -123,7 +120,6 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
 		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
-
 	}
 
 	/**

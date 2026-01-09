@@ -67,6 +67,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	public FilteredStringOrderedMap(OrderType type) {
 		super(type);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -79,6 +80,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	public FilteredStringOrderedMap(int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -92,6 +94,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	public FilteredStringOrderedMap(int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -105,6 +108,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	public FilteredStringOrderedMap(CharFilter filter, OrderType type) {
 		super(type);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -120,6 +124,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	public FilteredStringOrderedMap(CharFilter filter, int initialCapacity, OrderType type) {
 		super(initialCapacity, type);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -136,6 +141,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	public FilteredStringOrderedMap(CharFilter filter, int initialCapacity, float loadFactor, OrderType type) {
 		super(initialCapacity, loadFactor, type);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -224,6 +230,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	public FilteredStringOrderedMap() {
 		super();
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -234,6 +241,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	public FilteredStringOrderedMap(int initialCapacity) {
 		super(initialCapacity);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -245,6 +253,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	public FilteredStringOrderedMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -256,6 +265,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	public FilteredStringOrderedMap(CharFilter filter) {
 		super();
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -269,6 +279,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	public FilteredStringOrderedMap(CharFilter filter, int initialCapacity) {
 		super(initialCapacity);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -283,6 +294,7 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	public FilteredStringOrderedMap(CharFilter filter, int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		this.filter = filter;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 	}
 
 	/**
@@ -391,10 +403,10 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 		for (int i = 0, len = s.length(); i < len; i++) {
 			final char c = s.charAt(i);
 			if (filter.filter.test(c)) {
-				hash = BitConversion.imul((hash << 13 | hash >>> 19), hm) ^ filter.editor.applyAsChar(c);
+				hash = ((hash << 13 | hash >>> 19) * hm) ^ filter.editor.applyAsChar(c);
 			}
 		}
-		hash = BitConversion.imul(hash, hm);
+		hash *= hm;
 		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
 	}
 
@@ -497,6 +509,30 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 			}
 		}
 		return true;
+	}
+
+	@Override
+	protected void resize(int newSize) {
+		int oldCapacity = valueTable.length;
+		threshold = (int) (newSize * loadFactor);
+		mask = newSize - 1;
+		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
+
+		Object[] oldKeyTable = keyTable;
+		V[] oldValueTable = valueTable;
+
+		keyTable = new String[newSize];
+		valueTable = (V[]) new Object[newSize];
+
+		if (size > 0) {
+			for (int i = 0; i < oldCapacity; i++) {
+				String key = (String) oldKeyTable[i];
+				if (key != null) {
+					putResize(key, oldValueTable[i]);
+				}
+			}
+		}
 	}
 
 	/**
