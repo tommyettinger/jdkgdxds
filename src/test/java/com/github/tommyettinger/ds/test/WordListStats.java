@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.Utilities;
 
@@ -58,7 +59,13 @@ import com.github.tommyettinger.ds.Utilities;
  * Finding 0-collision multipliers:
  * <br>
  * <code>
- * Good multipliers for filterHash(): new int[]{1817, 2191, 3155, 3909, 4527, 5661, 9067, 10683, 10999, 14533, 16987, 19765, 20837, 20913, 21197, 22657, 23255, 24013, 27265, 28407, 29565, 30867, 30929, 32361, 35765, 36021, 39327, 40057, 40207, 41313, 42561, 43053}
+ * Good multipliers for filterHash(): new int[]{
+ * 0x00000719, 0x0000088F, 0x00000C53, 0x00000F45, 0x000011AF, 0x0000161D, 0x0000236B, 0x000029BB,
+ * 0x00002AF7, 0x000038C5, 0x0000425B, 0x00004D35, 0x00005165, 0x000051B1, 0x000052CD, 0x00005881,
+ * 0x00005AD7, 0x00005DCD, 0x00006A81, 0x00006EF7, 0x0000737D, 0x00007893, 0x000078D1, 0x00007E69,
+ * 0x00008BB5, 0x00008CB5, 0x0000999F, 0x00009C79, 0x00009D0F, 0x0000A161, 0x0000A641, 0x0000A82D,
+ * }
+ * Average collision count for filterHash(): 6.460284280936455
  * </code>
  */
 public class WordListStats {
@@ -133,13 +140,15 @@ public class WordListStats {
 			averageCollisions += collisionCount;
 //			System.out.printf("0x%08X has %d collisions.\n", op.mul, collisionCount);
 			if(collisionCount == 0) {
-				goodFilterHashMultipliers.append(op.mul);
+				Base.BASE16.appendUnsigned(goodFilterHashMultipliers.append("0x"), op.mul);
 				goodFilterHashMultipliers.append(", ");
 				goodCount++;
+				if((goodCount & 7) == 0)
+					goodFilterHashMultipliers.append('\n');
 			}
 		}
 		System.out.println("There are " + goodCount + " good multipliers.");
-		System.out.println("Good multipliers for filterHash(): new int[]{" + goodFilterHashMultipliers + "}");
+		System.out.println("Good multipliers for filterHash(): new int[]{\n" + goodFilterHashMultipliers + "}");
 		System.out.println("Average collision count for filterHash(): " + (averageCollisions / (done+1.0)));
 
 //		StringBuilder goodHashSeeds = new StringBuilder();
