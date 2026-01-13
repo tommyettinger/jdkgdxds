@@ -425,7 +425,7 @@ public class EnumMapTest extends TestCase {
 		assertFalse("Returned true for uncontained object", set
 			.remove(Integer.valueOf(1)));
 
-		iter.next();
+		entry = (Map.Entry) iter.next();
 		assertEquals("Wrong key", Size.Big, entry.getKey());
 		set.clear();
 		assertEquals("Wrong size", 0, set.size());

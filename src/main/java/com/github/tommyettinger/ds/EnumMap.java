@@ -1051,7 +1051,6 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	public static class Entries<V> extends AbstractSet<Map.Entry<Enum<?>, V>> implements EnhancedCollection<Map.Entry<Enum<?>, V>> {
-		protected Entry<V> entry = new Entry<>();
 		protected MapIterator<V, Map.Entry<Enum<?>, V>> iter;
 
 		public Entries(EnumMap<V> map) {
@@ -1072,8 +1071,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 						throw new NoSuchElementException();
 					}
 					Enum<?>[] universe = map.universe;
-					entry.key = universe[nextIndex];
-					entry.value = map.release(map.valueTable[nextIndex]);
+					Entry<V> entry = new Entry<>(universe[nextIndex], map.release(map.valueTable[nextIndex]));
 					currentIndex = nextIndex;
 					findNextIndex();
 					return entry;
@@ -1318,20 +1316,20 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * Append the remaining items that this can iterate through into the given Map.
 		 * Does not change the position of this iterator. Note that a Map is not a Collection.
 		 *
-		 * @param coll any modifiable Map; may have items appended into it
+		 * @param map any modifiable Map; may have items appended into it
 		 * @return the given map
 		 */
-		public Map<Enum<?>, V> appendInto(Map<Enum<?>, V> coll) {
+		public Map<Enum<?>, V> appendInto(Map<Enum<?>, V> map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				coll.put(entry.key, entry.value);
+				map.put(iter.map.universe[iter.nextIndex], iter.map.release(iter.map.valueTable[iter.nextIndex]));
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 	}
 
