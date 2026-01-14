@@ -27,7 +27,6 @@ import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;

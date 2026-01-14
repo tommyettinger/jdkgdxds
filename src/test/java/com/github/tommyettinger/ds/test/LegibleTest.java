@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds.test;
 
-import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import org.junit.Assert;

@@ -17,14 +17,11 @@
 package com.github.tommyettinger.ds.test;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.ds.Utilities;
 
 /**
  * With TRIALS set to 5000, except the long line, where it is set to 1048576:

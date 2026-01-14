@@ -1,3 +1,8 @@
+[2.0.0]
+- [BREAKING] The behavior of iterators has changed; they are no longer reused, which makes them act like more-normal JDK collections.
+- [BREAKING] In Map iterators over Entry Sets, the Entry is no longer modified in-place; a new Entry is produced at each iteration. This should lead to less confusion during debugging.
+- FilteredString Sets and Maps now use a different set of hash multipliers; they seem optimal for English dictionary words and many proper nouns.
+
 [1.14.1]
 - The dependency on digital has been updated to 0.9.9 . This is a GWT bug-fix update, and allows the library to work on GWT again. (0.9.8 was broken on GWT.)
 

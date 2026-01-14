@@ -29,7 +29,7 @@ and both projects are Apache-licensed. Note that FastUtil won't work on all plat
 
 Gradle dependency (for all platforms except GWT):
 ```
-api "com.github.tommyettinger:jdkgdxds:1.14.1"
+api "com.github.tommyettinger:jdkgdxds:2.0.0"
 ```
 
 For GWT, see "How do I get it?" below, or use TeaVM instead.
@@ -213,7 +213,7 @@ build (if you know you need some property of a particular commit).
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:1.14.1"
+api "com.github.tommyettinger:jdkgdxds:2.0.0"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -229,7 +229,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
 implementation "com.github.tommyettinger:digital:0.9.9:sources"
-implementation "com.github.tommyettinger:jdkgdxds:1.14.1:sources"
+implementation "com.github.tommyettinger:jdkgdxds:2.0.0:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -288,7 +288,7 @@ replaced with other commits shown on JitPack. If you need a commit dependency on
 need to exclude the implicit dependency from jdkgdxds on digital and rely on your explicit version of digital:
 ```
 implementation "com.github.tommyettinger:digital:$digitalCommitHashVersion"
-implementation('com.github.tommyettinger:jdkgdxds:1.14.1'){
+implementation('com.github.tommyettinger:jdkgdxds:2.0.0'){
     exclude group: 'com.github.tommyettinger', module: 'digital'
 }
 ```
@@ -440,7 +440,7 @@ libraries. Some other info here was scattered through this file and has been con
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
 The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
 [juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.8.4) might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.9.0) might be a good idea, though it is still optional.
 Another option for random number generation, if you use libGDX, is [cringe](https://github.com/tommyettinger/cringe), which is more closely-integrated with libGDX.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library -- both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.

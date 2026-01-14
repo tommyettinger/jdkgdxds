@@ -28,9 +28,6 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.tommyettinger.ds.test.PileupTest.LEN;
-import static com.github.tommyettinger.ds.test.PileupTest.generateVectorSpiral;
-
 /**
  * With 512 multipliers and no change:
  * 0 problem multipliers in total, 512 likely good multipliers in total.

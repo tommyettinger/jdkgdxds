@@ -20,8 +20,6 @@ import com.github.tommyettinger.digital.Base;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class Casing2Generator {
 	public static char[] load(CharSequence ku, CharSequence vu, CharSequence kd, CharSequence vd) {
