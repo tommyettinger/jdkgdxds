@@ -1296,7 +1296,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				list.add(new Entry<>(iter.next()));
+				list.add(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1315,7 +1315,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				coll.add(new Entry<>(iter.next()));
+				coll.add(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
