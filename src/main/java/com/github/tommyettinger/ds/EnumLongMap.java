@@ -1241,7 +1241,6 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		}
 	}
 
-
 	public static class Values implements OfLong {
 		protected ValueIterator iter;
 

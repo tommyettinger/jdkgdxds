@@ -936,7 +936,6 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	}
 
 	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
-		protected Entry entry = new Entry();
 
 		public EntryIterator(EnumFloatMap map) {
 			super(map);
@@ -955,8 +954,8 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
-			entry.key = map.keys.universe[nextIndex];
-			entry.value = map.valueTable[nextIndex];
+			Entry entry = new Entry(map.keys.universe[nextIndex], map.valueTable[nextIndex]);
+
 			currentIndex = nextIndex;
 			findNextIndex();
 			return entry;
@@ -969,7 +968,6 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	}
 
 	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
-		protected Entry entry = new Entry();
 		protected EntryIterator iter;
 
 		public Entries(EnumFloatMap map) {
@@ -1133,7 +1131,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				a[i++] = new Entry(iter.next());
+				a[i++] = iter.next();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1155,7 +1153,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				a[i++] = (T) new Entry(iter.next());
+				a[i++] = (T) iter.next();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1173,7 +1171,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				list.add(new Entry(iter.next()));
+				list.add(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1192,7 +1190,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				coll.add(new Entry(iter.next()));
+				coll.add(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1204,43 +1202,42 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * Append the remaining items that this can iterate through into the given ObjectFloatMap.
 		 * Does not change the position of this iterator. The ObjectFloatMap must have Enum keys.
 		 *
-		 * @param coll a modifiable ObjectFloatMap; may have items appended into it
+		 * @param map a modifiable ObjectFloatMap; may have items appended into it
 		 * @return the given ObjectFloatMap
 		 */
-		public ObjectFloatMap<Enum<?>> appendInto(ObjectFloatMap<Enum<?>> coll) {
+		public ObjectFloatMap<Enum<?>> appendInto(ObjectFloatMap<Enum<?>> map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				coll.put(entry.key, entry.value);
+				map.put(iter.map.keys.universe[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 
 		/**
 		 * Append the remaining items that this can iterate through into the given EnumFloatMap.
 		 * Does not change the position of this iterator.
 		 *
-		 * @param coll another EnumFloatMap; may have items appended into it
+		 * @param map another EnumFloatMap; may have items appended into it
 		 * @return the given EnumFloatMap
 		 */
-		public EnumFloatMap appendInto(EnumFloatMap coll) {
+		public EnumFloatMap appendInto(EnumFloatMap map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				coll.put(entry.key, entry.value);
+				map.put(iter.map.keys.universe[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 	}
-
 
 	public static class Values implements OfFloat {
 		protected ValueIterator iter;
