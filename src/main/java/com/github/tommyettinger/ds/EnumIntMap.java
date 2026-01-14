@@ -930,7 +930,6 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 	public static class EntryIterator extends MapIterator implements Iterable<Entry>, Iterator<Entry> {
-		protected Entry entry = new Entry();
 
 		public EntryIterator(EnumIntMap map) {
 			super(map);
@@ -949,8 +948,8 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			if (!hasNext) {
 				throw new NoSuchElementException();
 			}
-			entry.key = map.keys.universe[nextIndex];
-			entry.value = map.valueTable[nextIndex];
+			Entry entry = new Entry(map.keys.universe[nextIndex], map.valueTable[nextIndex]);
+
 			currentIndex = nextIndex;
 			findNextIndex();
 			return entry;
@@ -963,7 +962,6 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	}
 
 	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
-		protected Entry entry = new Entry();
 		protected EntryIterator iter;
 
 		public Entries(EnumIntMap map) {
@@ -1127,7 +1125,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				a[i++] = new Entry(iter.next());
+				a[i++] = iter.next();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1149,7 +1147,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				a[i++] = (T) new Entry(iter.next());
+				a[i++] = (T) iter.next();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1167,7 +1165,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				list.add(new Entry(iter.next()));
+				list.add(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1186,7 +1184,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				coll.add(new Entry(iter.next()));
+				coll.add(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1198,43 +1196,42 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 		 * Append the remaining items that this can iterate through into the given ObjectIntMap.
 		 * Does not change the position of this iterator. The ObjectIntMap must have Enum keys.
 		 *
-		 * @param coll a modifiable ObjectIntMap; may have items appended into it
+		 * @param map a modifiable ObjectIntMap; may have items appended into it
 		 * @return the given ObjectIntMap
 		 */
-		public ObjectIntMap<Enum<?>> appendInto(ObjectIntMap<Enum<?>> coll) {
+		public ObjectIntMap<Enum<?>> appendInto(ObjectIntMap<Enum<?>> map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				coll.put(entry.key, entry.value);
+				map.put(iter.map.keys.universe[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 
 		/**
 		 * Append the remaining items that this can iterate through into the given EnumIntMap.
 		 * Does not change the position of this iterator.
 		 *
-		 * @param coll another EnumIntMap; may have items appended into it
+		 * @param map another EnumIntMap; may have items appended into it
 		 * @return the given EnumIntMap
 		 */
-		public EnumIntMap appendInto(EnumIntMap coll) {
+		public EnumIntMap appendInto(EnumIntMap map) {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				iter.next();
-				coll.put(entry.key, entry.value);
+				map.put(iter.map.keys.universe[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				iter.findNextIndex();
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
 			iter.hasNext = hn;
-			return coll;
+			return map;
 		}
 	}
-
 
 	public static class Values implements PrimitiveCollection.OfInt {
 		protected ValueIterator iter;

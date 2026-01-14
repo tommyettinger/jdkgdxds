@@ -711,8 +711,8 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 						throw new NoSuchElementException();
 					}
 					currentIndex = nextIndex;
-					entry.key = ordering.get(nextIndex);
-					entry.value = map.get(entry.key);
+					Enum<?> k = ordering.get(nextIndex);
+					Entry entry = new Entry(k, map.get(k));
 					nextIndex++;
 					hasNext = nextIndex < map.size();
 					return entry;
@@ -723,15 +723,54 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 					if (currentIndex < 0) {
 						throw new IllegalStateException("next must be called before remove.");
 					}
-					if (entry.key != null) {
-						map.remove(entry.key);
-					}
+					map.remove(ordering.get(currentIndex));
 					nextIndex--;
 					currentIndex = -1;
 				}
 			};
 		}
 
+		/**
+		 * Append the remaining items that this can iterate through into the given ObjectIntMap.
+		 * Does not change the position of this iterator. The ObjectIntMap must have Enum keys.
+		 *
+		 * @param map a modifiable ObjectIntMap; may have items appended into it
+		 * @return the given ObjectIntMap
+		 */
+		public ObjectIntMap<Enum<?>> appendInto(ObjectIntMap<Enum<?>> map) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				Enum<?> k = ordering.get(iter.nextIndex);
+				map.put(k, iter.map.get(k));
+				iter.findNextIndex();
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return map;
+		}
+
+		/**
+		 * Append the remaining items that this can iterate through into the given EnumIntMap.
+		 * Does not change the position of this iterator.
+		 *
+		 * @param map another EnumIntMap; may have items appended into it
+		 * @return the given EnumIntMap
+		 */
+		public EnumIntMap appendInto(EnumIntMap map) {
+			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
+			boolean hn = iter.hasNext;
+			while (iter.hasNext) {
+				Enum<?> k = ordering.get(iter.nextIndex);
+				map.put(k, iter.map.get(k));
+				iter.findNextIndex();
+			}
+			iter.currentIndex = currentIdx;
+			iter.nextIndex = nextIdx;
+			iter.hasNext = hn;
+			return map;
+		}
 	}
 
 	public static class OrderedMapKeys extends Keys {
