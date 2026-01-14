@@ -1272,7 +1272,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				list.add(new Entry(iter.next()));
+				list.add(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
@@ -1291,7 +1291,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
 			boolean hn = iter.hasNext;
 			while (iter.hasNext) {
-				coll.add(new Entry(iter.next()));
+				coll.add(iter.next());
 			}
 			iter.currentIndex = currentIdx;
 			iter.nextIndex = nextIdx;
