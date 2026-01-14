@@ -764,7 +764,7 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 					if (currentIndex < 0) {
 						throw new IllegalStateException("next must be called before remove.");
 					}
-					map.remove(keys.get(nextIndex));
+					map.remove(keys.get(currentIndex));
 					nextIndex--;
 					currentIndex = -1;
 				}
