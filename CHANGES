@@ -1,3 +1,6 @@
+[2.0.1]
+- Casing received a fix for the GWT target. This allows jdkgdxds to be used with GWT again.
+
 [2.0.0]
 - [BREAKING] The behavior of iterators has changed; they are no longer reused, which makes them act like more-normal JDK collections.
 - [BREAKING] In Map iterators over Entry Sets, the Entry is no longer modified in-place; a new Entry is produced at each iteration. This should lead to less confusion during debugging.
