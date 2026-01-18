@@ -45,6 +45,10 @@ import java.util.List;
  * Using initial capacity 230 and load factor 0.5f...
  * Revision 5 map gets total collisions: 44061, PILEUP: 11
  * 19854875300 ns taken for 1000 ops
+ * <br>
+ * Using initial capacity 230 and load factor 0.2f...
+ * Revision 5 map gets total collisions: 24188, PILEUP: 7
+ * 46992328900 ns taken for 1000 ops
  */
 public class CaseInsensitiveIntMap5CollisionTest {
 	public static void main(String[] args) throws IOException {
@@ -52,10 +56,10 @@ public class CaseInsensitiveIntMap5CollisionTest {
 		WhiskerRandom rng = new WhiskerRandom(1234567890L);
 		Collections.shuffle(words, rng);
 		final int CAPACITY = words.size() >> 10;
-		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.5f...");
+		System.out.println("Using initial capacity " + CAPACITY + " and load factor 0.2f...");
 		long start = System.nanoTime();
 		for (int it = 0; it < 1000; it++) {
-			CaseInsensitiveIntMap5 set = new CaseInsensitiveIntMap5(CAPACITY, 0.5f);
+			CaseInsensitiveIntMap5 set = new CaseInsensitiveIntMap5(CAPACITY, 0.2f);
 			for (int i = 0, n = words.size(); i < n; i++) {
 				set.put(words.get(i), i);
 			}
