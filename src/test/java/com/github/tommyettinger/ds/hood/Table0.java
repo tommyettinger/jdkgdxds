@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2026 See AUTHORS file.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.github.tommyettinger.ds.hood;
+
+import com.github.tommyettinger.ds.Utilities;
+
+/**
+ * An initial iteration of <a href="https://www.corsix.org/content/my-favourite-small-hash-table">this hash table</a>.
+ * <br>
+ * Constraints at this stage:
+ * <ol>
+ *     <li>Keys are randomly-distributed 32-bit integers.</li>
+ *     <li>Values are also 32-bit integers.</li>
+ *     <li>If the key 0 is present, it is stored outside the normal part of the hash table.</li>
+ * </ol>
+ * Keys are not mixed.
+ */
+public class Table0 {
+	public long[] slots;
+	public int mask;
+	public int count;
+	public int defaultValue = 0;
+
+	public Table0() {
+		this(16);
+	}
+
+	public Table0(int capacity){
+		mask = Utilities.tableSize(capacity, 0.75f) - 1;
+		slots = new long[mask+2];
+		count = 0;
+	}
+
+	public boolean containsKey(int key) {
+		if(key == 0){
+			return (int) slots[mask + 1] == 0;
+		}
+		for (int d = 0; ; ++d) {
+			int idx = (key + d) & mask;
+			long slot = slots[idx];
+			int h = (int) slot;
+			if (slot == 0) {
+				return false;
+			} else if (key == h) {
+				return true;
+			} else if (((idx - h) & mask) < d) {
+				return false;
+			}
+		}
+	}
+
+	public int get(int key) {
+		if(key == 0){
+			long slot = slots[mask+1];
+			if((int)slot == 0)
+				return (int)(slot>>>32);
+			return defaultValue;
+		}
+		for (int d = 0; ; ++d) {
+			int idx = (key + d) & mask;
+			long slot = slots[idx];
+			int h = (int) slot;
+			if (slot == 0) {
+				return defaultValue;
+			} else if (key == h) {
+				return (int)(slot >>> 32);
+			} else if (((idx - h) & mask) < d) {
+				return defaultValue;
+			}
+		}
+	}
+
+	public int getOrDefault(int key, int defaultValue) {
+		if(key == 0){
+			long slot = slots[mask+1];
+			if((int)slot == 0)
+				return (int)(slot>>>32);
+			return defaultValue;
+		}
+		for (int d = 0; ; ++d) {
+			int idx = (key + d) & mask;
+			long slot = slots[idx];
+			int h = (int) slot;
+			if (slot == 0) {
+				return defaultValue;
+			} else if (key == h) {
+				return (int)(slot >>> 32);
+			} else if (((idx - h) & mask) < d) {
+				return defaultValue;
+			}
+		}
+	}
+}
