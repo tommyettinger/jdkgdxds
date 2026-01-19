@@ -181,4 +181,36 @@ public class Table0 {
 			}
 		}
 	}
+
+	public int remove(int key) {
+		if(key == 0){
+			if((int)slots[mask+1] == -1) {
+				int old = (int) (slots[mask + 1] >>> 32);
+				slots[mask + 1] = 0;
+				--count;
+				return old;
+			}
+			return defaultValue;
+		}
+		for (int d = 0; ; d++) {
+			int idx = key + d & mask;
+			long slot = slots[idx];
+			int low = (int)slot;
+			if(low == 0){
+				return defaultValue;
+			} else if(key == low){
+				int next = idx + 1 & mask;
+				--count;
+				while ((int)slots[next] != 0 && ((slots[next] ^ next) & mask) != 0){
+					slots[idx] = slots[next];
+					idx = next;
+					next = idx + 1 & mask;
+				}
+				slots[idx] = 0;
+				return (int) (slot >>> 32);
+			} else if((idx - low & mask) < d){
+				return defaultValue;
+			}
+		}
+	}
 }
