@@ -16,7 +16,11 @@
 
 package com.github.tommyettinger.ds.hood;
 
+import com.github.tommyettinger.ds.PrimitiveSet;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.tommyettinger.ds.support.util.IntIterator;
+
+import java.util.Arrays;
 
 /**
  * An initial iteration of <a href="https://www.corsix.org/content/my-favourite-small-hash-table">this hash table</a>.
@@ -211,6 +215,119 @@ public class Table0 {
 			} else if((idx - low & mask) < d){
 				return defaultValue;
 			}
+		}
+	}
+
+	public boolean delete(int key) {
+		if(key == 0){
+			if((int)slots[mask+1] == -1) {
+				slots[mask + 1] = 0;
+				--count;
+				return true;
+			}
+			return false;
+		}
+		for (int d = 0; ; d++) {
+			int idx = key + d & mask;
+			int low = (int)slots[idx];
+			if(low == 0){
+				return false;
+			} else if(key == low){
+				int next = idx + 1 & mask;
+				--count;
+				while ((int)slots[next] != 0 && ((slots[next] ^ next) & mask) != 0){
+					slots[idx] = slots[next];
+					idx = next;
+					next = idx + 1 & mask;
+				}
+				slots[idx] = 0;
+				return true;
+			} else if((idx - low & mask) < d){
+				return false;
+			}
+		}
+	}
+
+	public void clear() {
+		Arrays.fill(slots, 0);
+		count = 0;
+	}
+
+	protected static class MapIterator {
+		protected Table0 table;
+		protected int nextIndex;
+		protected boolean hasNext;
+
+		public MapIterator(Table0 table){
+			this.table = table;
+			if(table.count > 0)
+				findNextIndex();
+			else
+				hasNext = false;
+		}
+
+		public boolean hasNext() {
+			return hasNext;
+		}
+
+		protected void findNextIndex() {
+			long[] slots = table.slots;
+			for (int n = slots.length; ++nextIndex < n; ) {
+				if ((int)slots[nextIndex] != 0) {
+					hasNext = true;
+					return;
+				}
+			}
+			hasNext = false;
+		}
+	}
+
+	public static class KeyIterator extends MapIterator implements IntIterator {
+		public KeyIterator(Table0 table) {
+			super(table);
+		}
+
+		@Override
+		public int nextInt() {
+			int i = (nextIndex > table.mask) ? 0 : (int) table.slots[nextIndex];
+			findNextIndex();
+			return i;
+		}
+	}
+
+	public static class Keys implements PrimitiveSet.SetOfInt {
+		protected KeyIterator it;
+		public Keys(Table0 table) {
+			it = new KeyIterator(table);
+		}
+		@Override
+		public boolean add(int item) {
+			throw new UnsupportedOperationException("add() is not supported on a Keys view.");
+		}
+
+		@Override
+		public boolean remove(int item) {
+			return it.table.delete(item);
+		}
+
+		@Override
+		public boolean contains(int item) {
+			return it.table.containsKey(item);
+		}
+
+		@Override
+		public IntIterator iterator() {
+			return it;
+		}
+
+		@Override
+		public int size() {
+			return it.table.count;
+		}
+
+		@Override
+		public void clear() {
+			it.table.clear();
 		}
 	}
 }
