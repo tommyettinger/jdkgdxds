@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds.hood;
 
+import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.PrimitiveSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.util.IntIterator;
@@ -248,6 +249,17 @@ public class Table0 {
 		}
 	}
 
+	public boolean containsValue(int item) {
+		int idx = -1;
+		for (int n = slots.length; ++idx < n; ) {
+			long slot = slots[idx];
+			if ((int)slot != 0 && (int)(slot >>> 32) == item) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void clear() {
 		Arrays.fill(slots, 0);
 		count = 0;
@@ -330,4 +342,55 @@ public class Table0 {
 			it.table.clear();
 		}
 	}
+
+	public static class ValueIterator extends MapIterator implements IntIterator {
+		public ValueIterator(Table0 table) {
+			super(table);
+		}
+
+		@Override
+		public int nextInt() {
+			int i = (int) (table.slots[nextIndex] >>> 32);
+			findNextIndex();
+			return i;
+		}
+	}
+
+	public static class Values implements PrimitiveCollection.OfInt {
+		protected ValueIterator it;
+		public Values(Table0 table) {
+			it = new ValueIterator(table);
+		}
+		@Override
+		public boolean add(int item) {
+			throw new UnsupportedOperationException("add() is not supported on a Values view.");
+		}
+
+		@Override
+		public boolean remove(int item) {
+			throw new UnsupportedOperationException("remove() is not supported on a Values view.");
+		}
+
+		@Override
+		public boolean contains(int item) {
+			return it.table.containsValue(item);
+		}
+
+		@Override
+		public IntIterator iterator() {
+			return it;
+		}
+
+		@Override
+		public int size() {
+			return it.table.count;
+		}
+
+		@Override
+		public void clear() {
+			throw new UnsupportedOperationException("clear() is not supported on a Values view.");
+		}
+	}
+
+
 }
