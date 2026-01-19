@@ -105,9 +105,39 @@ public class Table0 {
 		}
 	}
 
+	public int put(int key, int value) {
+		long kv = (key & 0xFFFFFFFFL) | (long) value << 32;
+		for (int d = 0; ; d++) {
+			int idx = key + d & mask;
+			long slot = slots[idx];
+			int low = (int)slot;
+			if(low == 0){
+				// Insert new value (slot was previously empty)
+				slots[idx] = kv;
+				break;
+			} else if(key == low) {
+				// Overwrite existing value
+				slots[idx] = kv;
+				return (int)(slot >>> 32);
+			} else {
+				int d2 = idx - low & mask;
+				if(d2 < d) {
+					// Insert new value and move existing slot
+					slots[idx] = kv;
+					putResize(slots, slot, d2);
+					break;
+				}
+			}
+		}
+		if(++count >= mask * 0.75){
+			resize(count);
+		}
+		return defaultValue;
+	}
+
 	public void resize(int capacity) {
 		capacity = Utilities.tableSize(capacity, 0.75f);
-		if(capacity <= mask) return;
+		if(capacity - 1 <= mask) return;
 		int oldMask = mask;
 		mask = capacity - 1;
 		long[] newSlots = new long[capacity+1];
