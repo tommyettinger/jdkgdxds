@@ -104,4 +104,42 @@ public class Table0 {
 			}
 		}
 	}
+
+	public void resize(int capacity) {
+		capacity = Utilities.tableSize(capacity, 0.75f);
+		if(capacity <= mask) return;
+		int oldMask = mask;
+		mask = capacity - 1;
+		long[] newSlots = new long[capacity+1];
+		long[] oldSlots = slots;
+		newSlots[capacity] = oldSlots[oldMask+1];
+		int idx = 0;
+		do {
+			long slot = oldSlots[idx];
+			if((int)slot != 0){
+				putResize(newSlots, slot, 0);
+			}
+		} while (idx++ != oldMask);
+		slots = newSlots;
+	}
+
+	private void putResize(long[] slots, long kv, int d) {
+		for (; ; ++d) {
+			int h = (int) kv;
+			int idx = h + d & mask;
+			long slot = slots[idx];
+			int low = (int) slot;
+			if (low == 0) {
+				slots[idx] = kv;
+				return;
+			} else {
+				int d2 = idx - low & mask;
+				if(d2 < d){
+					slots[idx] = kv;
+					kv = slot;
+					d = d2;
+				}
+			}
+		}
+	}
 }
