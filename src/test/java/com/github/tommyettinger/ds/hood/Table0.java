@@ -47,7 +47,7 @@ public class Table0 {
 
 	public boolean containsKey(int key) {
 		if(key == 0){
-			return (int) slots[mask + 1] == 0;
+			return (int) slots[mask + 1] == -1;
 		}
 		for (int d = 0; ; ++d) {
 			int idx = (key + d) & mask;
@@ -66,7 +66,7 @@ public class Table0 {
 	public int get(int key) {
 		if(key == 0){
 			long slot = slots[mask+1];
-			if((int)slot == 0)
+			if((int)slot == -1)
 				return (int)(slot>>>32);
 			return defaultValue;
 		}
@@ -87,7 +87,7 @@ public class Table0 {
 	public int getOrDefault(int key, int defaultValue) {
 		if(key == 0){
 			long slot = slots[mask+1];
-			if((int)slot == 0)
+			if((int)slot == -1)
 				return (int)(slot>>>32);
 			return defaultValue;
 		}
@@ -106,6 +106,15 @@ public class Table0 {
 	}
 
 	public int put(int key, int value) {
+		if(key == 0) {
+			if((int)slots[mask+1] == -1) {
+				int old = (int) (slots[mask + 1] >>> 32);
+				slots[mask + 1] = (long) value << 32 | 0xFFFFFFFFL;
+				return old;
+			}
+			++count;
+			return defaultValue;
+		}
 		long kv = (key & 0xFFFFFFFFL) | (long) value << 32;
 		for (int d = 0; ; d++) {
 			int idx = key + d & mask;
@@ -130,7 +139,7 @@ public class Table0 {
 			}
 		}
 		if(++count >= mask * 0.75){
-			resize(count);
+			resize(mask+2);
 		}
 		return defaultValue;
 	}
