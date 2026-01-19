@@ -267,7 +267,7 @@ public class Table0 {
 
 	protected static class MapIterator {
 		protected Table0 table;
-		protected int nextIndex;
+		protected int nextIndex = -1;
 		protected boolean hasNext;
 
 		public MapIterator(Table0 table){
