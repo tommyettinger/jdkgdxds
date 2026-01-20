@@ -113,6 +113,27 @@ public class Table0 implements Iterable<Table0.Entry> {
 		}
 	}
 
+	public long getSlot(int key) {
+		if(key == 0){
+			long slot = slots[mask+1];
+			if((int)slot == -1)
+				return slot;
+			return 0L;
+		}
+		for (int d = 0; ; ++d) {
+			int idx = (key + d) & mask;
+			long slot = slots[idx];
+			int h = (int) slot;
+			if (slot == 0) {
+				return 0L;
+			} else if (key == h) {
+				return slot;
+			} else if (((idx - h) & mask) < d) {
+				return 0L;
+			}
+		}
+	}
+
 	public int getOrDefault(int key, int defaultValue) {
 		if(key == 0){
 			long slot = slots[mask+1];
@@ -399,6 +420,46 @@ public class Table0 implements Iterable<Table0.Entry> {
 		this.defaultValue = defaultValue;
 	}
 
+
+	@Override
+	public int hashCode() {
+		int h = count;
+		long[] slots = this.slots;
+		for (int i = 0, n = slots.length; i < n; i++) {
+			long slot = slots[i];
+			int key = (int)slot;
+			if (key != 0) {
+				h ^= key;
+				h ^= (int) (slot>>>32);
+			}
+		}
+		return h;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Table0)) {
+			return false;
+		}
+		Table0 other = (Table0) obj;
+		if (other.count != count) {
+			return false;
+		}
+		long[] slots = this.slots;
+		for (int i = 0, n = mask; i <= n; i++) {
+			long slot = slots[i];
+			int key = (int) slot;
+			if (key != 0) {
+				long otherValue = other.getSlot(key);
+				if (otherValue != slot)
+					return false;
+			}
+		}
+		return (slots[mask+1] == other.slots[other.mask+1]);
+	}
 	protected static class MapIterator {
 		protected Table0 table;
 		protected int nextIndex = -1;
