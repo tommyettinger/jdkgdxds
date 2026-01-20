@@ -92,6 +92,27 @@ public class Table0 implements Iterable<Table0.Entry> {
 		}
 	}
 
+	public Entry getEntry(int key) {
+		if(key == 0){
+			long slot = slots[mask+1];
+			if((int)slot == -1)
+				return new Entry(0, (int)(slot>>>32));
+			return null;
+		}
+		for (int d = 0; ; ++d) {
+			int idx = (key + d) & mask;
+			long slot = slots[idx];
+			int h = (int) slot;
+			if (slot == 0) {
+				return null;
+			} else if (key == h) {
+				return new Entry(key, (int)(slot >>> 32));
+			} else if (((idx - h) & mask) < d) {
+				return null;
+			}
+		}
+	}
+
 	public int getOrDefault(int key, int defaultValue) {
 		if(key == 0){
 			long slot = slots[mask+1];
@@ -520,8 +541,8 @@ public class Table0 implements Iterable<Table0.Entry> {
 		@Override
 		public boolean contains(Object o) {
 			if(!(o instanceof Entry)) return false;
-			Entry e = (Entry) o;
-			return it.table.containsKey(e.key) && it.table.get(e.key) == e.value;
+			Entry e = (Entry) o, mine = it.table.getEntry(e.key);
+			return e.key == mine.key && e.value == mine.value;
 		}
 
 		@Override
