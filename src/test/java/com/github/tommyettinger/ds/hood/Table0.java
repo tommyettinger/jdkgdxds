@@ -37,18 +37,18 @@ import java.util.Iterator;
  * </ol>
  * Keys are not mixed.
  */
-public class Table0 {
-	public long[] slots;
-	public int mask;
-	public int count;
-	public int defaultValue = 0;
+public class Table0 implements Iterable<Table0.Entry> {
+	protected long[] slots;
+	protected int mask;
+	protected int count;
+	protected int defaultValue = 0;
 
 	public Table0() {
-		this(16);
+		this(48);
 	}
 
 	public Table0(int capacity){
-		mask = Utilities.tableSize(capacity, 0.75f) - 1;
+		mask = Utilities.tableSize(Math.max(12, capacity), 0.75f) - 1;
 		slots = new long[mask+2];
 		count = 0;
 	}
@@ -268,6 +268,34 @@ public class Table0 {
 		count = 0;
 	}
 
+	public Iterator<Entry> iterator() {
+		return new EntryIterator(this);
+	}
+
+	public KeySet keySet() {
+		return new KeySet(this);
+	}
+
+	public Values values() {
+		return new Values(this);
+	}
+
+	public EntrySet entrySet() {
+		return new EntrySet(this);
+	}
+
+	public int size() {
+		return count;
+	}
+
+	public int getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(int defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
 	protected static class MapIterator {
 		protected Table0 table;
 		protected int nextIndex = -1;
@@ -310,14 +338,14 @@ public class Table0 {
 		}
 	}
 
-	public static class Keys implements PrimitiveSet.SetOfInt {
+	public static class KeySet implements PrimitiveSet.SetOfInt {
 		protected KeyIterator it;
-		public Keys(Table0 table) {
+		public KeySet(Table0 table) {
 			it = new KeyIterator(table);
 		}
 		@Override
 		public boolean add(int item) {
-			throw new UnsupportedOperationException("add() is not supported on a Keys view.");
+			throw new UnsupportedOperationException("add() is not supported on a KeySet view.");
 		}
 
 		@Override
