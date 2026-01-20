@@ -477,6 +477,11 @@ public class Table0 implements Iterable<Table0.Entry> {
 		public void clear() {
 			it.table.clear();
 		}
+
+		@Override
+		public String toString() {
+			return toString(", ", true);
+		}
 	}
 
 	public static class ValueIterator extends MapIterator implements IntIterator {
@@ -525,6 +530,11 @@ public class Table0 implements Iterable<Table0.Entry> {
 		@Override
 		public void clear() {
 			throw new UnsupportedOperationException("clear() is not supported on a Values view.");
+		}
+
+		@Override
+		public String toString() {
+			return toString(", ", true);
 		}
 	}
 
@@ -643,6 +653,11 @@ public class Table0 implements Iterable<Table0.Entry> {
 		@Override
 		public void clear() {
 			it.table.clear();
+		}
+
+		@Override
+		public String toString() {
+			return toString(", ", true);
 		}
 	}
 }
