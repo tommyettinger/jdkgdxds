@@ -16,10 +16,12 @@
 
 package com.github.tommyettinger.ds.hood;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.EnhancedCollection;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.PrimitiveSet;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 
 import java.util.AbstractSet;
@@ -51,6 +53,22 @@ public class Table0 implements Iterable<Table0.Entry> {
 		mask = Utilities.tableSize(Math.max(12, capacity), 0.75f) - 1;
 		slots = new long[mask+2];
 		count = 0;
+	}
+
+	public Table0(int[] keys, int[] values){
+		int capacity = Math.min(keys.length, values.length);
+		mask = Utilities.tableSize(Math.max(12, capacity), 0.75f) - 1;
+		slots = new long[mask+2];
+		count = 0;
+		putAll(keys, values, 0, capacity);
+	}
+
+	public Table0(int[] keys, int[] values, int offset, int length){
+		int capacity = Math.min(Math.min(keys.length, values.length) - offset, length);
+		mask = Utilities.tableSize(Math.max(12, capacity), 0.75f) - 1;
+		slots = new long[mask+2];
+		count = 0;
+		putAll(keys, values, offset, length);
 	}
 
 	public boolean containsKey(int key) {
@@ -460,6 +478,122 @@ public class Table0 implements Iterable<Table0.Entry> {
 		}
 		return (slots[mask+1] == other.slots[other.mask+1]);
 	}
+
+	@Override
+	public String toString() {
+		return toString(", ", true);
+	}
+
+	/**
+	 * Delegates to {@link #toString(String, boolean)} with the given entrySeparator and without braces.
+	 * This is different from {@link #toString()}, which includes braces by default.
+	 *
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @return a new String representing this map
+	 */
+	public String toString(String entrySeparator) {
+		return toString(entrySeparator, false);
+	}
+
+	public String toString(String entrySeparator, boolean braces) {
+		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+	}
+
+	/**
+	 * Makes a String from the contents of this Table0, but uses the given {@link IntAppender} and
+	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
+	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(CharSequence, int)} and {@link Base#appendUnsigned(CharSequence, int)}. To use
+	 * the default String representation, you can use {@link IntAppender#DEFAULT}
+	 * as an appender. To write values so that they can be read back as Java source code, use
+	 * {@link IntAppender#READABLE} for each appender.
+	 * <br>
+	 * Using {@code READABLE} appenders, if you separate keys
+	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
+	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
+	 *
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @return a new String representing this map
+	 */
+	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
+						   IntAppender keyAppender, IntAppender valueAppender) {
+		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+	}
+
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
+		return appendTo(sb, entrySeparator, "=", braces, IntAppender.DEFAULT, IntAppender.DEFAULT);
+	}
+
+	/**
+	 * Appends to a StringBuilder from the contents of this Table0, but uses the given {@link IntAppender} and
+	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
+	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(CharSequence, int)} and {@link Base#appendUnsigned(CharSequence, int)}. To use
+	 * the default String representation, you can use {@link IntAppender#DEFAULT}
+	 * as an appender. To write values so that they can be read back as Java source code, use
+	 * {@link IntAppender#READABLE} for each appender.
+	 * <br>
+	 * Using {@code READABLE} appenders, if you separate keys
+	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
+	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
+	 *
+	 * @param sb                a StringBuilder that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender       a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @return {@code sb}, with the appended keys and values of this map
+	 */
+	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+								  IntAppender keyAppender, IntAppender valueAppender) {
+		if (count == 0) {
+			return braces ? sb.append("{}") : sb;
+		}
+		if (braces) {
+			sb.append('{');
+		}
+		long[] slots = this.slots;
+		long zeroSlot = slots[mask+1];
+		if ((int)(zeroSlot) == -1) {
+			keyAppender.apply(sb, 0).append(keyValueSeparator);
+			valueAppender.apply(sb, (int) (zeroSlot>>>32));
+			if (count > 1) {
+				sb.append(entrySeparator);
+			}
+		}
+		int i = mask + 1;
+		while (i-- > 0) {
+			long slot = slots[i];
+			int key = (int) slot;
+			if (key == 0) {
+				continue;
+			}
+			keyAppender.apply(sb, key).append(keyValueSeparator);
+			valueAppender.apply(sb, (int) (slot>>>32));
+			break;
+		}
+		while (i-- > 0) {
+			long slot = slots[i];
+			int key = (int) slot;
+			if (key == 0) {
+				continue;
+			}
+			sb.append(entrySeparator);
+			keyAppender.apply(sb, key).append(keyValueSeparator);
+			valueAppender.apply(sb, (int) (slot>>>32));
+		}
+		if (braces) {
+			sb.append('}');
+		}
+		return sb;
+	}
+
+
 	protected static class MapIterator {
 		protected Table0 table;
 		protected int nextIndex = -1;
@@ -719,4 +853,429 @@ public class Table0 implements Iterable<Table0.Entry> {
 			return toString(", ", true);
 		}
 	}
+
+
+	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static Table0 with() {
+		return new Table0(0);
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive int and int, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   the first and only key; will be converted to primitive int
+	 * @param value0 the first and only value; will be converted to primitive int
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static Table0 with(Number key0, Number value0) {
+		Table0 map = new Table0(1);
+		map.put(key0.intValue(), value0.intValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive int and int, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param key1   a Number key; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static Table0 with(Number key0, Number value0, Number key1, Number value1) {
+		Table0 map = new Table0(2);
+		map.put(key0.intValue(), value0.intValue());
+		map.put(key1.intValue(), value1.intValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive int and int, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param key1   a Number key; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @param key2   a Number key; will be converted to primitive int
+	 * @param value2 a Number for a value; will be converted to primitive int
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static Table0 with(Number key0, Number value0, Number key1, Number value1, Number key2, Number value2) {
+		Table0 map = new Table0(3);
+		map.put(key0.intValue(), value0.intValue());
+		map.put(key1.intValue(), value1.intValue());
+		map.put(key2.intValue(), value2.intValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+	 * convert its Number keys and values to primitive int and int, regardless of which
+	 * Number type was used.
+	 *
+	 * @param key0   a Number key; will be converted to primitive int
+	 * @param value0 a Number for a value; will be converted to primitive int
+	 * @param key1   a Number key; will be converted to primitive int
+	 * @param value1 a Number for a value; will be converted to primitive int
+	 * @param key2   a Number key; will be converted to primitive int
+	 * @param value2 a Number for a value; will be converted to primitive int
+	 * @param key3   a Number key; will be converted to primitive int
+	 * @param value3 a Number for a value; will be converted to primitive int
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static Table0 with(Number key0, Number value0, Number key1, Number value1, Number key2, Number value2, Number key3, Number value3) {
+		Table0 map = new Table0(4);
+		map.put(key0.intValue(), value0.intValue());
+		map.put(key1.intValue(), value1.intValue());
+		map.put(key2.intValue(), value2.intValue());
+		map.put(key3.intValue(), value3.intValue());
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #Table0(int[], int[])}, which takes all keys and then all values.
+	 * This needs all keys to be some kind of (boxed) Number, and converts them to primitive
+	 * {@code int}s. It also needs all values to be a (boxed) Number, and converts them to
+	 * primitive {@code int}s. Any keys or values that aren't {@code Number}s have that
+	 * entry skipped.
+	 *
+	 * @param key0   the first key; will be converted to a primitive int
+	 * @param value0 the first value; will be converted to a primitive int
+	 * @param rest   an array or varargs of Number elements
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static Table0 with(Number key0, Number value0, Number... rest) {
+		Table0 map = new Table0(1 + (rest.length >>> 1));
+		map.put(key0.intValue(), value0.intValue());
+		map.putPairs(rest);
+		return map;
+	}
+
+	/**
+	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
+	 * another key, another value, and so on until another pair cannot be drawn.  All keys and values must be some type
+	 * of boxed Number, such as {@link Integer} or {@link Double}, and will be converted to primitive {@code int}s.
+	 * <br>
+	 * If any item in {@code pairs} cannot be cast to the appropriate Number type for its position in the
+	 * arguments, that pair is ignored and neither that key nor value is put into the map. If any key is null, that pair
+	 * is ignored, as well. If {@code pairs} is a Number array that is null, the entire call to putPairs() is ignored.
+	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
+	 *
+	 * @param pairs an array or varargs of Number elements
+	 */
+	public void putPairs(Number... pairs) {
+		if (pairs != null) {
+			for (int i = 1; i < pairs.length; i += 2) {
+				try {
+					if (pairs[i - 1] != null && pairs[i] != null)
+						put(pairs[i - 1].intValue(), pairs[i].intValue());
+				} catch (ClassCastException ignored) {
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
+	 * {@link #toString()} does).
+	 * Each item can vary significantly in length, and should use
+	 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+	 * of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 *
+	 * @param str a String containing BASE10 chars
+	 */
+	public void putLegible(String str) {
+		putLegible(str, ", ", "=", 0, -1);
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
+	 * {@link #toString(String)} does).
+	 * Each item can vary significantly in length, and should use
+	 * {@link Base#BASE10} digits, which should be human-readable. Any brackets inside the given range
+	 * of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 *
+	 * @param str            a String containing BASE10 chars
+	 * @param entrySeparator the String separating every key-value pair
+	 */
+	public void putLegible(String str, String entrySeparator) {
+		putLegible(str, entrySeparator, "=", 0, -1);
+	}
+
+	/**
+	 * Adds items to this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, String, boolean, IntAppender, IntAppender)}. Each item can vary
+	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
+	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 *
+	 * @param str               a String containing BASE10 chars
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 */
+	public void putLegible(String str, String entrySeparator, String keyValueSeparator) {
+		putLegible(str, entrySeparator, keyValueSeparator, 0, -1);
+	}
+
+	/**
+	 * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
+	 * {@link #appendTo(StringBuilder, String, String, boolean, IntAppender, IntAppender)}. Each item can vary
+	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
+	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
+	 * reduce length by 2 if the original String had brackets added to it.
+	 *
+	 * @param str               a String containing BASE10 chars
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param offset            the first position to read BASE10 chars from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public void putLegible(String str, String entrySeparator, String keyValueSeparator, int offset, int length) {
+		int sl, el, kvl;
+		if (str == null || entrySeparator == null || keyValueSeparator == null
+			|| (sl = str.length()) < 1 || (el = entrySeparator.length()) < 1 || (kvl = keyValueSeparator.length()) < 1
+			|| offset < 0 || offset > sl - 1) return;
+		final int lim = length < 0 ? sl : Math.min(offset + length, sl);
+		int end = str.indexOf(keyValueSeparator, offset + 1);
+		int k = 0;
+		boolean incomplete = false;
+		while (end != -1 && end + kvl < lim) {
+			k = Base.BASE10.readInt(str, offset, end);
+			offset = end + kvl;
+			end = str.indexOf(entrySeparator, offset + 1);
+			if (end != -1 && end + el < lim) {
+				put(k, Base.BASE10.readInt(str, offset, end));
+				offset = end + el;
+				end = str.indexOf(keyValueSeparator, offset + 1);
+			} else {
+				incomplete = true;
+			}
+		}
+		if (incomplete && offset < lim) {
+			put(k, Base.BASE10.readInt(str, offset, lim));
+		}
+	}
+
+	/**
+	 * Attempts to put alternating key-value pairs into this map, drawing a key, then a value from {@code pairs}, then
+	 * another key, another value, and so on until another pair cannot be drawn.  All keys and values must be primitive
+	 * {@code int}s.
+	 * <br>
+	 * If {@code pairs} is an int array that is null, the entire call to putPairs() is ignored.
+	 * If the length of {@code pairs} is odd, the last item (which will be unpaired) is ignored.
+	 *
+	 * @param pairs an array or varargs of int elements
+	 */
+	public void putPairsPrimitive(int... pairs) {
+		if (pairs != null) {
+			for (int i = 1; i < pairs.length; i += 2) {
+				put(pairs[i - 1], pairs[i]);
+			}
+		}
+	}
+
+	/**
+	 * Constructs an empty map.
+	 * This is usually less useful than just using the constructor, but can be handy
+	 * in some code-generation scenarios when you don't know how many arguments you will have.
+	 *
+	 * @return a new map containing nothing
+	 */
+	public static Table0 withPrimitive() {
+		return new Table0(0);
+	}
+
+	/**
+	 * Constructs a single-entry map given one key and one value.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   the first and only key
+	 * @param value0 the first and only value
+	 * @return a new map containing just the entry mapping key0 to value0
+	 */
+	public static Table0 withPrimitive(int key0, int value0) {
+		Table0 map = new Table0(1);
+		map.put(key0, value0);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a int key
+	 * @param value0 a int value
+	 * @param key1   a int key
+	 * @param value1 a int value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static Table0 withPrimitive(int key0, int value0, int key1, int value1) {
+		Table0 map = new Table0(2);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a int key
+	 * @param value0 a int value
+	 * @param key1   a int key
+	 * @param value1 a int value
+	 * @param key2   a int key
+	 * @param value2 a int value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static Table0 withPrimitive(int key0, int value0, int key1, int value1, int key2, int value2) {
+		Table0 map = new Table0(3);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This is mostly useful as an optimization for {@link #with(Number, Number, Number...)}
+	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
+	 * box its arguments into Number items.
+	 *
+	 * @param key0   a int key
+	 * @param value0 a int value
+	 * @param key1   a int key
+	 * @param value1 a int value
+	 * @param key2   a int key
+	 * @param value2 a int value
+	 * @param key3   a int key
+	 * @param value3 a int value
+	 * @return a new map containing the given key-value pairs
+	 */
+	public static Table0 withPrimitive(int key0, int value0, int key1, int value1, int key2, int value2, int key3, int value3) {
+		Table0 map = new Table0(4);
+		map.put(key0, value0);
+		map.put(key1, value1);
+		map.put(key2, value2);
+		map.put(key3, value3);
+		return map;
+	}
+
+	/**
+	 * Constructs a map given alternating keys and values.
+	 * This can be useful in some code-generation scenarios, or when you want to make a
+	 * map conveniently by-hand and have it populated at the start. You can also use
+	 * {@link #Table0(int[], int[])}, which takes all keys and then all values.
+	 * This needs all keys and all values to be primitive {@code int}s; if any are boxed,
+	 * then you should call {@link #with(Number, Number, Number...)}.
+	 * <br>
+	 * This method has to be named differently from {@link #with(Number, Number, Number...)} to
+	 * disambiguate the two, which would otherwise both be callable with all primitives
+	 * (due to auto-boxing).
+	 *
+	 * @param key0   the first key; must not be boxed
+	 * @param value0 the first value; must not be boxed
+	 * @param rest   an array or varargs of primitive int elements
+	 * @return a new map containing the given keys and values
+	 */
+	public static Table0 withPrimitive(int key0, int value0, int... rest) {
+		Table0 map = new Table0(1 + (rest.length >>> 1));
+		map.put(key0, value0);
+		map.putPairsPrimitive(rest);
+		return map;
+	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str},
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and
+	 * the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 */
+	public static Table0 parse(String str,
+								  String entrySeparator,
+								  String keyValueSeparator) {
+		return parse(str, entrySeparator, keyValueSeparator, false);
+	}
+
+	/**
+	 * Creates a new map by parsing all of {@code str} (or if {@code brackets} is true, all but the first and last
+	 * chars), with entries separated by {@code entrySeparator},
+	 * such as {@code ", "} and the keys separated from values by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param brackets          if true, the first and last chars in {@code str} will be ignored
+	 */
+	public static Table0 parse(String str,
+								  String entrySeparator,
+								  String keyValueSeparator,
+								  boolean brackets) {
+		Table0 m = new Table0();
+		if (brackets)
+			m.putLegible(str, entrySeparator, keyValueSeparator, 1, str.length() - 1);
+		else
+			m.putLegible(str, entrySeparator, keyValueSeparator, 0, -1);
+		return m;
+	}
+
+	/**
+	 * Creates a new map by parsing the given subrange of {@code str},
+	 * with entries separated by {@code entrySeparator}, such as {@code ", "} and the keys separated from values
+	 * by {@code keyValueSeparator}, such as {@code "="}.
+	 *
+	 * @param str               a String containing parseable text
+	 * @param entrySeparator    the String separating every key-value pair
+	 * @param keyValueSeparator the String separating every key from its corresponding value
+	 * @param offset            the first position to read parseable text from in {@code str}
+	 * @param length            how many chars to read; -1 is treated as maximum length
+	 */
+	public static Table0 parse(String str,
+								  String entrySeparator,
+								  String keyValueSeparator,
+								  int offset,
+								  int length) {
+		Table0 m = new Table0();
+		m.putLegible(str, entrySeparator, keyValueSeparator, offset, length);
+		return m;
+	}
+
 }
