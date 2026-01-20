@@ -181,7 +181,7 @@ public class Table0 implements Iterable<Table0.Entry> {
 			resize(count + len + 1);
 		}
 		PER_ITEM:
-		for (int i = offset; i < len; i++) {
+		for (int i = offset, target = offset + len; i < target; i++) {
 			int key = keys[i], value = values[i];
 			if (key == 0) {
 				if ((int) slots[mask + 1] == -1) {
@@ -317,6 +317,44 @@ public class Table0 implements Iterable<Table0.Entry> {
 				return false;
 			}
 		}
+	}
+
+	public boolean removeAll(int[] keys, int offset, int length) {
+		if(keys == null) return false;
+		int oldCount = count;
+		int target = offset + Math.min(keys.length - offset, length);
+		PER_ITEM:
+		for (int i = offset; i < target; i++) {
+			int key = keys[i];
+			if (key == 0) {
+				if ((int) slots[mask + 1] == -1) {
+					slots[mask + 1] = 0;
+					--count;
+					continue;
+				}
+				continue;
+			}
+			for (int d = 0; ; d++) {
+				int idx = key + d & mask;
+				int low = (int) slots[idx];
+				if (low == 0) {
+					continue PER_ITEM;
+				} else if (key == low) {
+					int next = idx + 1 & mask;
+					--count;
+					while ((int) slots[next] != 0 && ((slots[next] ^ next) & mask) != 0) {
+						slots[idx] = slots[next];
+						idx = next;
+						next = idx + 1 & mask;
+					}
+					slots[idx] = 0;
+					continue PER_ITEM;
+				} else if ((idx - low & mask) < d) {
+					continue PER_ITEM;
+				}
+			}
+		}
+		return oldCount != count;
 	}
 
 	public boolean containsValue(int item) {
