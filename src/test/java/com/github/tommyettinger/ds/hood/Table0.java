@@ -16,12 +16,15 @@
 
 package com.github.tommyettinger.ds.hood;
 
+import com.github.tommyettinger.ds.EnhancedCollection;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.PrimitiveSet;
 import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 
+import java.util.AbstractSet;
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * An initial iteration of <a href="https://www.corsix.org/content/my-favourite-small-hash-table">this hash table</a>.
@@ -392,5 +395,121 @@ public class Table0 {
 		}
 	}
 
+	public static class Entry {
+		public int key;
+		public int value;
 
+		public Entry() {
+		}
+
+		public Entry(int key, int value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		public Entry(Entry entry) {
+			this.key = entry.key;
+			this.value = entry.value;
+		}
+
+		@Override
+		public String toString() {
+			return key + "=" + value;
+		}
+
+		public int getKey() {
+			return key;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public int setValue(int value) {
+			int old = this.value;
+			this.value = value;
+			return old;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+
+			Entry entry = (Entry) o;
+
+			if (key != entry.key) {
+				return false;
+			}
+			return value == entry.value;
+		}
+
+		@Override
+		public int hashCode() {
+			return key * 31 + value;
+		}
+	}
+
+	public static class EntryIterator extends MapIterator implements Iterator<Entry> {
+		public EntryIterator(Table0 table) {
+			super(table);
+		}
+
+		@Override
+		public Entry next() {
+			long slot = table.slots[nextIndex];
+			findNextIndex();
+			return new Entry((int) slot, (int)(slot >>> 32));
+		}
+	}
+
+	public static class EntrySet extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
+		EntryIterator it;
+
+		public EntrySet(Table0 table) {
+			it = new EntryIterator(table);
+		}
+
+		@Override
+		public Iterator<Entry> iterator() {
+			return it;
+		}
+
+		@Override
+		public int size() {
+			return it.table.count;
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return it.table.count == 0;
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			if(!(o instanceof Entry)) return false;
+			Entry e = (Entry) o;
+			return it.table.containsKey(e.key) && it.table.get(e.key) == e.value;
+		}
+
+		@Override
+		public boolean add(Entry entry) {
+			throw new UnsupportedOperationException("add() is not supported on an EntrySet view.");
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			if(!(o instanceof Entry)) return false;
+			return it.table.delete(((Entry) o).key);
+		}
+
+		@Override
+		public void clear() {
+			it.table.clear();
+		}
+	}
 }
