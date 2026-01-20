@@ -141,6 +141,7 @@ public class Table0 implements Iterable<Table0.Entry> {
 				slots[mask + 1] = (long) value << 32 | 0xFFFFFFFFL;
 				return old;
 			}
+			slots[mask + 1] = (long) value << 32 | 0xFFFFFFFFL;
 			++count;
 			return defaultValue;
 		}
@@ -184,11 +185,8 @@ public class Table0 implements Iterable<Table0.Entry> {
 		for (int i = offset, target = offset + len; i < target; i++) {
 			int key = keys[i], value = values[i];
 			if (key == 0) {
-				if ((int) slots[mask + 1] == -1) {
-					slots[mask + 1] = (long) value << 32 | 0xFFFFFFFFL;
-					continue;
-				}
-				++count;
+				if ((int) slots[mask + 1] != -1) ++count;
+				slots[mask + 1] = (long) value << 32 | 0xFFFFFFFFL;
 				continue;
 			}
 			long kv = (key & 0xFFFFFFFFL) | (long) value << 32;

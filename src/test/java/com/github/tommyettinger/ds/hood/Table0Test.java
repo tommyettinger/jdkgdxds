@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class Table0Test {
-	private static final int LIMIT = 300;
+	private static final int LIMIT = 1000;
 
 	@Test
 	public void addThenRemoveTest() {
@@ -98,8 +98,8 @@ public class Table0Test {
 				map.remove(randomKey);
 				old.remove(randomKey);
 			}
-			System.out.println(map.keySet());
-			System.out.println(old.keySet());
+//			System.out.println(map.keySet());
+//			System.out.println(old.keySet());
 
 			Assert.assertTrue(map.keySet().equalContents(old.keySet()));
 			neo.clear();
