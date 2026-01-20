@@ -173,6 +173,52 @@ public class Table0 implements Iterable<Table0.Entry> {
 		return defaultValue;
 	}
 
+	public boolean putAll(int[] keys, int[] values, int offset, int length) {
+		if (keys == null || values == null) return false;
+		int oldCount = count;
+		int len = Math.min(Math.min(keys.length, values.length) - offset, length);
+		if(count + len >= mask * 0.75){
+			resize(count + len + 1);
+		}
+		PER_ITEM:
+		for (int i = offset; i < len; i++) {
+			int key = keys[i], value = values[i];
+			if (key == 0) {
+				if ((int) slots[mask + 1] == -1) {
+					slots[mask + 1] = (long) value << 32 | 0xFFFFFFFFL;
+					continue;
+				}
+				++count;
+				continue;
+			}
+			long kv = (key & 0xFFFFFFFFL) | (long) value << 32;
+			for (int d = 0; ; d++) {
+				int idx = key + d & mask;
+				long slot = slots[idx];
+				int low = (int) slot;
+				if (low == 0) {
+					// Insert new value (slot was previously empty)
+					slots[idx] = kv;
+					break;
+				} else if (key == low) {
+					// Overwrite existing value
+					slots[idx] = kv;
+					continue PER_ITEM;
+				} else {
+					int d2 = idx - low & mask;
+					if (d2 < d) {
+						// Insert new value and move existing slot
+						slots[idx] = kv;
+						putResize(slots, slot, d2);
+						break;
+					}
+				}
+			}
+			++count;
+		}
+		return oldCount != count;
+	}
+
 	public void resize(int capacity) {
 		capacity = Utilities.tableSize(capacity, 0.75f);
 		if(capacity - 1 <= mask) return;
