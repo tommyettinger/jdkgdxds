@@ -240,6 +240,49 @@ public class IntIntTable implements Iterable<IntIntTable.Entry> {
 		return defaultValue;
 	}
 
+	public boolean putAll(IntIntTable other) {
+		if (other == null) return false;
+		int oldCount = count;
+		int len = other.count;
+		if(count + len >= mask * 0.75){
+			resize(count + len + 1);
+		}
+		PER_ITEM:
+		for (int i = 0, target = other.mask + 1; i < target; i++) {
+			long kv = other.slots[i];
+			int key = (int) kv;
+			for (int d = 0; ; d++) {
+				int idx = key + d & mask;
+				long slot = slots[idx];
+				int low = (int) slot;
+				if (low == 0) {
+					// Insert new value (slot was previously empty)
+					slots[idx] = kv;
+					break;
+				} else if (key == low) {
+					// Overwrite existing value
+					slots[idx] = kv;
+					continue PER_ITEM;
+				} else {
+					int d2 = idx - low & mask;
+					if (d2 < d) {
+						// Insert new value and move existing slot
+						slots[idx] = kv;
+						putResize(slots, slot, d2);
+						break;
+					}
+				}
+			}
+			++count;
+		}
+		long zSlot = other.slots[other.mask+1];
+		if((int)zSlot == -1){
+			if ((int) slots[mask + 1] != -1) ++count;
+			slots[mask + 1] = zSlot;
+		}
+		return oldCount != count;
+	}
+
 	public boolean putAll(int[] keys, int[] values, int offset, int length) {
 		if (keys == null || values == null) return false;
 		int oldCount = count;

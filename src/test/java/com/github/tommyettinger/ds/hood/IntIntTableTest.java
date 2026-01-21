@@ -30,8 +30,8 @@ public class IntIntTableTest {
 		AceRandom random = new AceRandom(123);
 		IntIntMap map = new IntIntMap(16);
 		IntList neo = new IntList(LIMIT), age = new IntList(LIMIT);
-		IntIntTable old = new IntIntTable(16);
-		Assert.assertTrue(map.keySet().equalContents(old.keySet()));
+		IntIntTable tab = new IntIntTable(16);
+		Assert.assertTrue(map.keySet().equalContents(tab.keySet()));
 		neo.clear();
 		neo.addAll(map.values());
 		neo.sort();
@@ -44,8 +44,8 @@ public class IntIntTableTest {
 			int randomKey = random.next(9) - 200;
 			int randomValue = random.nextInt();
 			map.put(randomKey, randomValue);
-			old.put(randomKey, randomValue);
-			Assert.assertTrue(map.keySet().equalContents(old.keySet()));
+			tab.put(randomKey, randomValue);
+			Assert.assertTrue(map.keySet().equalContents(tab.keySet()));
 			neo.clear();
 			neo.addAll(map.values());
 			neo.sort();
@@ -59,8 +59,8 @@ public class IntIntTableTest {
 		for (int i = 0; i < LIMIT; i++) {
 			int randomKey = random.next(9) - 200;
 			map.remove(randomKey);
-			old.remove(randomKey);
-			Assert.assertTrue(map.keySet().equalContents(old.keySet()));
+			tab.remove(randomKey);
+			Assert.assertTrue(map.keySet().equalContents(tab.keySet()));
 			neo.clear();
 			neo.addAll(map.values());
 			neo.sort();
@@ -68,9 +68,17 @@ public class IntIntTableTest {
 			age.addAll(map.values());
 			age.sort();
 			Assert.assertEquals(neo, age);
-
 		}
 		System.out.printf("After removing, each map has %d items, with keyTable length %d\n", map.size(), map.getTableSize());
+
+		IntIntTable clone = new IntIntTable(tab.count);
+		clone.putAll(tab);
+		IntList til = new IntList(tab.keySet());
+		til.sort();
+		IntList cil = new IntList(clone.keySet());
+		cil.sort();
+		Assert.assertEquals(til, cil);
+
 	}
 
 	@Test
@@ -78,8 +86,8 @@ public class IntIntTableTest {
 		AceRandom random = new AceRandom(123);
 		IntList neo = new IntList(LIMIT), age = new IntList(LIMIT);
 		IntIntMap map = new IntIntMap(16);
-		IntIntTable old = new IntIntTable(16);
-		Assert.assertTrue(map.keySet().equalContents(old.keySet()));
+		IntIntTable tab = new IntIntTable(16);
+		Assert.assertTrue(map.keySet().equalContents(tab.keySet()));
 		neo.clear();
 		neo.addAll(map.values());
 		neo.sort();
@@ -93,15 +101,15 @@ public class IntIntTableTest {
 			int randomValue = random.nextInt();
 			if (random.nextBoolean(0.7f)) {
 				map.put(randomKey, randomValue);
-				old.put(randomKey, randomValue);
+				tab.put(randomKey, randomValue);
 			} else {
 				map.remove(randomKey);
-				old.remove(randomKey);
+				tab.remove(randomKey);
 			}
 //			System.out.println(map.keySet());
-//			System.out.println(old.keySet());
+//			System.out.println(tab.keySet());
 
-			Assert.assertTrue(map.keySet().equalContents(old.keySet()));
+			Assert.assertTrue(map.keySet().equalContents(tab.keySet()));
 			neo.clear();
 			neo.addAll(map.values());
 			neo.sort();
@@ -112,5 +120,13 @@ public class IntIntTableTest {
 
 		}
 		System.out.printf("Each map has %d items, with keyTable length %d\n", map.size(), map.getTableSize());
+
+		IntIntTable clone = new IntIntTable(tab.count);
+		clone.putAll(tab);
+		IntList til = new IntList(tab.keySet());
+		til.sort();
+		IntList cil = new IntList(clone.keySet());
+		cil.sort();
+		Assert.assertEquals(til, cil);
 	}
 }
