@@ -23,6 +23,7 @@ import com.github.tommyettinger.function.LongLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjToLongFunction;
 import com.github.tommyettinger.function.ObjToObjFunction;
 
+import java.io.IOException;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
@@ -612,7 +613,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, Appender.ENUM_NAME_APPENDER, LongAppender.DEFAULT);
 	}
 
@@ -632,34 +633,39 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	 * @param valueAppender     a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  Appender<Enum<?>> keyAppender, LongAppender valueAppender) {
-		if (size() == 0) {
-			return braces ? sb.append("{}") : sb;
-		}
-		if (braces) {
-			sb.append('{');
-		}
-		Enum<?>[] universe = this.keys.universe;
-		long[] valueTable = this.valueTable;
-		int i = 0;
-		final int len = universe.length;
-		while ((i = keys.nextOrdinal(i)) != -1) {
-			long v = valueTable[i];
-			keyAppender.apply(sb, universe[i]);
-			sb.append(keyValueSeparator);
-			valueAppender.apply(sb, v);
-			break;
-		}
-		while ((i = keys.nextOrdinal(i)) != -1) {
-			long v = valueTable[i];
-			sb.append(entrySeparator);
-			keyAppender.apply(sb, universe[i]);
-			sb.append(keyValueSeparator);
-			valueAppender.apply(sb, v);
-		}
-		if (braces) {
-			sb.append('}');
+		try {
+			if (size() == 0) {
+				if (braces) sb.append("{}");
+				return sb;
+			}
+			if (braces) {
+				sb.append('{');
+			}
+			Enum<?>[] universe = this.keys.universe;
+			long[] valueTable = this.valueTable;
+			int i = 0;
+			final int len = universe.length;
+			while ((i = keys.nextOrdinal(i)) != -1) {
+				long v = valueTable[i];
+				keyAppender.apply(sb, universe[i]);
+				sb.append(keyValueSeparator);
+				valueAppender.apply(sb, v);
+				break;
+			}
+			while ((i = keys.nextOrdinal(i)) != -1) {
+				long v = valueTable[i];
+				sb.append(entrySeparator);
+				keyAppender.apply(sb, universe[i]);
+				sb.append(keyValueSeparator);
+				valueAppender.apply(sb, v);
+			}
+			if (braces) {
+				sb.append('}');
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}
@@ -1660,7 +1666,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
 	 * {@link #toString()} does).
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and values are parsed with
@@ -1679,7 +1685,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
 	 * {@link #toString(String)} does).
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and values are parsed with
@@ -1699,7 +1705,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, Appender, LongAppender)}.
+	 * {@link #appendTo(CharSequence, String, String, boolean, Appender, LongAppender)}.
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and values are parsed with
 	 * {@link Base#readLong(CharSequence, int, int)}. Usually, keyParser is produced by
 	 * {@link PartialParser#enumParser(ObjToObjFunction)}. Any brackets
@@ -1718,7 +1724,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 	/**
 	 * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, Appender, LongAppender)}.
+	 * {@link #appendTo(CharSequence, String, String, boolean, Appender, LongAppender)}.
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and values are parsed with
 	 * {@link Base#readLong(CharSequence, int, int)}. Usually, keyParser is produced by
 	 * {@link PartialParser#enumParser(ObjToObjFunction)}. Any brackets

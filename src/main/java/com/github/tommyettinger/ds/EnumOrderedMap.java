@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjToObjFunction;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -694,9 +695,10 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
-		if (size == 0) {
-			return braces ? sb.append("{}") : sb;
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
+		try { if (size == 0) {
+				if (braces) sb.append("{}");
+				return sb;
 		}
 		if (braces) {
 			sb.append('{');
@@ -718,6 +720,9 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 		}
 		if (braces) {
 			sb.append('}');
+		}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}
