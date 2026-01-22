@@ -208,6 +208,10 @@ import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
  * <pre>
  * 0000000000/0000000001: latest 0xAA333A2D gets total collisions: 329595, PILEUP: 1
  * </pre>
+ * What we're using now:
+ * <pre>
+ * 0000000000/0000000001: latest 0xFAB9E45B gets total collisions: 155494, PILEUP: 0
+ * </pre>
  */
 public class BroadSpectrumMultiplierTest {
 
@@ -224,7 +228,7 @@ public class BroadSpectrumMultiplierTest {
 
 		final int[] problems = {0};
 		IntList likelyBad = new IntList(64);
-		final int COUNT = 1, MASK = COUNT - 1;
+		final int COUNT = 512;
 		IntLongOrderedMap good = new IntLongOrderedMap(COUNT);
 		int[] buffer = new int[Utilities.HASH_MULTIPLIERS.length];
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
@@ -234,6 +238,14 @@ public class BroadSpectrumMultiplierTest {
 			ObjectSet set = new ObjectSet(51, 0.7f) {
 				long collisionTotal = 0;
 				int longestPileup = 0;
+				{
+					hashMultiplier = Utilities.GOOD_MULTIPLIERS[finalA];
+				}
+
+				@Override
+				protected int place(Object item) {
+					return BitConversion.imul(item.hashCode() ^ 0xC143F257, hashMultiplier) >>> shift;
+				}
 
 				@Override
 				protected void addResize(Object key) {
@@ -255,7 +267,7 @@ public class BroadSpectrumMultiplierTest {
 					threshold = (int) (newSize * loadFactor);
 					mask = newSize - 1;
 					shift = BitConversion.countLeadingZeros(mask) + 32;
-					hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+
 					Object[] oldKeyTable = keyTable;
 
 					keyTable = new Object[newSize];
@@ -301,9 +313,9 @@ public class BroadSpectrumMultiplierTest {
 				System.out.println(finalA + " FAILURE");
 			}
 			// rotate multipliers by 1
-			System.arraycopy(Utilities.HASH_MULTIPLIERS, 1, buffer, 0, Utilities.HASH_MULTIPLIERS.length - 1);
-			System.arraycopy(Utilities.HASH_MULTIPLIERS, 0, buffer, Utilities.HASH_MULTIPLIERS.length - 1, 1);
-			System.arraycopy(buffer, 0, Utilities.HASH_MULTIPLIERS, 0, buffer.length);
+//			System.arraycopy(Utilities.HASH_MULTIPLIERS, 1, buffer, 0, Utilities.HASH_MULTIPLIERS.length - 1);
+//			System.arraycopy(Utilities.HASH_MULTIPLIERS, 0, buffer, Utilities.HASH_MULTIPLIERS.length - 1, 1);
+//			System.arraycopy(buffer, 0, Utilities.HASH_MULTIPLIERS, 0, buffer.length);
 
 		}
 		good.sortByValue(LongComparators.NATURAL_COMPARATOR);
