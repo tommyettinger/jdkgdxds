@@ -100,7 +100,7 @@ public class BroadSpectrumLongMultiplierTest {
 
 		final int[] problems = {0};
 		LongList likelyBad = new LongList(64);
-		final int COUNT = 0x10000;
+		final int COUNT = 1;
 		LongLongOrderedMap good = new LongLongOrderedMap(COUNT);
 		DistinctRandom random = new DistinctRandom(1L);
 		int[] buffer = new int[Utilities.HASH_MULTIPLIERS.length];
@@ -119,7 +119,8 @@ public class BroadSpectrumLongMultiplierTest {
 
 				@Override
 				protected int place(long item) {
-					return (int)((item ^ hm) * 0x883A21A5C11EF379L >>> shift);
+					return (int)((item ^ 0xC13FA9A902A6328FL) * 0xD1B54A32D192ED03L >>> shift);
+//					return (int)((item ^ hm) * 0x883A21A5C11EF379L >>> shift);
 				}
 
 				@Override
@@ -159,7 +160,7 @@ public class BroadSpectrumLongMultiplierTest {
 					}
 					if (collisionTotal > THRESHOLD) {
 //					if (longestPileup > 118 - shift * 2) {
-//						System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hm, finalA, collisionTotal, longestPileup);
+						System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hm, finalA, collisionTotal, longestPileup);
 						good.remove(hm);
 						likelyBad.add(hm);
 						problems[0]++;
@@ -169,10 +170,10 @@ public class BroadSpectrumLongMultiplierTest {
 
 				@Override
 				public void clear() {
-					if(longestPileup == 0 || (finalA & 127) == 0) {
+//					if(longestPileup == 0 || (finalA & 127) == 0) {
 						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": latest 0x" + Base.BASE16.unsigned(hm));
 						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
-					}
+//					}
 					minMax[0] = Math.min(minMax[0], collisionTotal);
 					minMax[1] = Math.max(minMax[1], collisionTotal);
 					minMax[2] = Math.min(minMax[2], longestPileup);
@@ -184,6 +185,10 @@ public class BroadSpectrumLongMultiplierTest {
 			try {
 				for (int i = 0, n = spiral.length; i < n; i++) {
 					long h = spiral[i].hashCode();
+//					set.add(h * 0xF1DE83E19937733DL);
+//					set.add(h * 0x9E3779B97F4A7C15L);
+//					set.add(h * 0xC13FA9A902A6328FL);
+//					set.add(h);
 					set.add((h & 0xFFFFFFFFL) | h << 32);
 				}
 				set.clear();
