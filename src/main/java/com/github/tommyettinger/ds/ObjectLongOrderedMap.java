@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -640,28 +641,34 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<K> keyAppender, LongAppender valueAppender) {
-		if (size == 0) {
-			return braces ? sb.append("{}") : sb;
-		}
-		if (braces) {
-			sb.append('{');
-		}
-		ObjectList<K> keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			K key = keys.get(i);
-			if (i > 0) {
-				sb.append(entrySeparator);
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<K> keyAppender, LongAppender valueAppender) {
+		try {
+			if (size == 0) {
+				if (braces) sb.append("{}");
+				return sb;
 			}
-			if (key == this)
-				sb.append("(this)");
-			else
-				keyAppender.apply(sb, key);
-			sb.append(keyValueSeparator);
-			valueAppender.apply(sb, get(key));
-		}
-		if (braces) {
-			sb.append('}');
+			if (braces) {
+				sb.append('{');
+			}
+			ObjectList<K> keys = this.keys;
+			for (int i = 0, n = keys.size(); i < n; i++) {
+				K key = keys.get(i);
+				if (i > 0) {
+					sb.append(entrySeparator);
+				}
+				if (key == this)
+					sb.append("(this)");
+				else
+					keyAppender.apply(sb, key);
+				sb.append(keyValueSeparator);
+				valueAppender.apply(sb, get(key));
+			}
+			if (braces) {
+				sb.append('}');
+			}
+		} catch (
+			IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}

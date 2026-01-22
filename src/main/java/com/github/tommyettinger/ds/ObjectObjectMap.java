@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 
+import java.io.IOException;
 import java.util.AbstractCollection;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -867,7 +868,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, Appender::append, Appender::append);
 	}
 
@@ -885,45 +886,50 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  Appender<K> keyAppender, Appender<V> valueAppender) {
-		if (size == 0) {
-			return braces ? sb.append("{}") : sb;
-		}
-		if (braces) {
-			sb.append('{');
-		}
-		K[] keyTable = this.keyTable;
-		V[] valueTable = this.valueTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			K key = keyTable[i];
-			if (key == null) {
-				continue;
+		try {
+			if (size == 0) {
+				if (braces) sb.append("{}");
+				return sb;
 			}
-			if (key == this) sb.append("(this)");
-			else keyAppender.apply(sb, key);
-			sb.append(keyValueSeparator);
-			V value = valueTable[i];
-			if (value == this) sb.append("(this)");
-			else valueAppender.apply(sb, value);
-			break;
-		}
-		while (i-- > 0) {
-			K key = keyTable[i];
-			if (key == null) {
-				continue;
+			if (braces) {
+				sb.append('{');
 			}
-			sb.append(entrySeparator);
-			if (key == this) sb.append("(this)");
-			else keyAppender.apply(sb, key);
-			sb.append(keyValueSeparator);
-			V value = valueTable[i];
-			if (value == this) sb.append("(this)");
-			else valueAppender.apply(sb, value);
-		}
-		if (braces) {
-			sb.append('}');
+			K[] keyTable = this.keyTable;
+			V[] valueTable = this.valueTable;
+			int i = keyTable.length;
+			while (i-- > 0) {
+				K key = keyTable[i];
+				if (key == null) {
+					continue;
+				}
+				if (key == this) sb.append("(this)");
+				else keyAppender.apply(sb, key);
+				sb.append(keyValueSeparator);
+				V value = valueTable[i];
+				if (value == this) sb.append("(this)");
+				else valueAppender.apply(sb, value);
+				break;
+			}
+			while (i-- > 0) {
+				K key = keyTable[i];
+				if (key == null) {
+					continue;
+				}
+				sb.append(entrySeparator);
+				if (key == this) sb.append("(this)");
+				else keyAppender.apply(sb, key);
+				sb.append(keyValueSeparator);
+				V value = valueTable[i];
+				if (value == this) sb.append("(this)");
+				else valueAppender.apply(sb, value);
+			}
+			if (braces) {
+				sb.append('}');
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}
@@ -1697,7 +1703,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
 	 * {@link #toString()} does).
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and a different PartialParser to
@@ -1715,7 +1721,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
 	 * {@link #toString(String)} does).
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and a different PartialParser to
@@ -1734,7 +1740,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, Appender, Appender)}. A PartialParser will be used to
+	 * {@link #appendTo(CharSequence, String, String, boolean, Appender, Appender)}. A PartialParser will be used to
 	 * parse keys from sections of {@code str}, and a different PartialParser to parse values. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
@@ -1751,7 +1757,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 
 	/**
 	 * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, Appender, Appender)}. A PartialParser will be used
+	 * {@link #appendTo(CharSequence, String, String, boolean, Appender, Appender)}. A PartialParser will be used
 	 * to parse keys from sections of {@code str}, and a different PartialParser to parse values. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.

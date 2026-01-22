@@ -838,7 +838,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return map.keys.appendTo(new StringBuilder(), entrySeparator, braces, keyAppender).toString();
 	}
 
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return map.keys.appendTo(sb, entrySeparator, braces, Appender::append);
 	}
 
@@ -854,7 +854,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @param keyAppender   a function that takes a StringBuilder and a T, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended items of this set
 	 */
-	public StringBuilder appendTo(StringBuilder sb, String itemSeparator, boolean braces,
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String itemSeparator, boolean braces,
 								  Appender<T> keyAppender) {
 		return map.keys.appendTo(sb, itemSeparator, braces, keyAppender);
 	}

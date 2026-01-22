@@ -24,6 +24,7 @@ import com.github.tommyettinger.function.ObjLongBiConsumer;
 import com.github.tommyettinger.function.ObjLongToLongBiFunction;
 import com.github.tommyettinger.function.ObjToLongFunction;
 
+import java.io.IOException;
 import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Iterator;
@@ -723,7 +724,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, Appender::append, LongAppender.DEFAULT);
 	}
 
@@ -743,10 +744,12 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	 * @param valueAppender     a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  Appender<K> keyAppender, LongAppender valueAppender) {
+		try {
 		if (size == 0) {
-			return braces ? sb.append("{}") : sb;
+				if (braces) sb.append("{}");
+				return sb;
 		}
 		if (braces) {
 			sb.append('{');
@@ -778,6 +781,9 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 		if (braces) {
 			sb.append('}');
+		}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}
@@ -1629,7 +1635,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
 	 * {@link #toString()} does).
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and values are parsed with
@@ -1646,7 +1652,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
 	 * {@link #toString(String)} does).
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and values are parsed with
@@ -1664,7 +1670,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, Appender, LongAppender)}.
+	 * {@link #appendTo(CharSequence, String, String, boolean, Appender, LongAppender)}.
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and values are parsed with
 	 * {@link Base#readLong(CharSequence, int, int)}. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
@@ -1681,7 +1687,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 	/**
 	 * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, Appender, LongAppender)}.
+	 * {@link #appendTo(CharSequence, String, String, boolean, Appender, LongAppender)}.
 	 * A PartialParser will be used to parse keys from sections of {@code str}, and values are parsed with
 	 * {@link Base#readLong(CharSequence, int, int)}. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
