@@ -23,6 +23,7 @@ import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongLongBiConsumer;
 
 
+import java.io.IOException;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
@@ -780,7 +781,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, LongAppender.DEFAULT, LongAppender.DEFAULT);
 	}
 
@@ -805,44 +806,49 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * @param valueAppender     a function that takes a StringBuilder and a long, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  LongAppender keyAppender, LongAppender valueAppender) {
-		if (size == 0) {
-			return braces ? sb.append("{}") : sb;
-		}
-		if (braces) {
-			sb.append('{');
-		}
-		if (hasZeroValue) {
-			keyAppender.apply(sb, 0L).append(keyValueSeparator);
-			valueAppender.apply(sb, zeroValue);
-			if (size > 1) {
+		try {
+			if (size == 0) {
+				if (braces) sb.append("{}");
+				return sb;
+			}
+			if (braces) {
+				sb.append('{');
+			}
+			if (hasZeroValue) {
+				keyAppender.apply(sb, 0L).append(keyValueSeparator);
+				valueAppender.apply(sb, zeroValue);
+				if (size > 1) {
+					sb.append(entrySeparator);
+				}
+			}
+			long[] keyTable = this.keyTable;
+			long[] valueTable = this.valueTable;
+			int i = keyTable.length;
+			while (i-- > 0) {
+				long key = keyTable[i];
+				if (key == 0) {
+					continue;
+				}
+				keyAppender.apply(sb, key).append(keyValueSeparator);
+				valueAppender.apply(sb, valueTable[i]);
+				break;
+			}
+			while (i-- > 0) {
+				long key = keyTable[i];
+				if (key == 0) {
+					continue;
+				}
 				sb.append(entrySeparator);
+				keyAppender.apply(sb, key).append(keyValueSeparator);
+				valueAppender.apply(sb, valueTable[i]);
 			}
-		}
-		long[] keyTable = this.keyTable;
-		long[] valueTable = this.valueTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {
-				continue;
+			if (braces) {
+				sb.append('}');
 			}
-			keyAppender.apply(sb, key).append(keyValueSeparator);
-			valueAppender.apply(sb, valueTable[i]);
-			break;
-		}
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {
-				continue;
-			}
-			sb.append(entrySeparator);
-			keyAppender.apply(sb, key).append(keyValueSeparator);
-			valueAppender.apply(sb, valueTable[i]);
-		}
-		if (braces) {
-			sb.append('}');
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}
@@ -1766,7 +1772,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
 	 * {@link #toString()} does).
 	 * Each item can vary significantly in length, and should use
@@ -1782,7 +1788,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
 	 * {@link #toString(String)} does).
 	 * Each item can vary significantly in length, and should use
@@ -1799,7 +1805,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, LongAppender, LongAppender)}. Each item can vary
+	 * {@link #appendTo(CharSequence, String, String, boolean, LongAppender, LongAppender)}. Each item can vary
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
@@ -1814,7 +1820,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 	/**
 	 * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, LongAppender, LongAppender)}. Each item can vary
+	 * {@link #appendTo(CharSequence, String, String, boolean, LongAppender, LongAppender)}. Each item can vary
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
