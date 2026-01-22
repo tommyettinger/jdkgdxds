@@ -188,7 +188,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place(long item) {
-		return (int) (hashMultiplier * (item ^ item << 32) >>> shift);
+		return (int) ((item ^ 0xC13FA9A902A6328FL) * 0xD1B54A32D192ED03L >>> shift);
 	}
 
 	/**
