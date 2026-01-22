@@ -23,6 +23,7 @@ import com.github.tommyettinger.ds.support.sort.IntComparators;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -699,24 +700,29 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  IntAppender keyAppender, IntAppender valueAppender) {
-		if (size == 0) {
-			return braces ? sb.append("{}") : sb;
-		}
-		if (braces) {
-			sb.append('{');
-		}
-		IntList keys = this.keys;
-		for (int i = 0, n = keys.size(); i < n; i++) {
-			int key = keys.get(i);
-			if (i > 0)
-				sb.append(entrySeparator);
-			keyAppender.apply(sb, key).append(keyValueSeparator);
-			valueAppender.apply(sb, get(key));
-		}
-		if (braces) {
-			sb.append('}');
+		try {
+			if (size == 0) {
+				if (braces) sb.append("{}");
+				return sb;
+			}
+			if (braces) {
+				sb.append('{');
+			}
+			IntList keys = this.keys;
+			for (int i = 0, n = keys.size(); i < n; i++) {
+				int key = keys.get(i);
+				if (i > 0)
+					sb.append(entrySeparator);
+				keyAppender.apply(sb, key).append(keyValueSeparator);
+				valueAppender.apply(sb, get(key));
+			}
+			if (braces) {
+				sb.append('}');
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}

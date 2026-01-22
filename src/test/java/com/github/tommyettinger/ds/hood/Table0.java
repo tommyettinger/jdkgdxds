@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.Utilities;
 import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 
+import java.io.IOException;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -524,7 +525,7 @@ public class Table0 implements Iterable<Table0.Entry> {
 		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, boolean braces) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, IntAppender.DEFAULT, IntAppender.DEFAULT);
 	}
 
@@ -549,46 +550,51 @@ public class Table0 implements Iterable<Table0.Entry> {
 	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
-	public StringBuilder appendTo(StringBuilder sb, String entrySeparator, String keyValueSeparator, boolean braces,
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  IntAppender keyAppender, IntAppender valueAppender) {
-		if (count == 0) {
-			return braces ? sb.append("{}") : sb;
-		}
-		if (braces) {
-			sb.append('{');
-		}
-		long[] slots = this.slots;
-		long zeroSlot = slots[mask+1];
-		if ((int)(zeroSlot) == -1) {
-			keyAppender.apply(sb, 0).append(keyValueSeparator);
-			valueAppender.apply(sb, (int) (zeroSlot>>>32));
-			if (count > 1) {
+		try {
+			if (count == 0) {
+				if (braces) sb.append("{}");
+				return sb;
+			}
+			if (braces) {
+				sb.append('{');
+			}
+			long[] slots = this.slots;
+			long zeroSlot = slots[mask + 1];
+			if ((int) (zeroSlot) == -1) {
+				keyAppender.apply(sb, 0).append(keyValueSeparator);
+				valueAppender.apply(sb, (int) (zeroSlot >>> 32));
+				if (count > 1) {
+					sb.append(entrySeparator);
+				}
+			}
+			int i = mask + 1;
+			while (i-- > 0) {
+				long slot = slots[i];
+				int key = (int) slot;
+				if (key == 0) {
+					continue;
+				}
+				keyAppender.apply(sb, key).append(keyValueSeparator);
+				valueAppender.apply(sb, (int) (slot >>> 32));
+				break;
+			}
+			while (i-- > 0) {
+				long slot = slots[i];
+				int key = (int) slot;
+				if (key == 0) {
+					continue;
+				}
 				sb.append(entrySeparator);
+				keyAppender.apply(sb, key).append(keyValueSeparator);
+				valueAppender.apply(sb, (int) (slot >>> 32));
 			}
-		}
-		int i = mask + 1;
-		while (i-- > 0) {
-			long slot = slots[i];
-			int key = (int) slot;
-			if (key == 0) {
-				continue;
+			if (braces) {
+				sb.append('}');
 			}
-			keyAppender.apply(sb, key).append(keyValueSeparator);
-			valueAppender.apply(sb, (int) (slot>>>32));
-			break;
-		}
-		while (i-- > 0) {
-			long slot = slots[i];
-			int key = (int) slot;
-			if (key == 0) {
-				continue;
-			}
-			sb.append(entrySeparator);
-			keyAppender.apply(sb, key).append(keyValueSeparator);
-			valueAppender.apply(sb, (int) (slot>>>32));
-		}
-		if (braces) {
-			sb.append('}');
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return sb;
 	}
@@ -1000,7 +1006,7 @@ public class Table0 implements Iterable<Table0.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code ", "}, and every key should be followed by {@code "="} before the value (which
 	 * {@link #toString()} does).
 	 * Each item can vary significantly in length, and should use
@@ -1016,7 +1022,7 @@ public class Table0 implements Iterable<Table0.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, boolean)}. Every key-value pair should be separated by
+	 * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
 	 * {@code entrySeparator}, and every key should be followed by "=" before the value (which
 	 * {@link #toString(String)} does).
 	 * Each item can vary significantly in length, and should use
@@ -1033,7 +1039,7 @@ public class Table0 implements Iterable<Table0.Entry> {
 
 	/**
 	 * Adds items to this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, IntAppender, IntAppender)}. Each item can vary
+	 * {@link #appendTo(CharSequence, String, String, boolean, IntAppender, IntAppender)}. Each item can vary
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
@@ -1048,7 +1054,7 @@ public class Table0 implements Iterable<Table0.Entry> {
 
 	/**
 	 * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
-	 * {@link #appendTo(StringBuilder, String, String, boolean, IntAppender, IntAppender)}. Each item can vary
+	 * {@link #appendTo(CharSequence, String, String, boolean, IntAppender, IntAppender)}. Each item can vary
 	 * significantly in length, and should use {@link Base#BASE10} digits, which should be human-readable. Any brackets
 	 * inside the given range of characters will ruin the parsing, so increase offset by 1 and
 	 * reduce length by 2 if the original String had brackets added to it.
