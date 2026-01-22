@@ -67,6 +67,16 @@ import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
  * (item ^ 0xD5C6E86246A11783L) * 0x883A21A5C11EF379L
  * 0000000306/0000000512: latest 0x883A21A5C11EF379 gets total collisions: 223470, PILEUP: 1
  * </pre>
+ *
+ * <pre>
+ * (item ^ 0xD5C6E84246A117A3L) * 0x883A21A5C11EF379L
+ * 0000000292/0000000512: latest 0xD5C6E84246A117A3 gets total collisions: 223297, PILEUP: 1
+ * </pre>
+ *
+ * <pre>
+ * (item ^ 0xD5C6E84646A117A7L) * 0x883A21A5C11EF379L
+ * 0000000097/0000000512: latest 0xD5C6E84646A117A7 gets total collisions: 222936, PILEUP: 1
+ * </pre>
  */
 public class BroadSpectrumLongMultiplierTest {
 
@@ -90,15 +100,15 @@ public class BroadSpectrumLongMultiplierTest {
 			final int finalA = a;
 
 			LongSet set = new LongSet(51, 0.7f) {
-//				final long hm = 0x80F53442FAE81817L ^ finalA << 2;
-//				final long hm = 0x80F53442FAE81817L ^ 2L << (finalA & 63) ^ 2L << (finalA >>> 6);
-				final long hm = LongUtilities.GOOD_MULTIPLIERS[finalA];
+				final long hm = 0xD5C6E84646A117A7L ^ finalA << 2;
+//				final long hm = 0xD5C6E84646A117A7L ^ 2L << (finalA & 63) ^ 2L << (finalA >>> 6);
+//				final long hm = LongUtilities.GOOD_MULTIPLIERS[finalA];
 				long collisionTotal = 0;
 				int longestPileup = 0;
 
 				@Override
 				protected int place(long item) {
-					return (int)((item ^ 0xD5C6E86246A11783L) * hm >>> shift);
+					return (int)((item ^ hm) * 0x883A21A5C11EF379L >>> shift);
 				}
 
 				@Override
