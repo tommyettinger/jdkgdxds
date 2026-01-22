@@ -21,6 +21,9 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
+import com.github.tommyettinger.random.DistinctRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.LowChangeQuasiRandom;
 
 import java.io.IOException;
 
@@ -77,6 +80,11 @@ import static com.github.tommyettinger.ds.test.PileupTest.generatePointSpiral;
  * (item ^ 0xD5C6E84646A117A7L) * 0x883A21A5C11EF379L
  * 0000000097/0000000512: latest 0xD5C6E84646A117A7 gets total collisions: 222936, PILEUP: 1
  * </pre>
+ *
+ * <pre>
+ * (item ^ 0xD5C2E85646A517B7L) * 0x883A21A5C11EF379L
+ * 0000000869/0000065536: latest 0xD5C2E85646A517B7 gets total collisions: 222565, PILEUP: 0
+ * </pre>
  */
 public class BroadSpectrumLongMultiplierTest {
 
@@ -92,15 +100,18 @@ public class BroadSpectrumLongMultiplierTest {
 
 		final int[] problems = {0};
 		LongList likelyBad = new LongList(64);
-		final int COUNT = 512;
+		final int COUNT = 0x10000;
 		LongLongOrderedMap good = new LongLongOrderedMap(COUNT);
+		DistinctRandom random = new DistinctRandom(1L);
 		int[] buffer = new int[Utilities.HASH_MULTIPLIERS.length];
 		long[] minMax = new long[]{Long.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE, Long.MIN_VALUE};
 		for (int a = 0; a < COUNT; a++) {
 			final int finalA = a;
 
 			LongSet set = new LongSet(51, 0.7f) {
-				final long hm = 0xD5C6E84646A117A7L ^ finalA << 2;
+//				final long hm = EnhancedRandom.fixGamma(finalA, 2);
+				final long hm = 0xD5C6E84646A117A7L ^ (random.nextLong() & random.nextLong() & random.nextLong());
+//				final long hm = 0xD5C6E84646A117A7L ^ finalA << 1;
 //				final long hm = 0xD5C6E84646A117A7L ^ 2L << (finalA & 63) ^ 2L << (finalA >>> 6);
 //				final long hm = LongUtilities.GOOD_MULTIPLIERS[finalA];
 				long collisionTotal = 0;
@@ -148,7 +159,7 @@ public class BroadSpectrumLongMultiplierTest {
 					}
 					if (collisionTotal > THRESHOLD) {
 //					if (longestPileup > 118 - shift * 2) {
-						System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hm, finalA, collisionTotal, longestPileup);
+//						System.out.printf("  WHOOPS!!!  Multiplier 0x%016X on index %4d has %d collisions and %d pileup\n", hm, finalA, collisionTotal, longestPileup);
 						good.remove(hm);
 						likelyBad.add(hm);
 						problems[0]++;
@@ -158,8 +169,10 @@ public class BroadSpectrumLongMultiplierTest {
 
 				@Override
 				public void clear() {
-					System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": latest 0x" + Base.BASE16.unsigned(hm));
-					System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+					if(longestPileup == 0 || (finalA & 127) == 0) {
+						System.out.print(Base.BASE10.unsigned(finalA) + "/" + Base.BASE10.unsigned(COUNT) + ": latest 0x" + Base.BASE16.unsigned(hm));
+						System.out.println(" gets total collisions: " + collisionTotal + ", PILEUP: " + longestPileup);
+					}
 					minMax[0] = Math.min(minMax[0], collisionTotal);
 					minMax[1] = Math.max(minMax[1], collisionTotal);
 					minMax[2] = Math.min(minMax[2], longestPileup);
@@ -175,7 +188,7 @@ public class BroadSpectrumLongMultiplierTest {
 				}
 				set.clear();
 			} catch (RuntimeException ignored) {
-				System.out.println(finalA + " FAILURE");
+//				System.out.println(finalA + " FAILURE");
 			}
 			// rotate multipliers by 1
 //			System.arraycopy(Utilities.HASH_MULTIPLIERS, 1, buffer, 0, Utilities.HASH_MULTIPLIERS.length - 1);
