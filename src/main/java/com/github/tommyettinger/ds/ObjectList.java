@@ -20,6 +20,7 @@ import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -564,15 +565,19 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		return toString(", ", true);
 	}
 
-	public StringBuilder appendTo(StringBuilder builder, String separator) {
-		int n = size();
-		if (n == 0) {
-			return builder;
-		}
-		builder.append(get(0));
-		for (int i = 1; i < n; i++) {
-			builder.append(separator);
-			builder.append(get(i));
+	public <S extends CharSequence & Appendable> S appendTo(S builder, String separator) {
+		try {
+			int n = size();
+			if (n == 0) {
+				return builder;
+			}
+			builder.append(get(0).toString());
+			for (int i = 1; i < n; i++) {
+				builder.append(separator);
+				builder.append(get(i).toString());
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return builder;
 	}

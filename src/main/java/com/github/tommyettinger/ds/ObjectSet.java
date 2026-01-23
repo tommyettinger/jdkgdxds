@@ -19,6 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -698,27 +699,31 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		}
 	}
 
-	public StringBuilder appendTo(StringBuilder builder, String separator) {
-		if (size == 0) {
-			return builder;
-		}
-		T[] keyTable = this.keyTable;
-		int i = keyTable.length;
-		while (i-- > 0) {
-			T key = keyTable[i];
-			if (key == null) {
-				continue;
+	public <S extends CharSequence & Appendable> S appendTo(S builder, String separator) {
+		try {
+			if (size == 0) {
+				return builder;
 			}
-			builder.append(key == this ? "(this)" : key);
-			break;
-		}
-		while (i-- > 0) {
-			T key = keyTable[i];
-			if (key == null) {
-				continue;
+			T[] keyTable = this.keyTable;
+			int i = keyTable.length;
+			while (i-- > 0) {
+				T key = keyTable[i];
+				if (key == null) {
+					continue;
+				}
+				builder.append(key == this ? "(this)" : key.toString());
+				break;
 			}
-			builder.append(separator);
-			builder.append(key == this ? "(this)" : key);
+			while (i-- > 0) {
+				T key = keyTable[i];
+				if (key == null) {
+					continue;
+				}
+				builder.append(separator);
+				builder.append(key == this ? "(this)" : key.toString());
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return builder;
 	}

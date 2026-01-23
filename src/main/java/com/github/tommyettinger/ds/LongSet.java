@@ -17,8 +17,10 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -493,34 +495,39 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		return SetOfLong.super.equalContents(o);
 	}
 
-	public StringBuilder appendTo(StringBuilder builder) {
-		if (size == 0) {
-			return builder.append("[]");
-		}
-		builder.append('[');
-		long[] keyTable = this.keyTable;
-		int i = keyTable.length;
-		if (hasZeroValue) {
-			builder.append('0');
-		} else {
+	public <S extends CharSequence & Appendable> S appendTo(S builder) {
+		try {
+			if (size == 0) {
+				builder.append("[]");
+				return builder;
+			}
+			builder.append('[');
+			long[] keyTable = this.keyTable;
+			int i = keyTable.length;
+			if (hasZeroValue) {
+				builder.append('0');
+			} else {
+				while (i-- > 0) {
+					long key = keyTable[i];
+					if (key == 0) {
+						continue;
+					}
+					LongAppender.DEFAULT.apply(builder, key);
+					break;
+				}
+			}
 			while (i-- > 0) {
 				long key = keyTable[i];
 				if (key == 0) {
 					continue;
 				}
-				builder.append(key);
-				break;
+				builder.append(", ");
+				LongAppender.DEFAULT.apply(builder, key);
 			}
+			builder.append(']');
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		while (i-- > 0) {
-			long key = keyTable[i];
-			if (key == 0) {
-				continue;
-			}
-			builder.append(", ");
-			builder.append(key);
-		}
-		builder.append(']');
 		return builder;
 	}
 

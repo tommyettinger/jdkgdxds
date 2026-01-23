@@ -740,11 +740,16 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 * @param delimiter the String that separates every pair of integers in the result
 	 * @return the given StringBuilder, after modifications
 	 */
-	public StringBuilder appendContents(StringBuilder builder, String delimiter) {
-		int curr = nextSetBit(0);
-		builder.append(curr);
-		while ((curr = nextSetBit(curr + 1)) != -1) {
-			builder.append(delimiter).append(curr);
+	public <S extends CharSequence & Appendable> S appendContents(S builder, String delimiter) {
+		try {
+			int curr = nextSetBit(0);
+			builder.append((char) curr);
+			while ((curr = nextSetBit(curr + 1)) != -1) {
+				builder.append(delimiter);
+				builder.append((char) curr);
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		return builder;
 	}
@@ -756,8 +761,15 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 * @param builder a StringBuilder that will be modified in-place and returned
 	 * @return the given StringBuilder, after modifications
 	 */
-	public StringBuilder appendTo(StringBuilder builder) {
-		return appendContents(builder.append('['), ", ").append(']');
+	public <S extends CharSequence & Appendable> S appendTo(S builder) {
+		try {
+			builder.append('[');
+			appendContents(builder, ", ");
+			builder.append(']');
+			return builder;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**

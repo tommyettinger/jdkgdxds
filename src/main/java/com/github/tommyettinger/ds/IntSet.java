@@ -17,8 +17,10 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -477,34 +479,39 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		return SetOfInt.super.equalContents(o);
 	}
 
-	public StringBuilder appendTo(StringBuilder builder) {
-		if (size == 0) {
-			return builder.append("[]");
-		}
-		builder.append('[');
-		int[] keyTable = this.keyTable;
-		int i = keyTable.length;
-		if (hasZeroValue) {
-			builder.append('0');
-		} else {
+	public <S extends CharSequence & Appendable> S appendTo(S builder) {
+		try {
+			if (size == 0) {
+				builder.append("[]");
+				return builder;
+			}
+			builder.append('[');
+			int[] keyTable = this.keyTable;
+			int i = keyTable.length;
+			if (hasZeroValue) {
+				builder.append('0');
+			} else {
+				while (i-- > 0) {
+					int key = keyTable[i];
+					if (key == 0) {
+						continue;
+					}
+					IntAppender.DEFAULT.apply(builder, key);
+					break;
+				}
+			}
 			while (i-- > 0) {
 				int key = keyTable[i];
 				if (key == 0) {
 					continue;
 				}
-				builder.append(key);
-				break;
+				builder.append(", ");
+				IntAppender.DEFAULT.apply(builder, key);
 			}
+			builder.append(']');
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		while (i-- > 0) {
-			int key = keyTable[i];
-			if (key == 0) {
-				continue;
-			}
-			builder.append(", ");
-			builder.append(key);
-		}
-		builder.append(']');
 		return builder;
 	}
 
