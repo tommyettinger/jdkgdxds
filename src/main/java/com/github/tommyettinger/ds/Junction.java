@@ -16,8 +16,10 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.ds.support.util.Appender;
 import com.github.tommyettinger.function.ObjToObjFunction;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -127,6 +129,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 	}
 
 	@Override
+	public <S extends CharSequence & Appendable> S appendTo(S sb, Appender<T> appender) {
+		return root.appendTo(sb, appender);
+	}
+
+	@Override
 	public int compareTo(Term<T> o) {
 		return root.compareTo(o);
 	}
@@ -188,6 +195,11 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		@Override
 		public String toString() {
 			return item.toString();
+		}
+
+		@Override
+		public <S extends CharSequence & Appendable> S appendTo(S sb, Appender<T> appender) {
+			return appender.apply(sb, item);
 		}
 
 		@Override
@@ -278,6 +290,17 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		@Override
 		public String toString() {
 			return "~" + term;
+		}
+
+		@Override
+		public <S extends CharSequence & Appendable> S appendTo(S sb, Appender<T> appender) {
+			try {
+				sb.append('~');
+				term.appendTo(sb, appender);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return sb;
 		}
 
 		@Override
@@ -397,6 +420,18 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		public String toString() {
 			return contents.appendTo(new StringBuilder(contents.size() + 2).append('(')
 				, "|", false).append(')').toString();
+		}
+
+		@Override
+		public <S extends CharSequence & Appendable> S appendTo(S sb, Appender<T> appender) {
+			try {
+				sb.append('(');
+				contents.appendTo(sb, "|", false, Term.termAppender(appender));
+				sb.append(')');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return sb;
 		}
 
 		@Override
@@ -532,6 +567,18 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		}
 
 		@Override
+		public <S extends CharSequence & Appendable> S appendTo(S sb, Appender<T> appender) {
+			try {
+				sb.append('(');
+				contents.appendTo(sb, "&", false, Term.termAppender(appender));
+				sb.append(')');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return sb;
+		}
+
+		@Override
 		public final boolean equals(Object o) {
 			if (!(o instanceof All)) return false;
 
@@ -659,7 +706,18 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		public String toString() {
 			return contents.appendTo(new StringBuilder(contents.size() + 2).append('(')
 				, "^", false).append(')').toString();
+		}
 
+		@Override
+		public <S extends CharSequence & Appendable> S appendTo(S sb, Appender<T> appender) {
+			try {
+				sb.append('(');
+				contents.appendTo(sb, "^", false, Term.termAppender(appender));
+				sb.append(')');
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return sb;
 		}
 
 		@Override

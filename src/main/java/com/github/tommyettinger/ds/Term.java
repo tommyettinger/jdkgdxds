@@ -17,6 +17,8 @@
 package com.github.tommyettinger.ds;
 
 
+import com.github.tommyettinger.ds.support.util.Appender;
+
 import java.util.Collection;
 
 /**
@@ -95,6 +97,45 @@ public interface Term<T extends Comparable<T>> extends Comparable<Term<T>> {
 	 * @return a String representation of this Term, or sometimes only its contents
 	 */
 	String toString();
+
+	/**
+	 * Appends a representation of this Term to an Appendable CharSequence, using {@code appender} to get textual forms
+	 * from T items.
+	 * <br>
+	 * If this is a Term of String, you can use {@link Appender#STRING_APPENDER} as the second parameter.
+	 *
+	 * @param sb        an Appendable CharSequence that this can append to
+	 * @param appender  a function that takes an Appendable CharSequence and a T, and returns the modified {@code S}
+	 * @return {@code sb}, with the appended representation of this Term
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	<S extends CharSequence & Appendable> S appendTo(S sb, Appender<T> appender);
+
+	/**
+	 * Generates an Appender that can append Term of T items to an Appendable CharSequence.
+	 * 
+	 * @param appender an Appender that can append {@code T} items (not Term of T; that's what this method does)
+	 * @return a new Appender of Term of T
+	 * @param <T> the generic type that each Term carries, which is always Comparable (and is often String)
+	 */
+	static <T extends Comparable<T>> Appender<Term<T>> termAppender(final Appender<T> appender) {
+		return new Appender<Term<T>>() {
+			@Override
+			public <S extends CharSequence & Appendable> S apply(S sb, Term<T> item) {
+				return item.appendTo(sb, appender);
+			}
+		};
+	}
+
+	/**
+	 * An existing Appender for Terms of String, a common usage.
+	 */
+	Appender<Term<String>> termOfStringAppender = new Appender<Term<String>>() {
+		@Override
+		public <S extends CharSequence & Appendable> S apply(S sb, Term<String> item) {
+			return item.appendTo(sb, Appender.STRING_APPENDER);
+		}
+	};
 
 	/**
 	 * Used primarily to check for equality between Terms, not to act like {@link #match(Collection)}.
