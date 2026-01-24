@@ -113,7 +113,7 @@ public interface Term<T extends Comparable<T>> extends Comparable<Term<T>> {
 
 	/**
 	 * Generates an Appender that can append Term of T items to an Appendable CharSequence.
-	 * 
+	 *
 	 * @param appender an Appender that can append {@code T} items (not Term of T; that's what this method does)
 	 * @return a new Appender of Term of T
 	 * @param <T> the generic type that each Term carries, which is always Comparable (and is often String)

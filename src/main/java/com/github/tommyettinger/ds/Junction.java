@@ -753,9 +753,14 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		}
 	}
 
-	static final ObjectIntMap<String> OPERATORS = ObjectIntMap.with("~", 27, "^", 9, "&", 6, "|", 3);
+	/**
+	 * Known operator Strings that can be used by {@link #parse(String)}, mapped to their precedence levels.
+	 * Meant for internal use (and use by similar subclasses) only.
+	 */
+	protected static final ObjectIntMap<String> OPERATORS = ObjectIntMap.with("~", 27, "^", 9, "&", 6, "|", 3);
 
 	/**
+	 * Used internally by {@link #parse(String)}.
 	 * Tokenizes a range of the String {@code text} from {@code start} inclusive to {@code end} exclusive.
 	 * Returns an ObjectDeque of Strings; they should be considered "operator-like" if they are one of
 	 * {@code ()|&^~} and otherwise are names.
@@ -765,7 +770,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 	 * @param end   the last index to stop reading before, exclusive
 	 * @return an ObjectDeque of the tokenized Strings
 	 */
-	static ObjectDeque<String> lex(String text, int start, int end) {
+	protected static ObjectDeque<String> lex(String text, int start, int end) {
 		ObjectDeque<String> deque = new ObjectDeque<>(end - start >>> 1);
 		StringBuilder sb = new StringBuilder(32);
 		for (int i = start; i < end; i++) {
@@ -797,11 +802,20 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 		return deque;
 	}
 
-	static boolean checkPrecedence(int opPrecedence, String other) {
+	/**
+	 * Used internally by {@link #shuntingYard(ObjectDeque)}.
+	 * Checks if the operator precedence of {@code other} is greater than or equal to {@code opPrecedence}. If other is
+	 * not a known operator, this returns false unless opPrecedence is negative.
+	 * @param opPrecedence the precedence level to compare to
+	 * @param other the operator String to look up in {@link #OPERATORS}
+	 * @return true if other represents a known operator with precedence greater than or equal to opPrecedence
+	 */
+	protected static boolean checkPrecedence(int opPrecedence, String other) {
 		return OPERATORS.get(other) >= opPrecedence;
 	}
 
 	/**
+	 * Implements the <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Shunting yard algorithm</a>.
 	 * <a href="https://eddmann.com/posts/shunting-yard-implementation-in-java/">Credit to Edd Mann</a>.
 	 * Edd's implementation operates on a StringBuilder, whereas we output another ObjectDeque, so the
 	 * order needed some work.
@@ -809,7 +823,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 	 * @param tokens typically produced by {@link #lex(String, int, int)}
 	 * @return the tokens, rearranged in postfix order and with parentheses removed
 	 */
-	static ObjectDeque<String> shuntingYard(ObjectDeque<String> tokens) {
+	protected static ObjectDeque<String> shuntingYard(ObjectDeque<String> tokens) {
 		ObjectDeque<String> output = new ObjectDeque<>(tokens.size()), stack = new ObjectDeque<>(16);
 
 		for (String token : tokens) {
@@ -837,6 +851,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
 	/**
 	 * Parses the String {@code text} into one Junction of String.
+	 * Consider using {@link StringJunction#parse(String)} instead, which doesn't use generics and saves allocations.
 	 *
 	 * @param text the String to parse
 	 * @return the resulting Junction of String
@@ -847,7 +862,8 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
 	/**
 	 * Parses a substring of {@code text} into one Junction of String. The {@code start} is inclusive and
-	 * the {@code end} is exclusive.
+	 * the {@code end} is exclusive. Consider using {@link StringJunction#parse(String, int, int)} instead, which
+	 * doesn't use generics and saves allocations.
 	 *
 	 * @param text  the String to parse
 	 * @param start the first index to read from, inclusive
