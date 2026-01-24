@@ -731,14 +731,15 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Given a StringBuilder, this appends part of the toString() representation of this CharBitSetFixedSize, without
-	 * allocating a String. This does not include the opening {@code [} and closing {@code ]} chars, and only appends
-	 * the int positions in this CharBitSetFixedSize, each pair separated by the given delimiter String. You can use
-	 * this to choose a different delimiter from what toString() uses.
+	 * Given an Appendable CharSequence, this appends part of the toString() representation of this CharBitSetFixedSize,
+	 * without allocating a String. This does not include the opening {@code [} and closing {@code ]} chars, and only
+	 * appends the int positions in this CharBitSetFixedSize, each pair separated by the given delimiter String. You can
+	 * use this to choose a different delimiter from what toString() uses.
 	 *
-	 * @param builder   a StringBuilder that will be modified in-place and returned
+	 * @param builder   an Appendable CharSequence that will be modified in-place and returned
 	 * @param delimiter the String that separates every pair of integers in the result
-	 * @return the given StringBuilder, after modifications
+	 * @return the given Appendable CharSequence, after modifications
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendContents(S builder, String delimiter) {
 		try {
@@ -755,11 +756,12 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Given a StringBuilder, this appends the toString() representation of this CharBitSetFixedSize, without allocating
-	 * a String. This includes the opening {@code [} and closing {@code ]} chars; it uses {@code ", "} as its delimiter.
-	 *
-	 * @param builder a StringBuilder that will be modified in-place and returned
-	 * @return the given StringBuilder, after modifications
+	 * Given an Appendable CharSequence, this appends the toString() representation of this CharBitSetFixedSize, without
+	 * allocating a String. This includes the opening {@code [} and closing {@code ]} chars; it uses {@code ", "} as its
+	 * delimiter.
+	 * @param builder an Appendable CharSequence that will be modified in-place and returned
+	 * @return the given Appendable CharSequence, after modifications
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S builder) {
 		try {
@@ -773,15 +775,16 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link CharAppender}
-	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+	 * Appends to an Appendable CharSequence from the contents of this CharBitSetFixedSize, but uses the given {@link CharAppender}
+	 * to convert each item to a customizable representation and append them to {@code sb}. To use
 	 * the default String representation, you can use {@link CharAppender#DEFAULT} as an appender.
 	 *
-	 * @param sb        a StringBuilder that this can append to
+	 * @param sb        an Appendable CharSequence that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets  true to wrap the output in square brackets, or false to omit them
-	 * @param appender  a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param appender  a function that takes an Appendable CharSequence and an int, and returns the modified {@code S}
 	 * @return {@code sb}, with the appended items of this PrimitiveCollection
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	@Override
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, CharAppender appender) {
@@ -808,9 +811,14 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 		return sb;
 	}
 
+	/**
+	 * Gets a String representation of this CharBitSetFixedSize with each char quoted (and potentially escaped), with
+	 * chars delimited by ", " and wrapped in square brackets.
+	 * @return a String representation of this set
+	 */
 	@Override
 	public String toString() {
-		return toString(", ", true);
+		return toString(", ", true, CharAppender.QUOTED);
 	}
 
 	/**

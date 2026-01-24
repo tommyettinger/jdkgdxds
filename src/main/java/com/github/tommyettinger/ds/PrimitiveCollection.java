@@ -1080,7 +1080,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Delegates to {@link #appendTo(CharSequence, String, boolean, LongAppender)} using
-		 * {@link LongAppender#DEFAULT} to append int items.
+		 * {@link LongAppender#DEFAULT} to append long items.
 		 *
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
@@ -1668,7 +1668,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Delegates to {@link #appendTo(CharSequence, String, boolean, FloatAppender)} using
-		 * {@link FloatAppender#DEFAULT} to append int items.
+		 * {@link FloatAppender#DEFAULT} to append float items.
 		 *
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
@@ -2251,7 +2251,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Delegates to {@link #appendTo(CharSequence, String, boolean, DoubleAppender)} using
-		 * {@link DoubleAppender#DEFAULT} to append int items.
+		 * {@link DoubleAppender#DEFAULT} to append double items.
 		 *
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
@@ -2839,7 +2839,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Delegates to {@link #appendTo(CharSequence, String, boolean, ShortAppender)} using
-		 * {@link ShortAppender#DEFAULT} to append int items.
+		 * {@link ShortAppender#DEFAULT} to append short items.
 		 *
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
@@ -3418,7 +3418,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Delegates to {@link #appendTo(CharSequence, String, boolean, ByteAppender)} using
-		 * {@link ByteAppender#DEFAULT} to append int items.
+		 * {@link ByteAppender#DEFAULT} to append byte items.
 		 *
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
@@ -4022,7 +4022,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Delegates to {@link #appendTo(CharSequence, String, boolean, CharAppender)} using
-		 * {@link CharAppender#DEFAULT} to append int items.
+		 * {@link CharAppender#DEFAULT} to append char items.
 		 *
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}
@@ -4602,7 +4602,7 @@ public interface PrimitiveCollection<T> {
 
 		/**
 		 * Delegates to {@link #appendTo(CharSequence, String, boolean, BooleanAppender)} using
-		 * {@link BooleanAppender#DEFAULT} to append int items.
+		 * {@link BooleanAppender#DEFAULT} to append boolean items.
 		 *
 		 * @param sb        a StringBuilder or similar that this can append to
 		 * @param separator how to separate items, such as {@code ", "}

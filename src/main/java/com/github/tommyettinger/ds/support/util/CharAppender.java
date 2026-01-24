@@ -32,13 +32,14 @@ public interface CharAppender {
 	 *
 	 * @param sb   an Appendable CharSequence that will be modified, such as a StringBuilder
 	 * @param item the item to append
-	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 * @return {@code sb}, after modification
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	<S extends CharSequence & Appendable> S apply(S sb, char item);
 
 	/**
-	 * A static constant to avoid Android and its R8 compiler allocating a new lambda every time
+	 * Appends one char at a time, without anything around it and without escaping any chars.
+	 * This is a static constant to avoid Android and its R8 compiler allocating a new lambda every time
 	 * {@code StringBuilder::append} is present at a call-site. This should be used in place of
 	 * {@link StringBuilder#append(char)} when you want to use that as a CharAppender.
 	 * <br>
@@ -52,6 +53,15 @@ public interface CharAppender {
 	 */
 	CharAppender QUOTED = Base::appendReadable;
 
+	/**
+	 * Appends a single char to sb. Doesn't append anything around it. Throws a RuntimeException if sb can't
+	 * be appended to due to an IOException, which should never really happen unless you're using a fixed-size
+	 * Appendable that has no room left.
+	 * @param sb   an Appendable CharSequence that will be modified, such as a StringBuilder
+	 * @param item the item to append
+	 * @return {@code sb}, after modification
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
 	static <S extends CharSequence & Appendable> S append(S sb, char item) {
 		try {
 			sb.append(item);
