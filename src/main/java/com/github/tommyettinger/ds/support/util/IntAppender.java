@@ -30,7 +30,7 @@ public interface IntAppender {
 	 * @param sb   an Appendable CharSequence that will be modified, such as a StringBuilder
 	 * @param item the item to append
 	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
-	 * @return {@code first}, after modification
+	 * @return {@code sb}, after modification
 	 */
 	<S extends CharSequence & Appendable> S apply(S sb, int item);
 

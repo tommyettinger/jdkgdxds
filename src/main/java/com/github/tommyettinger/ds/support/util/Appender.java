@@ -97,4 +97,55 @@ public interface Appender<T> {
 		}
 	};
 
+	/**
+	 * A pre-made Appender for String items. This exists both for convenience and to avoid repeatedly creating new
+	 * method references on Android.
+	 */
+	Appender<String> STRING_APPENDER = new Appender<String>() {
+		@Override
+		public <S extends CharSequence & Appendable> S apply(S sb, String item) {
+			try {
+				sb.append(item);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return sb;
+		}
+	};
+
+	/**
+	 * A pre-made Appender for CharSequence items. This exists both for convenience and to avoid repeatedly creating new
+	 * method references on Android.
+	 */
+	Appender<CharSequence> CHARSEQUENCE_APPENDER = new Appender<CharSequence>() {
+		@Override
+		public <S extends CharSequence & Appendable> S apply(S sb, CharSequence item) {
+			try {
+				sb.append(item);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return sb;
+		}
+	};
+
+	/**
+	 * A pre-made Appender for any Object items. This exists both for convenience and to avoid repeatedly creating new
+	 * method references on Android.
+	 * <br>
+	 * NOTE: Whether this works or not in practice (on all platforms) is unknown. If in doubt, create a strongly-typed
+	 * Appender from a method reference to {@link #append(CharSequence, Object)} and store it once per type, as with:
+	 * {@code public static final Appender<Thing> THING_APPENDER = Appender::append;} for your own type {@code Thing}.
+	 */
+	Appender<?> ANY_APPENDER = new Appender<Object>() {
+		@Override
+		public <S extends CharSequence & Appendable> S apply(S sb, Object item) {
+			try {
+				sb.append(Objects.toString(item));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return sb;
+		}
+	};
 }

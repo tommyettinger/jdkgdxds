@@ -413,6 +413,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
 	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
 	 * {@code public static final Appender<String> STRING_APPENDER = Appender::append;}
+	 * (There is also {@link Appender#STRING_APPENDER} already.)
 	 * <br>
 	 * Delegates to {@link #appendTo(CharSequence, String, boolean, Appender)}.
 	 *
@@ -427,7 +428,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this EnhancedCollection, using {@code Appender::append} to
+	 * Appends to an Appendable CharSequence from the contents of this EnhancedCollection, using {@code Appender::append} to
 	 * append each item's String representation, separating items with {@code separator}, and optionally wrapping the
 	 * output in square brackets if {@code brackets} is true.
 	 * <br>
@@ -435,12 +436,14 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
 	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
 	 * {@code public static final Appender<String> STRING_APPENDER = Appender::append;}
+	 * (There is also {@link Appender#STRING_APPENDER} already.)
 	 * <br>
 	 * Delegates to {@link #appendTo(CharSequence, String, boolean, Appender)}.
 	 *
-	 * @param sb        a StringBuilder that this can append to
+	 * @param sb        an Appendable CharSequence that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets  true to wrap the output in square brackets, or false to omit them
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
 	 */
 	default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
@@ -448,17 +451,19 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this EnhancedCollection, but uses the given {@link Appender}
-	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+	 * Appends to an Appendable CharSequence from the contents of this EnhancedCollection, but uses the given {@link Appender}
+	 * to convert each item to a customizable representation and append them to an Appendable CharSequence. To use
 	 * the default String representation, you can use {@code Appender::append}, but be advised that it will
 	 * allocate a method reference, each time this is called, on minimized Android builds due to R8 behavior. You can
 	 * cache an Appender of the appropriate T type easily, however, as with this for when T is String:
 	 * {@code public static final Appender<String> STRING_APPENDER = Appender::append;}
+	 * (There is also {@link Appender#STRING_APPENDER} already.)
 	 *
-	 * @param sb        a StringBuilder that this can append to
+	 * @param sb        an Appendable CharSequence that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets  true to wrap the output in square brackets, or false to omit them
-	 * @param appender  a function that takes a StringBuilder and a T, and returns the modified StringBuilder
+	 * @param appender  a function that takes an Appendable CharSequence and a T, and returns the modified {@code S}
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
 	 */
 	default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, Appender<T> appender) {
