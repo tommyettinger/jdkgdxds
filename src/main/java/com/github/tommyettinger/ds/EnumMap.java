@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.tommyettinger.function.ObjObjToObjBiFunction;
 import com.github.tommyettinger.function.ObjToObjFunction;
@@ -721,6 +722,13 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 
+	/**
+	 * Gets a String representation of this map, with each key using its {@link Enum#name()} and each value using
+	 * {@link Objects#toString(Object)}. Separates entries with ", " and separates keys from values with
+	 * "=". Places curly braces around the whole String.
+	 *
+	 * @return a new String representing this map
+	 */
 	@Override
 	public String toString() {
 		return toString(", ", true);
@@ -737,8 +745,17 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		return toString(entrySeparator, false);
 	}
 
+	/**
+	 * Gets the String representation of each key by its {@link Enum#name()} and each value by
+	 * {@link Objects#toString(Object)}.
+	 * Separates entries with {@code entrySeparator} and separates keys from values with
+	 * "=". Uses curly braces around the whole String if {@code braces} is true.
+	 * @param entrySeparator the String placed between entries (after each value and before the next key)
+	 * @param braces if true, will put curly braces around the output
+	 * @return a new String representing this map
+	 */
 	public String toString(String entrySeparator, boolean braces) {
-		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+		return appendTo(new StringBuilder(size() * 8), entrySeparator, braces).toString();
 	}
 
 	/**
@@ -751,32 +768,44 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take an Enum, such as {@link Appender#ENUM_NAME_APPENDER}
+	 * @param valueAppender     an Appender that can take a V value, such as {@code Appender::append}
 	 * @return a new String representing this map
 	 */
 	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
 						   Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {
-		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return appendTo(new StringBuilder(size() * 8), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this EnumMap, using
+	 * {@link Appender#ENUM_NAME_APPENDER} and {@link Objects#toString(Object)} to append keys and values, respectively.
+	 * Uses "=" to separate keys from their values.
+	 *
+	 * @param sb                an Appendable CharSequence that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, Appender.ENUM_NAME_APPENDER, Appender::append);
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this EnumMap, but uses the given {@link Appender} and
-	 * {@link Appender} to convert each key and each value to a customizable representation and append them
-	 * to a StringBuilder. To use
-	 * the default String representation, you can use {@code Appender::append} as an appender.
+	 * Appends to an Appendable CharSequence from the contents of this EnumMap, but uses the given {@link Appender}s
+	 * to convert each key and each value to a customizable representation and append them
+	 * to {@code sb}. To use the default String representation, you can use {@code Appender::append} as an appender.
+	 * To print the Enum keys by their name (as it is shown in source code), use {@link Appender#ENUM_NAME_APPENDER}.
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and an Enum, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take an Enum, such as {@link Appender#ENUM_NAME_APPENDER}
+	 * @param valueAppender     an Appender that can take a V value, such as {@code Appender::append}
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  Appender<Enum<?>> keyAppender, Appender<V> valueAppender) {

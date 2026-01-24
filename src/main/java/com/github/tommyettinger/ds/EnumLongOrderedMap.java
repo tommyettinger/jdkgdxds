@@ -19,10 +19,7 @@ package com.github.tommyettinger.ds;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
-import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.LongAppender;
-import com.github.tommyettinger.ds.support.util.LongIterator;
-import com.github.tommyettinger.ds.support.util.PartialParser;
+import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.ObjToObjFunction;
 
 import java.io.IOException;
@@ -675,21 +672,21 @@ public class EnumLongOrderedMap extends EnumLongMap implements Ordered<Enum<?>> 
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this EnumLongOrderedMap, but uses the given {@link Appender} and
+	 * Appends to an Appendable CharSequence from the contents of this EnumLongOrderedMap, but uses the given {@link Appender} and
 	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
-	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendUnsigned(CharSequence, long)}. To use
+	 * to the Appendable CharSequence. To use
 	 * the default toString representation, you can use {@code Appender::append} as an appender, or to use the readable
 	 * Enum {@link Enum#name()}, use {@link Appender#ENUM_NAME_APPENDER}. Use {@link LongAppender#DEFAULT} or
 	 * {@link LongAppender#READABLE} for human-readable or source-code-readable results, respectively.
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a long, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take an Enum, such as {@link Appender#ENUM_NAME_APPENDER}
+	 * @param valueAppender     a LongAppender, such as {@link LongAppender#DEFAULT}
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	@Override
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<Enum<?>> keyAppender, LongAppender valueAppender) {
