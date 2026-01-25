@@ -278,7 +278,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * value is set to the given value.
 	 *
 	 * @param key   an Enum key; must not be null
-	 * @param value a int value
+	 * @param value an int value
 	 * @param index the index in the order to place the given key and value; must be non-negative and less than {@link #size()}
 	 * @return the previous value associated with key, if there was one, or {@link #defaultValue} otherwise
 	 */
@@ -664,7 +664,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender       an Appender that can take an Enum, such as {@link Appender#ENUM_NAME_APPENDER}
-	 * @param valueAppender     a IntAppender, such as {@link IntAppender#DEFAULT}
+	 * @param valueAppender     an IntAppender, such as {@link IntAppender#DEFAULT}
 	 * @return {@code sb}, with the appended keys and values of this map
 	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
@@ -1066,7 +1066,7 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum for a key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static EnumIntOrderedMap withPrimitive(Enum<?> key0, int value0) {
@@ -1082,9 +1082,9 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static EnumIntOrderedMap withPrimitive(Enum<?> key0, int value0, Enum<?> key1, int value1) {
@@ -1101,11 +1101,11 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param key2   an Enum key
-	 * @param value2 a int for a value
+	 * @param value2 an int for a value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static EnumIntOrderedMap withPrimitive(Enum<?> key0, int value0, Enum<?> key1, int value1, Enum<?> key2, int value2) {
@@ -1123,13 +1123,13 @@ public class EnumIntOrderedMap extends EnumIntMap implements Ordered<Enum<?>> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param key2   an Enum key
-	 * @param value2 a int for a value
+	 * @param value2 an int for a value
 	 * @param key3   an Enum key
-	 * @param value3 a int for a value
+	 * @param value3 an int for a value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static EnumIntOrderedMap withPrimitive(Enum<?> key0, int value0, Enum<?> key1, int value1, Enum<?> key2, int value2, Enum<?> key3, int value3) {

@@ -1142,10 +1142,10 @@ public class Table0 implements Iterable<Table0.Entry> {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
-	 * @param value0 a int value
-	 * @param key1   a int key
-	 * @param value1 a int value
+	 * @param key0   an int key
+	 * @param value0 an int value
+	 * @param key1   an int key
+	 * @param value1 an int value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static Table0 withPrimitive(int key0, int value0, int key1, int value1) {
@@ -1161,12 +1161,12 @@ public class Table0 implements Iterable<Table0.Entry> {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
-	 * @param value0 a int value
-	 * @param key1   a int key
-	 * @param value1 a int value
-	 * @param key2   a int key
-	 * @param value2 a int value
+	 * @param key0   an int key
+	 * @param value0 an int value
+	 * @param key1   an int key
+	 * @param value1 an int value
+	 * @param key2   an int key
+	 * @param value2 an int value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static Table0 withPrimitive(int key0, int value0, int key1, int value1, int key2, int value2) {
@@ -1183,12 +1183,12 @@ public class Table0 implements Iterable<Table0.Entry> {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
-	 * @param value0 a int value
-	 * @param key1   a int key
-	 * @param value1 a int value
-	 * @param key2   a int key
-	 * @param value2 a int value
+	 * @param key0   an int key
+	 * @param value0 an int value
+	 * @param key1   an int key
+	 * @param value1 an int value
+	 * @param key2   an int key
+	 * @param value2 an int value
 	 * @param key3   a int key
 	 * @param value3 a int value
 	 * @return a new map containing the given key-value pairs

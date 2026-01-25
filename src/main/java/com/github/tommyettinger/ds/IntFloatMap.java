@@ -1933,9 +1933,9 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a float value
-	 * @param key1   a int key
+	 * @param key1   an int key
 	 * @param value1 a float value
 	 * @return a new map containing the given key-value pairs
 	 */
@@ -1952,9 +1952,9 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a float value
-	 * @param key1   a int key
+	 * @param key1   an int key
 	 * @param value1 a float value
 	 * @param key2   a int key
 	 * @param value2 a float value

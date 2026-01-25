@@ -614,7 +614,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	/**
 	 * Removes from this IntList all occurrences of any elements contained in the specified collection.
 	 *
-	 * @param c a primitive collection of int items to remove fully, such as another IntList or a IntDeque
+	 * @param c a primitive collection of int items to remove fully, such as another IntList or an IntDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeAll(OfInt c) {
@@ -640,7 +640,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 * will be removed for each occurrence of that value in {@code c}. If {@code c} has the same
 	 * contents as this IntList or has additional items, then removing each of {@code c} will clear this.
 	 *
-	 * @param c a primitive collection of int items to remove one-by-one, such as another IntList or a IntDeque
+	 * @param c a primitive collection of int items to remove one-by-one, such as another IntList or an IntDeque
 	 * @return true if this list was modified.
 	 */
 	public boolean removeEach(OfInt c) {
@@ -1031,7 +1031,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	/**
 	 * Returns a new primitive iterator over the int items in this IntList. Iterates in order if
-	 * {@link #keepsOrder()} returns true, which it does for a IntList but not a IntBag.
+	 * {@link #keepsOrder()} returns true, which it does for an IntList but not an IntBag.
 	 *
 	 * @return a {@link IntIterator}; use its nextInt() method instead of next()
 	 */
@@ -1042,7 +1042,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	/**
 	 * Returns a new primitive iterator over the items in this IntList. Iterates in order if
-	 * {@link #keepsOrder()} returns true, which it does for a IntList but not a IntBag.
+	 * {@link #keepsOrder()} returns true, which it does for an IntList but not a IntBag.
 	 *
 	 * @return a {@link IntIterator}; use its nextInt() method instead of next()
 	 */

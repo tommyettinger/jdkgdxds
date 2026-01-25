@@ -611,7 +611,7 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 * Sorts this IntFloatOrderedMap in-place by the given IntComparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys.
 	 *
-	 * @param comp a IntComparator, such as one from {@link IntComparators}, or null to use the keys' natural ordering
+	 * @param comp an IntComparator, such as one from {@link IntComparators}, or null to use the keys' natural ordering
 	 */
 	public void sort(IntComparator comp) {
 		keys.sort(comp);
@@ -1023,9 +1023,9 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a float value
-	 * @param key1   a int key
+	 * @param key1   an int key
 	 * @param value1 a float value
 	 * @return a new map containing the given key-value pairs
 	 */
@@ -1042,11 +1042,11 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a float value
-	 * @param key1   a int key
+	 * @param key1   an int key
 	 * @param value1 a float value
-	 * @param key2   a int key
+	 * @param key2   an int key
 	 * @param value2 a float value
 	 * @return a new map containing the given key-value pairs
 	 */
@@ -1064,13 +1064,13 @@ public class IntFloatOrderedMap extends IntFloatMap implements Ordered.OfInt {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a float value
-	 * @param key1   a int key
+	 * @param key1   an int key
 	 * @param value1 a float value
-	 * @param key2   a int key
+	 * @param key2   an int key
 	 * @param value2 a float value
-	 * @param key3   a int key
+	 * @param key3   an int key
 	 * @param value3 a float value
 	 * @return a new map containing the given key-value pairs
 	 */

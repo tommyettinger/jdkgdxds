@@ -1888,7 +1888,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
 	 * its key type, and will not box it.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a V value
 	 * @param <V>    the type of value0
 	 * @return a new map containing just the entry mapping key0 to value0
@@ -1905,9 +1905,9 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
 	 * its key type, and will not box it.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a V value
-	 * @param key1   a int key
+	 * @param key1   an int key
 	 * @param value1 a V value
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs
@@ -1925,11 +1925,11 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
 	 * its key type, and will not box it.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a V value
-	 * @param key1   a int key
+	 * @param key1   an int key
 	 * @param value1 a V value
-	 * @param key2   a int key
+	 * @param key2   an int key
 	 * @param value2 a V value
 	 * @param <V>    the type of values
 	 * @return a new map containing the given key-value pairs

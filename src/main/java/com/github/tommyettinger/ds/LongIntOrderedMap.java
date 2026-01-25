@@ -699,7 +699,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a int, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override

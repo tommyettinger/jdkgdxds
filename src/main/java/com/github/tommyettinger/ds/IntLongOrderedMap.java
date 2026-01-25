@@ -611,7 +611,7 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 	 * Sorts this IntLongOrderedMap in-place by the given IntComparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys.
 	 *
-	 * @param comp a IntComparator, such as one from {@link IntComparators}, or null to use the keys' natural ordering
+	 * @param comp an IntComparator, such as one from {@link IntComparators}, or null to use the keys' natural ordering
 	 */
 	public void sort(IntComparator comp) {
 		keys.sort(comp);

@@ -609,7 +609,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * Sorts this IntIntOrderedMap in-place by the given IntComparator used on the keys. If {@code comp} is null, then this
 	 * will sort by the natural ordering of the keys.
 	 *
-	 * @param comp a IntComparator, such as one from {@link IntComparators}, or null to use the keys' natural ordering
+	 * @param comp an IntComparator, such as one from {@link IntComparators}, or null to use the keys' natural ordering
 	 */
 	public void sort(IntComparator comp) {
 		keys.sort(comp);
@@ -696,7 +696,7 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender       a function that takes a StringBuilder and an int, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a int, and returns the modified StringBuilder
+	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended keys and values of this map
 	 */
 	@Override
@@ -1017,10 +1017,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
-	 * @param value0 a int value
-	 * @param key1   a int key
-	 * @param value1 a int value
+	 * @param key0   an int key
+	 * @param value0 an int value
+	 * @param key1   an int key
+	 * @param value1 an int value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static IntIntOrderedMap withPrimitive(int key0, int value0, int key1, int value1) {
@@ -1036,10 +1036,10 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
-	 * @param value0 a int value
-	 * @param key1   a int key
-	 * @param value1 a int value
+	 * @param key0   an int key
+	 * @param value0 an int value
+	 * @param key1   an int key
+	 * @param value1 an int value
 	 * @param key2   a int key
 	 * @param value2 a int value
 	 * @return a new map containing the given key-value pairs

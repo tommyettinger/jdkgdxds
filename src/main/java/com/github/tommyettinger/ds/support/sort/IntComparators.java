@@ -286,7 +286,7 @@ public final class IntComparators {
 	 * setting {@code from} and {@code to} so the whole array is sorted.
 	 *
 	 * @param items the int array to be sorted
-	 * @param c     a IntComparator to alter the sort order; if null, the natural order will be used
+	 * @param c     an IntComparator to alter the sort order; if null, the natural order will be used
 	 */
 	public static void sort(int[] items, final IntComparator c) {
 		sort(items, 0, items.length, c);
@@ -308,7 +308,7 @@ public final class IntComparators {
 	 * @param items the int array to be sorted
 	 * @param from  the index of the first element (inclusive) to be sorted.
 	 * @param to    the index of the last element (exclusive) to be sorted.
-	 * @param c     a IntComparator to alter the sort order; if null, the natural order will be used
+	 * @param c     an IntComparator to alter the sort order; if null, the natural order will be used
 	 */
 	public static void sort(int[] items, final int from, final int to, final IntComparator c) {
 		if (to <= 0) {

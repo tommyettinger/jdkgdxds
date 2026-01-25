@@ -141,7 +141,7 @@ public interface PrimitiveCollection<T> {
 		/**
 		 * Removes from this collection all occurrences of any elements contained in the specified IntIterator.
 		 *
-		 * @param it a IntIterator of items to remove fully
+		 * @param it an IntIterator of items to remove fully
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeAll(IntIterator it) {
@@ -197,7 +197,7 @@ public interface PrimitiveCollection<T> {
 		 * will be removed for each occurrence of that value in {@code it}. If {@code it} has the same
 		 * contents as this collection or has additional items, then removing each of {@code it} will clear this.
 		 *
-		 * @param it a IntIterator of items to remove one-by-one
+		 * @param it an IntIterator of items to remove one-by-one
 		 * @return true if this collection was modified.
 		 */
 		default boolean removeEach(IntIterator it) {

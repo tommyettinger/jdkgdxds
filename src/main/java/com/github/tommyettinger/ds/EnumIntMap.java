@@ -614,7 +614,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender       an Appender that can take an Enum, such as {@link Appender#ENUM_NAME_APPENDER}
-	 * @param valueAppender     a IntAppender, such as {@link IntAppender#DEFAULT}
+	 * @param valueAppender     an IntAppender, such as {@link IntAppender#DEFAULT}
 	 * @return a new String representing this map
 	 */
 	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
@@ -650,7 +650,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender       an Appender that can take an Enum, such as {@link Appender#ENUM_NAME_APPENDER}
-	 * @param valueAppender     a IntAppender, such as {@link IntAppender#DEFAULT}
+	 * @param valueAppender     an IntAppender, such as {@link IntAppender#DEFAULT}
 	 * @return {@code sb}, with the appended keys and values of this map
 	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
@@ -729,7 +729,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * @param value             the value to be merged with the existing value
 	 *                          associated with the key or, if no existing value
 	 *                          is associated with the key, to be associated with the key
-	 * @param remappingFunction given a int from this and the int {@code value}, this should return what int to use
+	 * @param remappingFunction given an int from this and the int {@code value}, this should return what int to use
 	 * @return the value now associated with key
 	 */
 	public int combine(Enum<?> key, int value, IntIntToIntBiFunction remappingFunction) {
@@ -749,7 +749,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * this map, though this depends on the {@code remappingFunction}.
 	 *
 	 * @param other             a non-null ObjectIntMap (or subclass) with a compatible key type
-	 * @param remappingFunction given a int value from this and a value from other, this should return what int to use
+	 * @param remappingFunction given an int value from this and a value from other, this should return what int to use
 	 */
 	public void combine(EnumIntMap other, IntIntToIntBiFunction remappingFunction) {
 		for (Entry e : other.entrySet()) {
@@ -1871,7 +1871,7 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum for a key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
 	public static EnumIntMap withPrimitive(Enum<?> key0, int value0) {
@@ -1887,9 +1887,9 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static EnumIntMap withPrimitive(Enum<?> key0, int value0, Enum<?> key1, int value1) {
@@ -1906,11 +1906,11 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param key2   an Enum key
-	 * @param value2 a int for a value
+	 * @param value2 an int for a value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static EnumIntMap withPrimitive(Enum<?> key0, int value0, Enum<?> key1, int value1, Enum<?> key2, int value2) {
@@ -1928,13 +1928,13 @@ public class EnumIntMap implements Iterable<EnumIntMap.Entry> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   an Enum key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   an Enum key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param key2   an Enum key
-	 * @param value2 a int for a value
+	 * @param value2 an int for a value
 	 * @param key3   an Enum key
-	 * @param value3 a int for a value
+	 * @param value3 an int for a value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static EnumIntMap withPrimitive(Enum<?> key0, int value0, Enum<?> key1, int value1, Enum<?> key2, int value2, Enum<?> key3, int value3) {

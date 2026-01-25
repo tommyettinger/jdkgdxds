@@ -135,7 +135,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
 	 *
-	 * @param set a IntSet without an order
+	 * @param set an IntSet without an order
 	 */
 	public IntOrderedSet(IntSet set) {
 		this(set, OrderType.LIST);
@@ -144,7 +144,7 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	/**
 	 * Creates a new set that contains all distinct elements in {@code set}.
 	 *
-	 * @param set      a IntSet without an order
+	 * @param set      an IntSet without an order
 	 * @param ordering determines what implementation {@link #order()} will use
 	 */
 	public IntOrderedSet(IntSet set, OrderType ordering) {

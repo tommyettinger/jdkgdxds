@@ -1908,10 +1908,10 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
-	 * @param value0 a int value
-	 * @param key1   a int key
-	 * @param value1 a int value
+	 * @param key0   an int key
+	 * @param value0 an int value
+	 * @param key1   an int key
+	 * @param value1 an int value
 	 * @return a new map containing the given key-value pairs
 	 */
 	public static IntIntMap withPrimitive(int key0, int value0, int key1, int value1) {
@@ -1927,7 +1927,7 @@ public class IntIntMap implements Iterable<IntIntMap.Entry> {
 	 * when there's no "rest" of the keys or values. Unlike the vararg with(), this doesn't
 	 * box its arguments into Number items.
 	 *
-	 * @param key0   a int key
+	 * @param key0   an int key
 	 * @param value0 a int value
 	 * @param key1   a int key
 	 * @param value1 a int value
