@@ -864,7 +864,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its V value to a primitive float, regardless of which Number type was used.
+	 * convert its Number key to a primitive int, regardless of which Number type was used.
 	 *
 	 * @param key0   the first and only key; will be converted to primitive int
 	 * @param value0 the first and only value
@@ -881,7 +881,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 * convert its Number keys to primitive ints, regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive int
 	 * @param value0 a V value
@@ -901,7 +901,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 * convert its Number keys to primitive ints, regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive int
 	 * @param value0 a V value
@@ -924,7 +924,7 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 * convert its Number keys to primitive ints, regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive int
 	 * @param value0 a V value

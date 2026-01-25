@@ -1684,7 +1684,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its K key to a primitive long, regardless of which Number type was used.
+	 * convert its Number key to a primitive long, regardless of which Number type was used.
 	 *
 	 * @param key0   the first and only key; will be converted to primitive long
 	 * @param value0 the first and only value
@@ -1701,7 +1701,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its K key to a primitive long, regardless of which Number type was used.
+	 * convert its Number keys to primitive longs, regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive long
 	 * @param value0 a V value
@@ -1721,7 +1721,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its K key to a primitive long, regardless of which Number type was used.
+	 * convert its Number keys to primitive longs, regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive long
 	 * @param value0 a V value
@@ -1744,7 +1744,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its K key to a primitive long, regardless of which Number type was used.
+	 * convert its Number keys to primitive longs regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive long
 	 * @param value0 a V value
