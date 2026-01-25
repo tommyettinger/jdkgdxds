@@ -678,13 +678,13 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	}
 
 	/**
-	 * Appends to an Appendable CharSequence from the contents of this LongLongOrderedMap, but uses the given {@link LongAppender} and
-	 * {@link LongAppender} to convert each key and each value to a customizable representation and append them
+	 * Appends to an Appendable CharSequence from the contents of this LongLongOrderedMap, but uses the given {@link LongAppender}s
+	 * to convert each key and each value to a customizable representation and append them
 	 * to {@code sb}. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
-	 * the default String representation, you can use {@link LongAppender#DEFAULT} or {@link LongAppender#DEFAULT}
+	 * the default String representation, you can use {@link LongAppender#DEFAULT}
 	 * as an appender. To write values so that they can be read back as Java source code, use
-	 * {@link LongAppender#READABLE} or {@link LongAppender#READABLE} for each appender.
+	 * {@link LongAppender#READABLE} for each appender.
 	 * <br>
 	 * Using {@code READABLE} appenders, if you separate keys
 	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
