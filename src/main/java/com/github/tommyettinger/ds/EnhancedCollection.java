@@ -401,7 +401,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @return a new String representing this EnhancedCollection
 	 */
 	default String toString(String itemSeparator, boolean brackets) {
-		return appendTo(new StringBuilder(32), itemSeparator, brackets).toString();
+		return appendTo(new StringBuilder(6 * size()), itemSeparator, brackets).toString();
 	}
 
 	/**
@@ -424,7 +424,7 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 */
 	default String toString(String separator, boolean brackets,
 							Appender<T> appender) {
-		return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+		return appendTo(new StringBuilder(6 * size()), separator, brackets, appender).toString();
 	}
 
 	/**
@@ -443,8 +443,8 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param sb        an Appendable CharSequence that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets  true to wrap the output in square brackets, or false to omit them
-	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets) {
 		return appendTo(sb, separator, brackets, Appender::append);
@@ -463,8 +463,8 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets  true to wrap the output in square brackets, or false to omit them
 	 * @param appender  a function that takes an Appendable CharSequence and a T, and returns the modified {@code S}
-	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 * @return {@code sb}, with the appended items of this EnhancedCollection
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	default <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, Appender<T> appender) {
 		try {

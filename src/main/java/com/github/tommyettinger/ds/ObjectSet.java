@@ -699,10 +699,20 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 		}
 	}
 
-	public <S extends CharSequence & Appendable> S appendTo(S builder, String separator) {
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this set, using {@link Object#toString()} to
+	 * append each item's String representation, separating items with {@code separator}. This won't wrap the output in
+	 * braces or brackets.
+	 *
+	 * @param sb        an Appendable CharSequence that this can append to
+	 * @param separator how to separate items, such as {@code ", "}
+	 * @return {@code sb}, with the appended items of this set
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator) {
 		try {
 			if (size == 0) {
-				return builder;
+				return sb;
 			}
 			T[] keyTable = this.keyTable;
 			int i = keyTable.length;
@@ -711,7 +721,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 				if (key == null) {
 					continue;
 				}
-				builder.append(key == this ? "(this)" : key.toString());
+				sb.append(key == this ? "(this)" : key.toString());
 				break;
 			}
 			while (i-- > 0) {
@@ -719,15 +729,21 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 				if (key == null) {
 					continue;
 				}
-				builder.append(separator);
-				builder.append(key == this ? "(this)" : key.toString());
+				sb.append(separator);
+				sb.append(key == this ? "(this)" : key.toString());
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return builder;
+		return sb;
 	}
 
+	/**
+	 * Gets a String representation of this set, using {@link Object#toString()} on each item, separating items with
+	 * {@code ", "}, and wrapping the output in square brackets.
+	 *
+	 * @return a String representation of this set
+	 */
 	@Override
 	public String toString() {
 		return toString(", ", true);

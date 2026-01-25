@@ -489,6 +489,25 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		return toString(", ");
 	}
 
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this set, using {@link Object#toString()} to
+	 * append each item's String representation, separating items with {@code separator}. This won't wrap the output in
+	 * braces or brackets.
+	 * <br>
+	 * Unlike the implementation in {@link ObjectSet}, this will show items in the same order they were inserted (unless
+	 * the order changed due to sorting, shuffling, etc.). This delegates to
+	 * {@link EnhancedCollection#appendTo(CharSequence, String, boolean)}.
+	 *
+	 * @param sb        an Appendable CharSequence that this can append to
+	 * @param separator how to separate items, such as {@code ", "}
+	 * @return {@code sb}, with the appended items of this set
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	@Override
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator) {
+		return appendTo(sb, ", ", false);
+	}
+
 	public static class ObjectOrderedSetIterator<K> extends ObjectSetIterator<K> {
 		private final ObjectList<K> items;
 
