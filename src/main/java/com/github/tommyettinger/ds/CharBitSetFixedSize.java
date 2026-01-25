@@ -761,7 +761,7 @@ public class CharBitSetFixedSize implements PrimitiveSet.SetOfChar, CharPredicat
 	 * delimiter.
 	 * @param builder an Appendable CharSequence that will be modified in-place and returned
 	 * @return the given Appendable CharSequence, after modifications
-	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S builder) {
 		try {
