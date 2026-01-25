@@ -727,6 +727,13 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		return true;
 	}
 
+	/**
+	 * Gets a String representation of this map using {@link LongAppender#DEFAULT} to get the String form of keys and
+	 * {@code Appender::append} to get the String form of values.
+	 * Separates keys from values using "=", and separates entries using ", ". Wraps the output in curly braces.
+	 *
+	 * @return a String representation of this map
+	 */
 	@Override
 	public String toString() {
 		return toString(", ", true);
@@ -743,8 +750,18 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		return toString(entrySeparator, false);
 	}
 
+	/**
+	 * Gets a String representation of this map using {@link LongAppender#DEFAULT} to get the String form of keys and
+	 * {@code Appender::append} to get the String form of values.
+	 * Separates keys from values using "=", and separates entries using {@code entrySeparator}.
+	 * Wraps the output in curly braces if {@code braces} is true.
+	 *
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param braces         true to wrap the output in curly braces, or false to omit them
+	 * @return a String representation of this map
+	 */
 	public String toString(String entrySeparator, boolean braces) {
-		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+		return appendTo(new StringBuilder(size() * 8), entrySeparator, braces).toString();
 	}
 
 	/**
@@ -764,28 +781,45 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 */
 	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
 						   LongAppender keyAppender, Appender<V> valueAppender) {
-		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return appendTo(new StringBuilder(size() * 8), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this LongObjectMap. Uses
+	 * {@link LongAppender#DEFAULT} and {@code Appender::append} to write keys and values, and appends them
+	 * to {@code sb}. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
+	 * the default String representation, you can use {@code Appender::append} as an appender. To write keys
+	 * so that they can be read back as Java source code, use {@link LongAppender#READABLE} for the keyAppender.
+	 * Uses {@code "="} to separate keys from their values. Uses {@code entrySeparator} to separate entries.
+	 * If {@code braces} is true, wraps the output in curly braces.
+	 *
+	 * @param sb                an Appendable CharSequence that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, LongAppender.DEFAULT, Appender::append);
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this LongFloatMap, but uses the given {@link LongAppender} and
+	 * Appends to an Appendable CharSequence from the contents of this LongObjectMap, but uses the given {@link LongAppender} and
 	 * {@link Appender} to convert each key and each value to a customizable representation and append them
-	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * to {@code sb}. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
 	 * the default String representation, you can use {@code Appender::append} as an appender. To write keys
 	 * so that they can be read back as Java source code, use {@link LongAppender#READABLE} for the keyAppender.
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param keyAppender       a LongAppender that can take a long key, such as {@link LongAppender#DEFAULT}
+	 * @param valueAppender     an Appender that can take a V value, such as {@code Appender::append}
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  LongAppender keyAppender, Appender<V> valueAppender) {
@@ -1650,7 +1684,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Constructs a single-entry map given one key and one value.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its V value to a primitive float, regardless of which Number type was used.
+	 * convert its K key to a primitive long, regardless of which Number type was used.
 	 *
 	 * @param key0   the first and only key; will be converted to primitive long
 	 * @param value0 the first and only value
@@ -1667,7 +1701,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 * convert its K key to a primitive long, regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive long
 	 * @param value0 a V value
@@ -1687,7 +1721,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 * convert its K key to a primitive long, regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive long
 	 * @param value0 a V value
@@ -1710,7 +1744,7 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 	 * Constructs a map given alternating keys and values.
 	 * This is mostly useful as an optimization for {@link #with(Number, Object, Object...)}
 	 * when there's no "rest" of the keys or values. Like the more-argument with(), this will
-	 * convert its V values to primitive floats, regardless of which Number type was used.
+	 * convert its K key to a primitive long, regardless of which Number type was used.
 	 *
 	 * @param key0   a Number key; will be converted to primitive long
 	 * @param value0 a V value
