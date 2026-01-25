@@ -560,26 +560,41 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		return super.hashCode();
 	}
 
+	/**
+	 * Make a String representation of the contents of this list, separating items with {@code ", "} and wrapping the
+	 * output in square brackets. Uses {@code Appender::append} to convert each item to a String form.
+	 * @return a String representation of the contents of this list
+	 */
 	@Override
 	public String toString() {
 		return toString(", ", true);
 	}
 
-	public <S extends CharSequence & Appendable> S appendTo(S builder, String separator) {
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this list, using {@link Object#toString()} to
+	 * append each item's String representation, separating items with {@code separator}. This won't wrap the output in
+	 * braces or brackets.
+	 *
+	 * @param sb        an Appendable CharSequence that this can append to
+	 * @param separator how to separate items, such as {@code ", "}
+	 * @return {@code sb}, with the appended items of this list
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator) {
 		try {
 			int n = size();
 			if (n == 0) {
-				return builder;
+				return sb;
 			}
-			builder.append(get(0).toString());
+			sb.append(get(0).toString());
 			for (int i = 1; i < n; i++) {
-				builder.append(separator);
-				builder.append(get(i).toString());
+				sb.append(separator);
+				sb.append(get(i).toString());
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return builder;
+		return sb;
 	}
 
 	/**

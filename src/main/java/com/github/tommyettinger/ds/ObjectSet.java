@@ -707,7 +707,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @param sb        an Appendable CharSequence that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @return {@code sb}, with the appended items of this set
-	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator) {
 		try {

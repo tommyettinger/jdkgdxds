@@ -829,30 +829,41 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * to a temporary StringBuilder. To use
 	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
-	 * @param entrySeparator how to separate set items, such as {@code ", "}
+	 * @param itemSeparator  how to separate set items, such as {@code ", "}
 	 * @param braces         true to wrap the output in curly braces, or false to omit them
 	 * @param keyAppender    a function that takes a StringBuilder and a T, and returns the modified StringBuilder
 	 * @return a new String representing this set
 	 */
-	public String toString(String entrySeparator, boolean braces, Appender<T> keyAppender) {
-		return map.keys.appendTo(new StringBuilder(), entrySeparator, braces, keyAppender).toString();
-	}
-
-	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
-		return map.keys.appendTo(sb, entrySeparator, braces, Appender::append);
+	public String toString(String itemSeparator, boolean braces, Appender<T> keyAppender) {
+		return map.keys.appendTo(new StringBuilder(), itemSeparator, braces, keyAppender).toString();
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this NumberedSet, but uses the given {@link Appender}
-	 * to convert all keys to a customizable representation and append them
-	 * to a StringBuilder. To use
-	 * the default String representation, you can use {@code Appender::append} as an appender.
+	 * Appends to an Appendable CharSequence from the contents of this NumberedSet, using {@code Appender::append} to
+	 * convert items to String.
 	 *
-	 * @param sb            a StringBuilder that this can append to
+	 * @param sb            an Appendable CharSequence that this can append to
 	 * @param itemSeparator how to separate set items, such as {@code ", "}
 	 * @param braces        true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender   a function that takes a StringBuilder and a T, and returns the modified StringBuilder
 	 * @return {@code sb}, with the appended items of this set
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
+	public <S extends CharSequence & Appendable> S appendTo(S sb, String itemSeparator, boolean braces) {
+		return map.keys.appendTo(sb, itemSeparator, braces, Appender::append);
+	}
+
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this NumberedSet, but uses the given {@link Appender}
+	 * to convert all keys to a customizable representation and append them
+	 * to {@code sb}. To use
+	 * the default String representation, you can use {@code Appender::append} as an appender.
+	 *
+	 * @param sb            a Appendable CharSequence that this can append to
+	 * @param itemSeparator how to separate set items, such as {@code ", "}
+	 * @param braces        true to wrap the output in curly braces, or false to omit them
+	 * @param keyAppender   an Appender that can take T items, such as {@code Appender::append}
+	 * @return {@code sb}, with the appended items of this set
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String itemSeparator, boolean braces,
 								  Appender<T> keyAppender) {
