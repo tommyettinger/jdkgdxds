@@ -736,6 +736,13 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		return true;
 	}
 
+	/**
+	 * Gets a String representation of this map using {@link LongAppender#DEFAULT} to get the String form of keys and
+	 * {@link IntAppender#DEFAULT} to get the String form of values.
+	 * Separates keys from values using "=", and separates entries using ", ". Wraps the output in curly braces.
+	 *
+	 * @return a String representation of this map
+	 */
 	@Override
 	public String toString() {
 		return toString(", ", true);
@@ -752,8 +759,18 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		return toString(entrySeparator, false);
 	}
 
+	/**
+	 * Gets a String representation of this map using {@link LongAppender#DEFAULT} to get the String form of keys and
+	 * {@link IntAppender#DEFAULT} to get the String form of values.
+	 * Separates keys from values using "=", and separates entries using {@code entrySeparator}.
+	 * Wraps the output in curly braces if {@code braces} is true.
+	 *
+	 * @param entrySeparator how to separate entries, such as {@code ", "}
+	 * @param braces         true to wrap the output in curly braces, or false to omit them
+	 * @return a String representation of this map
+	 */
 	public String toString(String entrySeparator, boolean braces) {
-		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+		return appendTo(new StringBuilder(8 * size()), entrySeparator, braces).toString();
 	}
 
 	/**
@@ -772,24 +789,41 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param keyAppender       a LongAppender that can take a long key, such as {@link LongAppender#DEFAULT}
+	 * @param valueAppender     a IntAppender that can take a int value, such as {@link IntAppender#DEFAULT}
 	 * @return a new String representing this map
 	 */
 	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
 						   LongAppender keyAppender, IntAppender valueAppender) {
-		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return appendTo(new StringBuilder(8 * size()), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this LongIntMap. Uses
+	 * {@link LongAppender#DEFAULT} and {@link IntAppender#DEFAULT} to write keys and values, and appends them
+	 * to {@code sb}. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
+	 * the default String representation, you can use {@link LongAppender#DEFAULT} or {@link IntAppender#DEFAULT}
+	 * as an appender. To write values so that they can be read back as Java source code, use
+	 * {@link LongAppender#READABLE} or {@link IntAppender#READABLE} for each appender.
+	 * Uses {@code "="} to separate keys from their values. Uses {@code entrySeparator} to separate entries.
+	 * If {@code braces} is true, wraps the output in curly braces.
+	 *
+	 * @param sb                an Appendable CharSequence that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, LongAppender.DEFAULT, IntAppender.DEFAULT);
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this LongIntMap, but uses the given {@link LongAppender} and
+	 * Appends to an Appendable CharSequence from the contents of this LongIntMap, but uses the given {@link LongAppender} and
 	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
-	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, int)}. To use
+	 * to {@code sb}. These functions are often method references to methods in Base, such as
+	 * {@link Base#appendReadable(CharSequence, long)} and {@link Base#appendUnsigned(CharSequence, long)}. To use
 	 * the default String representation, you can use {@link LongAppender#DEFAULT} or {@link IntAppender#DEFAULT}
 	 * as an appender. To write values so that they can be read back as Java source code, use
 	 * {@link LongAppender#READABLE} or {@link IntAppender#READABLE} for each appender.
@@ -798,13 +832,14 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a long, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param keyAppender       a LongAppender that can take a long key, such as {@link LongAppender#DEFAULT}
+	 * @param valueAppender     a IntAppender that can take a int value, such as {@link IntAppender#DEFAULT}
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  LongAppender keyAppender, IntAppender valueAppender) {
