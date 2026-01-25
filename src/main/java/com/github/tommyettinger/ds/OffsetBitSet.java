@@ -703,56 +703,59 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 	}
 
 	/**
-	 * Given a StringBuilder, this appends part of the toString() representation of this OffsetBitSet, without allocating a String.
+	 * Given an Appendable CharSequence, this appends part of the toString() representation of this OffsetBitSet, without allocating a String.
 	 * This does not include the opening {@code [} and closing {@code ]} chars, and only appends the int positions in this OffsetBitSet,
 	 * each pair separated by the given delimiter String. You can use this to choose a different delimiter from what toString() uses.
 	 *
-	 * @param builder   a StringBuilder that will be modified in-place and returned
+	 * @param sb an Appendable CharSequence that this can append to
 	 * @param delimiter the String that separates every pair of integers in the result
-	 * @return the given StringBuilder, after modifications
+	 * @return {@code sb}, with the appended items of this set
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
-	public <S extends CharSequence & Appendable> S appendContents(S builder, String delimiter) {
+	public <S extends CharSequence & Appendable> S appendContents(S sb, String delimiter) {
 		try {
 			int curr = nextSetBit(offset);
-			IntAppender.DEFAULT.apply(builder, curr);
+			IntAppender.DEFAULT.apply(sb, curr);
 			while ((curr = nextSetBit(curr + 1)) != offset - 1) {
-				builder.append(delimiter);
-				IntAppender.DEFAULT.apply(builder, curr);
+				sb.append(delimiter);
+				IntAppender.DEFAULT.apply(sb, curr);
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return builder;
+		return sb;
 	}
 
 	/**
-	 * Given a StringBuilder, this appends the toString() representation of this OffsetBitSet, without allocating a String.
+	 * Given an Appendable CharSequence, this appends the toString() representation of this OffsetBitSet, without allocating a String.
 	 * This includes the opening {@code [} and closing {@code ]} chars; it uses {@code ", "} as its delimiter.
 	 *
-	 * @param builder a StringBuilder that will be modified in-place and returned
-	 * @return the given StringBuilder, after modifications
+	 * @param sb an Appendable CharSequence that this can append to
+	 * @return {@code sb}, with the appended items of this set
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
-	public <S extends CharSequence & Appendable> S appendTo(S builder) {
+	public <S extends CharSequence & Appendable> S appendTo(S sb) {
 		try {
-			builder.append('[');
-			appendContents(builder, ", ");
-			builder.append(']');
-			return builder;
+			sb.append('[');
+			appendContents(sb, ", ");
+			sb.append(']');
+			return sb;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this PrimitiveCollection, but uses the given {@link IntAppender}
-	 * to convert each item to a customizable representation and append them to a StringBuilder. To use
+	 * Appends to an Appendable CharSequence from the contents of this set, but uses the given {@link IntAppender}
+	 * to convert each item to a customizable representation and append them to {@code sb}. To use
 	 * the default String representation, you can use {@link IntAppender#DEFAULT} as an appender.
 	 *
-	 * @param sb        a StringBuilder that this can append to
+	 * @param sb        an Appendable CharSequence that this can append to
 	 * @param separator how to separate items, such as {@code ", "}
 	 * @param brackets  true to wrap the output in square brackets, or false to omit them
-	 * @param appender  a function that takes a StringBuilder and an int, and returns the modified StringBuilder
-	 * @return {@code sb}, with the appended items of this PrimitiveCollection
+	 * @param appender  an IntAppender, such as {@link IntAppender#DEFAULT}
+	 * @return {@code sb}, with the appended items of this set
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	@Override
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String separator, boolean brackets, IntAppender appender) {
@@ -779,6 +782,11 @@ public class OffsetBitSet implements PrimitiveSet.OfInt {
 		return sb;
 	}
 
+	/**
+	 * Gets a String representation of this set using base-10 numbers for each int in the set, separated by ", " and
+	 * wrapped in square brackets.
+	 * @return a String representation of this set
+	 */
 	@Override
 	public String toString() {
 		return toString(", ", true);
