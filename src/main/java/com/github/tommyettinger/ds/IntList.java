@@ -1042,7 +1042,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 
 	/**
 	 * Returns a new primitive iterator over the items in this IntList. Iterates in order if
-	 * {@link #keepsOrder()} returns true, which it does for an IntList but not a IntBag.
+	 * {@link #keepsOrder()} returns true, which it does for an IntList but not an IntBag.
 	 *
 	 * @return a {@link IntIterator}; use its nextInt() method instead of next()
 	 */
@@ -1061,7 +1061,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	}
 
 	/**
-	 * A {@link IntIterator}, plus {@link ListIterator} methods, over the elements of a IntList.
+	 * A {@link IntIterator}, plus {@link ListIterator} methods, over the elements of an IntList.
 	 * Use {@link #nextInt()} in preference to {@link #next()} to avoid allocating Integer objects.
 	 */
 	public static class IntListIterator implements IntIterator {

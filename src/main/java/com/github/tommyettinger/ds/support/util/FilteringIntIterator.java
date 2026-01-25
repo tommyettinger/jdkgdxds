@@ -21,7 +21,7 @@ import com.github.tommyettinger.function.IntPredicate;
 import java.util.NoSuchElementException;
 
 /**
- * Wraps a IntIterator so that it skips any items for which {@link #filter} returns {@code false}. You can use
+ * Wraps an IntIterator so that it skips any items for which {@link #filter} returns {@code false}. You can use
  * a lambda or other predicate that accepts {@code int} and returns true or false for the filter here.
  * This has undefined behavior if any items the IntIterator could return are modified during iteration.
  * <br>
