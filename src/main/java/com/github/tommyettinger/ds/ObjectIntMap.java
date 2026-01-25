@@ -686,6 +686,12 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		return true;
 	}
 
+	/**
+	 * Gets a String representation of this map using {@code Appender::append} to get the String form of keys and
+	 * {@link IntAppender#DEFAULT} to get the String form of values.
+	 * Separates keys from values using "=", and separates entries using ", ". Wraps the output in curly braces.
+	 * @return a String representation of this map
+	 */
 	@Override
 	public String toString() {
 		return toString(", ", true);
@@ -702,8 +708,15 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 		return toString(entrySeparator, false);
 	}
 
+	/**
+	 * Gets a String representation of this map using {@code Appender::append} to get the String form of keys and
+	 * {@link IntAppender#DEFAULT} to get the String form of values.
+	 * Separates keys from values using "=", and separates entries using {@code entrySeparator}.
+	 * Wraps the output in curly braces if {@code braces} is true.
+	 * @return a String representation of this map
+	 */
 	public String toString(String entrySeparator, boolean braces) {
-		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+		return appendTo(new StringBuilder(8 * size()), entrySeparator, braces).toString();
 	}
 
 	/**
@@ -717,34 +730,46 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take a K key
+	 * @param valueAppender     an IntAppender that can take an int value
 	 * @return a new String representing this map
 	 */
 	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
 						   Appender<K> keyAppender, IntAppender valueAppender) {
-		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return appendTo(new StringBuilder(8 * size()), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this ObjectIntMap, using
+	 * {@code Appender::append} and {@link IntAppender#DEFAULT} to append keys and values, respectively.
+	 * Uses "=" to separate keys from their values.
+	 *
+	 * @param sb                an Appendable CharSequence that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, Appender::append, IntAppender.DEFAULT);
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this ObjectIntMap, but uses the given {@link Appender} and
+	 * Appends to an Appendable CharSequence from the contents of this ObjectIntMap, but uses the given {@link Appender} and
 	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendUnsigned(CharSequence, int)} . To use
+	 * {@link Base#appendUnsigned(CharSequence, int)}. To use
 	 * the default String representation, you can use {@code Appender::append} as an appender. To write numeric values
 	 * so that they can be read back as Java source code, use {@link IntAppender#READABLE} for the valueAppender.
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take a K key
+	 * @param valueAppender     an IntAppender that can take an int value
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  Appender<K> keyAppender, IntAppender valueAppender) {
@@ -1746,7 +1771,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   a K for a key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param <K>    the type of key0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
@@ -1763,9 +1788,9 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   a K key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   a K key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
@@ -1783,11 +1808,11 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   a K key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   a K key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param key2   a K key
-	 * @param value2 a int for a value
+	 * @param value2 an int for a value
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
@@ -1806,13 +1831,13 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   a K key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   a K key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param key2   a K key
-	 * @param value2 a int for a value
+	 * @param value2 an int for a value
 	 * @param key3   a K key
-	 * @param value3 a int for a value
+	 * @param value3 an int for a value
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */

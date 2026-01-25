@@ -625,20 +625,21 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this ObjectIntOrderedMap, but uses the given {@link Appender} and
+	 * Appends to an Appendable CharSequence from the contents of this ObjectIntOrderedMap, but uses the given {@link Appender} and
 	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendUnsigned(CharSequence, int)} . To use
+	 * {@link Base#appendUnsigned(CharSequence, int)}. To use
 	 * the default String representation, you can use {@code Appender::append} as an appender. To write numeric values
 	 * so that they can be read back as Java source code, use {@link IntAppender#READABLE} for the valueAppender.
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take a K key
+	 * @param valueAppender     an IntAppender that can take an int value
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	@Override
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<K> keyAppender, IntAppender valueAppender) {
@@ -951,7 +952,7 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   a K for a key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param <K>    the type of key0
 	 * @return a new map containing just the entry mapping key0 to value0
 	 */
@@ -968,9 +969,9 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   a K key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   a K key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
@@ -988,11 +989,11 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   a K key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   a K key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param key2   a K key
-	 * @param value2 a int for a value
+	 * @param value2 an int for a value
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */
@@ -1011,13 +1012,13 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * its value type, and will not box it.
 	 *
 	 * @param key0   a K key
-	 * @param value0 a int for a value
+	 * @param value0 an int for a value
 	 * @param key1   a K key
-	 * @param value1 a int for a value
+	 * @param value1 an int for a value
 	 * @param key2   a K key
-	 * @param value2 a int for a value
+	 * @param value2 an int for a value
 	 * @param key3   a K key
-	 * @param value3 a int for a value
+	 * @param value3 an int for a value
 	 * @param <K>    the type of keys
 	 * @return a new map containing the given key-value pairs
 	 */

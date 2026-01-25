@@ -18,10 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.ds.support.util.Appender;
-import com.github.tommyettinger.ds.support.util.FloatAppender;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
-import com.github.tommyettinger.ds.support.util.PartialParser;
+import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.tommyettinger.function.ObjFloatBiConsumer;
 import com.github.tommyettinger.function.ObjFloatToFloatBiFunction;
@@ -726,6 +723,12 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		return true;
 	}
 
+	/**
+	 * Gets a String representation of this map using {@code Appender::append} to get the String form of keys and
+	 * {@link FloatAppender#DEFAULT} to get the String form of values.
+	 * Separates keys from values using "=", and separates entries using ", ". Wraps the output in curly braces.
+	 * @return a String representation of this map
+	 */
 	@Override
 	public String toString() {
 		return toString(", ", true);
@@ -742,49 +745,68 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		return toString(entrySeparator, false);
 	}
 
+	/**
+	 * Gets a String representation of this map using {@code Appender::append} to get the String form of keys and
+	 * {@link FloatAppender#DEFAULT} to get the String form of values.
+	 * Separates keys from values using "=", and separates entries using {@code entrySeparator}.
+	 * Wraps the output in curly braces if {@code braces} is true.
+	 * @return a String representation of this map
+	 */
 	public String toString(String entrySeparator, boolean braces) {
-		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+		return appendTo(new StringBuilder(8 * size()), entrySeparator, braces).toString();
 	}
 
 	/**
 	 * Makes a String from the contents of this ObjectFloatMap, but uses the given {@link Appender} and
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendFriendly(CharSequence, float)}. To use
-	 * the default String representation, you can use {@code Appender::append} for keyAppender. To write numeric values
+	 * {@link Base#appendUnsigned(CharSequence, float)}. To use
+	 * the default String representation, you can use {@code Appender::append} as an appender. To write numeric values
 	 * so that they can be read back as Java source code, use {@link FloatAppender#READABLE} for the valueAppender.
 	 *
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a float, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take a K key
+	 * @param valueAppender     a FloatAppender that can take a float value
 	 * @return a new String representing this map
 	 */
 	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
 						   Appender<K> keyAppender, FloatAppender valueAppender) {
-		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return appendTo(new StringBuilder(8 * size()), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
+	/**
+	 * Appends to an Appendable CharSequence from the contents of this ObjectFloatMap, using
+	 * {@code Appender::append} and {@link FloatAppender#DEFAULT} to append keys and values, respectively.
+	 * Uses "=" to separate keys from their values.
+	 *
+	 * @param sb                an Appendable CharSequence that this can append to
+	 * @param entrySeparator    how to separate entries, such as {@code ", "}
+	 * @param braces            true to wrap the output in curly braces, or false to omit them
+	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
+	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {
 		return appendTo(sb, entrySeparator, "=", braces, Appender::append, FloatAppender.DEFAULT);
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this ObjectFloatMap, but uses the given {@link Appender} and
+	 * Appends to an Appendable CharSequence from the contents of this ObjectFloatMap, but uses the given {@link Appender} and
 	 * {@link FloatAppender} to convert each key and each value to a customizable representation and append them
 	 * to a StringBuilder. These functions are often method references to methods in Base, such as
-	 * {@link Base#appendFriendly(CharSequence, float)}. To use
+	 * {@link Base#appendUnsigned(CharSequence, float)}. To use
 	 * the default String representation, you can use {@code Appender::append} as an appender. To write numeric values
 	 * so that they can be read back as Java source code, use {@link FloatAppender#READABLE} for the valueAppender.
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a float, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take a K key
+	 * @param valueAppender     a FloatAppender that can take a float value
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  Appender<K> keyAppender, FloatAppender valueAppender) {
