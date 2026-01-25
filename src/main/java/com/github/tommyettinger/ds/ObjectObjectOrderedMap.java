@@ -628,18 +628,18 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this ObjectObjectOrderedMap, but uses the given {@link Appender} and
-	 * {@link Appender} to convert each key and each value to a customizable representation and append them
-	 * to a StringBuilder. To use
+	 * Appends to an Appendable CharSequence from the contents of this ObjectObjectOrderedMap, but uses the given {@link Appender}s
+	 * to convert each key and each value to a customizable representation and append them to {@code sb}. To use
 	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and a K, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and a V, and returns the modified StringBuilder
+	 * @param keyAppender       an Appender that can take a K key
+	 * @param valueAppender     an Appender that can take a V value
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S>  any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	@Override
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces, Appender<K> keyAppender, Appender<V> valueAppender) {
