@@ -858,12 +858,12 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @return a String representation of this map
 	 */
 	public String toString(String entrySeparator, boolean braces) {
-		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+		return appendTo(new StringBuilder(8 * size()), entrySeparator, braces).toString();
 	}
 
 	/**
-	 * Makes a String from the contents of this ObjectObjectMap, but uses the given {@link Appender} and
-	 * {@link Appender} to convert each key and each value to a customizable representation and append them
+	 * Makes a String from the contents of this ObjectObjectMap, but uses the given {@link Appender}s
+	 * to convert each key and each value to a customizable representation and append them
 	 * to a temporary StringBuilder. To use
 	 * the default String representation, you can use {@code Appender::append} as an appender.
 	 *
@@ -876,7 +876,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 */
 	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
 						   Appender<K> keyAppender, Appender<V> valueAppender) {
-		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return appendTo(new StringBuilder(8 * size()), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
 	/**
