@@ -149,7 +149,6 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 	 */
 	public IntOrderedSet(IntSet set, OrderType ordering) {
 		this(set.size(), set.loadFactor, ordering);
-		hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 

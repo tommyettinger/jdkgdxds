@@ -139,7 +139,6 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 	 */
 	public LongOrderedSet(LongSet set, OrderType ordering) {
 		this(set.size(), set.loadFactor, ordering);
-		hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 
