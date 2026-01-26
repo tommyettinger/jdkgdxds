@@ -169,7 +169,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @return an index between 0 and {@link InternalMap#mask} (both inclusive)
 	 */
 	protected int place(Object item) {
-		return BitConversion.imul(item.hashCode(), map.hashMultiplier) >>> map.shift;
+		return BitConversion.imul(item.hashCode() ^ 0xC143F257, 0xFAB9E45B) >>> map.shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & map.mask;
 	}
