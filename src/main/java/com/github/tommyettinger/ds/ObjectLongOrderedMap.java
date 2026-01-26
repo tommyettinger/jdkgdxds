@@ -119,7 +119,6 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 */
 	public ObjectLongOrderedMap(ObjectLongMap<? extends K> map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
-		hashMultiplier = map.hashMultiplier;
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
 		}
@@ -160,7 +159,6 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 	 */
 	public ObjectLongOrderedMap(ObjectLongOrderedMap<? extends K> other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
-		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
