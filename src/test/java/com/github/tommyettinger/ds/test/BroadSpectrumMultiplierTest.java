@@ -238,9 +238,7 @@ public class BroadSpectrumMultiplierTest {
 			ObjectSet set = new ObjectSet(51, 0.7f) {
 				long collisionTotal = 0;
 				int longestPileup = 0;
-				{
-					hashMultiplier = Utilities.GOOD_MULTIPLIERS[finalA];
-				}
+				int hashMultiplier = Utilities.GOOD_MULTIPLIERS[finalA];
 
 				@Override
 				protected int place(Object item) {

@@ -88,7 +88,6 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	 */
 	public ObjectOrderedSet(ObjectSet<? extends T> set, OrderType ordering) {
 		this(set.size(), set.loadFactor, ordering);
-		hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 
