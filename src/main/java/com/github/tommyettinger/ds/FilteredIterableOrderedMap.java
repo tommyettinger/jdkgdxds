@@ -151,7 +151,6 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 		super(map.size(), map.loadFactor, type);
 		filter = map.filter;
 		editor = map.editor;
-		this.hashMultiplier = map.hashMultiplier;
 		putAll(map);
 	}
 
@@ -290,7 +289,6 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 		super(map.size(), map.loadFactor, map.getOrderType());
 		filter = map.filter;
 		editor = map.editor;
-		this.hashMultiplier = map.hashMultiplier;
 		putAll(map);
 	}
 
@@ -396,10 +394,10 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	}
 
 	protected int hashHelper(I s) {
-		int hash = hashMultiplier;
+		int hash = 0;
 		for (K c : s) {
 			if (filter.test(c)) {
-				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), hashMultiplier);
+				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), 0xC143F257);
 			}
 		}
 		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
