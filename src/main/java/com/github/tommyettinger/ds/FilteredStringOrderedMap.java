@@ -226,7 +226,6 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	public FilteredStringOrderedMap(CharFilter filter, ObjectObjectOrderedMap<String, ? extends V> other, int offset, int count, OrderType type) {
 		this(filter, count, other.loadFactor, type);
-		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
@@ -369,7 +368,6 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	 */
 	public FilteredStringOrderedMap(CharFilter filter, ObjectObjectOrderedMap<String, ? extends V> other, int offset, int count) {
 		this(filter, count, other.loadFactor, other.getOrderType());
-		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 

@@ -117,7 +117,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 */
 	public ObjectObjectOrderedMap(ObjectObjectMap<? extends K, ? extends V> map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
-		hashMultiplier = map.hashMultiplier;
 		for (K k : map.keySet()) {
 			put(k, map.get(k));
 		}
@@ -134,7 +133,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 	 */
 	public ObjectObjectOrderedMap(ObjectObjectOrderedMap<? extends K, ? extends V> other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
-		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
