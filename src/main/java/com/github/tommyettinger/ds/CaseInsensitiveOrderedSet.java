@@ -57,7 +57,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	/**
 	 * Used by {@link #place(Object)} to mix hashCode() results.
 	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectOrderedSet}.
+	 * the same before and after serialization.
 	 */
 	protected int hashMultiplier = 0xC143F257;
 

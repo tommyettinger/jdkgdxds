@@ -57,6 +57,13 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * for Strings that uses the same rules this class does.
  */
 public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, V> {
+	/**
+	 * Used by {@link #place(Object)} to mix hashCode() results.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization.
+	 */
+	protected int hashMultiplier;
+
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);
 
 	/**
@@ -533,6 +540,28 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 				}
 			}
 		}
+	}
+
+	/**
+	 * Gets the current hashMultiplier, used in {@link #place} to mix hash codes.
+	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
+	 * {@link Utilities#FILTERED_HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
+	 *
+	 * @return the current hashMultiplier
+	 */
+	public int getHashMultiplier() {
+		return hashMultiplier;
+	}
+
+	/**
+	 * Sets the hashMultiplier to the given int, which will be made odd if even (by OR-ing with 1) and limited to at
+	 * most 16 bits. This can be any odd int, but should almost always be drawn from
+	 * {@link Utilities#FILTERED_HASH_MULTIPLIERS} or something like it.
+	 *
+	 * @param hashMultiplier any int; will be made odd if even, and limited to 16 bits
+	 */
+	public void setHashMultiplier(int hashMultiplier) {
+		this.hashMultiplier = (hashMultiplier & 0xFFFF) | 1;
 	}
 
 	/**
