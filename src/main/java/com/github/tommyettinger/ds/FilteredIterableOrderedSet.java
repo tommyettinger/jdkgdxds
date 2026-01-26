@@ -153,7 +153,6 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 		super(set.size(), set.loadFactor, type);
 		filter = set.filter;
 		editor = set.editor;
-		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 
@@ -289,7 +288,6 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 		super(set.size(), set.loadFactor, set.getOrderType());
 		filter = set.filter;
 		editor = set.editor;
-		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 
@@ -392,10 +390,10 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	}
 
 	protected int hashHelper(I s) {
-		int hash = hashMultiplier;
+		int hash = 0;
 		for (T c : s) {
 			if (filter.test(c)) {
-				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), hashMultiplier);
+				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), 0xC143F257);
 			}
 		}
 		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);

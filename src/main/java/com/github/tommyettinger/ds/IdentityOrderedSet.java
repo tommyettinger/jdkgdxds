@@ -141,26 +141,6 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is not used by identity hashing.
-	 *
-	 * @return any int; the value isn't used internally, but may be used by subclasses to identify something
-	 */
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * Effectively does nothing here because the hashMultiplier is not used by identity hashing.
-	 * Subclasses can use this to set some kind of identifier or user data, though.
-	 * Unlike the superclass implementation, this does not alter the given int to make it odd.
-	 *
-	 * @param hashMultiplier any int; will not be used
-	 */
-	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier;
-	}
-
-	/**
 	 * Constructs an empty set given the type as a generic type argument.
 	 * This is usually less useful than just using the constructor, but can be handy
 	 * in some code-generation scenarios when you don't know how many arguments you will have.

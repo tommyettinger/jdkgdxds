@@ -126,7 +126,6 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 		super(set.size(), set.loadFactor);
 		filter = set.filter;
 		editor = set.editor;
-		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 
@@ -229,10 +228,10 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	}
 
 	protected int hashHelper(I s) {
-		int hash = hashMultiplier;
+		int hash = 0;
 		for (T c : s) {
 			if (filter.test(c)) {
-				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), hashMultiplier);
+				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), 0xC143F257);
 			}
 		}
 		return hash ^ (hash << 23 | hash >>> 9) ^ (hash << 11 | hash >>> 21);
