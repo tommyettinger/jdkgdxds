@@ -604,9 +604,9 @@ public class IntIntTable implements Iterable<IntIntTable.Entry> {
 	}
 
 	/**
-	 * Appends to a StringBuilder from the contents of this IntIntTable, but uses the given {@link IntAppender} and
-	 * {@link IntAppender} to convert each key and each value to a customizable representation and append them
-	 * to a StringBuilder. These functions are often method references to methods in Base, such as
+	 * Appends to an Appendable CharSequence from the contents of this IntIntTable, but uses the given {@link IntAppender}s
+	 * to convert each key and each value to a customizable representation and append them
+	 * to {@code sb}. These functions are often method references to methods in Base, such as
 	 * {@link Base#appendReadable(CharSequence, int)} and {@link Base#appendUnsigned(CharSequence, int)}. To use
 	 * the default String representation, you can use {@link IntAppender#DEFAULT}
 	 * as an appender. To write values so that they can be read back as Java source code, use
@@ -616,13 +616,14 @@ public class IntIntTable implements Iterable<IntIntTable.Entry> {
 	 * from values with {@code ", "} and also separate entries with {@code ", "}, that allows the output to be
 	 * copied into source code that calls {@link #with(Number, Number, Number...)} (if {@code braces} is false).
 	 *
-	 * @param sb                a StringBuilder that this can append to
+	 * @param sb                an Appendable CharSequence that this can append to
 	 * @param entrySeparator    how to separate entries, such as {@code ", "}
 	 * @param keyValueSeparator how to separate each key from its value, such as {@code "="} or {@code ":"}
 	 * @param braces            true to wrap the output in curly braces, or false to omit them
-	 * @param keyAppender       a function that takes a StringBuilder and an int, and returns the modified StringBuilder
-	 * @param valueAppender     a function that takes a StringBuilder and an int, and returns the modified StringBuilder
+	 * @param keyAppender       a IntAppender that can take a int key, such as {@link IntAppender#DEFAULT}
+	 * @param valueAppender     a IntAppender that can take a int value, such as {@link IntAppender#DEFAULT}
 	 * @return {@code sb}, with the appended keys and values of this map
+	 * @param <S> any type that is both a CharSequence and an Appendable, such as StringBuilder, StringBuffer, CharBuffer, or CharList
 	 */
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, String keyValueSeparator, boolean braces,
 								  IntAppender keyAppender, IntAppender valueAppender) {

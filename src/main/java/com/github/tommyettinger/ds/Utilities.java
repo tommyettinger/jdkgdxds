@@ -137,7 +137,8 @@ public final class Utilities {
 	/**
 	 * Like {@link #HASH_MULTIPLIERS}, but specifically chosen to have no full collisions on a large list of English
 	 * words (235970 of them) when used with the hashing function for FilteredString data structures like
-	 * {@link FilteredStringSet} and {@link FilteredStringMap}.
+	 * {@link FilteredStringSet} and {@link FilteredStringMap}. These are all small enough to avoid overflowing a JS
+	 * Number when used on GWT. If you modify any of these, you should use odd multipliers less than 65536.
 	 */
 	public static final int[] FILTERED_HASH_MULTIPLIERS = new int[]{
 		0x00000719, 0x0000088F, 0x00000C53, 0x00000F45, 0x000011AF, 0x0000161D, 0x0000236B, 0x000029BB,
