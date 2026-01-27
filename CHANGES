@@ -1,3 +1,10 @@
+[2.1.0]
+- [BREAKING] The protected field `hashMultiplier` has been removed from most sets and maps, which no longer use it. However, the getter and setter for it are still present for compatibility, and used by some subclasses.
+- The iteration order of non-Ordered sets and maps is likely to have changed. Ordered sets and maps will notice no change.
+- The algorithm used by `place()` in most sets and maps is now faster and doesn't use a `hashMultiplier` variable, instead using a XOR and multiplication (using `BitConversion.imul()`). This is typically within 1-3% slower than libGDX does its sets and maps (with one `long` multiply) on desktop, but is resistant to linear patterns in `hashCode()`s. It is expected to be drastically faster on GWT, where the `long` math libGDX uses is very slow.
+- Many pieces of documentation for `toString()` and `appendTo()` have been updated and cleaned up to correctly refer to Appendable CharSequence instead of just StringBuilder.
+- When a temporary StringBuilder is created for a data structure's toString() result, it starts with an initial capacity based on that data structure's size, rather than always using 32 or the default for StringBuilder.
+
 [2.0.1]
 - Casing received a fix for the GWT target. This allows jdkgdxds to be used with GWT again.
 
