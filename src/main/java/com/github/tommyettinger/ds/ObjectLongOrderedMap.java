@@ -678,7 +678,11 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		public OrderedMapEntries(ObjectLongOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new EntryIterator<K>(map) {
+		}
+
+		@Override
+		public EntryIterator<K> iterator() {
+			return new EntryIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -714,16 +718,12 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 
 		@Override
 		public ObjectLongMap<K> appendInto(ObjectLongMap<K> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				K k = keys.get(iter.nextIndex);
 				map.put(k, iter.map.get(k));
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
@@ -734,7 +734,11 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		public OrderedMapKeys(ObjectLongOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new KeyIterator<K>(map) {
+		}
+
+		@Override
+		public KeyIterator<K> iterator() {
+			return new KeyIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -766,7 +770,6 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 				}
 			};
 		}
-
 	}
 
 	public static class OrderedMapValues<K> extends Values<K> {
@@ -775,7 +778,11 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 		public OrderedMapValues(ObjectLongOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new ValueIterator<K>(map) {
+		}
+
+		@Override
+		public ValueIterator<K> iterator() {
+			return new ValueIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -807,7 +814,6 @@ public class ObjectLongOrderedMap<K> extends ObjectLongMap<K> implements Ordered
 				}
 			};
 		}
-
 	}
 
 	/**

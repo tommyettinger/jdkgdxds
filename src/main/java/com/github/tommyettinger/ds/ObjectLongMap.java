@@ -81,7 +81,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	protected int shift;
 
 	/**
-	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1 bits in its low positions, ie a power of two
+	 * A bitmask used to confine hashcodes to the size of the table. Must be all 1-bits in its low positions, ie a power of two
 	 * minus 1. If {@link #place(Object)} is overridden, this can be used instead of {@link #shift} to isolate usable bits of a
 	 * hash.
 	 */
@@ -1137,10 +1137,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public static class Entries<K> extends AbstractSet<Entry<K>> implements EnhancedCollection<Entry<K>> {
-		protected EntryIterator<K> iter;
+		protected ObjectLongMap<K> map;
 
 		public Entries(ObjectLongMap<K> map) {
-			iter = new EntryIterator<>(map);
+			this.map = map;
 		}
 
 		/**
@@ -1150,24 +1150,17 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 */
 		@Override
 		public EntryIterator<K> iterator() {
-			return iter;
+			return new EntryIterator<>(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
+			return super.hashCode();
 		}
 
 		@Override
@@ -1176,27 +1169,15 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
-		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<Entry<K>> toList() {
-			ObjectList<Entry<K>> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Entry<K>> list = new ObjectList<>(map.size);
+			EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1208,14 +1189,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @return the given collection
 		 */
 		public Collection<Entry<K>> appendInto(Collection<Entry<K>> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1227,21 +1204,17 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @return the given map
 		 */
 		public ObjectLongMap<K> appendInto(ObjectLongMap<K> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				map.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
 
 	public static class Values<K> implements PrimitiveCollection.OfLong {
-		protected ValueIterator<K> iter;
+		protected ObjectLongMap<K> map;
 
 		@Override
 		public boolean add(long item) {
@@ -1255,7 +1228,7 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		@Override
 		public boolean contains(long item) {
-			return iter.map.containsValue(item);
+			return map.containsValue(item);
 		}
 
 		@Override
@@ -1265,24 +1238,16 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 
 		@Override
 		public ValueIterator<K> iterator() {
-			return iter;
+			return new ValueIterator<>(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		public Values(ObjectLongMap<K> map) {
-			iter = new ValueIterator<>(map);
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			this.map = map;
 		}
 
 		/**
@@ -1290,15 +1255,11 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * Does not change the position of this iterator.
 		 */
 		public LongList toList() {
-			LongList list = new LongList(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			LongList list = new LongList(map.size);
+			ValueIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1310,14 +1271,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ValueIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1328,37 +1285,30 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 	}
 
 	public static class Keys<K> extends AbstractSet<K> implements EnhancedCollection<K> {
-		protected KeyIterator<K> iter;
+		protected ObjectLongMap<K> map;
 
 		public Keys(ObjectLongMap<K> map) {
-			iter = new KeyIterator<>(map);
+			this.map = map;
 		}
 
 		@Override
 		public boolean contains(Object o) {
-			return iter.map.containsKey(o);
+			return map.containsKey(o);
 		}
 
 		@Override
 		public KeyIterator<K> iterator() {
-			return iter;
+			return new KeyIterator<>(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
+			return super.hashCode();
 		}
 
 		@Override
@@ -1367,27 +1317,15 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		}
 
 		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
-		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<K> toList() {
-			ObjectList<K> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<K> list = new ObjectList<>(map.size);
+			KeyIterator<K> iter = new KeyIterator<>(map);
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1399,14 +1337,10 @@ public class ObjectLongMap<K> implements Iterable<ObjectLongMap.Entry<K>> {
 		 * @return the given collection
 		 */
 		public Collection<K> appendInto(Collection<K> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			KeyIterator<K> iter = new KeyIterator<>(map);
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 	}
