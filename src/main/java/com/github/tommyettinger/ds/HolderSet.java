@@ -75,14 +75,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	 */
 	protected int mask;
 
-	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This should always change when {@link #shift} changes, meaning, when the backing table resizes.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link HolderOrderedSet}.
-	 */
-	protected int hashMultiplier;
-
 	protected transient ObjToObjFunction<T, K> extractor;
 
 	/**
@@ -99,7 +91,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 
 		keyTable = (T[]) new Object[tableSize];
 		this.extractor = null;
@@ -143,7 +134,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 
 		keyTable = (T[]) new Object[tableSize];
 		this.extractor = extractor;
@@ -169,7 +159,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		threshold = set.threshold;
 		mask = set.mask;
 		shift = set.shift;
-		hashMultiplier = set.hashMultiplier;
 		keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
 		size = set.size;
 		extractor = set.extractor;
@@ -659,7 +648,6 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 		T[] oldKeyTable = keyTable;
 
 		keyTable = (T[]) new Object[newSize];
@@ -675,24 +663,21 @@ public class HolderSet<T, K> implements Iterable<T>, Set<T>, EnhancedCollection<
 	}
 
 	/**
-	 * Gets the current hashMultiplier, used in {@link #place} to mix hash codes.
-	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
-	 * {@link Utilities#HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
+	 * Effectively does nothing here because the hashMultiplier is not used currently.
 	 *
-	 * @return the current hashMultiplier
+	 * @return 1; a hashMultiplier is not used in this class
 	 */
 	public int getHashMultiplier() {
-		return hashMultiplier;
+		return 1;
 	}
 
 	/**
-	 * Sets the hashMultiplier to the given int, which will be made odd if even (by OR-ing with 1). This can be any odd
-	 * int, but should almost always be drawn from {@link Utilities#GOOD_MULTIPLIERS} or something like it.
+	 * Effectively does nothing here because the hashMultiplier is not used currently.
+	 * Subclasses can use this to set some kind of identifier or user data, though.
 	 *
-	 * @param hashMultiplier any int; will be made odd if even.
+	 * @param hashMultiplier any int; will not be used
 	 */
 	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier | 1;
 	}
 
 	/**
