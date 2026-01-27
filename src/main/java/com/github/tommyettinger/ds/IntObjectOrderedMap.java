@@ -126,7 +126,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 */
 	public IntObjectOrderedMap(IntObjectMap<? extends V> map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
-		hashMultiplier = map.hashMultiplier;
 		IntIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			int k = it.nextInt();
@@ -170,7 +169,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 */
 	public IntObjectOrderedMap(IntObjectOrderedMap<? extends V> other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
-		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 

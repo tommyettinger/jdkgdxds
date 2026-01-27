@@ -123,7 +123,6 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 	 */
 	public IntLongOrderedMap(IntLongMap map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
-		hashMultiplier = map.hashMultiplier;
 		IntIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			int k = it.nextInt();
@@ -168,7 +167,6 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 	 */
 	public IntLongOrderedMap(IntLongOrderedMap other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
-		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
