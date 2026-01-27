@@ -16,6 +16,10 @@
 
 package com.github.tommyettinger.ds.test;
 
+import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.util.CharPredicates;
 import org.junit.Assert;
@@ -104,22 +108,89 @@ public class CaseInsensitiveTest {
 		Assert.assertEquals(synonyms, syn2);
 		Assert.assertEquals(5, synonyms.getAt(0).size());
 		Assert.assertEquals(5, syn2.getAt(0).size());
-		ObjectObjectOrderedMap.OrderedMapEntries<CharSequence, ObjectList<String>> es = new ObjectObjectOrderedMap.OrderedMapEntries<>(syn2);
-		Iterator<Map.Entry<CharSequence, ObjectList<String>>> it = es.iterator();
-		while (it.hasNext()) {
-			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();
+//		ObjectObjectOrderedMap.OrderedMapEntries<CharSequence, ObjectList<String>> es = new ObjectObjectOrderedMap.OrderedMapEntries<>(syn2);
+//		Iterator<Map.Entry<CharSequence, ObjectList<String>>> it = syn2.iterator();
+//		while (it.hasNext()) {
+//			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();
+//			System.out.print(ent.getKey());
+//			System.out.print(": ");
+//			System.out.println(ent.getValue());
+//		}
+//		it = syn2.iterator();
+//		Assert.assertTrue(it.hasNext());
+//		while (it.hasNext()) {
+//			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();
+//			System.out.print(ent.getKey());
+//			System.out.print(": ");
+//			System.out.println(ent.getValue());
+//		}
+		for(Map.Entry<CharSequence, ObjectList<String>> ent : synonyms){
 			System.out.print(ent.getKey());
 			System.out.print(": ");
 			System.out.println(ent.getValue());
 		}
-		it = es.iterator();
-		Assert.assertTrue(it.hasNext());
-		while (it.hasNext()) {
-			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();
+		System.out.println(synonyms);
+		for(Map.Entry<CharSequence, ObjectList<String>> ent : synonyms){
 			System.out.print(ent.getKey());
 			System.out.print(": ");
 			System.out.println(ent.getValue());
 		}
+	}
+
+	public static void registerJson(Json json){
+		json.setSerializer(CaseInsensitiveOrderedMap.class, new Json.Serializer<CaseInsensitiveOrderedMap>() {
+			@Override
+			public void write(Json json, CaseInsensitiveOrderedMap object, Class knownType) {
+				json.writeObjectStart(CaseInsensitiveOrderedMap.class, knownType);
+				json.writeValue("o", object.getOrderType().name(), String.class);
+				json.writeValue("d", object.getDefaultValue(), null);
+				json.writeObjectStart("m");
+				Iterator<Map.Entry<CharSequence, Object>> es = object.iterator();
+				while (es.hasNext()) {
+					Map.Entry<CharSequence, Object> e = es.next();
+					json.writeValue(e.getKey().toString(), e.getValue(), null);
+				}
+				json.writeObjectEnd();
+				json.writeObjectEnd();
+			}
+
+			@Override
+			public CaseInsensitiveOrderedMap<?> read(Json json, JsonValue jsonData, Class type) {
+				if (jsonData == null || jsonData.isNull()) return null;
+				jsonData.remove("class");
+				OrderType order = OrderType.valueOf(jsonData.getString("o", "LIST"));
+				Object d = json.readValue("d", null, jsonData);
+				jsonData = jsonData.get("m");
+				CaseInsensitiveOrderedMap data = new CaseInsensitiveOrderedMap<>(jsonData.size, order);
+				data.setDefaultValue(d);
+				for (JsonValue value = jsonData.child; value != null; value = value.next) {
+					data.put(value.name, json.readValue(null, value));
+				}
+				return data;
+			}
+		});
+
+	}
+	@Test
+	public void testJson() {
+		Json json = new Json(JsonWriter.OutputType.json);
+		registerJson(json);
+
+		CaseInsensitiveOrderedMap<String> words = new CaseInsensitiveOrderedMap<>(new String[]{"foo", "bar", "baz"},
+			new String[]{new GridPoint2(42, 42).toString(), new GridPoint2(23, 23).toString(), new GridPoint2(666, 666).toString()}, OrderType.BAG);
+		System.out.println(words.getAt(1));
+		String data = json.toJson(words);
+		System.out.println(data);
+		CaseInsensitiveOrderedMap<?> words2 = json.fromJson(CaseInsensitiveOrderedMap.class, data);
+		for(Map.Entry<CharSequence, ?> pair : words2) {
+			System.out.print(pair.getKey());
+			System.out.print("=");
+			System.out.print(pair.getValue());
+			System.out.print("; ");
+		}
+		Assert.assertEquals(words, words2);
+		Assert.assertEquals(words.getOrderType(), words2.getOrderType());
+
 	}
 
 	@Test

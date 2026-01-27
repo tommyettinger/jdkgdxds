@@ -56,12 +56,6 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * Category for other Unicode categories, such as upper-case letters, currency symbols, decimal digits, and so on.
  */
 public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSequence, V> {
-	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization.
-	 */
-	protected int hashMultiplier = 0xC143F257;
 
 	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
@@ -208,7 +202,6 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	 */
 	public CaseInsensitiveOrderedMap(CaseInsensitiveOrderedMap<? extends V> map) {
 		super(map.size(), map.loadFactor);
-		this.hashMultiplier = map.hashMultiplier;
 		putAll(map);
 
 	}
@@ -241,7 +234,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 	@Override
 	protected int place(Object item) {
 		if (item instanceof CharSequence)
-			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
+			return Utilities.hashCodeIgnoreCase((CharSequence) item) & mask;
 		return super.place(item);
 	}
 

@@ -51,13 +51,6 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  */
 public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectObjectOrderedMap}.
-	 */
-	protected int hashMultiplier = 0xC143F257;
-
-	/**
 	 * Creates a new map with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public CaseInsensitiveMap() {
@@ -114,7 +107,6 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	 */
 	public CaseInsensitiveMap(CaseInsensitiveMap<? extends V> map) {
 		super(map.size(), map.loadFactor);
-		this.hashMultiplier = map.hashMultiplier;
 		putAll(map);
 
 	}
@@ -133,7 +125,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 	@Override
 	protected int place(Object item) {
 		if (item instanceof CharSequence)
-			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
+			return Utilities.hashCodeIgnoreCase((CharSequence) item) & mask;
 		return super.place(item);
 	}
 

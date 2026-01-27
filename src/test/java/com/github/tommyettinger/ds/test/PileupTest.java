@@ -4261,6 +4261,7 @@ public class PileupTest {
 		long collisionTotal = 0;
 		int longestPileup = 0, allPileups = 0, pileupChecks = 0;
 		double averagePileup = 0;
+		static final int hashMultiplier = 0x36299db9;
 
 		public MeasuredCaseInsensitiveSet() {
 			super(51, PileupTest.LOAD);

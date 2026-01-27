@@ -54,12 +54,6 @@ import java.util.Iterator;
  * Category for other Unicode categories, such as upper-case letters, currency symbols, decimal digits, and so on.
  */
 public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
-	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization.
-	 */
-	protected int hashMultiplier = 0xC143F257;
 
 	public CaseInsensitiveOrderedSet(OrderType ordering) {
 		super(ordering);
@@ -230,7 +224,6 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	 */
 	public CaseInsensitiveOrderedSet(CaseInsensitiveOrderedSet set) {
 		super(set.size, set.loadFactor);
-		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 
@@ -250,7 +243,7 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	@Override
 	protected int place(Object item) {
 		if (item instanceof CharSequence)
-			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
+			return Utilities.hashCodeIgnoreCase((CharSequence) item) & mask;
 		return super.place(item);
 	}
 
@@ -278,26 +271,6 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	@Override
 	public boolean equals(Object o) {
 		return super.equals(o);
-	}
-
-	/**
-	 * Gets the seed (not actually a multiplier) for the hash function this uses on CharSequences,
-	 * {@link Utilities#hashCodeIgnoreCase(CharSequence, int)}.
-	 * @return the current hash seed
-	 */
-	@Override
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * Sets the seed (not actually a multiplier) for the hash function this uses on CharSequences,
-	 * {@link Utilities#hashCodeIgnoreCase(CharSequence, int)}.
-	 * @param hashMultiplier any int; will be given as a seed (not actually a multiplier) to a hash function
-	 */
-	@Override
-	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier;
 	}
 
 	/**

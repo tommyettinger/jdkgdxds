@@ -48,13 +48,6 @@ import java.util.Iterator;
  */
 public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link ObjectOrderedSet}.
-	 */
-	protected int hashMultiplier = 0xC143F257;
-
-	/**
 	 * Creates a new set with an initial capacity of {@link Utilities#getDefaultTableCapacity()} and a load factor of {@link Utilities#getDefaultLoadFactor()}.
 	 */
 	public CaseInsensitiveSet() {
@@ -142,14 +135,13 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 */
 	public CaseInsensitiveSet(CaseInsensitiveSet set) {
 		super(set.size, set.loadFactor);
-		this.hashMultiplier = set.hashMultiplier;
 		addAll(set);
 	}
 
 	@Override
 	protected int place(Object item) {
 		if (item instanceof CharSequence)
-			return Utilities.hashCodeIgnoreCase((CharSequence) item, hashMultiplier) & mask;
+			return Utilities.hashCodeIgnoreCase((CharSequence) item) & mask;
 		return super.place(item);
 	}
 
@@ -172,26 +164,6 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 			}
 		}
 		return h;
-	}
-
-	/**
-	 * Gets the seed (not actually a multiplier) for the hash function this uses on CharSequences,
-	 * {@link Utilities#hashCodeIgnoreCase(CharSequence, int)}.
-	 * @return the current hash seed
-	 */
-	@Override
-	public int getHashMultiplier() {
-		return hashMultiplier;
-	}
-
-	/**
-	 * Sets the seed (not actually a multiplier) for the hash function this uses on CharSequences,
-	 * {@link Utilities#hashCodeIgnoreCase(CharSequence, int)}.
-	 * @param hashMultiplier any int; will be given as a seed (not actually a multiplier) to a hash function
-	 */
-	@Override
-	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier;
 	}
 
 	/**
