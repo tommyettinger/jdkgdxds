@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.support.util.CharPredicates;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -101,6 +102,24 @@ public class CaseInsensitiveTest {
 			new CaseInsensitiveOrderedMap<>();
 		syn2.putAll(synonyms); // this was a problem due to some generics... messiness.
 		Assert.assertEquals(synonyms, syn2);
+		Assert.assertEquals(5, synonyms.getAt(0).size());
+		Assert.assertEquals(5, syn2.getAt(0).size());
+		ObjectObjectOrderedMap.OrderedMapEntries<CharSequence, ObjectList<String>> es = new ObjectObjectOrderedMap.OrderedMapEntries<>(syn2);
+		Iterator<Map.Entry<CharSequence, ObjectList<String>>> it = es.iterator();
+		while (it.hasNext()) {
+			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();
+			System.out.print(ent.getKey());
+			System.out.print(": ");
+			System.out.println(ent.getValue());
+		}
+		it = es.iterator();
+		Assert.assertTrue(it.hasNext());
+		while (it.hasNext()) {
+			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();
+			System.out.print(ent.getKey());
+			System.out.print(": ");
+			System.out.println(ent.getValue());
+		}
 	}
 
 	@Test
