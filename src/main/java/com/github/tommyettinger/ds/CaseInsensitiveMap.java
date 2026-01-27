@@ -237,9 +237,7 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		@Override
 		public int hashCode() {
 			int h = 0;
-			iter.reset();
-			while (iter.hasNext()) {
-				CharSequence obj = iter.next();
+			for (CharSequence obj : this) {
 				if (obj != null)
 					h ^= Utilities.hashCodeIgnoreCase(obj);
 			}

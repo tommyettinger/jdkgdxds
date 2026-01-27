@@ -682,7 +682,22 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		public OrderedMapEntries(ObjectObjectOrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
-			iter = new MapIterator<K, V, Map.Entry<K, V>>(map) {
+		}
+
+		@Override
+		public Map<K, V> appendInto(Map<K, V> map) {
+			MapIterator<K, V, Map.Entry<K, V>> iter = iterator();
+			while (iter.hasNext) {
+				K k = keys.get(iter.nextIndex);
+				map.put(k, iter.map.get(k));
+				iter.findNextIndex();
+			}
+			return map;
+		}
+
+		@Override
+		public MapIterator<K, V, Map.Entry<K, V>> iterator() {
+			return new MapIterator<K, V, Map.Entry<K, V>>(map) {
 				@Override
 				public MapIterator<K, V, Map.Entry<K, V>> iterator() {
 					return this;
@@ -724,21 +739,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 				}
 			};
 		}
-
-		@Override
-		public Map<K, V> appendInto(Map<K, V> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {
-				K k = keys.get(iter.nextIndex);
-				map.put(k, iter.map.get(k));
-				iter.findNextIndex();
-			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return map;
-		}
 	}
 
 	public static class OrderedMapKeys<K, V> extends Keys<K, V> {
@@ -747,7 +747,11 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		public OrderedMapKeys(ObjectObjectOrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
-			iter = new MapIterator<K, V, K>(map) {
+		}
+
+		@Override
+		public MapIterator<K, V, K> iterator() {
+			return new MapIterator<K, V, K>(map) {
 				@Override
 				public MapIterator<K, V, K> iterator() {
 					return this;
@@ -788,7 +792,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 				}
 			};
 		}
-
 	}
 
 	public static class OrderedMapValues<K, V> extends Values<K, V> {
@@ -797,7 +800,11 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 		public OrderedMapValues(ObjectObjectOrderedMap<K, V> map) {
 			super(map);
 			keys = map.keys;
-			iter = new MapIterator<K, V, V>(map) {
+		}
+
+		@Override
+		public MapIterator<K, V, V> iterator() {
+			return new MapIterator<K, V, V>(map) {
 				@Override
 				public MapIterator<K, V, V> iterator() {
 					return this;
@@ -838,7 +845,6 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 				}
 			};
 		}
-
 	}
 
 	/**

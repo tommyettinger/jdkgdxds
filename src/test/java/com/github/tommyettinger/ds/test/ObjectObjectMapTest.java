@@ -208,7 +208,7 @@ public class ObjectObjectMapTest extends TestCase {
 
 		Iterator<Map.Entry> iter = new ObjectObjectMap.Entries<>(hm).iterator();
 		s.remove(iter.next());
-		Assert.assertEquals(1001, s.size());
+		Assert.assertEquals(hm.size(), s.size());
 	}
 
 	@Test

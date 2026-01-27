@@ -310,9 +310,7 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 		@Override
 		public int hashCode() {
 			int h = 0;
-			iter.reset();
-			while (iter.hasNext()) {
-				CharSequence obj = iter.next();
+			for (CharSequence obj : this) {
 				if (obj != null)
 					h ^= Utilities.hashCodeIgnoreCase(obj);
 			}
