@@ -1174,11 +1174,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 	}
 
-	public static class Entries<K> extends AbstractSet<Entry<K>> implements EnhancedCollection<Entry<K>> {
-		protected EntryIterator<K> iter;
+	public static class Entries<K> extends AbstractSet<ObjectFloatMap.Entry<K>> implements EnhancedCollection<ObjectFloatMap.Entry<K>> {
+		protected ObjectFloatMap<K> map;
 
 		public Entries(ObjectFloatMap<K> map) {
-			iter = new EntryIterator<>(map);
+			this.map = map;
 		}
 
 		/**
@@ -1187,25 +1187,18 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public EntryIterator<K> iterator() {
-			return iter;
+		public ObjectFloatMap.EntryIterator<K> iterator() {
+			return new ObjectFloatMap.EntryIterator<>(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
+			return super.hashCode();
 		}
 
 		@Override
@@ -1214,27 +1207,15 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 
 		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
-		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
-		public ObjectList<Entry<K>> toList() {
-			ObjectList<Entry<K>> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+		public ObjectList<ObjectFloatMap.Entry<K>> toList() {
+			ObjectList<ObjectFloatMap.Entry<K>> list = new ObjectList<>(map.size);
+			ObjectFloatMap.EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1245,15 +1226,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		 * @param coll any modifiable Collection; may have items appended into it
 		 * @return the given collection
 		 */
-		public Collection<Entry<K>> appendInto(Collection<Entry<K>> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+		public Collection<ObjectFloatMap.Entry<K>> appendInto(Collection<ObjectFloatMap.Entry<K>> coll) {
+			ObjectFloatMap.EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1265,21 +1242,17 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		 * @return the given map
 		 */
 		public ObjectFloatMap<K> appendInto(ObjectFloatMap<K> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectFloatMap.EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				map.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
 
 	public static class Values<K> implements PrimitiveCollection.OfFloat {
-		protected ValueIterator<K> iter;
+		protected ObjectFloatMap<K> map;
 
 		@Override
 		public boolean add(float item) {
@@ -1293,7 +1266,7 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 
 		@Override
 		public boolean contains(float item) {
-			return iter.map.containsValue(item);
+			return map.containsValue(item);
 		}
 
 		@Override
@@ -1302,25 +1275,17 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 
 		@Override
-		public FloatIterator iterator() {
-			return iter;
+		public ObjectFloatMap.ValueIterator<K> iterator() {
+			return new ObjectFloatMap.ValueIterator<>(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		public Values(ObjectFloatMap<K> map) {
-			iter = new ValueIterator<>(map);
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			this.map = map;
 		}
 
 		/**
@@ -1328,15 +1293,11 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		 * Does not change the position of this iterator.
 		 */
 		public FloatList toList() {
-			FloatList list = new FloatList(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			FloatList list = new FloatList(map.size);
+			ObjectFloatMap.ValueIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.nextFloat());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1348,14 +1309,10 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfFloat appendInto(PrimitiveCollection.OfFloat coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectFloatMap.ValueIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.nextFloat());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1366,37 +1323,30 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 	}
 
 	public static class Keys<K> extends AbstractSet<K> implements EnhancedCollection<K> {
-		protected KeyIterator<K> iter;
+		protected ObjectFloatMap<K> map;
 
 		public Keys(ObjectFloatMap<K> map) {
-			iter = new KeyIterator<>(map);
+			this.map = map;
 		}
 
 		@Override
 		public boolean contains(Object o) {
-			return iter.map.containsKey(o);
+			return map.containsKey(o);
 		}
 
 		@Override
-		public KeyIterator<K> iterator() {
-			return iter;
+		public ObjectFloatMap.KeyIterator<K> iterator() {
+			return new ObjectFloatMap.KeyIterator<>(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
+			return super.hashCode();
 		}
 
 		@Override
@@ -1405,27 +1355,15 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		}
 
 		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
-		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<K> toList() {
-			ObjectList<K> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<K> list = new ObjectList<>(map.size);
+			ObjectFloatMap.KeyIterator<K> iter = new ObjectFloatMap.KeyIterator<>(map);
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1437,14 +1375,10 @@ public class ObjectFloatMap<K> implements Iterable<ObjectFloatMap.Entry<K>> {
 		 * @return the given collection
 		 */
 		public Collection<K> appendInto(Collection<K> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectFloatMap.KeyIterator<K> iter = new ObjectFloatMap.KeyIterator<>(map);
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 	}

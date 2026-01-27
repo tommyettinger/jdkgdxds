@@ -672,13 +672,17 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 		return sb;
 	}
 
-	public static class OrderedMapEntries<K> extends Entries<K> {
+	public static class OrderedMapEntries<K> extends ObjectFloatMap.Entries<K> {
 		protected ObjectList<K> keys;
 
 		public OrderedMapEntries(ObjectFloatOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new EntryIterator<K>(map) {
+		}
+
+		@Override
+		public ObjectFloatMap.EntryIterator<K> iterator() {
+			return new ObjectFloatMap.EntryIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -688,13 +692,13 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 				}
 
 				@Override
-				public Entry<K> next() {
+				public ObjectFloatMap.Entry<K> next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();
 					}
 					currentIndex = nextIndex;
 					K k = keys.get(nextIndex);
-					Entry<K> entry = new Entry<>(k, map.get(k));
+					ObjectFloatMap.Entry<K> entry = new ObjectFloatMap.Entry<>(k, map.get(k));
 					nextIndex++;
 					hasNext = nextIndex < map.size;
 					return entry;
@@ -714,27 +718,27 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 
 		@Override
 		public ObjectFloatMap<K> appendInto(ObjectFloatMap<K> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectFloatMap.EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				K k = keys.get(iter.nextIndex);
 				map.put(k, iter.map.get(k));
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
 
-	public static class OrderedMapKeys<K> extends Keys<K> {
+	public static class OrderedMapKeys<K> extends ObjectFloatMap.Keys<K> {
 		private final ObjectList<K> keys;
 
 		public OrderedMapKeys(ObjectFloatOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new KeyIterator<K>(map) {
+		}
+
+		@Override
+		public ObjectFloatMap.KeyIterator<K> iterator() {
+			return new ObjectFloatMap.KeyIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -766,16 +770,19 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 				}
 			};
 		}
-
 	}
 
-	public static class OrderedMapValues<K> extends Values<K> {
+	public static class OrderedMapValues<K> extends ObjectFloatMap.Values<K> {
 		private final ObjectList<K> keys;
 
 		public OrderedMapValues(ObjectFloatOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new ValueIterator<K>(map) {
+		}
+
+		@Override
+		public ObjectFloatMap.ValueIterator<K> iterator() {
+			return new ObjectFloatMap.ValueIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -807,7 +814,6 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 				}
 			};
 		}
-
 	}
 
 	/**

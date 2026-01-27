@@ -671,13 +671,17 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 		return sb;
 	}
 
-	public static class OrderedMapEntries<K> extends Entries<K> {
+	public static class OrderedMapEntries<K> extends ObjectIntMap.Entries<K> {
 		protected ObjectList<K> keys;
 
 		public OrderedMapEntries(ObjectIntOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new EntryIterator<K>(map) {
+		}
+
+		@Override
+		public ObjectIntMap.EntryIterator<K> iterator() {
+			return new ObjectIntMap.EntryIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -687,13 +691,13 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 				}
 
 				@Override
-				public Entry<K> next() {
+				public ObjectIntMap.Entry<K> next() {
 					if (!hasNext) {
 						throw new NoSuchElementException();
 					}
 					currentIndex = nextIndex;
 					K k = keys.get(nextIndex);
-					Entry<K> entry = new Entry<>(k, map.get(k));
+					ObjectIntMap.Entry<K> entry = new ObjectIntMap.Entry<>(k, map.get(k));
 					nextIndex++;
 					hasNext = nextIndex < map.size;
 					return entry;
@@ -713,28 +717,27 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 
 		@Override
 		public ObjectIntMap<K> appendInto(ObjectIntMap<K> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectIntMap.EntryIterator<K> iter = iterator();
 			while (iter.hasNext) {
 				K k = keys.get(iter.nextIndex);
 				map.put(k, iter.map.get(k));
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
-
 	}
 
-	public static class OrderedMapKeys<K> extends Keys<K> {
+	public static class OrderedMapKeys<K> extends ObjectIntMap.Keys<K> {
 		private final ObjectList<K> keys;
 
 		public OrderedMapKeys(ObjectIntOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new KeyIterator<K>(map) {
+		}
+
+		@Override
+		public ObjectIntMap.KeyIterator<K> iterator() {
+			return new ObjectIntMap.KeyIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -766,16 +769,19 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 				}
 			};
 		}
-
 	}
 
-	public static class OrderedMapValues<K> extends Values<K> {
+	public static class OrderedMapValues<K> extends ObjectIntMap.Values<K> {
 		private final ObjectList<K> keys;
 
 		public OrderedMapValues(ObjectIntOrderedMap<K> map) {
 			super(map);
 			keys = map.keys;
-			iter = new ValueIterator<K>(map) {
+		}
+
+		@Override
+		public ObjectIntMap.ValueIterator<K> iterator() {
+			return new ObjectIntMap.ValueIterator<K>(map) {
 
 				@Override
 				public void reset() {
@@ -807,7 +813,6 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 				}
 			};
 		}
-
 	}
 
 	/**
