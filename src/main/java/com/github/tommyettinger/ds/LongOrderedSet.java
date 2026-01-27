@@ -460,7 +460,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 			return "{}";
 		}
 		LongList items = this.items;
-		StringBuilder buffer = new StringBuilder(32);
+		StringBuilder buffer = new StringBuilder(6 * size());
 		buffer.append('{');
 		buffer.append(items.get(0));
 		for (int i = 1; i < size; i++) {

@@ -456,7 +456,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 			return "{}";
 		}
 		ObjectList<T> items = this.items;
-		StringBuilder buffer = new StringBuilder(32);
+		StringBuilder buffer = new StringBuilder(size() * 6);
 		buffer.append('{');
 		buffer.append(items.get(0));
 		for (int i = 1; i < size; i++) {

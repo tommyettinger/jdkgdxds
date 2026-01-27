@@ -398,7 +398,7 @@ public class CaseInsensitiveIntMap3 implements Iterable<CaseInsensitiveIntMap3.E
 
 	public String toString (String separator, boolean braces) {
 		if (size == 0) return braces ? "{}" : "";
-		StringBuilder buffer = new StringBuilder(32);
+		StringBuilder buffer = new StringBuilder(size * 8);
 		if (braces) buffer.append('{');
 		String[] keyTable = this.keyTable;
 		int[] valueTable = this.valueTable;

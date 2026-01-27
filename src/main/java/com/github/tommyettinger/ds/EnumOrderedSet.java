@@ -592,7 +592,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 			return "{}";
 		}
 		ObjectList<Enum<?>> items = this.ordering;
-		StringBuilder buffer = new StringBuilder(32);
+		StringBuilder buffer = new StringBuilder(6 * size());
 		buffer.append('{');
 		buffer.append(items.get(0));
 		for (int i = 1; i < size; i++) {

@@ -450,7 +450,7 @@ public interface PrimitiveCollection<T> {
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets) {
-			return appendTo(new StringBuilder(32), separator, brackets).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets).toString();
 		}
 
 		/**
@@ -466,7 +466,7 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString(String separator, boolean brackets,
 								IntAppender appender) {
-			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets, appender).toString();
 		}
 
 		/**
@@ -1059,7 +1059,7 @@ public interface PrimitiveCollection<T> {
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets) {
-			return appendTo(new StringBuilder(32), separator, brackets).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets).toString();
 		}
 
 		/**
@@ -1075,7 +1075,7 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString(String separator, boolean brackets,
 								LongAppender appender) {
-			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets, appender).toString();
 		}
 
 		/**
@@ -1647,7 +1647,7 @@ public interface PrimitiveCollection<T> {
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets) {
-			return appendTo(new StringBuilder(32), separator, brackets).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets).toString();
 		}
 
 		/**
@@ -1663,7 +1663,7 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString(String separator, boolean brackets,
 								FloatAppender appender) {
-			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets, appender).toString();
 		}
 
 		/**
@@ -2230,7 +2230,7 @@ public interface PrimitiveCollection<T> {
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets) {
-			return appendTo(new StringBuilder(32), separator, brackets).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets).toString();
 		}
 
 		/**
@@ -2246,7 +2246,7 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString(String separator, boolean brackets,
 								DoubleAppender appender) {
-			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets, appender).toString();
 		}
 
 		/**
@@ -2818,7 +2818,7 @@ public interface PrimitiveCollection<T> {
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets) {
-			return appendTo(new StringBuilder(32), separator, brackets).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets).toString();
 		}
 
 		/**
@@ -2834,7 +2834,7 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString(String separator, boolean brackets,
 								ShortAppender appender) {
-			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets, appender).toString();
 		}
 
 		/**
@@ -3397,7 +3397,7 @@ public interface PrimitiveCollection<T> {
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets) {
-			return appendTo(new StringBuilder(32), separator, brackets).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets).toString();
 		}
 
 		/**
@@ -3413,7 +3413,7 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString(String separator, boolean brackets,
 								ByteAppender appender) {
-			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets, appender).toString();
 		}
 
 		/**
@@ -4001,7 +4001,7 @@ public interface PrimitiveCollection<T> {
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets) {
-			return appendTo(new StringBuilder(32), separator, brackets).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets).toString();
 		}
 
 		/**
@@ -4017,7 +4017,7 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString(String separator, boolean brackets,
 								CharAppender appender) {
-			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(size() * 6), separator, brackets, appender).toString();
 		}
 
 		/**
@@ -4581,7 +4581,7 @@ public interface PrimitiveCollection<T> {
 		 * @return a new String representing this PrimitiveCollection
 		 */
 		default String toString(String separator, boolean brackets) {
-			return appendTo(new StringBuilder(32), separator, brackets).toString();
+			return appendTo(new StringBuilder(size() * 7), separator, brackets).toString();
 		}
 
 		/**
@@ -4597,7 +4597,7 @@ public interface PrimitiveCollection<T> {
 		 */
 		default String toString(String separator, boolean brackets,
 								BooleanAppender appender) {
-			return appendTo(new StringBuilder(), separator, brackets, appender).toString();
+			return appendTo(new StringBuilder(size() * 7), separator, brackets, appender).toString();
 		}
 
 		/**

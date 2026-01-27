@@ -571,7 +571,7 @@ public class IntIntTable implements Iterable<IntIntTable.Entry> {
 	}
 
 	public String toString(String entrySeparator, boolean braces) {
-		return appendTo(new StringBuilder(32), entrySeparator, braces).toString();
+		return appendTo(new StringBuilder(size() * 6), entrySeparator, braces).toString();
 	}
 
 	/**
@@ -596,7 +596,7 @@ public class IntIntTable implements Iterable<IntIntTable.Entry> {
 	 */
 	public String toString(String entrySeparator, String keyValueSeparator, boolean braces,
 						   IntAppender keyAppender, IntAppender valueAppender) {
-		return appendTo(new StringBuilder(), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
+		return appendTo(new StringBuilder(size() * 8), entrySeparator, keyValueSeparator, braces, keyAppender, valueAppender).toString();
 	}
 
 	public <S extends CharSequence & Appendable> S appendTo(S sb, String entrySeparator, boolean braces) {

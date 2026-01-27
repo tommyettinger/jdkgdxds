@@ -561,7 +561,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 			return "{}";
 		}
 		ObjectList<T> items = this.items;
-		StringBuilder buffer = new StringBuilder(32);
+		StringBuilder buffer = new StringBuilder(6 * size());
 		buffer.append('{');
 		buffer.append(items.get(0));
 		for (int i = 1; i < size; i++) {

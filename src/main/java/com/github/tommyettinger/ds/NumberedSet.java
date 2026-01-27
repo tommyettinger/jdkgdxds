@@ -820,7 +820,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	public String toString(String itemSeparator, boolean braces) {
-		return map.keys.appendTo(new StringBuilder(32), itemSeparator, braces).toString();
+		return map.keys.appendTo(new StringBuilder(size() * 6), itemSeparator, braces).toString();
 	}
 
 	/**
@@ -835,7 +835,7 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	 * @return a new String representing this set
 	 */
 	public String toString(String itemSeparator, boolean braces, Appender<T> keyAppender) {
-		return map.keys.appendTo(new StringBuilder(), itemSeparator, braces, keyAppender).toString();
+		return map.keys.appendTo(new StringBuilder(size() * 6), itemSeparator, braces, keyAppender).toString();
 	}
 
 	/**

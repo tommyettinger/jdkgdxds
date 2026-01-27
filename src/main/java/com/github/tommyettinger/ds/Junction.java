@@ -418,7 +418,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
 		@Override
 		public String toString() {
-			return contents.appendTo(new StringBuilder(contents.size() + 2).append('(')
+			return contents.appendTo(new StringBuilder(contents.size() * 6 + 2).append('(')
 				, "|", false).append(')').toString();
 		}
 
@@ -562,7 +562,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
 		@Override
 		public String toString() {
-			return contents.appendTo(new StringBuilder(contents.size() + 2).append('(')
+			return contents.appendTo(new StringBuilder(contents.size() * 6 + 2).append('(')
 				, "&", false).append(')').toString();
 		}
 
@@ -704,7 +704,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
 		@Override
 		public String toString() {
-			return contents.appendTo(new StringBuilder(contents.size() + 2).append('(')
+			return contents.appendTo(new StringBuilder(contents.size() * 6 + 2).append('(')
 				, "^", false).append(')').toString();
 		}
 
