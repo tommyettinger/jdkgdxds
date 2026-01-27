@@ -125,7 +125,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 */
 	public LongObjectOrderedMap(LongObjectMap<? extends V> map, OrderType ordering) {
 		this(map.size(), map.loadFactor, ordering);
-		hashMultiplier = map.hashMultiplier;
 		LongIterator it = map.keySet().iterator();
 		while (it.hasNext()) {
 			long k = it.nextLong();
@@ -169,7 +168,6 @@ public class LongObjectOrderedMap<V> extends LongObjectMap<V> implements Ordered
 	 */
 	public LongObjectOrderedMap(LongObjectOrderedMap<? extends V> other, int offset, int count, OrderType ordering) {
 		this(count, other.loadFactor, ordering);
-		hashMultiplier = other.hashMultiplier;
 		putAll(0, other, offset, count);
 	}
 
