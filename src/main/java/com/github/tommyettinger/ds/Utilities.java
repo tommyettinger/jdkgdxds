@@ -440,13 +440,62 @@ public final class Utilities {
 	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
 	 * converted to upper case by {@link Casing#caseUp(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
-	 * would use this with {@code (hashCodeIgnoreCase(text) >>> shift)}.
+	 * would use this with {@code (hashCodeIgnoreCase(text) & mask)}.
 	 *
 	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
 	 * @return an int hashCode; quality should be similarly good across any bits
 	 */
 	public static int hashCodeIgnoreCase(final CharSequence data) {
-		return hashCodeIgnoreCase(data, 0x36299db9);
+		int seed = 0x36299db9;
+		if (data == null) return seed;
+		final int len = data.length();
+		final int x = 0xC3A1CBF5;
+		final int y = 0xEC34F7A1;
+		final int z = 0xD9ABF481;
+		int a, b;
+		int p = 0;
+		if (len <= 2) {
+			if (len == 2) {
+				a = Casing.caseUp(data.charAt(0));
+				b = Casing.caseUp(data.charAt(1));
+			} else if (len == 1) {
+				a = Casing.caseUp(data.charAt(0));
+				b = 0;
+			} else a = b = 0;
+		} else {
+			int i = len;
+			if (i >= 6) {
+				int see1 = seed, see2 = seed;
+				do {
+					seed = BitConversion.imul(Casing.caseUp(data.charAt(p)) ^ x, Casing.caseUp(data.charAt(p + 1)) ^ seed);
+					seed ^= (seed << 3 | seed >>> 29) ^ (seed << 24 | seed >>> 8);
+					see1 = BitConversion.imul(Casing.caseUp(data.charAt(p + 2)) ^ y, Casing.caseUp(data.charAt(p + 3)) ^ see1);
+					see1 ^= (see1 << 21 | see1 >>> 11) ^ (see1 << 15 | see1 >>> 19);
+					see2 = BitConversion.imul(Casing.caseUp(data.charAt(p + 4)) ^ z, Casing.caseUp(data.charAt(p + 5)) ^ see2);
+					see2 ^= (see2 << 26 | see2 >>> 6) ^ (see2 << 7 | see2 >>> 25);
+					p += 6;
+					i -= 6;
+				} while (i >= 6);
+				seed ^= see1 ^ see2;
+			}
+			while ((i > 2)) {
+				seed = BitConversion.imul(Casing.caseUp(data.charAt(p)) ^ x, Casing.caseUp(data.charAt(p + 1)) ^ seed);
+				seed ^= (seed << 3 | seed >>> 29) ^ (seed << 24 | seed >>> 8);
+				i -= 2;
+				p += 2;
+			}
+			a = Casing.caseUp(data.charAt(len - 2));
+			b = Casing.caseUp(data.charAt(len - 1));
+		}
+		a = BitConversion.imul(a, z);
+		b ^= seed + len;
+		b = (b << 3 | b >>> 29) ^ (a = (a << 24 | a >>> 8) + b ^ y) + (a << 7 | a >>> 25);
+		a = (a << 14 | a >>> 18) ^ (b = (b << 29 | b >>> 3) + a ^ x) + (b << 11 | b >>> 21);
+		// I don't know if we need this level of robust mixing.
+//		b=(b<<19|b>>>13)^(a=(a<< 5|a>>>27)+b^y)+(a<<29|a>>> 3);
+//		a=(a<<17|a>>>15)^(b=(b<<11|b>>>21)+a^z)+(b<<23|b>>> 9);
+		return a ^ (a << 27 | a >>> 5) ^ (a << 9 | a >>> 23);
+
 	}
 
 	/**
@@ -455,7 +504,7 @@ public final class Utilities {
 	 * char values instead of 64-bit long values. This gets the hash as if all cased letters have been
 	 * converted to upper case by {@link Casing#caseUp(char)}; this should be correct for all alphabets in
 	 * Unicode except Georgian. Typically, place() methods in Sets and Maps here that want case-insensitive hashing
-	 * would use this with {@code (hashCodeIgnoreCase(text, seed) >>> shift)}.
+	 * would use this with {@code (hashCodeIgnoreCase(text, seed) & mask)}.
 	 *
 	 * @param data a non-null CharSequence; often a String, but this has no trouble with a StringBuilder
 	 * @param seed any int; must be the same between calls if two equivalent values for {@code data} must be the same

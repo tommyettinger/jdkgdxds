@@ -176,8 +176,8 @@ public class CaseInsensitiveTest {
 		Json json = new Json(JsonWriter.OutputType.json);
 		registerJson(json);
 
-		CaseInsensitiveOrderedMap<String> words = new CaseInsensitiveOrderedMap<>(new String[]{"foo", "bar", "baz"},
-			new String[]{new GridPoint2(42, 42).toString(), new GridPoint2(23, 23).toString(), new GridPoint2(666, 666).toString()}, OrderType.BAG);
+		CaseInsensitiveOrderedMap<GridPoint2> words = new CaseInsensitiveOrderedMap<>(new String[]{"foo", "bar", "baz"},
+			new GridPoint2[]{new GridPoint2(42, 42), new GridPoint2(23, 23), new GridPoint2(666, 666)}, OrderType.BAG);
 		System.out.println(words.getAt(1));
 		String data = json.toJson(words);
 		System.out.println(data);
