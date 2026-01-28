@@ -734,7 +734,11 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 		public OrderedMapEntries(EnumOrderedMap<V> map) {
 			super(map);
 			keys = map.ordering;
-			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
+		}
+
+		@Override
+		public MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+			return new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
 				public MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 					return this;
@@ -776,18 +780,15 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				}
 			};
 		}
+
 		@Override
 		public Map<Enum<?>, V> appendInto(Map<Enum<?>, V> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<V, Map.Entry<Enum<?>, V>> iter = iterator();
 			while (iter.hasNext) {
 				Enum<?> k = keys.get(iter.nextIndex);
 				map.put(k, iter.map.get(k));
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 
@@ -799,7 +800,11 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 		public OrderedMapKeys(EnumOrderedMap<?> map) {
 			super(map);
 			ordering = map.ordering;
-			iter = new MapIterator<Object, Enum<?>>(map) {
+		}
+
+		@Override
+		public MapIterator<?, Enum<?>> iterator() {
+			return new MapIterator<Object, Enum<?>>(map) {
 				@Override
 				public MapIterator<?, Enum<?>> iterator() {
 					return this;
@@ -840,7 +845,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				}
 			};
 		}
-
 	}
 
 	public static class OrderedMapValues<V> extends Values<V> {
@@ -849,7 +853,11 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 		public OrderedMapValues(EnumOrderedMap<V> map) {
 			super(map);
 			keys = map.ordering;
-			iter = new MapIterator<V, V>(map) {
+		}
+
+		@Override
+		public MapIterator<V, V> iterator() {
+			return new MapIterator<V, V>(map) {
 				@Override
 				public MapIterator<V, V> iterator() {
 					return this;
@@ -890,7 +898,6 @@ public class EnumOrderedMap<V> extends EnumMap<V> implements Ordered<Enum<?>> {
 				}
 			};
 		}
-
 	}
 
 	/**

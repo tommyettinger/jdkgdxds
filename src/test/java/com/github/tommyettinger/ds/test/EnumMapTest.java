@@ -588,7 +588,6 @@ public class EnumMapTest extends TestCase {
 		assertEquals("Wrong size", 1, set.size());
 		assertFalse("Should return false", set.retainAll(c));
 		assertEquals(1, set.size());
-		((EnumMap.Keys) set).resetIterator();
 		Object[] array = set.toArray();
 		assertEquals("Wrong length", 1, array.length);
 		assertEquals("Wrong key", Size.Big, array[0]);
@@ -957,7 +956,6 @@ public class EnumMapTest extends TestCase {
 		assertEquals("Wrong size", 1, collection.size());
 		assertFalse("Should return false", collection.retainAll(c));
 		assertEquals(1, collection.size());
-		((EnumMap.Values<?>) collection).resetIterator();
 		Object[] array = collection.toArray();
 		assertEquals("Wrong length", 1, array.length);
 		assertEquals("Wrong key", 1, array[0]);

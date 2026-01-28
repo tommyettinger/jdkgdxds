@@ -1086,10 +1086,96 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 	}
 
 	public static class Entries<V> extends AbstractSet<Map.Entry<Enum<?>, V>> implements EnhancedCollection<Map.Entry<Enum<?>, V>> {
-		protected MapIterator<V, Map.Entry<Enum<?>, V>> iter;
+		protected EnumMap<V> map;
 
 		public Entries(EnumMap<V> map) {
-			iter = new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
+			this.map = map;
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			if (o instanceof Map.Entry) {
+				Map.Entry ent = ((Map.Entry) o);
+				if (ent.getKey() instanceof Enum<?>) {
+					Enum<?> e = (Enum<?>) ent.getKey();
+					int ord = e.ordinal();
+					return (ord < map.universe.length && map.universe[ord] == e
+						&& map.valueTable[ord] != null && map.valueTable[ord].equals(map.hold(ent.getValue())));
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			if (o instanceof Map.Entry) {
+				Map.Entry ent = ((Map.Entry) o);
+				if (ent.getKey() instanceof Enum<?>) {
+					Enum<?> e = (Enum<?>) ent.getKey();
+					int ord = e.ordinal();
+					if (ord < map.universe.length && map.universe[ord] == e
+						&& map.valueTable[ord] != null && map.valueTable[ord].equals(map.hold(ent.getValue()))) {
+						map.remove(e);
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Removes from this set all of its elements that are contained in the
+		 * specified collection (optional operation).  If the specified
+		 * collection is also a set, this operation effectively modifies this
+		 * set so that its value is the <i>asymmetric set difference</i> of
+		 * the two sets.
+		 *
+		 * @param c collection containing elements to be removed from this set
+		 * @return {@code true} if this set changed as a result of the call
+		 */
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			boolean res = false;
+			for (Object o : c) {
+				if (remove(o)) {
+					res = true;
+				}
+			}
+			return res;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @param c
+		 * @implSpec This implementation iterates over this collection, checking each
+		 * element returned by the iterator in turn to see if it's contained
+		 * in the specified collection.  If it's not so contained, it's removed
+		 * from this collection with the iterator's {@code remove} method.
+		 */
+		@Override
+		public boolean retainAll(Collection<?> c) {
+			Objects.requireNonNull(c);
+			MapIterator<V, Map.Entry<Enum<?>, V>> iter = iterator();
+			boolean modified = false;
+			while (iter.hasNext) {
+				Map.Entry<Enum<?>, V> n = iter.next();
+				if (!c.contains(n)) {
+					iter.remove();
+					modified = true;
+				}
+			}
+			return modified;
+		}
+
+		/**
+		 * Returns an iterator over the elements contained in this collection.
+		 *
+		 * @return an iterator over the elements contained in this collection
+		 */
+		@Override
+		public MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
+			return new MapIterator<V, Map.Entry<Enum<?>, V>>(map) {
 				@Override
 				public MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
 					return this;
@@ -1120,132 +1206,8 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		}
 
 		@Override
-		public boolean contains(Object o) {
-			if (o instanceof Map.Entry) {
-				Map.Entry ent = ((Map.Entry) o);
-				if (ent.getKey() instanceof Enum<?>) {
-					Enum<?> e = (Enum<?>) ent.getKey();
-					int ord = e.ordinal();
-					return (ord < iter.map.universe.length && iter.map.universe[ord] == e
-						&& iter.map.valueTable[ord] != null && iter.map.valueTable[ord].equals(iter.map.hold(ent.getValue())));
-				}
-			}
-			return false;
-		}
-
-		@Override
-		public boolean remove(Object o) {
-			if (o instanceof Map.Entry) {
-				Map.Entry ent = ((Map.Entry) o);
-				if (ent.getKey() instanceof Enum<?>) {
-					Enum<?> e = (Enum<?>) ent.getKey();
-					int ord = e.ordinal();
-					if (ord < iter.map.universe.length && iter.map.universe[ord] == e
-						&& iter.map.valueTable[ord] != null && iter.map.valueTable[ord].equals(iter.map.hold(ent.getValue()))) {
-						iter.map.remove(e);
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
-		/**
-		 * Removes from this set all of its elements that are contained in the
-		 * specified collection (optional operation).  If the specified
-		 * collection is also a set, this operation effectively modifies this
-		 * set so that its value is the <i>asymmetric set difference</i> of
-		 * the two sets.
-		 *
-		 * @param c collection containing elements to be removed from this set
-		 * @return {@code true} if this set changed as a result of the call
-		 */
-		@Override
-		public boolean removeAll(Collection<?> c) {
-			iter.reset();
-			boolean res = false;
-			for (Object o : c) {
-				if (remove(o)) {
-					iter.reset();
-					res = true;
-				}
-			}
-			return res;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 *
-		 * @param c
-		 * @implSpec This implementation iterates over this collection, checking each
-		 * element returned by the iterator in turn to see if it's contained
-		 * in the specified collection.  If it's not so contained, it's removed
-		 * from this collection with the iterator's {@code remove} method.
-		 */
-		@Override
-		public boolean retainAll(Collection<?> c) {
-			Objects.requireNonNull(c);
-			iter.reset();
-			boolean modified = false;
-			while (iter.hasNext) {
-				Map.Entry<Enum<?>, V> n = iter.next();
-				if (!c.contains(n)) {
-					iter.remove();
-					modified = true;
-				}
-			}
-			iter.reset();
-			return modified;
-		}
-
-		/**
-		 * @param c a Collection of any type
-		 * @return true if all elements in c are contained in this set; false otherwise
-		 * @see #contains(Object)
-		 */
-		@Override
-		public boolean containsAll(Collection<?> c) {
-			iter.reset();
-			return super.containsAll(c);
-		}
-
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
-		@Override
-		public MapIterator<V, Map.Entry<Enum<?>, V>> iterator() {
-			return iter;
-		}
-
-		@Override
 		public int size() {
-			return iter.map.size;
-		}
-
-		@Override
-		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			boolean res = super.equals(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
+			return map.size;
 		}
 
 
@@ -1259,16 +1221,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public void clear() {
-			iter.map.clear();
-			iter.reset();
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			map.clear();
 		}
 
 		/**
@@ -1276,17 +1229,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public Object[] toArray() {
-			Object[] a = new Object[iter.map.size];
+			Object[] a = new Object[map.size];
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<V, Map.Entry<Enum<?>, V>> iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1297,17 +1245,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public <T> T[] toArray(T[] a) {
-			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
+			if (a.length < map.size) a = Arrays.copyOf(a, map.size);
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<V, Map.Entry<Enum<?>, V>> iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = (T) iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1316,15 +1259,11 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<Map.Entry<Enum<?>, V>> toList() {
-			ObjectList<Map.Entry<Enum<?>, V>> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Map.Entry<Enum<?>, V>> list = new ObjectList<>(map.size);
+			MapIterator<V, Map.Entry<Enum<?>, V>> iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1336,14 +1275,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return the given collection
 		 */
 		public Collection<Map.Entry<Enum<?>, V>> appendInto(Collection<Map.Entry<Enum<?>, V>> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<V, Map.Entry<Enum<?>, V>> iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1355,24 +1290,30 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return the given map
 		 */
 		public Map<Enum<?>, V> appendInto(Map<Enum<?>, V> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<V, Map.Entry<Enum<?>, V>> iter = iterator();
 			while (iter.hasNext) {
-				map.put(iter.map.universe[iter.nextIndex], iter.map.release(iter.map.valueTable[iter.nextIndex]));
+				map.put(this.map.universe[iter.nextIndex], this.map.release(this.map.valueTable[iter.nextIndex]));
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
 
 	public static class Values<V> extends AbstractCollection<V> implements EnhancedCollection<V> {
-		protected MapIterator<V, V> iter;
+		protected EnumMap<V> map;
 
 		public Values(EnumMap<V> map) {
-			iter = new MapIterator<V, V>(map) {
+			this.map = map;
+		}
+
+		/**
+		 * Returns an iterator over the elements contained in this collection.
+		 *
+		 * @return an iterator over the elements contained in this collection
+		 */
+		@Override
+		public MapIterator<V, V> iterator() {
+			return new MapIterator<V, V>(map) {
 				@Override
 				public MapIterator<V, V> iterator() {
 					return this;
@@ -1394,22 +1335,11 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 					return value;
 				}
 			};
-
-		}
-
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
-		@Override
-		public MapIterator<V, V> iterator() {
-			return iter;
 		}
 
 		@Override
 		public boolean contains(Object o) {
-			return iter.map.containsValue(o);
+			return map.containsValue(o);
 		}
 
 		/**
@@ -1418,43 +1348,9 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public boolean remove(Object o) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			boolean res = super.remove(o);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
-		}
-
-		/**
-		 * @param c a Collection of any items to try to remove
-		 * @return true if this was modified as a result of this call, or false otherwise
-		 */
-		@Override
-		public boolean removeAll(Collection<?> c) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			boolean res = super.removeAll(c);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
-
-		}
-
-		@Override
-		public boolean retainAll(Collection<?> c) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			boolean res = super.retainAll(c);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
+			int oldSize = map.size();
+			map.remove(map.findKey(o, false));
+			return map.size() != oldSize;
 		}
 
 		/**
@@ -1462,8 +1358,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public void clear() {
-			iter.map.clear();
-			iter.reset();
+			map.clear();
 		}
 
 		@Override
@@ -1476,9 +1371,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 			Collection<?> values = (Collection<?>) o;
 			if (size() != values.size()) return false;
 
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
+			MapIterator<V, V> iter = iterator();
 			boolean res = true;
 			for (Object obj : values) {
 				if (!iter.hasNext) {
@@ -1491,34 +1384,16 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 					break;
 				}
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return res;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
 			int hc = 1;
 			for (V v : this)
 				hc += (v == null ? 0 : v.hashCode());
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return hc;
 		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
 
 		@Override
 		public String toString() {
@@ -1527,7 +1402,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		/**
@@ -1535,17 +1410,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public Object[] toArray() {
-			Object[] a = new Object[iter.map.size];
+			Object[] a = new Object[map.size];
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<V, V> iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1556,17 +1426,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public <T> T[] toArray(T[] a) {
-			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
+			if (a.length < map.size) a = Arrays.copyOf(a, map.size);
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<V, V> iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = (T) iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1575,15 +1440,11 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<V> toList() {
-			ObjectList<V> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<V> list = new ObjectList<>(map.size);
+			MapIterator<V, V> iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1595,23 +1456,75 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return the given collection
 		 */
 		public Collection<V> appendInto(Collection<V> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<V, V> iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 	}
 
 	public static class Keys extends AbstractSet<Enum<?>> implements EnhancedCollection<Enum<?>> {
-		protected MapIterator<?, Enum<?>> iter;
+		protected EnumMap<?> map;
 
 		public Keys(EnumMap<?> map) {
-			iter = new MapIterator<Object, Enum<?>>(map) {
+			this.map = map;
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			return map.containsKey(o);
+		}
+
+		/**
+		 * @param o the item to try to remove
+		 * @return true if this map was modified (meaning the item was removed successfully); false otherwise
+		 */
+		@Override
+		public boolean remove(Object o) {
+			if (o instanceof Enum<?>) {
+				Enum<?> e = (Enum<?>) o;
+				int ord = e.ordinal();
+				if (ord < map.universe.length && map.universe[ord] == e
+					&& map.valueTable[ord] != null) {
+					map.remove(e);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Removes from this set all of its elements that are contained in the
+		 * specified collection (optional operation).  If the specified
+		 * collection is also a set, this operation effectively modifies this
+		 * set so that its value is the <i>asymmetric set difference</i> of
+		 * the two sets.
+		 *
+		 * @param c collection containing elements to be removed from this set
+		 * @return {@code true} if this set changed as a result of the call
+		 */
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			MapIterator<?, Enum<?>> iter = iterator();
+			boolean res = false;
+			for (Object o : c) {
+				if (remove(o)) {
+					iter.reset();
+					res = true;
+				}
+			}
+			return res;
+		}
+
+		/**
+		 * Returns an iterator over the elements contained in this collection.
+		 *
+		 * @return an iterator over the elements contained in this collection
+		 */
+		@Override
+		public MapIterator<?, Enum<?>> iterator() {
+			return new MapIterator<Object, Enum<?>>(map) {
 				@Override
 				public MapIterator<?, Enum<?>> iterator() {
 					return this;
@@ -1635,69 +1548,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 			};
 		}
 
-		@Override
-		public boolean contains(Object o) {
-			return iter.map.containsKey(o);
-		}
-
-		/**
-		 * @param o the item to try to remove
-		 * @return true if this map was modified (meaning the item was removed successfully); false otherwise
-		 */
-		@Override
-		public boolean remove(Object o) {
-			if (o instanceof Enum<?>) {
-				Enum<?> e = (Enum<?>) o;
-				int ord = e.ordinal();
-				if (ord < iter.map.universe.length && iter.map.universe[ord] == e
-					&& iter.map.valueTable[ord] != null) {
-					iter.map.remove(e);
-					return true;
-				}
-			}
-			return false;
-		}
-
-		/**
-		 * Removes from this set all of its elements that are contained in the
-		 * specified collection (optional operation).  If the specified
-		 * collection is also a set, this operation effectively modifies this
-		 * set so that its value is the <i>asymmetric set difference</i> of
-		 * the two sets.
-		 *
-		 * @param c collection containing elements to be removed from this set
-		 * @return {@code true} if this set changed as a result of the call
-		 */
-		@Override
-		public boolean removeAll(Collection<?> c) {
-			iter.reset();
-			boolean res = false;
-			for (Object o : c) {
-				if (remove(o)) {
-					iter.reset();
-					res = true;
-				}
-			}
-			return res;
-		}
-
-		/**
-		 * Returns an iterator over the elements contained in this collection.
-		 *
-		 * @return an iterator over the elements contained in this collection
-		 */
-		@Override
-		public MapIterator<?, Enum<?>> iterator() {
-			return iter;
-		}
-
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		public void clear() {
-			iter.map.clear();
-			iter.reset();
+			map.clear();
 		}
 
 
@@ -1708,39 +1564,7 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 
 		@Override
 		public int size() {
-			return iter.map.size;
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			boolean res = super.equals(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
-		}
-
-		@Override
-		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			return map.size;
 		}
 
 		/**
@@ -1748,17 +1572,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public Object[] toArray() {
-			Object[] a = new Object[iter.map.size];
+			Object[] a = new Object[map.size];
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<?, Enum<?>> iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1769,17 +1588,12 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 */
 		@Override
 		public <T> T[] toArray(T[] a) {
-			if (a.length < iter.map.size) a = Arrays.copyOf(a, iter.map.size);
+			if (a.length < map.size) a = Arrays.copyOf(a, map.size);
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<?, Enum<?>> iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = (T) iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1790,15 +1604,11 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return a new ObjectList containing the remaining items
 		 */
 		public ObjectList<Enum<?>> toList() {
-			ObjectList<Enum<?>> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Enum<?>> list = new ObjectList<>(map.size);
+			MapIterator<?, Enum<?>> iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1810,15 +1620,11 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return a new EnumSet containing the remaining items, sharing a universe with this key set
 		 */
 		public EnumSet toEnumSet() {
-			EnumSet es = new EnumSet(iter.map.universe, true);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EnumSet es = new EnumSet(map.universe, true);
+			MapIterator<?, Enum<?>> iter = iterator();
 			while (iter.hasNext) {
 				es.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return es;
 		}
 
@@ -1830,14 +1636,10 @@ public class EnumMap<V> implements Map<Enum<?>, V>, Iterable<Map.Entry<Enum<?>, 
 		 * @return the given collection, potentially after modifications
 		 */
 		public Collection<Enum<?>> appendInto(Collection<Enum<?>> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			MapIterator<?, Enum<?>> iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 	}
