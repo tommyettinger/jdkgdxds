@@ -715,7 +715,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		public OrderedMapEntries(IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
-			iter = new EntryIterator<V>(map) {
+		}
+
+		@Override
+		public EntryIterator<V> iterator() {
+			return new EntryIterator<V>(map) {
 
 				@Override
 				public void reset() {
@@ -751,16 +755,12 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 
 		@Override
 		public IntObjectMap<V> appendInto(IntObjectMap<V> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator<V> iter = iterator();
 			while (iter.hasNext) {
 				int k = keys.get(iter.nextIndex);
 				map.put(k, iter.map.get(k));
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
@@ -771,7 +771,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		public OrderedMapKeys(IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
-			iter = new KeyIterator<V>(map) {
+		}
+
+		@Override
+		public KeyIterator<V> iterator() {
+			return new KeyIterator<V>(map) {
 
 				@Override
 				public void reset() {
@@ -803,7 +807,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 				}
 			};
 		}
-
 	}
 
 	public static class OrderedMapValues<V> extends Values<V> {
@@ -812,7 +815,11 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 		public OrderedMapValues(IntObjectOrderedMap<V> map) {
 			super(map);
 			keys = map.keys;
-			iter = new ValueIterator<V>(map) {
+		}
+
+		@Override
+		public ValueIterator<V> iterator() {
+			return new ValueIterator<V>(map) {
 
 				@Override
 				public void reset() {
@@ -844,7 +851,6 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 				}
 			};
 		}
-
 	}
 
 	/**

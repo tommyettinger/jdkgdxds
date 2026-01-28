@@ -1264,11 +1264,6 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 		}
 
 		@Override
-		public int hashCode() {
-			return super.hashCode();
-		}
-
-		@Override
 		public String toString() {
 			return toString(", ", true);
 		}
