@@ -1241,10 +1241,10 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	}
 
 	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
-		protected EntryIterator iter;
+		protected IntLongMap map;
 
 		public Entries(IntLongMap map) {
-			iter = new EntryIterator(map);
+			this.map = map;
 		}
 
 		/**
@@ -1254,24 +1254,12 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 */
 		@Override
 		public EntryIterator iterator() {
-			return iter;
+			return new EntryIterator(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
-		}
-
-		@Override
-		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
+			return map.size;
 		}
 
 		@Override
@@ -1280,27 +1268,15 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 
 		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
-		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<Entry> toList() {
-			ObjectList<Entry> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Entry> list = new ObjectList<>(map.size);
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1312,14 +1288,10 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * @return the given collection
 		 */
 		public Collection<Entry> appendInto(Collection<Entry> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1331,21 +1303,17 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * @return the given map
 		 */
 		public IntLongMap appendInto(IntLongMap map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				map.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
 
 	public static class Values implements PrimitiveCollection.OfLong {
-		protected ValueIterator iter;
+		protected IntLongMap map;
 
 		@Override
 		public boolean add(long item) {
@@ -1359,7 +1327,7 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 
 		@Override
 		public boolean contains(long item) {
-			return iter.map.containsValue(item);
+			return map.containsValue(item);
 		}
 
 		@Override
@@ -1373,25 +1341,17 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public LongIterator iterator() {
-			return iter;
+		public ValueIterator iterator() {
+			return new ValueIterator(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		public Values(IntLongMap map) {
-			iter = new ValueIterator(map);
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			this.map = map;
 		}
 
 		/**
@@ -1399,15 +1359,11 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * Does not change the position of this iterator.
 		 */
 		public LongList toList() {
-			LongList list = new LongList(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			LongList list = new LongList(map.size);
+			ValueIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1419,14 +1375,10 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ValueIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1437,10 +1389,10 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	}
 
 	public static class Keys implements PrimitiveSet.SetOfInt {
-		protected KeyIterator iter;
+		protected IntLongMap map;
 
 		public Keys(IntLongMap map) {
-			iter = new KeyIterator(map);
+			this.map = map;
 		}
 
 		@Override
@@ -1455,12 +1407,12 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 
 		@Override
 		public boolean contains(int item) {
-			return iter.map.containsKey(item);
+			return map.containsKey(item);
 		}
 
 		@Override
-		public IntIterator iterator() {
-			return iter;
+		public KeyIterator iterator() {
+			return new KeyIterator(map);
 		}
 
 		@Override
@@ -1470,30 +1422,17 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
+			KeyIterator iter = iterator();
 			int hc = 1;
 			while (iter.hasNext) {
-				hc += iter.nextInt();
+				hc ^= iter.nextInt();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return hc;
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
 		}
 
 		/**
@@ -1501,15 +1440,11 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * Does not change the position of this iterator.
 		 */
 		public IntList toList() {
-			IntList list = new IntList(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			IntList list = new IntList(map.size);
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.nextInt());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1521,27 +1456,17 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfInt appendInto(PrimitiveCollection.OfInt coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.nextInt());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
 		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals(Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			boolean eq = SetOfInt.super.equalContents(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return eq;
+			return SetOfInt.super.equalContents(other);
 		}
 
 		@Override

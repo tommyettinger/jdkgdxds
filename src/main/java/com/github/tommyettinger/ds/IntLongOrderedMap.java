@@ -734,7 +734,22 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 		public OrderedMapEntries(IntLongOrderedMap map) {
 			super(map);
 			keys = map.keys;
-			iter = new EntryIterator(map) {
+		}
+
+		@Override
+		public IntLongMap appendInto(IntLongMap map) {
+			EntryIterator iter = iterator();
+			while (iter.hasNext) {
+				int k = keys.get(iter.nextIndex);
+				map.put(k, iter.map.get(k));
+				iter.findNextIndex();
+			}
+			return map;
+		}
+
+		@Override
+		public EntryIterator iterator() {
+			return new EntryIterator(map) {
 
 				@Override
 				public void reset() {
@@ -767,21 +782,6 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 				}
 			};
 		}
-
-		@Override
-		public IntLongMap appendInto(IntLongMap map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {
-				int k = keys.get(iter.nextIndex);
-				map.put(k, iter.map.get(k));
-				iter.findNextIndex();
-			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return map;
-		}
 	}
 
 	public static class OrderedMapKeys extends Keys {
@@ -790,7 +790,11 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 		public OrderedMapKeys(IntLongOrderedMap map) {
 			super(map);
 			keys = map.keys;
-			iter = new KeyIterator(map) {
+		}
+
+		@Override
+		public KeyIterator iterator() {
+			return new KeyIterator(map) {
 
 				@Override
 				public void reset() {
@@ -822,7 +826,6 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 				}
 			};
 		}
-
 	}
 
 	public static class OrderedMapValues extends Values {
@@ -831,7 +834,11 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 		public OrderedMapValues(IntLongOrderedMap map) {
 			super(map);
 			keys = map.keys;
-			iter = new ValueIterator(map) {
+		}
+
+		@Override
+		public ValueIterator iterator() {
+			return new ValueIterator(map) {
 
 				@Override
 				public void reset() {
@@ -863,7 +870,6 @@ public class IntLongOrderedMap extends IntLongMap implements Ordered.OfInt {
 				}
 			};
 		}
-
 	}
 
 	/**

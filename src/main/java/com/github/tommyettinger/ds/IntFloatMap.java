@@ -1475,9 +1475,9 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 			KeyIterator iter = iterator();
 			int hc = 1;
 			while (iter.hasNext) {
-				hc += iter.nextInt();
+				hc ^= iter.nextInt();
 			}
-			return (int) (hc ^ hc >>> 32);
+			return hc;
 		}
 
 		/**
