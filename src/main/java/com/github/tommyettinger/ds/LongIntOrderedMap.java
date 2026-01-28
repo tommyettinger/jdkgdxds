@@ -735,7 +735,22 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 		public OrderedMapEntries(LongIntOrderedMap map) {
 			super(map);
 			keys = map.keys;
-			iter = new EntryIterator(map) {
+		}
+
+		@Override
+		public LongIntMap appendInto(LongIntMap map) {
+			EntryIterator iter = iterator();
+			while (iter.hasNext) {
+				long k = keys.get(iter.nextIndex);
+				map.put(k, iter.map.get(k));
+				iter.findNextIndex();
+			}
+			return map;
+		}
+
+		@Override
+		public EntryIterator iterator() {
+			return new EntryIterator(map) {
 
 				@Override
 				public void reset() {
@@ -768,22 +783,6 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 				}
 			};
 		}
-
-		@Override
-		public LongIntMap appendInto(LongIntMap map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			while (iter.hasNext) {
-				long k = keys.get(iter.nextIndex);
-				map.put(k, iter.map.get(k));
-				iter.findNextIndex();
-			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return map;
-		}
-
 	}
 
 	public static class OrderedMapKeys extends Keys {
@@ -792,7 +791,11 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 		public OrderedMapKeys(LongIntOrderedMap map) {
 			super(map);
 			keys = map.keys;
-			iter = new KeyIterator(map) {
+		}
+
+		@Override
+		public KeyIterator iterator() {
+			return new KeyIterator(map) {
 
 				@Override
 				public void reset() {
@@ -824,7 +827,6 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 				}
 			};
 		}
-
 	}
 
 	public static class OrderedMapValues extends Values {
@@ -833,7 +835,11 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 		public OrderedMapValues(LongIntOrderedMap map) {
 			super(map);
 			keys = map.keys;
-			iter = new ValueIterator(map) {
+		}
+
+		@Override
+		public ValueIterator iterator() {
+			return new ValueIterator(map) {
 
 				@Override
 				public void reset() {
@@ -865,9 +871,7 @@ public class LongIntOrderedMap extends LongIntMap implements Ordered.OfLong {
 				}
 			};
 		}
-
 	}
-
 
 	/**
 	 * Constructs an empty map.

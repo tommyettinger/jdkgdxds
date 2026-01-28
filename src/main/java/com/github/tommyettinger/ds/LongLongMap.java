@@ -1246,10 +1246,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
-		protected EntryIterator iter;
+		protected LongLongMap map;
 
 		public Entries(LongLongMap map) {
-			iter = new EntryIterator(map);
+			this.map = map;
 		}
 
 		/**
@@ -1259,24 +1259,12 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 */
 		@Override
 		public EntryIterator iterator() {
-			return iter;
+			return new EntryIterator(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
-		}
-
-		@Override
-		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
+			return map.size;
 		}
 
 		@Override
@@ -1285,27 +1273,15 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		}
 
 		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
-		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<Entry> toList() {
-			ObjectList<Entry> list = new ObjectList<>(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Entry> list = new ObjectList<>(map.size);
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1317,14 +1293,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 * @return the given collection
 		 */
 		public Collection<Entry> appendInto(Collection<Entry> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1336,21 +1308,17 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 * @return the given map
 		 */
 		public LongLongMap appendInto(LongLongMap map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				map.put(iter.map.keyTable[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
 
 	public static class Values implements PrimitiveCollection.OfLong {
-		protected ValueIterator iter;
+		protected LongLongMap map;
 
 		@Override
 		public boolean add(long item) {
@@ -1364,7 +1332,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 		@Override
 		public boolean contains(long item) {
-			return iter.map.containsValue(item);
+			return map.containsValue(item);
 		}
 
 		@Override
@@ -1378,25 +1346,17 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public LongIterator iterator() {
-			return iter;
+		public ValueIterator iterator() {
+			return new ValueIterator(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		public Values(LongLongMap map) {
-			iter = new ValueIterator(map);
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			this.map = map;
 		}
 
 		/**
@@ -1404,15 +1364,11 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 * Does not change the position of this iterator.
 		 */
 		public LongList toList() {
-			LongList list = new LongList(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			LongList list = new LongList(map.size);
+			ValueIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1424,14 +1380,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ValueIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1442,10 +1394,10 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	public static class Keys implements PrimitiveSet.SetOfLong {
-		protected KeyIterator iter;
+		protected LongLongMap map;
 
 		public Keys(LongLongMap map) {
-			iter = new KeyIterator(map);
+			this.map = map;
 		}
 
 		@Override
@@ -1460,12 +1412,12 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 		@Override
 		public boolean contains(long item) {
-			return iter.map.containsKey(item);
+			return map.containsKey(item);
 		}
 
 		@Override
-		public LongIterator iterator() {
-			return iter;
+		public KeyIterator iterator() {
+			return new KeyIterator(map);
 		}
 
 		@Override
@@ -1475,30 +1427,17 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 
 		@Override
 		public int size() {
-			return iter.map.size;
+			return map.size;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
+			KeyIterator iter = iterator();
 			long hc = 1;
 			while (iter.hasNext) {
 				hc += iter.nextLong();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return (int) (hc ^ hc >>> 32);
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
 		}
 
 		/**
@@ -1506,15 +1445,11 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 * Does not change the position of this iterator.
 		 */
 		public LongList toList() {
-			LongList list = new LongList(iter.map.size);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			LongList list = new LongList(map.size);
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1526,27 +1461,17 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		 * @return the given collection
 		 */
 		public PrimitiveCollection.OfLong appendInto(PrimitiveCollection.OfLong coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
 		@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 		@Override
 		public boolean equals(Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			boolean eq = SetOfLong.super.equalContents(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return eq;
+			return SetOfLong.super.equalContents(other);
 		}
 
 		@Override
