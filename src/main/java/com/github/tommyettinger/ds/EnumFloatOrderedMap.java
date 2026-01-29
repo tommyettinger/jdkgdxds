@@ -881,7 +881,6 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 		}
 	}
 
-
 	/**
 	 * Constructs an empty map.
 	 * This is usually less useful than just using the constructor, but can be handy

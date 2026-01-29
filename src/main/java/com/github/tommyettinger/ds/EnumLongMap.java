@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.PrimitiveCollection.OfLong;
 import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.LongLongToLongBiFunction;
@@ -1000,33 +1001,33 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 	}
 
 	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
-		protected EntryIterator iter;
+		protected EnumLongMap map;
 
 		public Entries(EnumLongMap map) {
-			iter = new EntryIterator(map);
+			this.map = map;
 		}
 
 		@Override
 		public boolean contains(Object o) {
-			if (o instanceof Entry && iter.map.keys != null && iter.map.keys.universe != null) {
+			if (o instanceof Entry && map.keys != null && map.keys.universe != null) {
 				Entry ent = ((Entry) o);
 				Enum<?> e = ent.getKey();
 				int ord = e.ordinal();
-				return (ord < iter.map.keys.universe.length && iter.map.keys.universe[ord] == e
-					&& iter.map.keys.contains(e) && iter.map.valueTable[ord] == ent.getValue());
+				return (ord < map.keys.universe.length && map.keys.universe[ord] == e
+					&& map.keys.contains(e) && map.valueTable[ord] == ent.getValue());
 			}
 			return false;
 		}
 
 		@Override
 		public boolean remove(Object o) {
-			if (o instanceof Entry && iter.map.keys != null && iter.map.keys.universe != null) {
+			if (o instanceof Entry && map.keys != null && map.keys.universe != null) {
 				Entry ent = ((Entry) o);
 				Enum<?> e = ent.getKey();
 				int ord = e.ordinal();
-				if (ord < iter.map.keys.universe.length && iter.map.keys.universe[ord] == e
-					&& iter.map.keys.contains(e) && iter.map.valueTable[ord] == ent.getValue()) {
-					iter.map.keys.remove(e);
+				if (ord < map.keys.universe.length && map.keys.universe[ord] == e
+					&& map.keys.contains(e) && map.valueTable[ord] == ent.getValue()) {
+					map.keys.remove(e);
 					return true;
 				}
 			}
@@ -1045,13 +1046,9 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 */
 		@Override
 		public boolean removeAll(Collection<?> c) {
-			iter.reset();
 			boolean res = false;
 			for (Object o : c) {
-				if (remove(o)) {
-					iter.reset();
-					res = true;
-				}
+				res |= remove(o);
 			}
 			return res;
 		}
@@ -1068,7 +1065,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		@Override
 		public boolean retainAll(Collection<?> c) {
 			Objects.requireNonNull(c);
-			iter.reset();
+			EntryIterator iter = iterator();
 			boolean modified = false;
 			while (iter.hasNext) {
 				Entry n = iter.next();
@@ -1077,19 +1074,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 					modified = true;
 				}
 			}
-			iter.reset();
 			return modified;
-		}
-
-		/**
-		 * @param c a Collection of any type
-		 * @return true if all elements in c are contained in this set; false otherwise
-		 * @see #contains(Object)
-		 */
-		@Override
-		public boolean containsAll(Collection<?> c) {
-			iter.reset();
-			return super.containsAll(c);
 		}
 
 		/**
@@ -1099,36 +1084,12 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 */
 		@Override
 		public EntryIterator iterator() {
-			return iter;
+			return new EntryIterator(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size();
-		}
-
-		@Override
-		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			boolean res = super.equals(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
+			return map.size();
 		}
 
 		@Override
@@ -1141,16 +1102,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 */
 		@Override
 		public void clear() {
-			iter.map.clear();
-			iter.reset();
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			map.clear();
 		}
 
 		/**
@@ -1158,17 +1110,12 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 */
 		@Override
 		public Object[] toArray() {
-			Object[] a = new Object[iter.map.size()];
+			Object[] a = new Object[map.size()];
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1180,17 +1127,12 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		@SuppressWarnings("unchecked")
 		@Override
 		public <T> T[] toArray(T[] a) {
-			if (a.length < iter.map.size()) a = Arrays.copyOf(a, iter.map.size());
+			if (a.length < map.size()) a = Arrays.copyOf(a, map.size());
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = (T) iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1199,15 +1141,11 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<Entry> toList() {
-			ObjectList<Entry> list = new ObjectList<>(iter.map.size());
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Entry> list = new ObjectList<>(map.size());
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1219,14 +1157,10 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @return the given collection
 		 */
 		public Collection<Entry> appendInto(Collection<Entry> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1238,15 +1172,11 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @return the given ObjectLongMap
 		 */
 		public ObjectLongMap<Enum<?>> appendInto(ObjectLongMap<Enum<?>> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
-				map.put(iter.map.keys.universe[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				map.put(this.map.keys.universe[iter.nextIndex], this.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 
@@ -1258,21 +1188,17 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @return the given EnumLongMap
 		 */
 		public EnumLongMap appendInto(EnumLongMap map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
-				map.put(iter.map.keys.universe[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				map.put(this.map.keys.universe[iter.nextIndex], this.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
 
 	public static class Values implements OfLong {
-		protected ValueIterator iter;
+		protected EnumLongMap map;
 
 		@Override
 		public boolean add(long item) {
@@ -1286,7 +1212,7 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 		@Override
 		public boolean contains(long item) {
-			return iter.map.containsValue(item);
+			return map.containsValue(item);
 		}
 
 		@Override
@@ -1296,24 +1222,16 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 
 		@Override
 		public ValueIterator iterator() {
-			return iter;
+			return new ValueIterator(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size();
+			return map.size();
 		}
 
 		public Values(EnumLongMap map) {
-			iter = new ValueIterator(map);
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			this.map = map;
 		}
 
 		/**
@@ -1321,15 +1239,11 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * Does not change the position of this iterator.
 		 */
 		public LongList toList() {
-			LongList list = new LongList(iter.map.size());
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			LongList list = new LongList(map.size());
+			ValueIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1341,42 +1255,31 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @return the given collection
 		 */
 		public OfLong appendInto(OfLong coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ValueIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.nextLong());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			long hc = iter.map.size();
+			ValueIterator iter = iterator();
+			long hc = map.size();
 			while (iter.hasNext) {
 				long v = iter.nextLong();
-				hc = hc * 0x9E3779B97F4A7C15L + v;
+				hc = hc * 0x9E3779B97F4A7C15L ^ (v ^ v >>> 32);
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return (int) (hc ^ hc >>> 32);
+			return (int)(hc ^ hc >>> 32);
 		}
 
 		@Override
 		public boolean equals(Object other) {
 			if (other instanceof OfLong) {
-				boolean res = iter.map.size() == ((OfLong) other).size();
+				boolean res = map.size() == ((OfLong) other).size();
 				if (res) {
 					LongIterator otter = ((OfLong) other).iterator();
-					int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-					boolean hn = iter.hasNext;
-					iter.reset();
+					ValueIterator iter = iterator();
 
 					while (iter.hasNext && otter.hasNext()) {
 						if (iter.nextLong() != otter.nextLong()) {
@@ -1385,10 +1288,6 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 						}
 					}
 					res &= iter.hasNext == otter.hasNext();
-
-					iter.currentIndex = currentIdx;
-					iter.nextIndex = nextIdx;
-					iter.hasNext = hn;
 				}
 				return res;
 			}
@@ -1399,16 +1298,14 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		public String toString() {
 			return toString(", ", true);
 		}
-
-
 	}
 
 	public static class Keys extends EnumSet {
-		protected KeyIterator iter;
+		protected EnumLongMap map;
 
 		public Keys(EnumLongMap map) {
 			super();
-			iter = new KeyIterator(map);
+			this.map = map;
 			if (map.keys == null) return;
 
 			EnumSet other = map.keys;
@@ -1455,8 +1352,8 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<Enum<?>> iterator() {
-			return iter;
+		public KeyIterator iterator() {
+			return new KeyIterator(map);
 		}
 
 		/**
@@ -1483,29 +1380,17 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		}
 
 		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
-		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 *
 		 * @return a new ObjectList containing the remaining items
 		 */
 		public ObjectList<Enum<?>> toList() {
-			ObjectList<Enum<?>> list = new ObjectList<>(iter.map.size());
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Enum<?>> list = new ObjectList<>(map.size());
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1518,14 +1403,10 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 */
 		public EnumSet toEnumSet() {
 			EnumSet es = new EnumSet(super.universe, true);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				es.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return es;
 		}
 
@@ -1537,14 +1418,10 @@ public class EnumLongMap implements Iterable<EnumLongMap.Entry> {
 		 * @return the given collection, potentially after modifications
 		 */
 		public Collection<Enum<?>> appendInto(Collection<Enum<?>> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 	}
