@@ -999,33 +999,33 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	}
 
 	public static class Entries extends AbstractSet<Entry> implements EnhancedCollection<Entry> {
-		protected EntryIterator iter;
+		protected EnumFloatMap map;
 
 		public Entries(EnumFloatMap map) {
-			iter = new EntryIterator(map);
+			this.map = map;
 		}
 
 		@Override
 		public boolean contains(Object o) {
-			if (o instanceof Entry && iter.map.keys != null && iter.map.keys.universe != null) {
+			if (o instanceof Entry && map.keys != null && map.keys.universe != null) {
 				Entry ent = ((Entry) o);
 				Enum<?> e = ent.getKey();
 				int ord = e.ordinal();
-				return (ord < iter.map.keys.universe.length && iter.map.keys.universe[ord] == e
-					&& iter.map.keys.contains(e) && iter.map.valueTable[ord] == ent.getValue());
+				return (ord < map.keys.universe.length && map.keys.universe[ord] == e
+					&& map.keys.contains(e) && map.valueTable[ord] == ent.getValue());
 			}
 			return false;
 		}
 
 		@Override
 		public boolean remove(Object o) {
-			if (o instanceof Entry && iter.map.keys != null && iter.map.keys.universe != null) {
+			if (o instanceof Entry && map.keys != null && map.keys.universe != null) {
 				Entry ent = ((Entry) o);
 				Enum<?> e = ent.getKey();
 				int ord = e.ordinal();
-				if (ord < iter.map.keys.universe.length && iter.map.keys.universe[ord] == e
-					&& iter.map.keys.contains(e) && iter.map.valueTable[ord] == ent.getValue()) {
-					iter.map.keys.remove(e);
+				if (ord < map.keys.universe.length && map.keys.universe[ord] == e
+					&& map.keys.contains(e) && map.valueTable[ord] == ent.getValue()) {
+					map.keys.remove(e);
 					return true;
 				}
 			}
@@ -1044,13 +1044,9 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 */
 		@Override
 		public boolean removeAll(Collection<?> c) {
-			iter.reset();
 			boolean res = false;
 			for (Object o : c) {
-				if (remove(o)) {
-					iter.reset();
-					res = true;
-				}
+				res |= remove(o);
 			}
 			return res;
 		}
@@ -1067,7 +1063,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		@Override
 		public boolean retainAll(Collection<?> c) {
 			Objects.requireNonNull(c);
-			iter.reset();
+			EntryIterator iter = iterator();
 			boolean modified = false;
 			while (iter.hasNext) {
 				Entry n = iter.next();
@@ -1076,19 +1072,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 					modified = true;
 				}
 			}
-			iter.reset();
 			return modified;
-		}
-
-		/**
-		 * @param c a Collection of any type
-		 * @return true if all elements in c are contained in this set; false otherwise
-		 * @see #contains(Object)
-		 */
-		@Override
-		public boolean containsAll(Collection<?> c) {
-			iter.reset();
-			return super.containsAll(c);
 		}
 
 		/**
@@ -1098,36 +1082,12 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 */
 		@Override
 		public EntryIterator iterator() {
-			return iter;
+			return new EntryIterator(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size();
-		}
-
-		@Override
-		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = super.hashCode();
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return hc;
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			boolean res = super.equals(other);
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-			return res;
+			return map.size();
 		}
 
 		@Override
@@ -1140,16 +1100,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 */
 		@Override
 		public void clear() {
-			iter.map.clear();
-			iter.reset();
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			map.clear();
 		}
 
 		/**
@@ -1157,17 +1108,12 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 */
 		@Override
 		public Object[] toArray() {
-			Object[] a = new Object[iter.map.size()];
+			Object[] a = new Object[map.size()];
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1179,17 +1125,12 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		@SuppressWarnings("unchecked")
 		@Override
 		public <T> T[] toArray(T[] a) {
-			if (a.length < iter.map.size()) a = Arrays.copyOf(a, iter.map.size());
+			if (a.length < map.size()) a = Arrays.copyOf(a, map.size());
 			int i = 0;
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				a[i++] = (T) iter.next();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
-
 			return a;
 		}
 
@@ -1198,15 +1139,11 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * Does not change the position of this iterator.
 		 */
 		public ObjectList<Entry> toList() {
-			ObjectList<Entry> list = new ObjectList<>(iter.map.size());
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Entry> list = new ObjectList<>(map.size());
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1218,14 +1155,10 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * @return the given collection
 		 */
 		public Collection<Entry> appendInto(Collection<Entry> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
@@ -1237,15 +1170,11 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * @return the given ObjectFloatMap
 		 */
 		public ObjectFloatMap<Enum<?>> appendInto(ObjectFloatMap<Enum<?>> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
-				map.put(iter.map.keys.universe[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				map.put(this.map.keys.universe[iter.nextIndex], this.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 
@@ -1257,21 +1186,17 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * @return the given EnumFloatMap
 		 */
 		public EnumFloatMap appendInto(EnumFloatMap map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
-				map.put(iter.map.keys.universe[iter.nextIndex], iter.map.valueTable[iter.nextIndex]);
+				map.put(this.map.keys.universe[iter.nextIndex], this.map.valueTable[iter.nextIndex]);
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
 
 	public static class Values implements OfFloat {
-		protected ValueIterator iter;
+		protected EnumFloatMap map;
 
 		@Override
 		public boolean add(float item) {
@@ -1285,7 +1210,7 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 
 		@Override
 		public boolean contains(float item) {
-			return iter.map.containsValue(item);
+			return map.containsValue(item);
 		}
 
 		@Override
@@ -1295,24 +1220,16 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 
 		@Override
 		public ValueIterator iterator() {
-			return iter;
+			return new ValueIterator(map);
 		}
 
 		@Override
 		public int size() {
-			return iter.map.size();
+			return map.size();
 		}
 
 		public Values(EnumFloatMap map) {
-			iter = new ValueIterator(map);
-		}
-
-		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
+			this.map = map;
 		}
 
 		/**
@@ -1320,15 +1237,11 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * Does not change the position of this iterator.
 		 */
 		public FloatList toList() {
-			FloatList list = new FloatList(iter.map.size());
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			FloatList list = new FloatList(map.size());
+			ValueIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.nextFloat());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1340,42 +1253,31 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * @return the given collection
 		 */
 		public OfFloat appendInto(OfFloat coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ValueIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.nextFloat());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 
 		@Override
 		public int hashCode() {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
-			iter.reset();
-			int hc = iter.map.size();
+			ValueIterator iter = iterator();
+			int hc = map.size();
 			while (iter.hasNext) {
 				float v = iter.nextFloat();
 				hc = BitConversion.imul(hc, 0x9E3779BB) ^ BitConversion.floatToRawIntBits(v);
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return hc;
 		}
 
 		@Override
 		public boolean equals(Object other) {
 			if (other instanceof OfFloat) {
-				boolean res = iter.map.size() == ((OfFloat) other).size();
+				boolean res = map.size() == ((OfFloat) other).size();
 				if (res) {
 					FloatIterator otter = ((OfFloat) other).iterator();
-					int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-					boolean hn = iter.hasNext;
-					iter.reset();
+					ValueIterator iter = iterator();
 
 					while (iter.hasNext && otter.hasNext()) {
 						if (iter.nextFloat() != otter.nextFloat()) {
@@ -1384,10 +1286,6 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 						}
 					}
 					res &= iter.hasNext == otter.hasNext();
-
-					iter.currentIndex = currentIdx;
-					iter.nextIndex = nextIdx;
-					iter.hasNext = hn;
 				}
 				return res;
 			}
@@ -1403,11 +1301,11 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 	}
 
 	public static class Keys extends EnumSet {
-		protected KeyIterator iter;
+		protected EnumFloatMap map;
 
 		public Keys(EnumFloatMap map) {
 			super();
-			iter = new KeyIterator(map);
+			this.map = map;
 			if (map.keys == null) return;
 
 			EnumSet other = map.keys;
@@ -1454,8 +1352,8 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * @return an iterator over the elements contained in this collection
 		 */
 		@Override
-		public Iterator<Enum<?>> iterator() {
-			return iter;
+		public KeyIterator iterator() {
+			return new KeyIterator(map);
 		}
 
 		/**
@@ -1482,29 +1380,17 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		}
 
 		/**
-		 * The iterator is reused by this data structure, and you can reset it
-		 * back to the start of the iteration order using this.
-		 */
-		public void resetIterator() {
-			iter.reset();
-		}
-
-		/**
 		 * Returns a new {@link ObjectList} containing the remaining items.
 		 * Does not change the position of this iterator.
 		 *
 		 * @return a new ObjectList containing the remaining items
 		 */
 		public ObjectList<Enum<?>> toList() {
-			ObjectList<Enum<?>> list = new ObjectList<>(iter.map.size());
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			ObjectList<Enum<?>> list = new ObjectList<>(map.size());
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				list.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return list;
 		}
 
@@ -1517,14 +1403,10 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 */
 		public EnumSet toEnumSet() {
 			EnumSet es = new EnumSet(super.universe, true);
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				es.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return es;
 		}
 
@@ -1536,14 +1418,10 @@ public class EnumFloatMap implements Iterable<EnumFloatMap.Entry> {
 		 * @return the given collection, potentially after modifications
 		 */
 		public Collection<Enum<?>> appendInto(Collection<Enum<?>> coll) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			KeyIterator iter = iterator();
 			while (iter.hasNext) {
 				coll.add(iter.next());
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return coll;
 		}
 	}

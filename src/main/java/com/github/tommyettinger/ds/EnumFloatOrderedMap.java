@@ -720,7 +720,11 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 		public OrderedMapEntries(EnumFloatOrderedMap map) {
 			super(map);
 			ordering = map.ordering;
-			iter = new EntryIterator(map) {
+		}
+
+		@Override
+		public EntryIterator iterator() {
+			return new EntryIterator(map) {
 
 				@Override
 				public void reset() {
@@ -762,16 +766,12 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 		 * @return the given ObjectFloatMap
 		 */
 		public ObjectFloatMap<Enum<?>> appendInto(ObjectFloatMap<Enum<?>> map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				Enum<?> k = ordering.get(iter.nextIndex);
 				map.put(k, iter.map.get(k));
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 
@@ -783,16 +783,12 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 		 * @return the given EnumFloatMap
 		 */
 		public EnumFloatMap appendInto(EnumFloatMap map) {
-			int currentIdx = iter.currentIndex, nextIdx = iter.nextIndex;
-			boolean hn = iter.hasNext;
+			EntryIterator iter = iterator();
 			while (iter.hasNext) {
 				Enum<?> k = ordering.get(iter.nextIndex);
 				map.put(k, iter.map.get(k));
 				iter.findNextIndex();
 			}
-			iter.currentIndex = currentIdx;
-			iter.nextIndex = nextIdx;
-			iter.hasNext = hn;
 			return map;
 		}
 	}
@@ -803,7 +799,11 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 		public OrderedMapKeys(EnumFloatOrderedMap map) {
 			super(map);
 			ordering = map.ordering;
-			iter = new KeyIterator(map) {
+		}
+
+		@Override
+		public KeyIterator iterator() {
+			return new KeyIterator(map) {
 
 				@Override
 				public void reset() {
@@ -835,7 +835,6 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 				}
 			};
 		}
-
 	}
 
 	public static class OrderedMapValues extends Values {
@@ -844,7 +843,11 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 		public OrderedMapValues(EnumFloatOrderedMap map) {
 			super(map);
 			ordering = map.ordering;
-			iter = new ValueIterator(map) {
+		}
+
+		@Override
+		public ValueIterator iterator() {
+			return new ValueIterator(map) {
 
 				@Override
 				public void reset() {
@@ -876,7 +879,6 @@ public class EnumFloatOrderedMap extends EnumFloatMap implements Ordered<Enum<?>
 				}
 			};
 		}
-
 	}
 
 
