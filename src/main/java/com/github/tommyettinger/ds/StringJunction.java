@@ -48,6 +48,10 @@ import java.util.Objects;
  * you get a StringJunction that will match any of "a", "b", or "c". Alternatively, an input such as
  * {@code (beef|turkey|veggie|warm melted cheese)&bun} will match a Collection that contains "beef" as well as
  * "bun", "turkey" as well as "bun", "veggie" as well as "bun", or "warm melted cheese" as well as "bun".
+ * <br>
+ * If you need an item type other than String, you can use {@link Junction}.
+ *
+ * @see Junction Junction is a generalization of this class to a generic item type.
  */
 public class StringJunction implements Term<String> {
 	public Term<String> root;

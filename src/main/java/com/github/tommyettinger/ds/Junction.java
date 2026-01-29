@@ -30,7 +30,7 @@ import java.util.Objects;
  * Note, the {@link #equals(Object)} method is meant to compare two Junctions to see if they are equivalent, while
  * the {@link #match(Collection)} method is how you actually check if this Junction matches a Collection.
  * <br>
- * A Junction mostly provides the same API as any other Term type, but does also supply {@link #negate()}, which
+ * A Junction mostly provides the same API as any other Term type, but does also supply {@link #negate()}. That
  * can be useful when you don't want to use {@link #remove(Collection)} to remove matches, but instead want to
  * filter and keep only terms that match this Junction. Note that negate() modifies this Junction in-place, so you
  * might want to call negate() again after filtering.
@@ -44,13 +44,18 @@ import java.util.Objects;
  * multiple Terms match. Any, All, and One are usually shown as taking two arguments, but can actually take 1 or more.
  * This is important for One because it still requires exactly one match even if 10 arguments are given.
  * <br>
- * This provides a static convenience method, {@link #parse(String)}, that can parse a Junction of String from a
- * String that may contain symbols for various terms, and/or parentheses. Given an input such as {@code a|b|c},
+ * This provides a static convenience method, {@link #parse(ObjToObjFunction, String)}, that can parse a Junction of T
+ * from a String that may contain symbols for various terms, and/or parentheses. It also needs a function to parse a T
+ * instance from a String part of the parsed input. Given an input such as {@code a|b|c},
  * you get a Junction that will match any of "a", "b", or "c". Alternatively, an input such as
  * {@code (beef|turkey|veggie|warm melted cheese)&bun} will match a Collection that contains "beef" as well as
  * "bun", "turkey" as well as "bun", "veggie" as well as "bun", or "warm melted cheese" as well as "bun".
+ * <br>
+ * If you intend to use String for {@code T}, consider the specialized {@link StringJunction} class instead, which
+ * has its own nested classes and tends to be more efficient at handling that common case.
  *
  * @param <T> any Comparable type, such as String or any enum type
+ * @see StringJunction StringJunction is a specialized Junction type where {@code T} is always String.
  */
 public class Junction<T extends Comparable<T>> implements Term<T> {
 	public Term<T> root;

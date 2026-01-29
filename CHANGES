@@ -1,3 +1,7 @@
+[2.1.1]
+- [BREAKING] CaseInsensitive Maps and Sets now no longer have a protected `hashMultiplier` field, because its initialization order was a serious problem. They still have getters and setters for it in case classes extended it that used that API.
+- All map entry set, key set, and value collection types now have re-entrant iterators, matching the behavior of iterators elsewhere since 2.0.0 .
+
 [2.1.0]
 - [BREAKING] The protected field `hashMultiplier` has been removed from most sets and maps, which no longer use it. However, the getter and setter for it are still present for compatibility, and used by some subclasses.
 - The iteration order of non-Ordered sets and maps is likely to have changed. Ordered sets and maps will notice no change.
