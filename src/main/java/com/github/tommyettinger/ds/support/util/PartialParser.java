@@ -66,14 +66,20 @@ public interface PartialParser<R> {
 
 	/**
 	 * An example of using {@link #enumParser(ObjToObjFunction)} for {@link OrderType}, this is simply the result of
-	 * passing {@code OrderType::valueOf} to {@code PartialParser.enumParser()}.
+	 * passing {@code OrderType::valueOf} to {@code PartialParser.enumParser()}. Note that while enumParser() has a
+	 * complicated return type, you can assign its result to a {@code PartialParser<Enum<?>>} .
 	 */
 	PartialParser<Enum<?>> DEFAULT_ORDER_TYPE = enumParser(OrderType::valueOf);
 
 	/**
-	 * Wraps {@link Junction#parse(String, int, int)}.
+	 * Wraps {@link Junction#parse(String, int, int)}. Prefer {@link #DEFAULT_STRING_JUNCTION}, for StringJunction.
 	 */
 	PartialParser<Junction<String>> DEFAULT_JUNCTION_STRING = Junction::parse;
+
+	/**
+	 * Wraps {@link StringJunction#parse(String, int, int)}.
+	 */
+	PartialParser<StringJunction> DEFAULT_STRING_JUNCTION = StringJunction::parse;
 
 	/**
 	 * Creates a PartialParser that can parse a section of text with multiple {@code T} items separated by
