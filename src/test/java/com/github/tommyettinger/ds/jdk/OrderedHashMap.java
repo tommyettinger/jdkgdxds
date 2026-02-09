@@ -275,6 +275,17 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 		return super.remove(key);
 	}
 
+	public boolean remove(Object key, Object value) {
+		// If key is not present, using an O(1) containsKey() lets us avoid an O(n) remove step on keys.
+		if (!super.containsKey(key) || !Objects.equals(super.get(key), value)) {
+			return false;
+		}
+		super.remove(key);
+		keys.remove(key);
+		return true;
+
+	}
+
 	/**
 	 * Removes the entry at the given index in the order, returning the value of that entry.
 	 *
@@ -607,6 +618,52 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 		@Override
 		public void remove() {
 			OrderedHashMap.super.remove(currentKey);
+			keyIterator.remove();
+		}
+	}
+
+	final class Entry implements Map.Entry<K, V>{
+		private final K key;
+
+		Entry(K k) {
+			key = k;
+		}
+		@Override
+		public K getKey() {
+			return key;
+		}
+
+		@Override
+		public V getValue() {
+			return get(key);
+		}
+
+		@Override
+		public V setValue(V value) {
+			return put(key, value);
+		}
+	}
+
+	final class EntryIterator implements Iterator<Map.Entry<K, V>> {
+		Iterator<K> keyIterator;
+		Entry current;
+		public EntryIterator(){
+			keyIterator = keys.iterator();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return keyIterator.hasNext();
+		}
+
+		@Override
+		public Map.Entry<K, V> next() {
+			return current = new Entry(keyIterator.next());
+		}
+
+		@Override
+		public void remove() {
+			OrderedHashMap.super.remove(current.key);
 			keyIterator.remove();
 		}
 	}
