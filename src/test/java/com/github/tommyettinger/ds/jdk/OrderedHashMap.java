@@ -34,6 +34,7 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 
 	protected final ArrayList<K> keys;
 
+	transient Set<Map.Entry<K, V>> entrySet;
 	transient Set<K> keySet;
 	transient Collection<V> values;
 
@@ -483,81 +484,59 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 			values = new OrderedMapValues();
 		return values;
 	}
-//
-//	/**
-//	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
-//	 *
-//	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
-//	 */
-//	@Override
-//	public Set<Map.Entry<K, V>> entrySet() {
-//		return new OrderedMapEntries<>();
-//	}
-//
-//	public static class OrderedMapEntries<K, V> extends Entries<K, V> {
-//		protected ArrayList<K> keys;
-//
-//		public OrderedMapEntries(OrderedHashMap<K, V> map) {
-//			super(map);
-//			keys = map.keys;
-//		}
-//
-//		@Override
-//		public Map<K, V> appendInto(Map<K, V> map) {
-//			MapIterator<K, V, Map.Entry<K, V>> iter = iterator();
-//			while (iter.hasNext) {
-//				K k = keys.get(iter.nextIndex);
-//				map.put(k, iter.map.get(k));
-//				iter.findNextIndex();
-//			}
-//			return map;
-//		}
-//
-//		@Override
-//		public MapIterator<K, V, Map.Entry<K, V>> iterator() {
-//			return new MapIterator<K, V, Map.Entry<K, V>>(map) {
-//				@Override
-//				public MapIterator<K, V, Map.Entry<K, V>> iterator() {
-//					return this;
-//				}
-//
-//				@Override
-//				public void reset() {
-//					currentIndex = -1;
-//					nextIndex = 0;
-//					hasNext = map.size > 0;
-//				}
-//
-//				@Override
-//				public boolean hasNext() {
-//					return hasNext;
-//				}
-//
-//				@Override
-//				public Entry<K, V> next() {
-//					if (!hasNext) {
-//						throw new NoSuchElementException();
-//					}
-//					currentIndex = nextIndex;
-//					K k = keys.get(nextIndex);
-//					Entry<K, V> entry = new Entry<>(k, map.get(k));
-//					nextIndex++;
-//					hasNext = nextIndex < map.size;
-//					return entry;
-//				}
-//
-//				@Override
-//				public void remove() {
-//					if (currentIndex < 0) {
-//						throw new IllegalStateException("next must be called before remove.");
-//					}
-//					map.remove(keys.get(currentIndex));
-//					nextIndex--;
-//					currentIndex = -1;
-//				}
-//			};
-//		}
-//	}
+
+	/**
+	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
+	 *
+	 * @return a {@link Set} of {@link Map.Entry} key-value pairs
+	 */
+	@Override
+	public Set<Map.Entry<K, V>> entrySet() {
+		if(entrySet == null)
+			entrySet = new OrderedMapEntries();
+		return entrySet;
+	}
+
+	public class OrderedMapEntries extends AbstractSet<Map.Entry<K, V>> {
+		@Override
+		public Iterator<Map.Entry<K, V>> iterator() {
+			return new EntryIterator();
+		}
+
+		@Override
+		public int size() {
+			return OrderedHashMap.this.size();
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			if(o instanceof Map.Entry<?, ?>){
+				Map.Entry<?, ?> kv = (Map.Entry<?, ?>) o;
+				boolean keyExists = containsKey(kv.getKey());
+				if(keyExists){
+					return Objects.equals(get(kv.getKey()), kv.getValue());
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			if(o instanceof Map.Entry<?, ?>){
+				Map.Entry<?, ?> kv = (Map.Entry<?, ?>) o;
+				boolean keyExists = containsKey(kv.getKey());
+				if(keyExists){
+					return OrderedHashMap.this.remove(kv.getKey(), kv.getValue());
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public void clear() {
+			OrderedHashMap.this.clear();
+		}
+	}
 
 	final class OrderedMapKeys extends AbstractSet<K> {
 		@Override
