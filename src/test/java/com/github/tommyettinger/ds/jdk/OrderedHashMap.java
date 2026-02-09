@@ -35,6 +35,7 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 	protected final ArrayList<K> keys;
 
 	transient Set<K> keySet;
+	transient Collection<V> values;
 
 	/**
 	 * Creates a new map with an initial capacity of 16 and a load factor of 0.75f .
@@ -459,16 +460,18 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 			keySet = new OrderedMapKeys();
 		return keySet;
 	}
-//
-//	/**
-//	 * Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
-//	 *
-//	 * @return a {@link Collection} of V values
-//	 */
-//	@Override
-//	public Collection<V> values() {
-//		return new OrderedMapValues<>();
-//	}
+
+	/**
+	 * Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
+	 *
+	 * @return a {@link Collection} of V values
+	 */
+	@Override
+	public Collection<V> values() {
+		if(values == null)
+			values = new OrderedMapValues();
+		return values;
+	}
 //
 //	/**
 //	 * Returns a Set of Map.Entry, containing the entries in the map. Remove is supported by the Set's iterator.
@@ -544,98 +547,92 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 //			};
 //		}
 //	}
-//
+
 	final class OrderedMapKeys extends AbstractSet<K> {
-	@Override
-	public Iterator<K> iterator() {
-		return keys.iterator();
+		@Override
+		public Iterator<K> iterator() {
+			return keys.iterator();
+		}
+
+		@Override
+		public int size() {
+			return OrderedHashMap.this.size();
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			return containsKey(o);
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			int oldSize = size();
+			OrderedHashMap.this.remove(o);
+			return size() != oldSize;
+		}
+
+		@Override
+		public void clear() {
+			OrderedHashMap.this.clear();
+		}
+
+		@Override
+		public Object[] toArray() {
+			return keys.toArray();
+		}
+
+		@Override
+		public <T> T[] toArray(T[] a) {
+			return keys.toArray(a);
+		}
 	}
 
-	@Override
-	public int size() {
-		return OrderedHashMap.this.size();
+	final class ValueIterator implements Iterator<V> {
+		Iterator<K> keyIterator;
+		K currentKey;
+		public ValueIterator(){
+			keyIterator = keys.iterator();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return keyIterator.hasNext();
+		}
+
+		@Override
+		public V next() {
+			return get(currentKey = keyIterator.next());
+		}
+
+		@Override
+		public void remove() {
+			OrderedHashMap.super.remove(currentKey);
+			keyIterator.remove();
+		}
 	}
 
-	@Override
-	public boolean contains(Object o) {
-		return containsKey(o);
-	}
+	final class OrderedMapValues extends AbstractCollection<V> {
 
-	@Override
-	public boolean remove(Object o) {
-		int oldSize = size();
-		OrderedHashMap.this.remove(o);
-		return size() != oldSize;
-	}
+		@Override
+		public Iterator<V> iterator() {
+			return new ValueIterator();
+		}
 
-	@Override
-	public void clear() {
-		OrderedHashMap.this.clear();
-	}
+		@Override
+		public int size() {
+			return OrderedHashMap.this.size();
+		}
 
-	@Override
-	public Object[] toArray() {
-		return keys.toArray();
-	}
+		@Override
+		public boolean contains(Object o) {
+			return containsValue(o);
+		}
 
-	@Override
-	public <T> T[] toArray(T[] a) {
-		return keys.toArray(a);
+		@Override
+		public void clear() {
+			OrderedHashMap.this.clear();
+		}
 	}
-}
-//
-//	public static class OrderedMapValues<K, V> extends Values<K, V> {
-//		private final ArrayList<K> keys;
-//
-//		public OrderedMapValues(OrderedHashMap<K, V> map) {
-//			super(map);
-//			keys = map.keys;
-//		}
-//
-//		@Override
-//		public MapIterator<K, V, V> iterator() {
-//			return new MapIterator<K, V, V>(map) {
-//				@Override
-//				public MapIterator<K, V, V> iterator() {
-//					return this;
-//				}
-//
-//				@Override
-//				public boolean hasNext() {
-//					return hasNext;
-//				}
-//
-//				@Override
-//				public void reset() {
-//					currentIndex = -1;
-//					nextIndex = 0;
-//					hasNext = map.size > 0;
-//				}
-//
-//				@Override
-//				public V next() {
-//					if (!hasNext) {
-//						throw new NoSuchElementException();
-//					}
-//					V value = map.get(keys.get(nextIndex));
-//					currentIndex = nextIndex;
-//					nextIndex++;
-//					hasNext = nextIndex < map.size;
-//					return value;
-//				}
-//
-//				@Override
-//				public void remove() {
-//					if (currentIndex < 0) {
-//						throw new IllegalStateException("next must be called before remove.");
-//					}
-//					map.remove(keys.get(currentIndex));
-//					nextIndex = currentIndex;
-//					currentIndex = -1;
-//				}
-//			};
-//		}
-//	}
 
 	/**
 	 * Constructs an empty map given the types as generic type arguments.
