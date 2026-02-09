@@ -17,12 +17,7 @@
 package com.github.tommyettinger.ds.jdk;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A {@link HashMap} that also stores keys in an {@link ArrayList} using the insertion order.
@@ -38,6 +33,8 @@ import java.util.Map;
 public class OrderedHashMap<K, V> extends HashMap<K, V> {
 
 	protected final ArrayList<K> keys;
+
+	transient Set<K> keySet;
 
 	/**
 	 * Creates a new map with an initial capacity of 16 and a load factor of 0.75f .
@@ -441,25 +438,27 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 		}
 	}
 
-//	/**
-//	 * Returns a {@link Set} view of the keys contained in this map.
-//	 * The set is backed by the map, so changes to the map are
-//	 * reflected in the set, and vice versa.  If the map is modified
-//	 * while an iteration over the set is in progress (except through
-//	 * the iterator's own {@code remove} operation), the results of
-//	 * the iteration are undefined.  The set supports element removal,
-//	 * which removes the corresponding mapping from the map, via the
-//	 * {@code Iterator.remove}, {@code Set.remove},
-//	 * {@code removeAll}, {@code retainAll}, and {@code clear}
-//	 * operations.  It does not support the {@code add} or {@code addAll}
-//	 * operations.
-//	 *
-//	 * @return a set view of the keys contained in this map
-//	 */
-//	@Override
-//	public Set<K> keySet() {
-//		return new OrderedMapKeys<>();
-//	}
+	/**
+	 * Returns a {@link Set} view of the keys contained in this map.
+	 * The set is backed by the map, so changes to the map are
+	 * reflected in the set, and vice versa.  If the map is modified
+	 * while an iteration over the set is in progress (except through
+	 * the iterator's own {@code remove} operation), the results of
+	 * the iteration are undefined.  The set supports element removal,
+	 * which removes the corresponding mapping from the map, via the
+	 * {@code Iterator.remove}, {@code Set.remove},
+	 * {@code removeAll}, {@code retainAll}, and {@code clear}
+	 * operations.  It does not support the {@code add} or {@code addAll}
+	 * operations.
+	 *
+	 * @return a set view of the keys contained in this map
+	 */
+	@Override
+	public Set<K> keySet() {
+		if(keySet == null)
+			keySet = new OrderedMapKeys();
+		return keySet;
+	}
 //
 //	/**
 //	 * Returns a Collection for the values in the map. Remove is supported by the Collection's iterator.
@@ -546,58 +545,44 @@ public class OrderedHashMap<K, V> extends HashMap<K, V> {
 //		}
 //	}
 //
-//	public static class OrderedMapKeys<K, V> extends Keys<K, V> {
-//		private final ArrayList<K> keys;
-//
-//		public OrderedMapKeys(OrderedHashMap<K, V> map) {
-//			super(map);
-//			keys = map.keys;
-//		}
-//
-//		@Override
-//		public MapIterator<K, V, K> iterator() {
-//			return new MapIterator<K, V, K>(map) {
-//				@Override
-//				public MapIterator<K, V, K> iterator() {
-//					return this;
-//				}
-//
-//				@Override
-//				public boolean hasNext() {
-//					return hasNext;
-//				}
-//
-//				@Override
-//				public void reset() {
-//					currentIndex = -1;
-//					nextIndex = 0;
-//					hasNext = map.size > 0;
-//				}
-//
-//				@Override
-//				public K next() {
-//					if (!hasNext) {
-//						throw new NoSuchElementException();
-//					}
-//					K key = keys.get(nextIndex);
-//					currentIndex = nextIndex;
-//					nextIndex++;
-//					hasNext = nextIndex < map.size;
-//					return key;
-//				}
-//
-//				@Override
-//				public void remove() {
-//					if (currentIndex < 0) {
-//						throw new IllegalStateException("next must be called before remove.");
-//					}
-//					map.remove(keys.get(currentIndex));
-//					nextIndex = currentIndex;
-//					currentIndex = -1;
-//				}
-//			};
-//		}
-//	}
+	final class OrderedMapKeys extends AbstractSet<K> {
+	@Override
+	public Iterator<K> iterator() {
+		return keys.iterator();
+	}
+
+	@Override
+	public int size() {
+		return OrderedHashMap.this.size();
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return containsKey(o);
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		int oldSize = size();
+		OrderedHashMap.this.remove(o);
+		return size() != oldSize;
+	}
+
+	@Override
+	public void clear() {
+		OrderedHashMap.this.clear();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return keys.toArray();
+	}
+
+	@Override
+	public <T> T[] toArray(T[] a) {
+		return keys.toArray(a);
+	}
+}
 //
 //	public static class OrderedMapValues<K, V> extends Values<K, V> {
 //		private final ArrayList<K> keys;
