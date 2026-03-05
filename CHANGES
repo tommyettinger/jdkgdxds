@@ -1,3 +1,8 @@
+[2.1.2]
+- The dependency on digital updated to 0.10.0 . This mostly affects the `Interpolations` class.
+- There's a predefined `PartialParser` for `StringJunction` types now, instead of needing `Junction<String>` .
+- Gradle updated to 9.4.0 (which should only affect this library internally). This allows building jdkgdxds with Java 26.
+
 [2.1.1]
 - [BREAKING] CaseInsensitive Maps and Sets now no longer have a protected `hashMultiplier` field, because its initialization order was a serious problem. They still have getters and setters for it in case classes extended it that used that API.
 - All map entry set, key set, and value collection types now have re-entrant iterators, matching the behavior of iterators elsewhere since 2.0.0 .
