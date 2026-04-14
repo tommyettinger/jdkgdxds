@@ -1743,7 +1743,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	public long removeAt(int index) {
 		if (index <= 0)
 			return removeFirst();
-		if (index >= size)
+		if (index >= size - 1)
 			return removeLast();
 
 		long[] items = this.items;
@@ -1807,7 +1807,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	public long poll(int index) {
 		if (index <= 0)
 			return pollFirst();
-		if (index >= size)
+		if (index >= size - 1)
 			return pollLast();
 		// No need to check for size to be 0 because the above checks will already do that, and one will run.
 

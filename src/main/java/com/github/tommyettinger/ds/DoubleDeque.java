@@ -1745,7 +1745,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	public double removeAt(int index) {
 		if (index <= 0)
 			return removeFirst();
-		if (index >= size)
+		if (index >= size - 1)
 			return removeLast();
 
 		double[] items = this.items;
@@ -1809,7 +1809,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	public double poll(int index) {
 		if (index <= 0)
 			return pollFirst();
-		if (index >= size)
+		if (index >= size - 1)
 			return pollLast();
 		// No need to check for size to be 0 because the above checks will already do that, and one will run.
 

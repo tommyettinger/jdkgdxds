@@ -1743,7 +1743,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public short removeAt(int index) {
 		if (index <= 0)
 			return removeFirst();
-		if (index >= size)
+		if (index >= size - 1)
 			return removeLast();
 
 		short[] items = this.items;
@@ -1807,7 +1807,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	public short poll(int index) {
 		if (index <= 0)
 			return pollFirst();
-		if (index >= size)
+		if (index >= size - 1)
 			return pollLast();
 		// No need to check for size to be 0 because the above checks will already do that, and one will run.
 

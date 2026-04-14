@@ -2144,7 +2144,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	public char removeAt(int index) {
 		if (index <= 0)
 			return removeFirst();
-		if (index >= size)
+		if (index >= size - 1)
 			return removeLast();
 
 		char[] items = this.items;
@@ -2208,7 +2208,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	public char poll(int index) {
 		if (index <= 0)
 			return pollFirst();
-		if (index >= size)
+		if (index >= size - 1)
 			return pollLast();
 		// No need to check for size to be 0 because the above checks will already do that, and one will run.
 
