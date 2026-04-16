@@ -1092,7 +1092,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		final int cs = c.size();
 		if (cs == 0) return false;
 		int oldSize = size;
-		ensureCapacity(Math.max(cs, oldSize));
+		ensureCapacity(cs);
 		if (c == this) {
 			if (head <= tail) {
 				if (tail + 1 < items.length)
@@ -1135,7 +1135,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		final int cs = c.size();
 		if (cs == 0) return false;
 		int oldSize = size;
-		ensureCapacity(Math.max(cs, oldSize));
+		ensureCapacity(cs);
 		if (c == this) {
 			if (head <= tail) {
 				if (head >= oldSize)
