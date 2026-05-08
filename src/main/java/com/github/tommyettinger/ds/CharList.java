@@ -851,8 +851,9 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 			}
 		}
 
+		boolean result = size != freeIndex;
 		size = freeIndex;
-		return freeIndex != 0;
+		return result;
 	}
 
 	/**

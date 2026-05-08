@@ -698,8 +698,9 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 			}
 		}
 
+		boolean result = size != freeIndex;
 		size = freeIndex;
-		return freeIndex != 0;
+		return result;
 	}
 
 	/**

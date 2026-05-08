@@ -698,8 +698,9 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 			}
 		}
 
+		boolean result = size != freeIndex;
 		size = freeIndex;
-		return freeIndex != 0;
+		return result;
 	}
 
 	/**

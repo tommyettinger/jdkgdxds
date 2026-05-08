@@ -702,8 +702,9 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 			}
 		}
 
+		boolean result = size != freeIndex;
 		size = freeIndex;
-		return freeIndex != 0;
+		return result;
 	}
 
 	/**

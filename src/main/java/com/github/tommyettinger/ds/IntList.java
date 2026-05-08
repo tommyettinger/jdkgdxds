@@ -698,8 +698,9 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 			}
 		}
 
+		boolean result = size != freeIndex;
 		size = freeIndex;
-		return freeIndex != 0;
+		return result;
 	}
 
 	/**
