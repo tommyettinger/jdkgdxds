@@ -558,6 +558,49 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	}
 
 	/**
+	 * Removes all elements of this collection that satisfy the given predicate.
+	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
+	 * <br>
+	 * This is more efficient than the default implementation; this method runs in linear time.
+	 *
+	 * @param filter a BooleanPredicate (takes a boolean and returns true if it should be removed); may be a lambda
+	 * @return true if this data structure was modified as a result, or false if it did not change
+	 * @throws NullPointerException {@inheritDoc}
+	 */
+	@Override
+	public boolean removeIf(BooleanPredicate filter) {
+		if (filter == null)
+		{
+			throw new NullPointerException("The filter cannot be null.");
+		}
+
+		int freeIndex = 0;   // the first free slot in items array
+
+		// Find the first item which needs to be removed.
+		while (freeIndex < size && !filter.test(items[freeIndex]))
+			freeIndex++;
+		if (freeIndex >= size) return false;
+
+		int current = freeIndex + 1;
+		while (current < size)
+		{
+			// Find the first item which needs to be kept.
+			while (current < size && filter.test(items[current]))
+				current++;
+
+			if (current < size)
+			{
+				// copy item to the free slot.
+				items[freeIndex++] = items[current++];
+			}
+		}
+
+		size = freeIndex;
+		return freeIndex != 0;
+	}
+
+
+	/**
 	 * Removes all items from this BooleanList that are not present somewhere in {@code other}, any number of times.
 	 *
 	 * @param other a PrimitiveCollection.OfBoolean that contains the items that this should keep, whenever present
