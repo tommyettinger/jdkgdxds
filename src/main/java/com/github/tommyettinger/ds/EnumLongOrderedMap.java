@@ -16,7 +16,6 @@
 
 package com.github.tommyettinger.ds;
 
-import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.*;

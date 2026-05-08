@@ -17,7 +17,6 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.PrimitiveCollection.OfLong;
 import com.github.tommyettinger.ds.support.util.*;
 import com.github.tommyettinger.function.LongLongToLongBiFunction;
