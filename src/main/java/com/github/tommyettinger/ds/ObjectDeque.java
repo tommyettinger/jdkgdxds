@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.ds.support.util.PartialParser;
+import com.github.tommyettinger.function.ObjPredicate;
 
 import java.util.AbstractList;
 import java.util.ArrayDeque;
@@ -1760,6 +1761,69 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			changed |= remove(array[i]);
 		}
 		return changed;
+	}
+
+	/**
+	 * Removes all elements of this collection that satisfy the given predicate.
+	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
+	 * <br>
+	 * This method runs in linear time. It takes an ObjPredicate rather than a Predicate, and it may need lambda
+	 * parameters to be cast to ObjPredicate in order to avoid confusion with the Collection.removeIf(Predicate) method.
+	 * (Predicate isn't available on RoboVM, but ObjPredicate is.)
+	 * The implementation is based loosely on what .NET uses for its List.RemoveAll() method, which is MIT-licensed.
+	 *
+	 * @param filter an ObjPredicate (takes a compatible item and returns true if it should be removed); may be a lambda
+	 * @return true if this data structure was modified as a result, or false if it did not change
+	 * @throws NullPointerException if filter is null
+	 */
+	public boolean removeIf(ObjPredicate<? super T> filter) {
+		int freeIndex = 0;
+		int wrapIndex = head;
+
+		while (freeIndex < size && !filter.test(items[wrapIndex])) {
+			freeIndex++;
+			wrapIndex++;
+		}
+		if (freeIndex >= size)
+			return false;
+
+		int current = freeIndex + 1;
+		int wrapCurrent = wrapIndex + 1;
+		if (wrapCurrent >= items.length) wrapCurrent = 0;
+
+		while (current < size) {
+			while (current < size && filter.test(items[wrapCurrent])) {
+				current++;
+				wrapCurrent++;
+				if (wrapCurrent >= items.length) wrapCurrent = 0;
+			}
+
+			if (current >= size)
+				break;
+
+			items[wrapIndex++] = items[wrapCurrent++];
+			freeIndex++;
+			current++;
+			if (wrapIndex >= items.length) wrapIndex = 0;
+			if (wrapCurrent >= items.length) wrapCurrent = 0;
+		}
+
+		if (head <= tail)
+			Utilities.clear(items, wrapIndex, size - freeIndex);
+		else {
+			int deleteCount = size - freeIndex;
+			if (wrapIndex + deleteCount <= items.length)
+				Utilities.clear(items, wrapIndex, deleteCount);
+			else {
+				// The deleted range wraps.
+				Utilities.clear(items, wrapIndex, items.length - wrapIndex);
+				Utilities.clear(items, 0, deleteCount - (items.length - wrapIndex));
+			}
+		}
+
+		boolean result = size != freeIndex;
+		size = freeIndex;
+		return result;
 	}
 
 	/**
