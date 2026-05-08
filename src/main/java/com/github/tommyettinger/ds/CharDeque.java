@@ -2644,6 +2644,17 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 		items[i] = item;
 	}
 
+	/**
+	 * Replaces each element of this deque with the result of applying the
+	 * given operator to that element.
+	 * <br>
+	 * This can be used to perform tasks like converting the case of a CharDeque that contains letters, with
+	 * {@code replaceAll(Character::toUpperCase)} (which doesn't necessarily work the same on GWT) or the cross-platform
+	 * {@code replaceAll(Casing::caseUp)}. Using Casing should probably be used when you need all your
+	 * {@code CharSequence}s to have the same case, but it can't convert text to lower case.
+	 *
+	 * @param operator a CharToCharFunction (a functional interface defined in funderby)
+	 */
 	@Override
 	public void replaceAll(CharToCharFunction operator) {
 		final char[] items = this.items;
