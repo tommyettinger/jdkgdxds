@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.function.ObjPredicate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -238,6 +239,33 @@ public class DequeTest {
 			System.out.println(deque);
 			deque.truncate(deque.size - 2);
 			System.out.println(deque);
+		}
+	}
+
+	@Test
+	public void testRemoveIf(){
+		{
+			ObjectDeque<String> deque = ObjectDeque.with("alpha", "beta", "gamma", "delta", "epsilon", "zeta");
+			Assert.assertTrue(deque.removeIf((ObjPredicate<? super String>) s -> s.endsWith("a")));
+			Assert.assertEquals(1, deque.size());
+		}
+		{
+			ObjectDeque<String> deque = ObjectDeque.with("alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta", "theta");
+			Assert.assertTrue(deque.removeIf((ObjPredicate<? super String>) s -> s.endsWith("a")));
+			Assert.assertEquals(1, deque.size());
+		}
+		{
+			ObjectDeque<String> deque = ObjectDeque.with("", "alpha", "beta", "gamma", "delta", "epsilon", "zeta");
+			deque.removeFirst();
+			Assert.assertTrue(deque.removeIf((ObjPredicate<? super String>) s -> s.endsWith("a")));
+			Assert.assertEquals(1, deque.size());
+		}
+		{
+			ObjectDeque<String> deque = ObjectDeque.with("gamma", "delta", "epsilon", "zeta");
+			deque.addFirst("beta");
+			deque.addFirst("alpha");
+			Assert.assertTrue(deque.removeIf((ObjPredicate<? super String>) s -> s.endsWith("a")));
+			Assert.assertEquals(1, deque.size());
 		}
 	}
 }
