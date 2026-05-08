@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.function.ShortPredicate;
 import com.github.tommyettinger.function.ShortToShortFunction;
 import com.github.tommyettinger.ds.support.sort.ShortComparator;
 import com.github.tommyettinger.ds.support.sort.ShortComparators;
@@ -656,6 +657,46 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 			}
 		}
 		return size != startSize;
+	}
+
+	/**
+	 * Removes all elements of this collection that satisfy the given predicate.
+	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
+	 * <br>
+	 * This is more efficient than the default implementation; this method runs in linear time. The implementation is
+	 * mostly the same as what .NET uses for its List.RemoveAll() method, which is MIT-licensed.
+	 *
+	 * @param filter a ShortPredicate (takes a short and returns true if it should be removed); may be a lambda
+	 * @return true if this data structure was modified as a result, or false if it did not change
+	 * @throws NullPointerException {@inheritDoc}
+	 */
+	@Override
+	public boolean removeIf(ShortPredicate filter) {
+		if (filter == null)
+		{
+			throw new NullPointerException("The filter cannot be null.");
+		}
+
+		int freeIndex = 0;
+
+		while (freeIndex < size && !filter.test(items[freeIndex]))
+			freeIndex++;
+		if (freeIndex >= size) return false;
+
+		int current = freeIndex + 1;
+		while (current < size)
+		{
+			while (current < size && filter.test(items[current]))
+				current++;
+
+			if (current < size)
+			{
+				items[freeIndex++] = items[current++];
+			}
+		}
+
+		size = freeIndex;
+		return freeIndex != 0;
 	}
 
 	/**

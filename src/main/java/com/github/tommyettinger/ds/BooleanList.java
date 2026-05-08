@@ -561,7 +561,8 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 * Removes all elements of this collection that satisfy the given predicate.
 	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
 	 * <br>
-	 * This is more efficient than the default implementation; this method runs in linear time.
+	 * This is more efficient than the default implementation; this method runs in linear time. The implementation is
+	 * mostly the same as what .NET uses for its List.RemoveAll() method, which is MIT-licensed.
 	 *
 	 * @param filter a BooleanPredicate (takes a boolean and returns true if it should be removed); may be a lambda
 	 * @return true if this data structure was modified as a result, or false if it did not change
@@ -574,9 +575,8 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 			throw new NullPointerException("The filter cannot be null.");
 		}
 
-		int freeIndex = 0;   // the first free slot in items array
+		int freeIndex = 0;
 
-		// Find the first item which needs to be removed.
 		while (freeIndex < size && !filter.test(items[freeIndex]))
 			freeIndex++;
 		if (freeIndex >= size) return false;
@@ -584,13 +584,11 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		int current = freeIndex + 1;
 		while (current < size)
 		{
-			// Find the first item which needs to be kept.
 			while (current < size && filter.test(items[current]))
 				current++;
 
 			if (current < size)
 			{
-				// copy item to the free slot.
 				items[freeIndex++] = items[current++];
 			}
 		}
@@ -598,7 +596,6 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		size = freeIndex;
 		return freeIndex != 0;
 	}
-
 
 	/**
 	 * Removes all items from this BooleanList that are not present somewhere in {@code other}, any number of times.

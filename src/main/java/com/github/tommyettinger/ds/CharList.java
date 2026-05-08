@@ -20,6 +20,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.support.sort.CharComparator;
 import com.github.tommyettinger.ds.support.sort.CharComparators;
 import com.github.tommyettinger.ds.support.util.CharIterator;
+import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 
 import java.util.Arrays;
@@ -812,6 +813,46 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 			}
 		}
 		return size != startSize;
+	}
+
+	/**
+	 * Removes all elements of this collection that satisfy the given predicate.
+	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
+	 * <br>
+	 * This is more efficient than the default implementation; this method runs in linear time. The implementation is
+	 * mostly the same as what .NET uses for its List.RemoveAll() method, which is MIT-licensed.
+	 *
+	 * @param filter a CharPredicate (takes a char and returns true if it should be removed); may be a lambda
+	 * @return true if this data structure was modified as a result, or false if it did not change
+	 * @throws NullPointerException {@inheritDoc}
+	 */
+	@Override
+	public boolean removeIf(CharPredicate filter) {
+		if (filter == null)
+		{
+			throw new NullPointerException("The filter cannot be null.");
+		}
+
+		int freeIndex = 0;
+
+		while (freeIndex < size && !filter.test(items[freeIndex]))
+			freeIndex++;
+		if (freeIndex >= size) return false;
+
+		int current = freeIndex + 1;
+		while (current < size)
+		{
+			while (current < size && filter.test(items[current]))
+				current++;
+
+			if (current < size)
+			{
+				items[freeIndex++] = items[current++];
+			}
+		}
+
+		size = freeIndex;
+		return freeIndex != 0;
 	}
 
 	/**
