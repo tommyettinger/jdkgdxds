@@ -671,7 +671,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 *
 	 * @param filter a LongPredicate (takes a long and returns true if it should be removed); may be a lambda
 	 * @return true if this data structure was modified as a result, or false if it did not change
-	 * @throws NullPointerException {@inheritDoc}
+	 * @throws NullPointerException if filter is null
 	 */
 	@Override
 	public boolean removeIf(LongPredicate filter) {

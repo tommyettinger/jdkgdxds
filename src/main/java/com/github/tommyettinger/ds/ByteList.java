@@ -671,7 +671,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 *
 	 * @param filter a BytePredicate (takes a byte and returns true if it should be removed); may be a lambda
 	 * @return true if this data structure was modified as a result, or false if it did not change
-	 * @throws NullPointerException {@inheritDoc}
+	 * @throws NullPointerException if filter is null
 	 */
 	@Override
 	public boolean removeIf(BytePredicate filter) {

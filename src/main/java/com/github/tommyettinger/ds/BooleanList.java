@@ -566,7 +566,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 *
 	 * @param filter a BooleanPredicate (takes a boolean and returns true if it should be removed); may be a lambda
 	 * @return true if this data structure was modified as a result, or false if it did not change
-	 * @throws NullPointerException {@inheritDoc}
+	 * @throws NullPointerException if filter is null
 	 */
 	@Override
 	public boolean removeIf(BooleanPredicate filter) {

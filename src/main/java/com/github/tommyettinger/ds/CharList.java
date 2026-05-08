@@ -824,7 +824,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 *
 	 * @param filter a CharPredicate (takes a char and returns true if it should be removed); may be a lambda
 	 * @return true if this data structure was modified as a result, or false if it did not change
-	 * @throws NullPointerException {@inheritDoc}
+	 * @throws NullPointerException if filter is null
 	 */
 	@Override
 	public boolean removeIf(CharPredicate filter) {

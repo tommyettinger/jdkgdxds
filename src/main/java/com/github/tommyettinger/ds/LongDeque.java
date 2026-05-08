@@ -20,6 +20,7 @@ import com.github.tommyettinger.ds.support.sort.LongComparator;
 import com.github.tommyettinger.ds.support.sort.LongComparators;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.tommyettinger.function.LongToLongFunction;
+import com.github.tommyettinger.function.LongPredicate;
 
 import java.util.*;
 
@@ -1846,6 +1847,55 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public boolean removeEach(OfLong c) {
 		return removeEach(c.iterator());
+	}
+
+	/**
+	 * Removes all elements of this collection that satisfy the given predicate.
+	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
+	 * <br>
+	 * This is more efficient than the default implementation; this method runs in linear time. The implementation is
+	 * mostly the same as what .NET uses for its List.RemoveAll() method, which is MIT-licensed.
+	 *
+	 * @param filter a LongPredicate (takes a long and returns true if it should be removed); may be a lambda
+	 * @return true if this data structure was modified as a result, or false if it did not change
+	 * @throws NullPointerException if filter is null
+	 */
+	@Override
+	public boolean removeIf(LongPredicate filter) {
+		int freeIndex = 0;
+		int wrapIndex = head;
+
+		while (freeIndex < size && !filter.test(items[wrapIndex])) {
+			freeIndex++;
+			wrapIndex++;
+		}
+		if (freeIndex >= size)
+			return false;
+
+		int current = freeIndex + 1;
+		int wrapCurrent = wrapIndex + 1;
+		if (wrapCurrent >= items.length) wrapCurrent = 0;
+
+		while (current < size) {
+			while (current < size && filter.test(items[wrapCurrent])) {
+				current++;
+				wrapCurrent++;
+				if (wrapCurrent >= items.length) wrapCurrent = 0;
+			}
+
+			if (current >= size)
+				break;
+
+			items[wrapIndex++] = items[wrapCurrent++];
+			freeIndex++;
+			current++;
+			if (wrapIndex >= items.length) wrapIndex = 0;
+			if (wrapCurrent >= items.length) wrapCurrent = 0;
+		}
+
+		boolean result = size != freeIndex;
+		size = freeIndex;
+		return result;
 	}
 
 	@Override

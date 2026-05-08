@@ -671,7 +671,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 *
 	 * @param filter an IntPredicate (takes an int and returns true if it should be removed); may be a lambda
 	 * @return true if this data structure was modified as a result, or false if it did not change
-	 * @throws NullPointerException {@inheritDoc}
+	 * @throws NullPointerException if filter is null
 	 */
 	@Override
 	public boolean removeIf(IntPredicate filter) {

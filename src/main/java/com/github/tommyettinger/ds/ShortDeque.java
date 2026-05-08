@@ -1854,11 +1854,11 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
 	 * <br>
 	 * This is more efficient than the default implementation; this method runs in linear time. The implementation is
-	 * mostly the same as what .NET uses for its List.RemoveAll() method, which is MIT-licensed.
+	 * based loosely on what .NET uses for its List.RemoveAll() method, which is MIT-licensed.
 	 *
 	 * @param filter a ShortPredicate (takes a short and returns true if it should be removed); may be a lambda
 	 * @return true if this data structure was modified as a result, or false if it did not change
-	 * @throws NullPointerException {@inheritDoc}
+	 * @throws NullPointerException if filter is null
 	 */
 	@Override
 	public boolean removeIf(ShortPredicate filter) {
