@@ -1215,6 +1215,20 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 		return h ^ h >>> 16;
 	}
 
+	/**
+	 * Gets a hash of this CharList that treats every letter as upper-case, so this can work as a hash with
+	 * {@link #equalsIgnoreCase(CharSequence)} as the equality comparison.
+	 * @return a hash of this CharList that treats every letter as upper-case
+	 */
+	public int hashCodeIgnoreCase() {
+		char[] items = this.items;
+		int h = size;
+		for (int i = 0, n = size; i < n; i++) {
+			h = h * 31 + Casing.caseUp(items[i]);
+		}
+		return h ^ h >>> 16;
+	}
+
 	@Override
 	public boolean equals(Object object) {
 		if (object == this) {

@@ -345,6 +345,22 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 		return h ^ h >>> 16;
 	}
 
+
+	/**
+	 * Gets a hash of this CharBag that treats every letter as upper-case, so this can work as a hash with
+	 * {@link #equalsIgnoreCase(CharSequence)} as the equality comparison.
+	 * @return a hash of this CharBag that treats every letter as upper-case
+	 */
+	@Override
+	public int hashCodeIgnoreCase() {
+		char[] items = this.items;
+		int h = size;
+		for (int i = 0, n = size; i < n; i++) {
+			h += Casing.caseUp(items[i]);
+		}
+		return h ^ h >>> 16;
+	}
+
 	/**
 	 * Adds {@code count} repetitions of {@code padWith} to the start (left) of this list.
 	 * <br>

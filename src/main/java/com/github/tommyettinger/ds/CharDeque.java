@@ -2773,6 +2773,33 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	}
 
 	/**
+	 * Gets a hash of this CharDeque that treats every letter as upper-case, so this can work as a hash with
+	 * {@link #equalsIgnoreCase(CharSequence)} as the equality comparison.
+	 * @return a hash of this CharDeque that treats every letter as upper-case
+	 */
+	@Override
+	public int hashCodeIgnoreCase() {
+		final int size = this.size;
+		final char[] items = this.items;
+		final int backingLength = items.length;
+		int index = this.head;
+
+		int hash = size + 1;
+		for (int s = 0; s < size; s++) {
+			final char value = items[index];
+
+			hash *= 43; // avoids LEA pessimization
+			hash ^= Casing.caseUp(value); // avoids precision loss on GWT
+
+			index++;
+			if (index == backingLength)
+				index = 0;
+		}
+
+		return hash;
+	}
+
+	/**
 	 * Compares this with any other CharSequence for equality of length, contents, and order.
 	 *
 	 * @param object the object to be compared for equality with this collection
