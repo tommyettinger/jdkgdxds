@@ -1,3 +1,10 @@
+[2.1.3]
+- addAll() on deque types now increases capacity more in-line with how other types do, like lists, and won't increase capacity as often.
+- remove() on deque types now actually uses the shortcut path for removing the tail, instead of only using the better implementation available when removing the head.
+- The removeIf() method in all PrimitiveCollection types now has a more efficient implementation in each primitive list and deque.
+- removeIf(ObjPredicate) is also available in ObjectDeque, but not ObjectList or ObjectBag, which can still use Collection.removeIf(Predicate) on any platform except RoboVM.
+- Gradle updated to 9.5.0, which should only have internal effects, if any.
+
 [2.1.2]
 - The dependency on digital updated to 0.10.0 . This mostly affects the `Interpolations` class.
 - There's a predefined `PartialParser` for `StringJunction` types now, instead of needing `Junction<String>` .

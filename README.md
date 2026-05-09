@@ -29,7 +29,7 @@ and both projects are Apache-licensed. Note that FastUtil won't work on all plat
 
 Gradle dependency (for all platforms except GWT):
 ```
-api "com.github.tommyettinger:jdkgdxds:2.1.2"
+api "com.github.tommyettinger:jdkgdxds:2.1.3"
 ```
 
 For GWT, see "How do I get it?" below, or use TeaVM instead.
@@ -213,7 +213,7 @@ build (if you know you need some property of a particular commit).
 
 Maven Central uses the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:2.1.2"
+api "com.github.tommyettinger:jdkgdxds:2.1.3"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
@@ -229,7 +229,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
 implementation "com.github.tommyettinger:digital:0.10.0:sources"
-implementation "com.github.tommyettinger:jdkgdxds:2.1.2:sources"
+implementation "com.github.tommyettinger:jdkgdxds:2.1.3:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -288,7 +288,7 @@ replaced with other commits shown on JitPack. If you need a commit dependency on
 need to exclude the implicit dependency from jdkgdxds on digital and rely on your explicit version of digital:
 ```
 implementation "com.github.tommyettinger:digital:$digitalCommitHashVersion"
-implementation('com.github.tommyettinger:jdkgdxds:2.1.2'){
+implementation('com.github.tommyettinger:jdkgdxds:2.1.3'){
     exclude group: 'com.github.tommyettinger', module: 'digital'
 }
 ```
@@ -310,6 +310,12 @@ You can also use [Apache Fory](https://fory.apache.org) to serialize these data 
 [tantrum](https://github.com/tommyettinger/tantrum). The tantrum README.md has dependency information. Fory can be
 faster than Kryo, and despite being "Incubating" at the Apache Foundation, I have so-far encountered no bugs with it in
 practice that persisted more than 2 weeks before being fixed in a release.
+
+Using any of these serialization libraries will be more efficient when serializing ordered maps and ordered sets.
+Those only need to store key-value pairs or items in the correct order. Serializing automatically would usually store a
+map or set as well as a list for order. Some cases (especially when using Fory) may be more efficient to store unordered
+maps and sets automatically, without using a custom serializer. If it matters for your use case, such as network
+transmission of data structures, you should measure both with and without custom serializers if possible.
 
 ## Updating to 1.0.1
 
