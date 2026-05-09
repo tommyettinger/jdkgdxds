@@ -32,6 +32,15 @@ import java.util.Random;
  * A resizable, insertion-ordered char list. Primitive-backed, so it avoids the boxing that occurs with an ArrayList of Character.
  * This tries to imitate most of the {@link java.util.List} interface, though it can't implement it without boxing its items.
  * Has a primitive iterator accessible via {@link #iterator()}.
+ * <br>
+ * You can perform in-place mutation on a CharList using {@link #replaceAll(CharToCharFunction)} with any appropriate
+ * lambda or method reference. A common use for this is to convert the case of an entire CharList, such as with
+ * {@link Character#toUpperCase(char)} or {@link Character#toLowerCase(char)}. Be aware that the Character methods don't
+ * work as expected on GWT. If you target GWT, you can use {@link Casing#caseUp(char)} from this library to convert all
+ * chars to upper case, or Category from RegExodus if you need to convert to lower case or do other conversions. The
+ * conversion to upper case only can be useful for making CharSequences that are comparable without considering case,
+ * and you can also use {@link #equalsIgnoreCase(CharSequence)}, {@link #hashCodeIgnoreCase()}, and
+ * {@link #compareWithIgnoreCase(CharSequence)} for that.
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger

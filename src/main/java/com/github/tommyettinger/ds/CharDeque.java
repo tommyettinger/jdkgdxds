@@ -55,6 +55,15 @@ import java.util.*;
  * to {@link CharList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
  * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
  * middle of the List using an iterator should be typically faster for {@link LinkedList}.
+ * <br>
+ * You can perform in-place mutation on a CharDeque using {@link #replaceAll(CharToCharFunction)} with any appropriate
+ * lambda or method reference. A common use for this is to convert the case of an entire CharDeque, such as with
+ * {@link Character#toUpperCase(char)} or {@link Character#toLowerCase(char)}. Be aware that the Character methods don't
+ * work as expected on GWT. If you target GWT, you can use {@link Casing#caseUp(char)} from this library to convert all
+ * chars to upper case, or Category from RegExodus if you need to convert to lower case or do other conversions. The
+ * conversion to upper case only can be useful for making CharSequences that are comparable without considering case,
+ * and you can also use {@link #equalsIgnoreCase(CharSequence)}, {@link #hashCodeIgnoreCase()}, and
+ * {@link #compareWithIgnoreCase(CharSequence)} for that.
  */
 public class CharDeque extends CharList implements RandomAccess, Arrangeable, PrimitiveCollection.OfChar,
 	Ordered.OfChar, CharSequence, Appendable {
