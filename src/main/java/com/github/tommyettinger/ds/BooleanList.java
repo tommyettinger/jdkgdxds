@@ -32,7 +32,8 @@ import java.util.Random;
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
- * @see BooleanBag BooleanBag is an unordered variant on BooleanList.
+ * @see BooleanBag BooleanBag is an unordered variant on BooleanList with faster removal from the start or middle.
+ * @see BooleanDeque BooleanDeque has fast prepend as well as append operations, with the same functionality as BooleanList.
  */
 public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoolean, Arrangeable {
 	/**

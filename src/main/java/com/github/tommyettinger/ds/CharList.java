@@ -44,7 +44,8 @@ import java.util.Random;
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
- * @see CharBag CharBag is an unordered variant on CharList.
+ * @see CharBag CharBag is an unordered variant on CharList with faster removal from the start or middle.
+ * @see CharDeque CharDeque has fast prepend as well as append operations, with the same functionality as CharList.
  */
 public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arrangeable, CharSequence, Appendable,
 	Comparable<CharList> {

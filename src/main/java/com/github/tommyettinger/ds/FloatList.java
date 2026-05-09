@@ -36,7 +36,8 @@ import java.util.Random;
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
- * @see FloatBag FloatBag is an unordered variant on FloatList.
+ * @see FloatBag FloatBag is an unordered variant on FloatList with faster removal from the start or middle.
+ * @see FloatDeque FloatDeque has fast prepend as well as append operations, with the same functionality as FloatList.
  */
 public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, Arrangeable {
 	/**

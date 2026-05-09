@@ -34,7 +34,8 @@ import java.util.Random;
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
- * @see IntBag IntBag is an unordered variant on IntList.
+ * @see IntBag IntBag is an unordered variant on IntList with faster removal from the start or middle.
+ * @see IntDeque IntDeque has fast prepend as well as append operations, with the same functionality as IntList.
  */
 public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrangeable {
 	/**

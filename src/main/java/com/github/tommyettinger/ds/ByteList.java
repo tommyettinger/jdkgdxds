@@ -34,7 +34,8 @@ import java.util.Random;
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
- * @see ByteBag ByteBag is an unordered variant on ByteList.
+ * @see ByteBag ByteBag is an unordered variant on ByteList with faster removal from the start or middle.
+ * @see ByteDeque ByteDeque has fast prepend as well as append operations, with the same functionality as ByteList.
  */
 public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arrangeable {
 	/**

@@ -34,7 +34,8 @@ import java.util.Random;
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
- * @see LongBag LongBag is an unordered variant on LongList.
+ * @see LongBag LongBag is an unordered variant on LongList with faster removal from the start or middle.
+ * @see LongDeque LongDeque has fast prepend as well as append operations, with the same functionality as LongList.
  */
 public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arrangeable {
 	/**

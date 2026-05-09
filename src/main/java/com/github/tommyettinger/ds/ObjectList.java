@@ -43,7 +43,9 @@ import java.util.Random;
  * {@code ObjectList<String> myList = new ObjectList<>(); String[] s = myList.toArray(String::new);}.
  *
  * @author Tommy Ettinger
- * @see ObjectBag ObjectBag is an unordered variant on ObjectList.
+ * @see ObjectBag ObjectBag is an unordered variant on ObjectBag with faster removal from the start or middle.
+ * @see ObjectDeque ObjectDeque is not a subclass, but is a List and Deque, has fast prepend as well as append
+ * operations, and has mostly the same functionality as ObjectList.
  */
 public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedCollection<T>, Arrangeable.ArrangeableList<T> {
 	/**

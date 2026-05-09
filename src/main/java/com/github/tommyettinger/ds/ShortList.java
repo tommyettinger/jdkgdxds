@@ -32,7 +32,8 @@ import java.util.*;
  *
  * @author Nathan Sweet
  * @author Tommy Ettinger
- * @see ShortBag ShortBag is an unordered variant on ShortList.
+ * @see ShortBag ShortBag is an unordered variant on ShortList with faster removal from the start or middle.
+ * @see ShortDeque ShortDeque has fast prepend as well as append operations, with the same functionality as ShortList.
  */
 public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, Arrangeable, RandomAccess {
 	/**

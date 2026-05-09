@@ -51,9 +51,9 @@ import java.util.*;
  * the methods from {@link Arrangeable}, and many default methods from PrimitiveCollection and Ordered.
  * <br>
  * In general, this is an improvement over {@link ArrayDeque} in every type of functionality, and is mostly equivalent
- * to {@link LongList} as long as the performance of {@link #get(int)} is adequate. Because it is array-backed, it
- * should usually be much faster than {@link LinkedList}, as well; only periodic resizing and modifications in the
- * middle of the List using an iterator should be typically faster for {@link LinkedList}.
+ * to {@link LongList} as long as the performance of {@link #get(int)} is adequate.
+ * Because it is array-backed, it should usually be much faster than {@link LinkedList}, as well.
+ * This is primitive-based, so it isn't especially comparable to LinkedList.
  */
 public class LongDeque extends LongList implements RandomAccess, Arrangeable, PrimitiveCollection.OfLong, Ordered.OfLong {
 
