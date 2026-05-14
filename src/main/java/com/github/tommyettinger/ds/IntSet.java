@@ -383,7 +383,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 				return keyTable[i];
 			}
 		}
-		throw new IllegalStateException("IntSetAlt is empty.");
+		throw new IllegalStateException("IntSet is empty.");
 	}
 
 	/**
