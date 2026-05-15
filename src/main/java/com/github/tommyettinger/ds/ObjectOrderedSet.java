@@ -32,7 +32,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
  * using {@link #order()}. There is some additional overhead for put and remove.
  * <p>
- * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is somewhat slower due
+ * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is slower (linear time) due
  * to {@link #order()}. Add may be slightly slower, depending on hash collisions. Load factors greater than 0.9 greatly increase
  * the chances to resize to the next higher POT size.
  * <p>
@@ -44,7 +44,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * {@link #equate(Object, Object)} can be overridden to change how equality is calculated.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal.
- * It tries different hashes from a simple family, with the hash changing on resize.
  * Linear probing continues to work even when all hashCodes collide; it just works more slowly in that case.
  *
  * @author Nathan Sweet

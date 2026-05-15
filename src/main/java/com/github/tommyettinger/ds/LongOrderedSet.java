@@ -30,8 +30,8 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * {@link #iterator() Iteration} is ordered and faster than an unordered set. Keys can also be accessed and the order changed
  * using {@link #order()}. There is some additional overhead for put and remove.
  * <p>
- * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is somewhat slower due
- * to {@link #order()}. Add may be slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce
+ * This class performs fast contains (typically O(1), worst case O(n) but that is rare in practice). Remove is slower (linear time) due
+ * to {@link #order()}. Add may be slightly slower, depending on hash collisions. Hash codes are mixed to reduce
  * collisions and the need to resize. Load factors greater than 0.91 greatly increase the chances to resize to the next higher POT
  * size.
  * <p>
@@ -42,7 +42,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * are calculated (which can be useful for types like {@link StringBuilder} that don't implement hashCode()).
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal.
- * It tries different hashes from a simple family, with the hash changing on resize.
  * Linear probing continues to work even when all hashCodes collide, just more slowly.
  *
  * @author Nathan Sweet

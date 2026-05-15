@@ -40,7 +40,7 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * done except when growing the table size.
  * <p>
  * This class performs fast contains and remove (typically O(1), worst case O(n) but that is rare in practice). Add may be
- * slightly slower, depending on hash collisions. Hashcodes are rehashed to reduce collisions and the need to resize. Load factors
+ * slightly slower, depending on hash collisions. Hash codes are mixed to reduce collisions and the need to resize. Load factors
  * greater than 0.91 greatly increase the chances to resize to the next higher POT size.
  * <p>
  * Unordered sets and maps are not designed to provide especially fast iteration. Iteration is faster with {@link Ordered} types like
@@ -51,7 +51,6 @@ import static com.github.tommyettinger.ds.Utilities.tableSize;
  * {@link #locateKey(long)} can be overridden to change how equality is calculated.
  * <p>
  * This implementation uses linear probing with the backward shift algorithm for removal.
- * It tries different hashes from a simple family, with the hash changing on resize.
  * Linear probing continues to work even when all hashCodes collide, just more slowly.
  *
  * @author Nathan Sweet
