@@ -43,11 +43,21 @@ import com.github.tommyettinger.function.CharToCharFunction;
  * {@link #makeMap()} and {@link #makeOrderedMap()} methods, which can take 0-4 String-V pairs without allocating,
  * or one or more String-V pairs if given an array or varargs.
  * <br>
+ * A CharFilter can be used to produce high-quality non-cryptographic hashes of char arrays, Strings, and other
+ * CharSequences (including {@link CharList}, {@link CharBag}, and {@link CharDeque}), producing either 32-bit or 64-bit
+ * hashes. These take a {@code long} seed and optionally start and length parameters; they use
+ * {@link #hash(long, char[])}, {@link #hash64(long, char[])}, and their overloads. Predefined functions are also
+ * provided with {@link Hasher.SeededHashFunction} and {@link Hasher.SeededHashFunction64} types, such as
+ * {@link #stringHash}, {@link #stringArrayHash}, and {@link #stringArray2DHash}, to handle multidimensional arrays.
+ * All hash functions respect the filter and editor of the CharFilter; they won't consider any char that
+ * the {@link #getFilter() filter} returns false for, and they run each char through the {@link #getEditor() editor}
+ * after passing the filter but before incorporating it into the hash result.
+ * <br>
  * If you target GWT, be aware that several built-in JDK methods for handling chars may work differently in HTML than on
  * desktop, Android, or other platforms. In particular, {@link Character#isLetter(char)} will not work on most Unicode
  * chars on GWT, so you need another way to handle checks like that.
  * {@code com.github.tommyettinger.ds.support.util.CharPredicates.IS_LETTER} is a CharPredicate you can use instead of
- * isLetter on any platform, and acts as {@link Character#isLetter(char)} does on Java 24, but on all Java versions and
+ * isLetter on any platform, and acts as {@link Character#isLetter(char)} does on Java 25, but on all Java versions and
  * target platforms (including GWT). Other fields in CharPredicates may also be useful, and you can create your own
  * {@link CharBitSet} or {@link CharBitSetFixedSize} objects to serve as predefined predicates that look up a char in an
  * uncompressed bit set.
