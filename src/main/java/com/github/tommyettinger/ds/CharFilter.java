@@ -16,6 +16,7 @@
 
 package com.github.tommyettinger.ds;
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.function.CharPredicate;
 import com.github.tommyettinger.function.CharToCharFunction;
 
@@ -1140,5 +1141,30 @@ public class CharFilter {
 		h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
 		return h2;
 	}
+
+	public final Hasher.SeededHashFunction64<char[]> charArrayHash64 = this::hash64;
+	public final Hasher.SeededHashFunction64<CharSequence> charSequenceHash64 = this::hash64;
+	public final Hasher.SeededHashFunction64<String> stringHash64 = this::hash64;
+	public final Hasher.SeededHashFunction64<char[][]> charArray2DHash64 = (long seed, char[][] data) -> Hasher.hashBulk64(seed, charArrayHash64, data);
+	public final Hasher.SeededHashFunction64<CharSequence[]> charSequenceArrayHash64 = (long seed, CharSequence[] data) -> Hasher.hashBulk64(seed, charSequenceHash64, data);
+	public final Hasher.SeededHashFunction64<String[]> stringArrayHash64 = (long seed, String[] data) -> Hasher.hashBulk64(seed, stringHash64, data);
+	public final Hasher.SeededHashFunction64<char[][][]> charArray3DHash64 = (long seed, char[][][] data) -> Hasher.hashBulk64(seed, charArray2DHash64, data);
+	public final Hasher.SeededHashFunction64<CharSequence[][]> charSequenceArray2DHash64 = (long seed, CharSequence[][] data) -> Hasher.hashBulk64(seed, charSequenceArrayHash64, data);
+	public final Hasher.SeededHashFunction64<String[][]> stringArray2DHash64 = (long seed, String[][] data) -> Hasher.hashBulk64(seed, stringArrayHash64, data);
+	public final Hasher.SeededHashFunction64<CharSequence[][][]> charSequenceArray3DHash64 = (long seed, CharSequence[][][] data) -> Hasher.hashBulk64(seed, charSequenceArray2DHash64, data);
+	public final Hasher.SeededHashFunction64<String[][][]> stringArray3DHash64 = (long seed, String[][][] data) -> Hasher.hashBulk64(seed, stringArray2DHash64, data);
+
+	public final Hasher.SeededHashFunction<char[]> charArrayHash = this::hash;
+	public final Hasher.SeededHashFunction<CharSequence> charSequenceHash = this::hash;
+	public final Hasher.SeededHashFunction<String> stringHash = this::hash;
+	public final Hasher.SeededHashFunction<char[][]> charArray2DHash = (long seed, char[][] data) -> Hasher.hashBulk(seed, charArrayHash, data);
+	public final Hasher.SeededHashFunction<CharSequence[]> charSequenceArrayHash = (long seed, CharSequence[] data) -> Hasher.hashBulk(seed, charSequenceHash, data);
+	public final Hasher.SeededHashFunction<String[]> stringArrayHash = (long seed, String[] data) -> Hasher.hashBulk(seed, stringHash, data);
+	public final Hasher.SeededHashFunction<char[][][]> charArray3DHash = (long seed, char[][][] data) -> Hasher.hashBulk(seed, charArray2DHash, data);
+	public final Hasher.SeededHashFunction<CharSequence[][]> charSequenceArray2DHash = (long seed, CharSequence[][] data) -> Hasher.hashBulk(seed, charSequenceArrayHash, data);
+	public final Hasher.SeededHashFunction<String[][]> stringArray2DHash = (long seed, String[][] data) -> Hasher.hashBulk(seed, stringArrayHash, data);
+	public final Hasher.SeededHashFunction<CharSequence[][][]> charSequenceArray3DHash = (long seed, CharSequence[][][] data) -> Hasher.hashBulk(seed, charSequenceArray2DHash, data);
+	public final Hasher.SeededHashFunction<String[][][]> stringArray3DHash = (long seed, String[][][] data) -> Hasher.hashBulk(seed, stringArray2DHash, data);
+
 //</editor-fold>
 }
