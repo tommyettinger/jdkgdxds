@@ -76,3 +76,13 @@ figuring out how to get Gradle to supply the sources of jdkgdxds'
 dependencies to GWT projects that depend on jdkgdxds. This is
 something I had tried more than once and always failed, every time,
 so huge thanks are in order!
+
+Thanks to Sokolov Yura, a.k.a. funny_falcon, for making the GoodOAAT
+hashing function, which I modified to hash 16-bits at a time instead
+of 8-bits at a time and use in CharFilter now. Thanks also to
+everyone who's contributed to SMHasher, from its start with Austin
+Appleby, to changes by Reini Urban, to Frank J. T. Wojcik's changes
+in SMHasher3, which is the version I used to test my hash variant.
+My changes are here,
+https://github.com/tommyettinger/smhasher-with-junk/blob/master/smhasher3/hashes/pairaat.cpp ,
+if anyone wants the C++ code.
