@@ -52,6 +52,7 @@ import com.github.tommyettinger.function.CharToCharFunction;
  * uncompressed bit set.
  */
 public class CharFilter {
+//<editor-fold defaultstate="collapsed" desc="Main Functionality">
 	/**
 	 * The unique identifying name for this combination of filter and editor.
 	 */
@@ -76,24 +77,6 @@ public class CharFilter {
 		this.filter = filter;
 		this.editor = editor;
 		REGISTRY.add(this);
-	}
-
-	/**
-	 * Tries to get an existing CharFilter known by {@code name}, and if one exists, this returns that CharFilter.
-	 * Otherwise, this will construct and return a new CharFilter with the given name, filter, and editor, registering it
-	 * in the process.
-	 *
-	 * @param name   the String name to look up, or to register by if none was found
-	 * @param filter a CharPredicate that should return true iff a character should be considered for equality/hashing
-	 * @param editor a CharToCharFunction that will take a char from a key String and return a potentially different char
-	 * @return a CharFilter, either one that already exists by the given name, or a newly-registered one that was just created
-	 */
-	public static CharFilter getOrCreate(String name, CharPredicate filter, CharToCharFunction editor) {
-		CharFilter existing = REGISTRY.get(name);
-		if (existing == null) {
-			return new CharFilter(name, filter, editor);
-		}
-		return existing;
 	}
 
 	@Override
@@ -130,90 +113,24 @@ public class CharFilter {
 		return editor;
 	}
 
+//</editor-fold>
+//<editor-fold defaultstate="collapsed" desc="Static Registry Methods">
 	/**
-	 * Hashes a section of a char array, ignoring any chars that the {@link #getFilter() filter} doesn't return true
-	 * for, and potentially changing chars using the {@link #getEditor() editor} only during hashing (not permanently).
-	 * Gets a 32-bit hash. Uses 64-bit math so this behaves correctly, though slowly, on GWT.
-	 * <br>
-	 * Based loosely on funny-falcon's GoodOAAT hash for bytes, but made to work on Java's 16-bit chars instead.
-	 * GoodOAAT is MIT-licensed.
-	 * <br>
-	 * This hash passes SMHasher 3 testing.
+	 * Tries to get an existing CharFilter known by {@code name}, and if one exists, this returns that CharFilter.
+	 * Otherwise, this will construct and return a new CharFilter with the given name, filter, and editor, registering it
+	 * in the process.
 	 *
-	 * @param seed any change to the seed should change the hashes of non-null, non-empty data
-	 * @param data  the char array to hash
-	 * @param start the start index
-	 * @param length how many items to hash (this will hash fewer if there aren't enough items in the array)
-	 * @return a 32-bit hash of data
+	 * @param name   the String name to look up, or to register by if none was found
+	 * @param filter a CharPredicate that should return true iff a character should be considered for equality/hashing
+	 * @param editor a CharToCharFunction that will take a char from a key String and return a potentially different char
+	 * @return a CharFilter, either one that already exists by the given name, or a newly-registered one that was just created
 	 */
-	public int hash(long seed, char[] data, int start, int length) {
-		if (data == null || start < 0 || length < 0 || start >= data.length)
-			return 0;
-		long h1 = seed + 0x3C79AC492BA7B653L;
-		long h2 = seed ^ (seed << 17 | seed >>> 47) ^ (seed << 47 | seed >>> 17);
-		final int len = Math.min(length, data.length - start), end = start + len;
-		for (int i = start; i < end; i++) {
-			char d = data[i];
-			if(filter.test(d)) {
-				h1 += editor.applyAsChar(d);
-				h1 += h1 << 3;
-				h2 += h1;
-				h2 = (h2 << 7 | h2 >>> 57);
-				h2 += h2 << 2;
-			}
+	public static CharFilter getOrCreate(String name, CharPredicate filter, CharToCharFunction editor) {
+		CharFilter existing = REGISTRY.get(name);
+		if (existing == null) {
+			return new CharFilter(name, filter, editor);
 		}
-
-		h1 ^= h2 ^ h2 >> 27;
-		h1 += (h2 << 25 | h2 >>> 39);
-		h2 ^= h1; h2 += (h1 << 53 | h1 >>> 11);
-		h1 ^= h2; h1 += (h2 << 11 | h2 >>> 53);
-		h2 ^= h1; h2 += (h1 << 46 | h1 >>> 18);
-		h1 ^= h2; h1 += (h2 << 37 | h2 >>> 27);
-		h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
-		return (int)h2;
-	}
-
-	/**
-	 * Hashes a section of a char array, ignoring any chars that the {@link #getFilter() filter} doesn't return true
-	 * for, and potentially changing chars using the {@link #getEditor() editor} only during hashing (not permanently).
-	 * Gets a 32-bit hash. Uses 64-bit math so this behaves correctly, though slowly, on GWT.
-	 * <br>
-	 * Based loosely on funny-falcon's GoodOAAT hash for bytes, but made to work on Java's 16-bit chars instead.
-	 * GoodOAAT is MIT-licensed.
-	 * <br>
-	 * This hash passes SMHasher 3 testing.
-	 *
-	 * @param seed any change to the seed should change the hashes of non-null, non-empty data
-	 * @param data  the String or other CharSequence to hash
-	 * @param start the start index
-	 * @param length how many items to hash (this will hash fewer if there aren't enough items in the CharSequence)
-	 * @return a 32-bit hash of data
-	 */
-	public int hash(long seed, CharSequence data, int start, int length) {
-		if (data == null || start < 0 || length < 0 || start >= data.length())
-			return 0;
-		long h1 = seed + 0x3C79AC492BA7B653L;
-		long h2 = seed ^ (seed << 17 | seed >>> 47) ^ (seed << 47 | seed >>> 17);
-		final int len = Math.min(length, data.length() - start), end = start + len;
-		for (int i = start; i < end; i++) {
-			char d = data.charAt(i);
-			if(filter.test(d)) {
-				h1 += editor.applyAsChar(d);
-				h1 += h1 << 3;
-				h2 += h1;
-				h2 = (h2 << 7 | h2 >>> 57);
-				h2 += h2 << 2;
-			}
-		}
-
-		h1 ^= h2 ^ h2 >> 27;
-		h1 += (h2 << 25 | h2 >>> 39);
-		h2 ^= h1; h2 += (h1 << 53 | h1 >>> 11);
-		h1 ^= h2; h1 += (h2 << 11 | h2 >>> 53);
-		h2 ^= h1; h2 += (h1 << 46 | h1 >>> 18);
-		h1 ^= h2; h1 += (h2 << 37 | h2 >>> 27);
-		h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
-		return (int)h2;
+		return existing;
 	}
 
 	/**
@@ -248,6 +165,8 @@ public class CharFilter {
 		return REGISTRY.getOrDefault(name, defaultValue);
 	}
 
+//</editor-fold>
+//<editor-fold defaultstate="collapsed" desc="Make Functions for Sets">
 	/**
 	 * Constructs an empty set using this CharFilter.
 	 * This is usually less useful than just using the constructor, but can be handy
@@ -566,6 +485,8 @@ public class CharFilter {
 		return new FilteredStringOrderedSet(this, varargs);
 	}
 
+//</editor-fold>
+//<editor-fold defaultstate="collapsed" desc="Make Functions for Maps">
 	/**
 	 * Constructs an empty map given just a CharFilter.
 	 * This is usually less useful than just using the constructor, but can be handy
@@ -809,4 +730,124 @@ public class CharFilter {
 		}
 		return map;
 	}
+
+//</editor-fold>
+//<editor-fold defaultstate="collapsed" desc="GoodOAAT-based Hashes">
+	/*
+	 * The remainder of this file is MIT-licensed.
+	 * Small One-At-A-Time functions
+	 * Copyright (C) 2026       Tommy Ettinger
+	 * Copyright (C) 2021-2022  Frank J. T. Wojcik
+	 * Copyright (c) 2016       Sokolov Yura aka funny_falcon <funny.falcon@gmail.com>
+	 *
+	 * Permission is hereby granted, free of charge, to any person
+	 * obtaining a copy of this software and associated documentation
+	 * files (the "Software"), to deal in the Software without
+	 * restriction, including without limitation the rights to use,
+	 * copy, modify, merge, publish, distribute, sublicense, and/or
+	 * sell copies of the Software, and to permit persons to whom the
+	 * Software is furnished to do so, subject to the following
+	 * conditions:
+	 *
+	 * The above copyright notice and this permission notice shall be
+	 * included in all copies or substantial portions of the Software.
+	 *
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	 * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+	 * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+	 * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+	 * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+	 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	 * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+	 * OTHER DEALINGS IN THE SOFTWARE.
+	 */
+
+	/**
+	 * Hashes a section of a char array, ignoring any chars that the {@link #getFilter() filter} doesn't return true
+	 * for, and potentially changing chars using the {@link #getEditor() editor} only during hashing (not permanently).
+	 * Gets a 32-bit hash. Uses 64-bit math so this behaves correctly, though slowly, on GWT.
+	 * <br>
+	 * Based on Sokolov Yura's (funny_falcon's) GoodOAAT hash for bytes, but made to work on Java's 16-bit chars
+	 * instead. GoodOAAT is MIT-licensed. Like GoodOAAT, this is non-multiplicative.
+	 * <br>
+	 * This hash passes SMHasher 3 testing. It is called "PairAAT_C" in
+	 * <a href="https://github.com/tommyettinger/smhasher-with-junk/tree/master/smhasher3">the test repo</a>.
+	 *
+	 * @param seed any change to the seed should change the hashes of non-null, non-empty data
+	 * @param data  the char array to hash
+	 * @param start the start index
+	 * @param length how many items to hash (this will hash fewer if there aren't enough items in the array)
+	 * @return a 32-bit hash of data
+	 */
+	public int hash(long seed, char[] data, int start, int length) {
+		if (data == null || start < 0 || length < 0 || start >= data.length)
+			return 0;
+		long h1 = seed + 0xD1B92B09B92266DDL;
+		long h2 = seed ^ (seed << 22 | seed >>> 42) ^ (seed << 47 | seed >>> 17) ^ 0x9E3779B97F4A7C15L;
+		final int len = Math.min(length, data.length - start), end = start + len;
+		for (int i = start; i < end; i++) {
+			char d = data[i];
+			if(filter.test(d)) {
+				h1 += editor.applyAsChar(d);
+				h1 += h1 << 8;
+				h2 += h1;
+				h2 = (h2 << 7 | h2 >>> 57);
+				h2 += h2 << 2;
+			}
+		}
+
+		h1 ^= h2;
+		h1 += (h2 << 25 | h2 >>> 39);
+		h2 ^= h1; h2 += (h1 << 53 | h1 >>> 11);
+		h1 ^= h2; h1 += (h2 << 11 | h2 >>> 53);
+		h2 ^= h1; h2 += (h1 << 46 | h1 >>> 18);
+		h1 ^= h2; h1 += (h2 << 37 | h2 >>> 27);
+		h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
+		return (int)h2;
+	}
+
+	/**
+	 * Hashes a section of a char array, ignoring any chars that the {@link #getFilter() filter} doesn't return true
+	 * for, and potentially changing chars using the {@link #getEditor() editor} only during hashing (not permanently).
+	 * Gets a 32-bit hash. Uses 64-bit math so this behaves correctly, though slowly, on GWT.
+	 * <br>
+	 * Based on Sokolov Yura's (funny_falcon's) GoodOAAT hash for bytes, but made to work on Java's 16-bit chars
+	 * instead. GoodOAAT is MIT-licensed. Like GoodOAAT, this is non-multiplicative.
+	 * <br>
+	 * This hash passes SMHasher 3 testing. It is called "PairAAT_C" in
+	 * <a href="https://github.com/tommyettinger/smhasher-with-junk/tree/master/smhasher3">the test repo</a>.
+	 *
+	 * @param seed any change to the seed should change the hashes of non-null, non-empty data
+	 * @param data  the String or other CharSequence to hash
+	 * @param start the start index
+	 * @param length how many items to hash (this will hash fewer if there aren't enough items in the CharSequence)
+	 * @return a 32-bit hash of data
+	 */
+	public int hash(long seed, CharSequence data, int start, int length) {
+		if (data == null || start < 0 || length < 0 || start >= data.length())
+			return 0;
+		long h1 = seed + 0xD1B92B09B92266DDL;
+		long h2 = seed ^ (seed << 22 | seed >>> 42) ^ (seed << 47 | seed >>> 17) ^ 0x9E3779B97F4A7C15L;
+		final int len = Math.min(length, data.length() - start), end = start + len;
+		for (int i = start; i < end; i++) {
+			char d = data.charAt(i);
+			if(filter.test(d)) {
+				h1 += editor.applyAsChar(d);
+				h1 += h1 << 8;
+				h2 += h1;
+				h2 = (h2 << 7 | h2 >>> 57);
+				h2 += h2 << 2;
+			}
+		}
+
+		h1 ^= h2;
+		h1 += (h2 << 25 | h2 >>> 39);
+		h2 ^= h1; h2 += (h1 << 53 | h1 >>> 11);
+		h1 ^= h2; h1 += (h2 << 11 | h2 >>> 53);
+		h2 ^= h1; h2 += (h1 << 46 | h1 >>> 18);
+		h1 ^= h2; h1 += (h2 << 37 | h2 >>> 27);
+		h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
+		return (int)h2;
+	}
+//</editor-fold>
 }
