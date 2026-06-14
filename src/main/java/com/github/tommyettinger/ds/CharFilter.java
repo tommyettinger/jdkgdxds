@@ -849,5 +849,93 @@ public class CharFilter {
 		h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
 		return (int)h2;
 	}
+
+	/**
+	 * Hashes a section of a char array, ignoring any chars that the {@link #getFilter() filter} doesn't return true
+	 * for, and potentially changing chars using the {@link #getEditor() editor} only during hashing (not permanently).
+	 * Gets a 64-bit hash. Uses 64-bit math so this behaves correctly, though slowly, on GWT.
+	 * <br>
+	 * Based on Sokolov Yura's (funny_falcon's) GoodOAAT hash for bytes, but made to work on Java's 16-bit chars
+	 * instead. GoodOAAT is MIT-licensed. Like GoodOAAT, this is non-multiplicative.
+	 * <br>
+	 * This hash passes SMHasher 3 testing. It is called "PairAAT64_C" in
+	 * <a href="https://github.com/tommyettinger/smhasher-with-junk/tree/master/smhasher3">the test repo</a>.
+	 *
+	 * @param seed any change to the seed should change the hashes of non-null, non-empty data
+	 * @param data  the char array to hash
+	 * @param start the start index
+	 * @param length how many items to hash (this will hash fewer if there aren't enough items in the array)
+	 * @return a 64-bit hash of data
+	 */
+	public long hash64(long seed, char[] data, int start, int length) {
+		if (data == null || start < 0 || length < 0 || start >= data.length)
+			return 0;
+		long h1 = seed + 0xD1B92B09B92266DDL;
+		long h2 = seed ^ (seed << 22 | seed >>> 42) ^ (seed << 47 | seed >>> 17) ^ 0x9E3779B97F4A7C15L;
+		final int len = Math.min(length, data.length - start), end = start + len;
+		for (int i = start; i < end; i++) {
+			char d = data[i];
+			if(filter.test(d)) {
+				h1 += editor.applyAsChar(d);
+				h1 += h1 << 8;
+				h2 += h1;
+				h2 = (h2 << 7 | h2 >>> 57);
+				h2 += h2 << 2;
+			}
+		}
+
+		h1 ^= h2;
+		h1 += (h2 << 25 | h2 >>> 39);
+		h2 ^= h1; h2 += (h1 << 53 | h1 >>> 11);
+		h1 ^= h2; h1 += (h2 << 11 | h2 >>> 53);
+		h2 ^= h1; h2 += (h1 << 46 | h1 >>> 18);
+		h1 ^= h2; h1 += (h2 << 37 | h2 >>> 27);
+		h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
+		return h2;
+	}
+
+	/**
+	 * Hashes a section of a char array, ignoring any chars that the {@link #getFilter() filter} doesn't return true
+	 * for, and potentially changing chars using the {@link #getEditor() editor} only during hashing (not permanently).
+	 * Gets a 64-bit hash. Uses 64-bit math so this behaves correctly, though slowly, on GWT.
+	 * <br>
+	 * Based on Sokolov Yura's (funny_falcon's) GoodOAAT hash for bytes, but made to work on Java's 16-bit chars
+	 * instead. GoodOAAT is MIT-licensed. Like GoodOAAT, this is non-multiplicative.
+	 * <br>
+	 * This hash passes SMHasher 3 testing. It is called "PairAAT64_C" in
+	 * <a href="https://github.com/tommyettinger/smhasher-with-junk/tree/master/smhasher3">the test repo</a>.
+	 *
+	 * @param seed any change to the seed should change the hashes of non-null, non-empty data
+	 * @param data  the String or other CharSequence to hash
+	 * @param start the start index
+	 * @param length how many items to hash (this will hash fewer if there aren't enough items in the CharSequence)
+	 * @return a 64-bit hash of data
+	 */
+	public long hash64(long seed, CharSequence data, int start, int length) {
+		if (data == null || start < 0 || length < 0 || start >= data.length())
+			return 0;
+		long h1 = seed + 0xD1B92B09B92266DDL;
+		long h2 = seed ^ (seed << 22 | seed >>> 42) ^ (seed << 47 | seed >>> 17) ^ 0x9E3779B97F4A7C15L;
+		final int len = Math.min(length, data.length() - start), end = start + len;
+		for (int i = start; i < end; i++) {
+			char d = data.charAt(i);
+			if(filter.test(d)) {
+				h1 += editor.applyAsChar(d);
+				h1 += h1 << 8;
+				h2 += h1;
+				h2 = (h2 << 7 | h2 >>> 57);
+				h2 += h2 << 2;
+			}
+		}
+
+		h1 ^= h2;
+		h1 += (h2 << 25 | h2 >>> 39);
+		h2 ^= h1; h2 += (h1 << 53 | h1 >>> 11);
+		h1 ^= h2; h1 += (h2 << 11 | h2 >>> 53);
+		h2 ^= h1; h2 += (h1 << 46 | h1 >>> 18);
+		h1 ^= h2; h1 += (h2 << 37 | h2 >>> 27);
+		h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
+		return h2;
+	}
 //</editor-fold>
 }
