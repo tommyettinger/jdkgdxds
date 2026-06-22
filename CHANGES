@@ -1,3 +1,8 @@
+[2.1.5]
+- jdkgdxds is now distributed via JitPack.io for stable releases as well as commit releases.
+- The dependency on digital updated to 0.10.2. This should be identical to 0.10.1 other than coming from JitPack.io .
+- Gradle updated to 9.6.0, which should only have internal effects, if any.
+
 [2.1.4]
 - CharFilter now provides hash() and hash64() methods that filter and edit the CharSequences or char arrays they are given.
 - The dependency on digital updated to 0.10.1 . This includes some fixes in older Hasher methods (before "hashBulk" methods were added), and improves the precision of MathTools.cbrt().

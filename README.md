@@ -29,7 +29,7 @@ and both projects are Apache-licensed. Note that FastUtil won't work on all plat
 
 Gradle dependency (for all platforms except GWT):
 ```
-api "com.github.tommyettinger:jdkgdxds:2.1.4"
+api "com.github.tommyettinger:jdkgdxds:2.1.5"
 ```
 
 For GWT, see "How do I get it?" below, or use TeaVM instead.
@@ -208,28 +208,35 @@ changes could be made in a future version if any interest is shown.
 
 ## How do I get it?
 
-You have two options: Maven Central for stable releases (recommended), or JitPack to select a commit of your choice to
-build (if you know you need some property of a particular commit).
+You have two options: ~~Maven Central~~ JitPack for stable releases (recommended), or JitPack to select a commit of
+your choice to build (if you know you need some property of a particular commit).
+Maven Central is no longer a feasible way to release this library, so we use JitPack to release stable releases
+as well as commits.
+See [my rant in the digital project](https://github.com/tommyettinger/digital#rant) for why.
+See [JitPack's information on using it as a repo](https://jitpack.io/#tommyettinger/jdkgdxds) if you don't already use
+gdx-liftoff to create projects, or you are otherwise making a project yourself and don't already use JitPack.
 
-Maven Central uses the Gradle dependency:
+Stable releases use the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:2.1.4"
+api "com.github.tommyettinger:jdkgdxds:2.1.5"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
-It does not need any additional repository to be specified in most cases; if it can't be found, you may need the repository
-`mavenCentral()` or to remove the `mavenLocal()` repo. Jdkgdxds has dependencies (which, on platforms other than GWT,
-are downloaded automatically by Gradle, Maven, or most other common JVM build tools) on
-[digital](https://github.com/tommyettinger/digital), which provides common math code meant for use by multiple projects,
-and [funderby](https://github.com/tommyettinger/funderby), which has Java 8 functional interfaces for primitive types.
-The version for the `digital` dependency is 0.10.1 (you can specify it manually with the core dependency
-`api "com.github.tommyettinger:digital:0.10.1"`). Funderby has only changed a bit since its initial release, and is on version
+It may not need the JitPack repository to be specified in some cases; if it can't be found, you may need the repository
+`maven { url = 'https://jitpack.io' }`. See [JitPack.io](https://jitpack.io/#tommyettinger/jdkgdxds) for more.
+Jdkgdxds has dependencies (which, on platforms other than GWT, are downloaded automatically by Gradle, Maven, or most
+other common JVM build tools) on [digital](https://github.com/tommyettinger/digital), which provides common math code
+meant for use by multiple projects, and [funderby](https://github.com/tommyettinger/funderby), which has Java 8 functional interfaces for primitive types.
+The version for the `digital` dependency is 0.10.2 (you can specify it manually with the core dependency
+`api "com.github.tommyettinger:digital:0.10.2"`). Funderby has only changed a bit since its initial release, and is on version
 0.1.2 (you can specify it manually with `implementation "com.github.tommyettinger:funderby:0.1.2"`).
+The digital dependency is also distributed via JitPack; the funderby dependency still uses Maven Central, which is the
+`mavenCentral()` repo in Gradle.
 
 If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.10.1:sources"
-implementation "com.github.tommyettinger:jdkgdxds:2.1.4:sources"
+implementation "com.github.tommyettinger:digital:0.10.2:sources"
+implementation "com.github.tommyettinger:jdkgdxds:2.1.5:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -266,14 +273,14 @@ should use `'com.android.tools:desugar_jdk_libs:2.1.5'`.
 
 You can build specific, typically brand-new commits on JitPack.
 [JitPack has instructions for any recent commit you want here](https://jitpack.io/#tommyettinger/jdkgdxds/1e8e71a629).
-To reiterate, you add `maven { url 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
+To reiterate, you add `maven { url = 'https://jitpack.io' }` to your project's `repositories` section, just **not** the one inside
 `buildscript` (that just applies to the Gradle script itself, not your project). Then you can add
 `implementation 'com.github.tommyettinger:jdkgdxds:1e8e71a629'` or `api 'com.github.tommyettinger:jdkgdxds:1e8e71a629'`, depending
 on what your other dependencies use, to your project or its core module (if there are multiple modules, as in a typical libGDX
 project). If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
-implementation "com.github.tommyettinger:digital:0.10.1:sources"
+implementation "com.github.tommyettinger:digital:0.10.2:sources"
 implementation "com.github.tommyettinger:jdkgdxds:1e8e71a629:sources"
 ```
 to its
@@ -288,7 +295,7 @@ replaced with other commits shown on JitPack. If you need a commit dependency on
 need to exclude the implicit dependency from jdkgdxds on digital and rely on your explicit version of digital:
 ```
 implementation "com.github.tommyettinger:digital:$digitalCommitHashVersion"
-implementation('com.github.tommyettinger:jdkgdxds:2.1.4'){
+implementation('com.github.tommyettinger:jdkgdxds:2.1.5'){
     exclude group: 'com.github.tommyettinger', module: 'digital'
 }
 ```
@@ -446,7 +453,7 @@ libraries. Some other info here was scattered through this file and has been con
 The dependency (and `inherits` line) on digital is not necessary for jdkgdxds 0.2.8, but is necessary starting in 1.0.3 and later.
 The dependency and `inherits` line for funderby is new in 1.0.4 . Versions 1.0.1 and 1.0.2 also depended on
 [juniper](https://github.com/tommyettinger/juniper) 0.1.0 ; if you intend to use the
-randomized algorithms here (like shuffles), then depending on Juniper (0.10.4) might be a good idea, though it is still optional.
+randomized algorithms here (like shuffles), then depending on Juniper (0.10.5) might be a good idea, though it is still optional.
 Another option for random number generation, if you use libGDX, is [cringe](https://github.com/tommyettinger/cringe), which is more closely-integrated with libGDX.
 The versions are expected to increase somewhat for digital as bugs are found and fixed, but a low version number isn't a bad thing
 for that library. Both digital and juniper were both mostly drawn from code in this library, and were tested significantly here.
