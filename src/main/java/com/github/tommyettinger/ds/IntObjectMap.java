@@ -200,7 +200,7 @@ public class IntObjectMap<V> implements Iterable<IntObjectMap.Entry<V>> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place(int item) {
-		return BitConversion.imul(item ^ 0xC143F257, 0xFAB9E45B) >>> shift;
+		return BitConversion.imul(item ^ mask, 0xFAB9E45B) >>> shift;
 	}
 
 	/**
