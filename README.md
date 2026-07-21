@@ -210,10 +210,10 @@ changes could be made in a future version if any interest is shown.
 
 You have two options: ~~Maven Central~~ JitPack for stable releases (recommended), or JitPack to select a commit of
 your choice to build (if you know you need some property of a particular commit).
-Maven Central is no longer a feasible way to release this library, so we use JitPack to release stable releases
+Maven Central is no longer a feasible way to publish this library, so we use JitPack to publish stable releases
 as well as commits.
 See [my rant in the digital project](https://github.com/tommyettinger/digital#rant) for why.
-See [JitPack's information on using it as a repo](https://jitpack.io/#tommyettinger/jdkgdxds) if you don't already use
+See [JitPack's information on using it as a repo](https://jitpack.io/#tommyettinger/jdkgdxds) if you don't use
 gdx-liftoff to create projects, or you are otherwise making a project yourself and don't already use JitPack.
 
 Stable releases use the Gradle dependency:

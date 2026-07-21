@@ -86,3 +86,16 @@ in SMHasher3, which is the version I used to test my hash variant.
 My changes are here,
 https://github.com/tommyettinger/smhasher-with-junk/blob/master/smhasher3/hashes/pairaat.cpp ,
 if anyone wants the C++ code.
+
+Thanks to Soonil Nagarkar for deep-diving into libGDX's hash table
+design (which is very similar to jdkgdxds' design) in this post:
+https://sooniln.github.io/posts/hashmap-benchmarks-2026/
+A quick fix for the "Naive Copy" scenario, where a small Set or Map
+has a larger Set or Map's contents put into it without ensuring a
+capacity increase first, has been incorporated into jdkgdxds 2.1.6 .
+The case for a copy constructor isn't applicable, since we don't
+create smaller sets or maps when we use the copy constructor, but
+for putAll(), it might apply if the call we already did to
+ensureCapacity() didn't increase the capacity. If this performs
+worse by a noticeable amount, I might undo the change, but it only
+entails a XOR with `mask` instead of a XOR with a constant.

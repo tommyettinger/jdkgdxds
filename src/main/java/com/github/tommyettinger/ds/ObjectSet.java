@@ -174,7 +174,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place(Object item) {
-		return BitConversion.imul(item.hashCode() ^ 0xC143F257, 0xFAB9E45B) >>> shift;
+		return BitConversion.imul(item.hashCode() ^ mask, 0xFAB9E45B) >>> shift;
 		// This can be used if you know hashCode() has few collisions normally, and won't be maliciously manipulated.
 //		return item.hashCode() & mask;
 	}
