@@ -3449,8 +3449,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 */
 	public static <T> ObjectDeque<T> with(T item0, T item1, T item2, T item3, T item4) {
 		ObjectDeque<T> deque = new ObjectDeque<>(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -3468,8 +3467,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 */
 	public static <T> ObjectDeque<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		ObjectDeque<T> deque = new ObjectDeque<>(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -3488,8 +3486,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 */
 	public static <T> ObjectDeque<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		ObjectDeque<T> deque = new ObjectDeque<>(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -3509,8 +3506,7 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	 */
 	public static <T> ObjectDeque<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		ObjectDeque<T> deque = new ObjectDeque<>(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 

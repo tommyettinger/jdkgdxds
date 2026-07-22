@@ -252,8 +252,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 */
 	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3, T item4) {
 		ObjectBag<T> bag = new ObjectBag<>(5);
-		bag.add(item0, item1, item2, item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -271,8 +270,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 */
 	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		ObjectBag<T> bag = new ObjectBag<>(6);
-		bag.add(item0, item1, item2, item3);
-		bag.add(item4, item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -291,8 +289,7 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 */
 	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		ObjectBag<T> bag = new ObjectBag<>(7);
-		bag.add(item0, item1, item2, item3);
-		bag.add(item4, item5, item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -306,13 +303,13 @@ public class ObjectBag<T> extends ObjectList<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param item7 a T item
 	 * @param <T>   the type of item, typically inferred
 	 * @return a new ObjectBag that holds the given items
 	 */
 	public static <T> ObjectBag<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		ObjectBag<T> bag = new ObjectBag<>(8);
-		bag.add(item0, item1, item2, item3);
-		bag.add(item4, item5, item6, item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 
