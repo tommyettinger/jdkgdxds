@@ -429,6 +429,113 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 		this.head = head;
 	}
 
+	public void addFirst(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5) {
+		boolean[] items = this.items;
+
+		if (size + 5 > items.length)
+			items = resize(size + 5 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 5;
+
+		this.head = head;
+	}
+
+	public void addFirst(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5,
+						 boolean value6) {
+		boolean[] items = this.items;
+
+		if (size + 6 > items.length)
+			items = resize(size + 6 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 6;
+
+		this.head = head;
+	}
+
+	public void addFirst(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5,
+						 boolean value6, boolean value7) {
+		boolean[] items = this.items;
+
+		if (size + 7 > items.length)
+			items = resize(size + 7 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value7;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 7;
+
+		this.head = head;
+	}
+
+	public void addFirst(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5,
+						 boolean value6, boolean value7, boolean value8) {
+		boolean[] items = this.items;
+
+		if (size + 8 > items.length)
+			items = resize(size + 8 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value8;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value7;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 8;
+
+		this.head = head;
+	}
+
 	/**
 	 * Trims the capacity of this {@code BooleanDeque} instance to be the
 	 * deque's current size.  An application can use this operation to minimize
