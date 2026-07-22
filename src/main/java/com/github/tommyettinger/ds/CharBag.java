@@ -430,8 +430,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 */
 	public static CharBag with(char item0, char item1) {
 		CharBag bag = new CharBag(2);
-		bag.add(item0);
-		bag.add(item1);
+		bag.add(item0, item1);
 		return bag;
 	}
 
@@ -445,9 +444,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 */
 	public static CharBag with(char item0, char item1, char item2) {
 		CharBag bag = new CharBag(3);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
+		bag.add(item0, item1, item2);
 		return bag;
 	}
 
@@ -462,10 +459,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 */
 	public static CharBag with(char item0, char item1, char item2, char item3) {
 		CharBag bag = new CharBag(4);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
+		bag.add(item0, item1, item2, item3);
 		return bag;
 	}
 
@@ -481,11 +475,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 */
 	public static CharBag with(char item0, char item1, char item2, char item3, char item4) {
 		CharBag bag = new CharBag(5);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -502,12 +492,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 */
 	public static CharBag with(char item0, char item1, char item2, char item3, char item4, char item5) {
 		CharBag bag = new CharBag(6);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -525,13 +510,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 */
 	public static CharBag with(char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
 		CharBag bag = new CharBag(7);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -549,14 +528,7 @@ public class CharBag extends CharList implements CharSequence, Appendable {
 	 */
 	public static CharBag with(char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
 		CharBag bag = new CharBag(8);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
-		bag.add(item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 

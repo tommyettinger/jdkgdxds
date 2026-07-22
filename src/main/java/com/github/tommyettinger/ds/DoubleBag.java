@@ -217,7 +217,6 @@ public class DoubleBag extends DoubleList {
 	 * @param item a double item
 	 * @return a new DoubleBag that holds the given item
 	 */
-
 	public static DoubleBag with(double item) {
 		DoubleBag bag = new DoubleBag(1);
 		bag.add(item);
@@ -233,8 +232,7 @@ public class DoubleBag extends DoubleList {
 	 */
 	public static DoubleBag with(double item0, double item1) {
 		DoubleBag bag = new DoubleBag(2);
-		bag.add(item0);
-		bag.add(item1);
+		bag.add(item0, item1);
 		return bag;
 	}
 
@@ -248,9 +246,7 @@ public class DoubleBag extends DoubleList {
 	 */
 	public static DoubleBag with(double item0, double item1, double item2) {
 		DoubleBag bag = new DoubleBag(3);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
+		bag.add(item0, item1, item2);
 		return bag;
 	}
 
@@ -265,10 +261,7 @@ public class DoubleBag extends DoubleList {
 	 */
 	public static DoubleBag with(double item0, double item1, double item2, double item3) {
 		DoubleBag bag = new DoubleBag(4);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
+		bag.add(item0, item1, item2, item3);
 		return bag;
 	}
 
@@ -284,11 +277,7 @@ public class DoubleBag extends DoubleList {
 	 */
 	public static DoubleBag with(double item0, double item1, double item2, double item3, double item4) {
 		DoubleBag bag = new DoubleBag(5);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -305,12 +294,7 @@ public class DoubleBag extends DoubleList {
 	 */
 	public static DoubleBag with(double item0, double item1, double item2, double item3, double item4, double item5) {
 		DoubleBag bag = new DoubleBag(6);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -328,13 +312,7 @@ public class DoubleBag extends DoubleList {
 	 */
 	public static DoubleBag with(double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
 		DoubleBag bag = new DoubleBag(7);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -352,14 +330,7 @@ public class DoubleBag extends DoubleList {
 	 */
 	public static DoubleBag with(double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
 		DoubleBag bag = new DoubleBag(8);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
-		bag.add(item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 

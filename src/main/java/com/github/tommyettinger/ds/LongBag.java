@@ -231,8 +231,7 @@ public class LongBag extends LongList {
 	 */
 	public static LongBag with(long item0, long item1) {
 		LongBag bag = new LongBag(2);
-		bag.add(item0);
-		bag.add(item1);
+		bag.add(item0, item1);
 		return bag;
 	}
 
@@ -246,9 +245,7 @@ public class LongBag extends LongList {
 	 */
 	public static LongBag with(long item0, long item1, long item2) {
 		LongBag bag = new LongBag(3);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
+		bag.add(item0, item1, item2);
 		return bag;
 	}
 
@@ -263,10 +260,7 @@ public class LongBag extends LongList {
 	 */
 	public static LongBag with(long item0, long item1, long item2, long item3) {
 		LongBag bag = new LongBag(4);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
+		bag.add(item0, item1, item2, item3);
 		return bag;
 	}
 
@@ -282,11 +276,7 @@ public class LongBag extends LongList {
 	 */
 	public static LongBag with(long item0, long item1, long item2, long item3, long item4) {
 		LongBag bag = new LongBag(5);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -303,12 +293,7 @@ public class LongBag extends LongList {
 	 */
 	public static LongBag with(long item0, long item1, long item2, long item3, long item4, long item5) {
 		LongBag bag = new LongBag(6);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -326,13 +311,7 @@ public class LongBag extends LongList {
 	 */
 	public static LongBag with(long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
 		LongBag bag = new LongBag(7);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -350,14 +329,7 @@ public class LongBag extends LongList {
 	 */
 	public static LongBag with(long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
 		LongBag bag = new LongBag(8);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
-		bag.add(item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 

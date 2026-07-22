@@ -217,7 +217,6 @@ public class FloatBag extends FloatList {
 	 * @param item a float item
 	 * @return a new FloatBag that holds the given item
 	 */
-
 	public static FloatBag with(float item) {
 		FloatBag bag = new FloatBag(1);
 		bag.add(item);
@@ -233,8 +232,7 @@ public class FloatBag extends FloatList {
 	 */
 	public static FloatBag with(float item0, float item1) {
 		FloatBag bag = new FloatBag(2);
-		bag.add(item0);
-		bag.add(item1);
+		bag.add(item0, item1);
 		return bag;
 	}
 
@@ -248,9 +246,7 @@ public class FloatBag extends FloatList {
 	 */
 	public static FloatBag with(float item0, float item1, float item2) {
 		FloatBag bag = new FloatBag(3);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
+		bag.add(item0, item1, item2);
 		return bag;
 	}
 
@@ -265,10 +261,7 @@ public class FloatBag extends FloatList {
 	 */
 	public static FloatBag with(float item0, float item1, float item2, float item3) {
 		FloatBag bag = new FloatBag(4);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
+		bag.add(item0, item1, item2, item3);
 		return bag;
 	}
 
@@ -284,11 +277,7 @@ public class FloatBag extends FloatList {
 	 */
 	public static FloatBag with(float item0, float item1, float item2, float item3, float item4) {
 		FloatBag bag = new FloatBag(5);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -305,12 +294,7 @@ public class FloatBag extends FloatList {
 	 */
 	public static FloatBag with(float item0, float item1, float item2, float item3, float item4, float item5) {
 		FloatBag bag = new FloatBag(6);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -328,13 +312,7 @@ public class FloatBag extends FloatList {
 	 */
 	public static FloatBag with(float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
 		FloatBag bag = new FloatBag(7);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -352,14 +330,7 @@ public class FloatBag extends FloatList {
 	 */
 	public static FloatBag with(float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
 		FloatBag bag = new FloatBag(8);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
-		bag.add(item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 

@@ -232,8 +232,7 @@ public class ShortBag extends ShortList {
 	 */
 	public static ShortBag with(short item0, short item1) {
 		ShortBag bag = new ShortBag(2);
-		bag.add(item0);
-		bag.add(item1);
+		bag.add(item0, item1);
 		return bag;
 	}
 
@@ -247,9 +246,7 @@ public class ShortBag extends ShortList {
 	 */
 	public static ShortBag with(short item0, short item1, short item2) {
 		ShortBag bag = new ShortBag(3);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
+		bag.add(item0, item1, item2);
 		return bag;
 	}
 
@@ -264,10 +261,7 @@ public class ShortBag extends ShortList {
 	 */
 	public static ShortBag with(short item0, short item1, short item2, short item3) {
 		ShortBag bag = new ShortBag(4);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
+		bag.add(item0, item1, item2, item3);
 		return bag;
 	}
 
@@ -283,11 +277,7 @@ public class ShortBag extends ShortList {
 	 */
 	public static ShortBag with(short item0, short item1, short item2, short item3, short item4) {
 		ShortBag bag = new ShortBag(5);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -304,12 +294,7 @@ public class ShortBag extends ShortList {
 	 */
 	public static ShortBag with(short item0, short item1, short item2, short item3, short item4, short item5) {
 		ShortBag bag = new ShortBag(6);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -327,13 +312,7 @@ public class ShortBag extends ShortList {
 	 */
 	public static ShortBag with(short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
 		ShortBag bag = new ShortBag(7);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -351,14 +330,7 @@ public class ShortBag extends ShortList {
 	 */
 	public static ShortBag with(short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
 		ShortBag bag = new ShortBag(8);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
-		bag.add(item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 

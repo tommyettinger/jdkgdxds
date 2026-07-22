@@ -232,8 +232,7 @@ public class ByteBag extends ByteList {
 	 */
 	public static ByteBag with(byte item0, byte item1) {
 		ByteBag bag = new ByteBag(2);
-		bag.add(item0);
-		bag.add(item1);
+		bag.add(item0, item1);
 		return bag;
 	}
 
@@ -247,9 +246,7 @@ public class ByteBag extends ByteList {
 	 */
 	public static ByteBag with(byte item0, byte item1, byte item2) {
 		ByteBag bag = new ByteBag(3);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
+		bag.add(item0, item1, item2);
 		return bag;
 	}
 
@@ -264,10 +261,7 @@ public class ByteBag extends ByteList {
 	 */
 	public static ByteBag with(byte item0, byte item1, byte item2, byte item3) {
 		ByteBag bag = new ByteBag(4);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
+		bag.add(item0, item1, item2, item3);
 		return bag;
 	}
 
@@ -283,11 +277,7 @@ public class ByteBag extends ByteList {
 	 */
 	public static ByteBag with(byte item0, byte item1, byte item2, byte item3, byte item4) {
 		ByteBag bag = new ByteBag(5);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -304,12 +294,7 @@ public class ByteBag extends ByteList {
 	 */
 	public static ByteBag with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
 		ByteBag bag = new ByteBag(6);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -327,13 +312,7 @@ public class ByteBag extends ByteList {
 	 */
 	public static ByteBag with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
 		ByteBag bag = new ByteBag(7);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -351,14 +330,7 @@ public class ByteBag extends ByteList {
 	 */
 	public static ByteBag with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
 		ByteBag bag = new ByteBag(8);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
-		bag.add(item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 

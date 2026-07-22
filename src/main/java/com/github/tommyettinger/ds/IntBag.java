@@ -231,8 +231,7 @@ public class IntBag extends IntList {
 	 */
 	public static IntBag with(int item0, int item1) {
 		IntBag bag = new IntBag(2);
-		bag.add(item0);
-		bag.add(item1);
+		bag.add(item0, item1);
 		return bag;
 	}
 
@@ -246,9 +245,7 @@ public class IntBag extends IntList {
 	 */
 	public static IntBag with(int item0, int item1, int item2) {
 		IntBag bag = new IntBag(3);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
+		bag.add(item0, item1, item2);
 		return bag;
 	}
 
@@ -263,10 +260,7 @@ public class IntBag extends IntList {
 	 */
 	public static IntBag with(int item0, int item1, int item2, int item3) {
 		IntBag bag = new IntBag(4);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
+		bag.add(item0, item1, item2, item3);
 		return bag;
 	}
 
@@ -282,11 +276,7 @@ public class IntBag extends IntList {
 	 */
 	public static IntBag with(int item0, int item1, int item2, int item3, int item4) {
 		IntBag bag = new IntBag(5);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -303,12 +293,7 @@ public class IntBag extends IntList {
 	 */
 	public static IntBag with(int item0, int item1, int item2, int item3, int item4, int item5) {
 		IntBag bag = new IntBag(6);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -326,13 +311,7 @@ public class IntBag extends IntList {
 	 */
 	public static IntBag with(int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
 		IntBag bag = new IntBag(7);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -350,14 +329,7 @@ public class IntBag extends IntList {
 	 */
 	public static IntBag with(int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
 		IntBag bag = new IntBag(8);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
-		bag.add(item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 
