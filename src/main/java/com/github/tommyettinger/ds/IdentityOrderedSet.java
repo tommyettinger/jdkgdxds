@@ -223,8 +223,7 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 */
 	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(5);
-		set.add(item0, item1, item2, item3);
-		set.add(item4);
+		set.add(item0, item1, item2, item3, item4);
 		return set;
 	}
 
@@ -242,8 +241,7 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 */
 	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(6);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5);
+		set.add(item0, item1, item2, item3, item4, item5);
 		return set;
 	}
 
@@ -262,8 +260,7 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 */
 	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(7);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6);
+		set.add(item0, item1, item2, item3, item4, item5, item6);
 		return set;
 	}
 
@@ -277,13 +274,13 @@ public class IdentityOrderedSet<T> extends ObjectOrderedSet<T> {
 	 * @param item4 a T item
 	 * @param item5 a T item
 	 * @param item6 a T item
+	 * @param item7 a T item
 	 * @param <T>   the type of item, typically inferred
 	 * @return a new IdentityOrderedSet that holds the given items
 	 */
 	public static <T> IdentityOrderedSet<T> with(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		IdentityOrderedSet<T> set = new IdentityOrderedSet<>(8);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6, item7);
+		set.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return set;
 	}
 
