@@ -219,6 +219,66 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 		size += 4;
 	}
 
+	public void add (boolean value1, boolean value2, boolean value3, boolean value4, boolean value5) {
+		boolean[] items = this.items;
+		if (size + 4 >= items.length) {
+			items = resize(Math.max(11, (int)(size * 1.75f)));
+		}
+		items[size] = value1;
+		items[size + 1] = value2;
+		items[size + 2] = value3;
+		items[size + 3] = value4;
+		items[size + 4] = value5;
+		size += 5;
+	}
+
+	public void add (boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6) {
+		boolean[] items = this.items;
+		if (size + 5 >= items.length) {
+			items = resize(Math.max(13, (int) (size * 1.75f)));
+		}
+		items[size] = value1;
+		items[size + 1] = value2;
+		items[size + 2] = value3;
+		items[size + 3] = value4;
+		items[size + 4] = value5;
+		items[size + 5] = value6;
+		size += 6;
+	}
+
+	public void add (boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6,
+	                 boolean value7) {
+		boolean[] items = this.items;
+		if (size + 6 >= items.length) {
+			items = resize(Math.max(16, (int)(size * 1.75f)));
+		}
+		items[size] = value1;
+		items[size + 1] = value2;
+		items[size + 2] = value3;
+		items[size + 3] = value4;
+		items[size + 4] = value5;
+		items[size + 5] = value6;
+		items[size + 6] = value7;
+		size += 7;
+	}
+
+	public void add (boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6,
+	                 boolean value7, boolean value8) {
+		boolean[] items = this.items;
+		if (size + 7 >= items.length) {
+			items = resize(Math.max(18, (int)(size * 1.75f)));
+		}
+		items[size] = value1;
+		items[size + 1] = value2;
+		items[size + 2] = value3;
+		items[size + 3] = value4;
+		items[size + 4] = value5;
+		items[size + 5] = value6;
+		items[size + 6] = value7;
+		items[size + 7] = value8;
+		size += 8;
+	}
+
 	// Modified from libGDX
 	public boolean addAll(BooleanList list) {
 		return addAll(list.items, 0, list.size);
@@ -1228,8 +1288,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	public static BooleanList with(boolean item0, boolean item1) {
 		BooleanList list = new BooleanList(2);
-		list.add(item0);
-		list.add(item1);
+		list.add(item0, item1);
 		return list;
 	}
 
@@ -1243,9 +1302,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	public static BooleanList with(boolean item0, boolean item1, boolean item2) {
 		BooleanList list = new BooleanList(3);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
+		list.add(item0, item1, item2);
 		return list;
 	}
 
@@ -1260,10 +1317,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3) {
 		BooleanList list = new BooleanList(4);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
+		list.add(item0, item1, item2, item3);
 		return list;
 	}
 
@@ -1279,11 +1333,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
 		BooleanList list = new BooleanList(5);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
+		list.add(item0, item1, item2, item3, item4);
 		return list;
 	}
 
@@ -1300,12 +1350,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
 		BooleanList list = new BooleanList(6);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
+		list.add(item0, item1, item2, item3, item4, item5);
 		return list;
 	}
 
@@ -1323,13 +1368,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
 		BooleanList list = new BooleanList(7);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
+		list.add(item0, item1, item2, item3, item4, item5, item6);
 		return list;
 	}
 
@@ -1347,14 +1386,7 @@ public class BooleanList implements PrimitiveCollection.OfBoolean, Ordered.OfBoo
 	 */
 	public static BooleanList with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
 		BooleanList list = new BooleanList(8);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
-		list.add(item7);
+		list.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return list;
 	}
 
