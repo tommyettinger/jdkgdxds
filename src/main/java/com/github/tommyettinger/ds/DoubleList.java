@@ -1513,8 +1513,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	public static DoubleList with(double item0, double item1) {
 		DoubleList list = new DoubleList(2);
-		list.add(item0);
-		list.add(item1);
+		list.add(item0, item1);
 		return list;
 	}
 
@@ -1528,9 +1527,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	public static DoubleList with(double item0, double item1, double item2) {
 		DoubleList list = new DoubleList(3);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
+		list.add(item0, item1, item2);
 		return list;
 	}
 
@@ -1545,10 +1542,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	public static DoubleList with(double item0, double item1, double item2, double item3) {
 		DoubleList list = new DoubleList(4);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
+		list.add(item0, item1, item2, item3);
 		return list;
 	}
 
@@ -1564,11 +1558,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	public static DoubleList with(double item0, double item1, double item2, double item3, double item4) {
 		DoubleList list = new DoubleList(5);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
+		list.add(item0, item1, item2, item3, item4);
 		return list;
 	}
 
@@ -1585,12 +1575,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	public static DoubleList with(double item0, double item1, double item2, double item3, double item4, double item5) {
 		DoubleList list = new DoubleList(6);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
+		list.add(item0, item1, item2, item3, item4, item5);
 		return list;
 	}
 
@@ -1608,13 +1593,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	public static DoubleList with(double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
 		DoubleList list = new DoubleList(7);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
+		list.add(item0, item1, item2, item3, item4, item5, item6);
 		return list;
 	}
 
@@ -1632,14 +1611,7 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 	 */
 	public static DoubleList with(double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
 		DoubleList list = new DoubleList(8);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
-		list.add(item7);
+		list.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return list;
 	}
 

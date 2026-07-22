@@ -1860,8 +1860,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 */
 	public static CharList with(char item0, char item1) {
 		CharList list = new CharList(2);
-		list.add(item0);
-		list.add(item1);
+		list.add(item0, item1);
 		return list;
 	}
 
@@ -1875,9 +1874,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 */
 	public static CharList with(char item0, char item1, char item2) {
 		CharList list = new CharList(3);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
+		list.add(item0, item1, item2);
 		return list;
 	}
 
@@ -1892,10 +1889,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 */
 	public static CharList with(char item0, char item1, char item2, char item3) {
 		CharList list = new CharList(4);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
+		list.add(item0, item1, item2, item3);
 		return list;
 	}
 
@@ -1911,11 +1905,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 */
 	public static CharList with(char item0, char item1, char item2, char item3, char item4) {
 		CharList list = new CharList(5);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
+		list.add(item0, item1, item2, item3, item4);
 		return list;
 	}
 
@@ -1932,12 +1922,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 */
 	public static CharList with(char item0, char item1, char item2, char item3, char item4, char item5) {
 		CharList list = new CharList(6);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
+		list.add(item0, item1, item2, item3, item4, item5);
 		return list;
 	}
 
@@ -1955,13 +1940,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 */
 	public static CharList with(char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
 		CharList list = new CharList(7);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
+		list.add(item0, item1, item2, item3, item4, item5, item6);
 		return list;
 	}
 
@@ -1979,14 +1958,7 @@ public class CharList implements PrimitiveCollection.OfChar, Ordered.OfChar, Arr
 	 */
 	public static CharList with(char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
 		CharList list = new CharList(8);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
-		list.add(item7);
+		list.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return list;
 	}
 

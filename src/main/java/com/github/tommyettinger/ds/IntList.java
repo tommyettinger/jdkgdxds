@@ -1400,8 +1400,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public static IntList with(int item0, int item1) {
 		IntList list = new IntList(2);
-		list.add(item0);
-		list.add(item1);
+		list.add(item0, item1);
 		return list;
 	}
 
@@ -1415,9 +1414,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public static IntList with(int item0, int item1, int item2) {
 		IntList list = new IntList(3);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
+		list.add(item0, item1, item2);
 		return list;
 	}
 
@@ -1432,10 +1429,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public static IntList with(int item0, int item1, int item2, int item3) {
 		IntList list = new IntList(4);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
+		list.add(item0, item1, item2, item3);
 		return list;
 	}
 
@@ -1451,11 +1445,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public static IntList with(int item0, int item1, int item2, int item3, int item4) {
 		IntList list = new IntList(5);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
+		list.add(item0, item1, item2, item3, item4);
 		return list;
 	}
 
@@ -1472,12 +1462,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public static IntList with(int item0, int item1, int item2, int item3, int item4, int item5) {
 		IntList list = new IntList(6);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
+		list.add(item0, item1, item2, item3, item4, item5);
 		return list;
 	}
 
@@ -1495,13 +1480,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public static IntList with(int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
 		IntList list = new IntList(7);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
+		list.add(item0, item1, item2, item3, item4, item5, item6);
 		return list;
 	}
 
@@ -1519,14 +1498,7 @@ public class IntList implements PrimitiveCollection.OfInt, Ordered.OfInt, Arrang
 	 */
 	public static IntList with(int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
 		IntList list = new IntList(8);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
-		list.add(item7);
+		list.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return list;
 	}
 

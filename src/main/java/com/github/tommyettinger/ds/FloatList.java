@@ -1498,7 +1498,6 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 * @param item a float item
 	 * @return a new FloatList that holds the given item
 	 */
-
 	public static FloatList with(float item) {
 		FloatList list = new FloatList(1);
 		list.add(item);
@@ -1514,8 +1513,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public static FloatList with(float item0, float item1) {
 		FloatList list = new FloatList(2);
-		list.add(item0);
-		list.add(item1);
+		list.add(item0, item1);
 		return list;
 	}
 
@@ -1529,9 +1527,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public static FloatList with(float item0, float item1, float item2) {
 		FloatList list = new FloatList(3);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
+		list.add(item0, item1, item2);
 		return list;
 	}
 
@@ -1546,10 +1542,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public static FloatList with(float item0, float item1, float item2, float item3) {
 		FloatList list = new FloatList(4);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
+		list.add(item0, item1, item2, item3);
 		return list;
 	}
 
@@ -1565,11 +1558,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public static FloatList with(float item0, float item1, float item2, float item3, float item4) {
 		FloatList list = new FloatList(5);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
+		list.add(item0, item1, item2, item3, item4);
 		return list;
 	}
 
@@ -1586,12 +1575,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public static FloatList with(float item0, float item1, float item2, float item3, float item4, float item5) {
 		FloatList list = new FloatList(6);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
+		list.add(item0, item1, item2, item3, item4, item5);
 		return list;
 	}
 
@@ -1609,13 +1593,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public static FloatList with(float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
 		FloatList list = new FloatList(7);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
+		list.add(item0, item1, item2, item3, item4, item5, item6);
 		return list;
 	}
 
@@ -1633,14 +1611,7 @@ public class FloatList implements PrimitiveCollection.OfFloat, Ordered.OfFloat, 
 	 */
 	public static FloatList with(float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
 		FloatList list = new FloatList(8);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
-		list.add(item7);
+		list.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return list;
 	}
 

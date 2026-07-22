@@ -1401,8 +1401,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	public static ByteList with(byte item0, byte item1) {
 		ByteList list = new ByteList(2);
-		list.add(item0);
-		list.add(item1);
+		list.add(item0, item1);
 		return list;
 	}
 
@@ -1416,9 +1415,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	public static ByteList with(byte item0, byte item1, byte item2) {
 		ByteList list = new ByteList(3);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
+		list.add(item0, item1, item2);
 		return list;
 	}
 
@@ -1433,10 +1430,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	public static ByteList with(byte item0, byte item1, byte item2, byte item3) {
 		ByteList list = new ByteList(4);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
+		list.add(item0, item1, item2, item3);
 		return list;
 	}
 
@@ -1452,11 +1446,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	public static ByteList with(byte item0, byte item1, byte item2, byte item3, byte item4) {
 		ByteList list = new ByteList(5);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
+		list.add(item0, item1, item2, item3, item4);
 		return list;
 	}
 
@@ -1473,12 +1463,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	public static ByteList with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
 		ByteList list = new ByteList(6);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
+		list.add(item0, item1, item2, item3, item4, item5);
 		return list;
 	}
 
@@ -1496,13 +1481,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	public static ByteList with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
 		ByteList list = new ByteList(7);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
+		list.add(item0, item1, item2, item3, item4, item5, item6);
 		return list;
 	}
 
@@ -1520,14 +1499,7 @@ public class ByteList implements PrimitiveCollection.OfByte, Ordered.OfByte, Arr
 	 */
 	public static ByteList with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
 		ByteList list = new ByteList(8);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
-		list.add(item7);
+		list.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return list;
 	}
 

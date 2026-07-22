@@ -1400,8 +1400,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public static LongList with(long item0, long item1) {
 		LongList list = new LongList(2);
-		list.add(item0);
-		list.add(item1);
+		list.add(item0, item1);
 		return list;
 	}
 
@@ -1415,9 +1414,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public static LongList with(long item0, long item1, long item2) {
 		LongList list = new LongList(3);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
+		list.add(item0, item1, item2);
 		return list;
 	}
 
@@ -1432,10 +1429,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public static LongList with(long item0, long item1, long item2, long item3) {
 		LongList list = new LongList(4);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
+		list.add(item0, item1, item2, item3);
 		return list;
 	}
 
@@ -1451,11 +1445,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public static LongList with(long item0, long item1, long item2, long item3, long item4) {
 		LongList list = new LongList(5);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
+		list.add(item0, item1, item2, item3, item4);
 		return list;
 	}
 
@@ -1472,12 +1462,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public static LongList with(long item0, long item1, long item2, long item3, long item4, long item5) {
 		LongList list = new LongList(6);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
+		list.add(item0, item1, item2, item3, item4, item5);
 		return list;
 	}
 
@@ -1495,13 +1480,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public static LongList with(long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
 		LongList list = new LongList(7);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
+		list.add(item0, item1, item2, item3, item4, item5, item6);
 		return list;
 	}
 
@@ -1519,14 +1498,7 @@ public class LongList implements PrimitiveCollection.OfLong, Ordered.OfLong, Arr
 	 */
 	public static LongList with(long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
 		LongList list = new LongList(8);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
-		list.add(item7);
+		list.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return list;
 	}
 

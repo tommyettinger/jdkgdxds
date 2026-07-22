@@ -1398,8 +1398,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public static ShortList with(short item0, short item1) {
 		ShortList list = new ShortList(2);
-		list.add(item0);
-		list.add(item1);
+		list.add(item0, item1);
 		return list;
 	}
 
@@ -1413,9 +1412,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public static ShortList with(short item0, short item1, short item2) {
 		ShortList list = new ShortList(3);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
+		list.add(item0, item1, item2);
 		return list;
 	}
 
@@ -1430,10 +1427,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public static ShortList with(short item0, short item1, short item2, short item3) {
 		ShortList list = new ShortList(4);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
+		list.add(item0, item1, item2, item3);
 		return list;
 	}
 
@@ -1449,11 +1443,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public static ShortList with(short item0, short item1, short item2, short item3, short item4) {
 		ShortList list = new ShortList(5);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
+		list.add(item0, item1, item2, item3, item4);
 		return list;
 	}
 
@@ -1470,12 +1460,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public static ShortList with(short item0, short item1, short item2, short item3, short item4, short item5) {
 		ShortList list = new ShortList(6);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
+		list.add(item0, item1, item2, item3, item4, item5);
 		return list;
 	}
 
@@ -1493,13 +1478,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public static ShortList with(short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
 		ShortList list = new ShortList(7);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
+		list.add(item0, item1, item2, item3, item4, item5, item6);
 		return list;
 	}
 
@@ -1517,14 +1496,7 @@ public class ShortList implements PrimitiveCollection.OfShort, Ordered.OfShort, 
 	 */
 	public static ShortList with(short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
 		ShortList list = new ShortList(8);
-		list.add(item0);
-		list.add(item1);
-		list.add(item2);
-		list.add(item3);
-		list.add(item4);
-		list.add(item5);
-		list.add(item6);
-		list.add(item7);
+		list.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return list;
 	}
 
