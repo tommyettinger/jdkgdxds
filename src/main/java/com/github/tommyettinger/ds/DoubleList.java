@@ -224,6 +224,66 @@ public class DoubleList implements PrimitiveCollection.OfDouble, Ordered.OfDoubl
 		size += 4;
 	}
 
+	public void add (double value1, double value2, double value3, double value4, double value5) {
+		double[] items = this.items;
+		if (size + 4 >= items.length) {
+			items = resize(Math.max(11, (int)(size * 1.75f)));
+		}
+		items[size] = value1;
+		items[size + 1] = value2;
+		items[size + 2] = value3;
+		items[size + 3] = value4;
+		items[size + 4] = value5;
+		size += 5;
+	}
+
+	public void add (double value1, double value2, double value3, double value4, double value5, double value6) {
+		double[] items = this.items;
+		if (size + 5 >= items.length) {
+			items = resize(Math.max(13, (int) (size * 1.75f)));
+		}
+		items[size] = value1;
+		items[size + 1] = value2;
+		items[size + 2] = value3;
+		items[size + 3] = value4;
+		items[size + 4] = value5;
+		items[size + 5] = value6;
+		size += 6;
+	}
+
+	public void add (double value1, double value2, double value3, double value4, double value5, double value6,
+	                 double value7) {
+		double[] items = this.items;
+		if (size + 6 >= items.length) {
+			items = resize(Math.max(16, (int)(size * 1.75f)));
+		}
+		items[size] = value1;
+		items[size + 1] = value2;
+		items[size + 2] = value3;
+		items[size + 3] = value4;
+		items[size + 4] = value5;
+		items[size + 5] = value6;
+		items[size + 6] = value7;
+		size += 7;
+	}
+
+	public void add (double value1, double value2, double value3, double value4, double value5, double value6,
+	                 double value7, double value8) {
+		double[] items = this.items;
+		if (size + 7 >= items.length) {
+			items = resize(Math.max(18, (int)(size * 1.75f)));
+		}
+		items[size] = value1;
+		items[size + 1] = value2;
+		items[size + 2] = value3;
+		items[size + 3] = value4;
+		items[size + 4] = value5;
+		items[size + 5] = value6;
+		items[size + 6] = value7;
+		items[size + 7] = value8;
+		size += 8;
+	}
+
 	// Modified from libGDX
 	public boolean addAll(DoubleList list) {
 		return addAll(list.items, 0, list.size);
