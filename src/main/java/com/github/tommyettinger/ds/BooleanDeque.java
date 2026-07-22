@@ -257,6 +257,100 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 		size += 4;
 	}
 
+	public void addLast(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5) {
+		boolean[] items = this.items;
+
+		if (size + 5 > items.length)
+			items = resize(size + 5 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		size += 5;
+	}
+
+	public void addLast(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6) {
+		boolean[] items = this.items;
+
+		if (size + 6 > items.length)
+			items = resize(size + 6 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		size += 6;
+	}
+
+	public void addLast(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6,
+						boolean value7) {
+		boolean[] items = this.items;
+
+		if (size + 7 > items.length)
+			items = resize(size + 7 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value7;
+		size += 7;
+	}
+
+	public void addLast(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6,
+						boolean value7, boolean value8) {
+		boolean[] items = this.items;
+
+		if (size + 8 > items.length)
+			items = resize(size + 8 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value7;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value8;
+		size += 8;
+	}
+
 	/**
 	 * Prepend given value to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
 	 *
@@ -810,6 +904,28 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	@Override
 	public void add(boolean value1, boolean value2, boolean value3, boolean value4) {
 		addLast(value1, value2, value3, value4);
+	}
+
+	@Override
+	public void add(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5) {
+		addLast(value1, value2, value3, value4, value5);
+	}
+
+	@Override
+	public void add(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6) {
+		addLast(value1, value2, value3, value4, value5, value6);
+	}
+
+	@Override
+	public void add(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6,
+					boolean value7) {
+		addLast(value1, value2, value3, value4, value5, value6, value7);
+	}
+
+	@Override
+	public void add(boolean value1, boolean value2, boolean value3, boolean value4, boolean value5, boolean value6,
+					boolean value7, boolean value8) {
+		addLast(value1, value2, value3, value4, value5, value6, value7, value8);
 	}
 
 	/**
@@ -2819,8 +2935,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 */
 	public static BooleanDeque with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
 		BooleanDeque deque = new BooleanDeque(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -2837,8 +2952,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 */
 	public static BooleanDeque with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
 		BooleanDeque deque = new BooleanDeque(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -2856,8 +2970,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 */
 	public static BooleanDeque with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
 		BooleanDeque deque = new BooleanDeque(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -2876,8 +2989,7 @@ public class BooleanDeque extends BooleanList implements RandomAccess, Arrangeab
 	 */
 	public static BooleanDeque with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
 		BooleanDeque deque = new BooleanDeque(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 
