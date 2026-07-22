@@ -3074,8 +3074,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3, byte item4) {
 		ByteDeque deque = new ByteDeque(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -3092,8 +3091,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5) {
 		ByteDeque deque = new ByteDeque(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -3111,8 +3109,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6) {
 		ByteDeque deque = new ByteDeque(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -3131,8 +3128,7 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static ByteDeque with(byte item0, byte item1, byte item2, byte item3, byte item4, byte item5, byte item6, byte item7) {
 		ByteDeque deque = new ByteDeque(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 

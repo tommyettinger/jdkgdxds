@@ -3551,8 +3551,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static CharDeque with(char item0, char item1, char item2, char item3, char item4) {
 		CharDeque deque = new CharDeque(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -3569,8 +3568,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static CharDeque with(char item0, char item1, char item2, char item3, char item4, char item5) {
 		CharDeque deque = new CharDeque(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -3588,8 +3586,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static CharDeque with(char item0, char item1, char item2, char item3, char item4, char item5, char item6) {
 		CharDeque deque = new CharDeque(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -3608,8 +3605,7 @@ public class CharDeque extends CharList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static CharDeque with(char item0, char item1, char item2, char item3, char item4, char item5, char item6, char item7) {
 		CharDeque deque = new CharDeque(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 

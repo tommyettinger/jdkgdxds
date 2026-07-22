@@ -3241,8 +3241,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	public static FloatDeque with(float item0, float item1, float item2, float item3, float item4) {
 		FloatDeque deque = new FloatDeque(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -3259,8 +3258,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	public static FloatDeque with(float item0, float item1, float item2, float item3, float item4, float item5) {
 		FloatDeque deque = new FloatDeque(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -3278,8 +3276,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	public static FloatDeque with(float item0, float item1, float item2, float item3, float item4, float item5, float item6) {
 		FloatDeque deque = new FloatDeque(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -3298,8 +3295,7 @@ public class FloatDeque extends FloatList implements RandomAccess, Arrangeable, 
 	 */
 	public static FloatDeque with(float item0, float item1, float item2, float item3, float item4, float item5, float item6, float item7) {
 		FloatDeque deque = new FloatDeque(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 

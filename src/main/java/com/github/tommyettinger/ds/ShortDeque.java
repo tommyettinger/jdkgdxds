@@ -3075,8 +3075,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	public static ShortDeque with(short item0, short item1, short item2, short item3, short item4) {
 		ShortDeque deque = new ShortDeque(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -3093,8 +3092,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	public static ShortDeque with(short item0, short item1, short item2, short item3, short item4, short item5) {
 		ShortDeque deque = new ShortDeque(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -3112,8 +3110,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	public static ShortDeque with(short item0, short item1, short item2, short item3, short item4, short item5, short item6) {
 		ShortDeque deque = new ShortDeque(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -3132,8 +3129,7 @@ public class ShortDeque extends ShortList implements RandomAccess, Arrangeable, 
 	 */
 	public static ShortDeque with(short item0, short item1, short item2, short item3, short item4, short item5, short item6, short item7) {
 		ShortDeque deque = new ShortDeque(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 

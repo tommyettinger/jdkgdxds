@@ -3242,8 +3242,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	public static DoubleDeque with(double item0, double item1, double item2, double item3, double item4) {
 		DoubleDeque deque = new DoubleDeque(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -3260,8 +3259,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	public static DoubleDeque with(double item0, double item1, double item2, double item3, double item4, double item5) {
 		DoubleDeque deque = new DoubleDeque(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -3279,8 +3277,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	public static DoubleDeque with(double item0, double item1, double item2, double item3, double item4, double item5, double item6) {
 		DoubleDeque deque = new DoubleDeque(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -3299,8 +3296,7 @@ public class DoubleDeque extends DoubleList implements RandomAccess, Arrangeable
 	 */
 	public static DoubleDeque with(double item0, double item1, double item2, double item3, double item4, double item5, double item6, double item7) {
 		DoubleDeque deque = new DoubleDeque(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 

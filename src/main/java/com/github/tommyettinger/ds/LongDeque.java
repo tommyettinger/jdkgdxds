@@ -3075,8 +3075,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static LongDeque with(long item0, long item1, long item2, long item3, long item4) {
 		LongDeque deque = new LongDeque(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -3093,8 +3092,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static LongDeque with(long item0, long item1, long item2, long item3, long item4, long item5) {
 		LongDeque deque = new LongDeque(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -3112,8 +3110,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static LongDeque with(long item0, long item1, long item2, long item3, long item4, long item5, long item6) {
 		LongDeque deque = new LongDeque(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -3132,8 +3129,7 @@ public class LongDeque extends LongList implements RandomAccess, Arrangeable, Pr
 	 */
 	public static LongDeque with(long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7) {
 		LongDeque deque = new LongDeque(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 

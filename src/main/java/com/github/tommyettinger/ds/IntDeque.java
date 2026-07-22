@@ -3075,8 +3075,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 */
 	public static IntDeque with(int item0, int item1, int item2, int item3, int item4) {
 		IntDeque deque = new IntDeque(5);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4);
+		deque.add(item0, item1, item2, item3, item4);
 		return deque;
 	}
 
@@ -3093,8 +3092,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 */
 	public static IntDeque with(int item0, int item1, int item2, int item3, int item4, int item5) {
 		IntDeque deque = new IntDeque(6);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5);
+		deque.add(item0, item1, item2, item3, item4, item5);
 		return deque;
 	}
 
@@ -3112,8 +3110,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 */
 	public static IntDeque with(int item0, int item1, int item2, int item3, int item4, int item5, int item6) {
 		IntDeque deque = new IntDeque(7);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6);
+		deque.add(item0, item1, item2, item3, item4, item5, item6);
 		return deque;
 	}
 
@@ -3132,8 +3129,7 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 	 */
 	public static IntDeque with(int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7) {
 		IntDeque deque = new IntDeque(8);
-		deque.add(item0, item1, item2, item3);
-		deque.add(item4, item5, item6, item7);
+		deque.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return deque;
 	}
 
