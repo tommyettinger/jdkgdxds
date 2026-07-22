@@ -720,8 +720,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 */
 	public static EnumOrderedSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4) {
 		EnumOrderedSet set = new EnumOrderedSet();
-		set.add(item0, item1, item2, item3);
-		set.add(item4);
+		set.add(item0, item1, item2, item3, item4);
 		return set;
 	}
 
@@ -738,8 +737,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 */
 	public static EnumOrderedSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5) {
 		EnumOrderedSet set = new EnumOrderedSet();
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5);
+		set.add(item0, item1, item2, item3, item4, item5);
 		return set;
 	}
 
@@ -757,8 +755,7 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 */
 	public static EnumOrderedSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6) {
 		EnumOrderedSet set = new EnumOrderedSet();
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6);
+		set.add(item0, item1, item2, item3, item4, item5, item6);
 		return set;
 	}
 
@@ -772,12 +769,12 @@ public class EnumOrderedSet extends EnumSet implements Ordered<Enum<?>> {
 	 * @param item4 an Enum item
 	 * @param item5 an Enum item
 	 * @param item6 an Enum item
+	 * @param item7 an Enum item
 	 * @return a new EnumOrderedSet that holds the given items
 	 */
 	public static EnumOrderedSet with(Enum<?> item0, Enum<?> item1, Enum<?> item2, Enum<?> item3, Enum<?> item4, Enum<?> item5, Enum<?> item6, Enum<?> item7) {
 		EnumOrderedSet set = new EnumOrderedSet();
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6, item7);
+		set.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return set;
 	}
 

@@ -243,8 +243,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 */
 	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(5);
-		set.add(item0, item1, item2, item3);
-		set.add(item4);
+		set.add(item0, item1, item2, item3, item4);
 		return set;
 	}
 
@@ -261,8 +260,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 */
 	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(6);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5);
+		set.add(item0, item1, item2, item3, item4, item5);
 		return set;
 	}
 
@@ -280,8 +278,7 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 */
 	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(7);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6);
+		set.add(item0, item1, item2, item3, item4, item5, item6);
 		return set;
 	}
 
@@ -295,12 +292,12 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 	 * @param item4 a CharSequence item
 	 * @param item5 a CharSequence item
 	 * @param item6 a CharSequence item
+	 * @param item7 a CharSequence item
 	 * @return a new CaseInsensitiveSet that holds the given items
 	 */
 	public static CaseInsensitiveSet with(CharSequence item0, CharSequence item1, CharSequence item2, CharSequence item3, CharSequence item4, CharSequence item5, CharSequence item6, CharSequence item7) {
 		CaseInsensitiveSet set = new CaseInsensitiveSet(8);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6, item7);
+		set.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return set;
 	}
 
