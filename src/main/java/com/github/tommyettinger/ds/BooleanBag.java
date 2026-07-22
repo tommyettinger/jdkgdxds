@@ -232,8 +232,7 @@ public class BooleanBag extends BooleanList {
 	 */
 	public static BooleanBag with(boolean item0, boolean item1) {
 		BooleanBag bag = new BooleanBag(2);
-		bag.add(item0);
-		bag.add(item1);
+		bag.add(item0, item1);
 		return bag;
 	}
 
@@ -247,9 +246,7 @@ public class BooleanBag extends BooleanList {
 	 */
 	public static BooleanBag with(boolean item0, boolean item1, boolean item2) {
 		BooleanBag bag = new BooleanBag(3);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
+		bag.add(item0, item1, item2);
 		return bag;
 	}
 
@@ -264,10 +261,7 @@ public class BooleanBag extends BooleanList {
 	 */
 	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3) {
 		BooleanBag bag = new BooleanBag(4);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
+		bag.add(item0, item1, item2, item3);
 		return bag;
 	}
 
@@ -283,11 +277,7 @@ public class BooleanBag extends BooleanList {
 	 */
 	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4) {
 		BooleanBag bag = new BooleanBag(5);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
+		bag.add(item0, item1, item2, item3, item4);
 		return bag;
 	}
 
@@ -304,12 +294,7 @@ public class BooleanBag extends BooleanList {
 	 */
 	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5) {
 		BooleanBag bag = new BooleanBag(6);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
+		bag.add(item0, item1, item2, item3, item4, item5);
 		return bag;
 	}
 
@@ -327,13 +312,7 @@ public class BooleanBag extends BooleanList {
 	 */
 	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6) {
 		BooleanBag bag = new BooleanBag(7);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
+		bag.add(item0, item1, item2, item3, item4, item5, item6);
 		return bag;
 	}
 
@@ -351,14 +330,7 @@ public class BooleanBag extends BooleanList {
 	 */
 	public static BooleanBag with(boolean item0, boolean item1, boolean item2, boolean item3, boolean item4, boolean item5, boolean item6, boolean item7) {
 		BooleanBag bag = new BooleanBag(8);
-		bag.add(item0);
-		bag.add(item1);
-		bag.add(item2);
-		bag.add(item3);
-		bag.add(item4);
-		bag.add(item5);
-		bag.add(item6);
-		bag.add(item7);
+		bag.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return bag;
 	}
 
