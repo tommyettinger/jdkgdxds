@@ -68,6 +68,68 @@ public interface EnhancedCollection<T> extends Collection<T> {
 	}
 
 	/**
+	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 *
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return true if this modified the set
+	 */
+	default boolean add(T item0, T item1, T item2, T item3, T item4) {
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4);
+	}
+
+	/**
+	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 *
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return true if this modified the set
+	 */
+	default boolean add(T item0, T item1, T item2, T item3, T item4, T item5) {
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5);
+	}
+
+	/**
+	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 *
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return true if this modified the set
+	 */
+	default boolean add(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5) | add(item6);
+	}
+
+	/**
+	 * Adds all parameters using {@link #add(Object)} for each one. Returns true if the set was modified.
+	 *
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @param item7 a T item
+	 * @return true if this modified the set
+	 */
+	default boolean add(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5) | add(item6) | add(item7);
+	}
+
+	/**
 	 * Gets the {@link Iterable#iterator()} from the parameter and delegates to {@link #addAll(Iterator)}.
 	 *
 	 * @param it an Iterable of items to append to this EnhancedCollection
