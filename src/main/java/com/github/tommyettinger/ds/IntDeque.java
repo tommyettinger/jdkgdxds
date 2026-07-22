@@ -258,6 +258,100 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		size += 4;
 	}
 
+	public void addLast(int value1, int value2, int value3, int value4, int value5) {
+		int[] items = this.items;
+
+		if (size + 5 > items.length)
+			items = resize(size + 5 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		size += 5;
+	}
+
+	public void addLast(int value1, int value2, int value3, int value4, int value5, int value6) {
+		int[] items = this.items;
+
+		if (size + 6 > items.length)
+			items = resize(size + 6 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		size += 6;
+	}
+
+	public void addLast(int value1, int value2, int value3, int value4, int value5, int value6,
+	                    int value7) {
+		int[] items = this.items;
+
+		if (size + 7 > items.length)
+			items = resize(size + 7 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value7;
+		size += 7;
+	}
+
+	public void addLast(int value1, int value2, int value3, int value4, int value5, int value6,
+	                    int value7, int value8) {
+		int[] items = this.items;
+
+		if (size + 8 > items.length)
+			items = resize(size + 8 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value7;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value8;
+		size += 8;
+	}
+
 	/**
 	 * Prepend given value to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
 	 *
@@ -332,6 +426,113 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		if (--head == -1) head = items.length - 1;
 		items[head] = value1;
 		size += 4;
+
+		this.head = head;
+	}
+
+	public void addFirst(int value1, int value2, int value3, int value4, int value5) {
+		int[] items = this.items;
+
+		if (size + 5 > items.length)
+			items = resize(size + 5 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 5;
+
+		this.head = head;
+	}
+
+	public void addFirst(int value1, int value2, int value3, int value4, int value5,
+	                     int value6) {
+		int[] items = this.items;
+
+		if (size + 6 > items.length)
+			items = resize(size + 6 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 6;
+
+		this.head = head;
+	}
+
+	public void addFirst(int value1, int value2, int value3, int value4, int value5,
+	                     int value6, int value7) {
+		int[] items = this.items;
+
+		if (size + 7 > items.length)
+			items = resize(size + 7 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value7;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 7;
+
+		this.head = head;
+	}
+
+	public void addFirst(int value1, int value2, int value3, int value4, int value5,
+	                     int value6, int value7, int value8) {
+		int[] items = this.items;
+
+		if (size + 8 > items.length)
+			items = resize(size + 8 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value8;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value7;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 8;
 
 		this.head = head;
 	}
@@ -813,6 +1014,27 @@ public class IntDeque extends IntList implements RandomAccess, Arrangeable, Prim
 		addLast(value1, value2, value3, value4);
 	}
 
+	@Override
+	public void add(int value1, int value2, int value3, int value4, int value5) {
+		addLast(value1, value2, value3, value4, value5);
+	}
+
+	@Override
+	public void add(int value1, int value2, int value3, int value4, int value5, int value6) {
+		addLast(value1, value2, value3, value4, value5, value6);
+	}
+
+	@Override
+	public void add(int value1, int value2, int value3, int value4, int value5, int value6,
+	                int value7) {
+		addLast(value1, value2, value3, value4, value5, value6, value7);
+	}
+
+	@Override
+	public void add(int value1, int value2, int value3, int value4, int value5, int value6,
+	                int value7, int value8) {
+		addLast(value1, value2, value3, value4, value5, value6, value7, value8);
+	}
 	/**
 	 * Inserts the specified element into this deque at the specified index.
 	 * Unlike {@link #offerFirst(int)} and {@link #offerLast(int)}, this does not run in expected constant time unless

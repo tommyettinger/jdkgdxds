@@ -258,6 +258,100 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		size += 4;
 	}
 
+	public void addLast(byte value1, byte value2, byte value3, byte value4, byte value5) {
+		byte[] items = this.items;
+
+		if (size + 5 > items.length)
+			items = resize(size + 5 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		size += 5;
+	}
+
+	public void addLast(byte value1, byte value2, byte value3, byte value4, byte value5, byte value6) {
+		byte[] items = this.items;
+
+		if (size + 6 > items.length)
+			items = resize(size + 6 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		size += 6;
+	}
+
+	public void addLast(byte value1, byte value2, byte value3, byte value4, byte value5, byte value6,
+	                    byte value7) {
+		byte[] items = this.items;
+
+		if (size + 7 > items.length)
+			items = resize(size + 7 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value7;
+		size += 7;
+	}
+
+	public void addLast(byte value1, byte value2, byte value3, byte value4, byte value5, byte value6,
+	                    byte value7, byte value8) {
+		byte[] items = this.items;
+
+		if (size + 8 > items.length)
+			items = resize(size + 8 << 1);
+
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value7;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value8;
+		size += 8;
+	}
+
 	/**
 	 * Prepend given value to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
 	 *
@@ -332,6 +426,113 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 		if (--head == -1) head = items.length - 1;
 		items[head] = value1;
 		size += 4;
+
+		this.head = head;
+	}
+
+	public void addFirst(byte value1, byte value2, byte value3, byte value4, byte value5) {
+		byte[] items = this.items;
+
+		if (size + 5 > items.length)
+			items = resize(size + 5 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 5;
+
+		this.head = head;
+	}
+
+	public void addFirst(byte value1, byte value2, byte value3, byte value4, byte value5,
+	                     byte value6) {
+		byte[] items = this.items;
+
+		if (size + 6 > items.length)
+			items = resize(size + 6 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 6;
+
+		this.head = head;
+	}
+
+	public void addFirst(byte value1, byte value2, byte value3, byte value4, byte value5,
+	                     byte value6, byte value7) {
+		byte[] items = this.items;
+
+		if (size + 7 > items.length)
+			items = resize(size + 7 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value7;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 7;
+
+		this.head = head;
+	}
+
+	public void addFirst(byte value1, byte value2, byte value3, byte value4, byte value5,
+	                     byte value6, byte value7, byte value8) {
+		byte[] items = this.items;
+
+		if (size + 8 > items.length)
+			items = resize(size + 8 << 1);
+
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value8;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value7;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 8;
 
 		this.head = head;
 	}
@@ -811,6 +1012,28 @@ public class ByteDeque extends ByteList implements RandomAccess, Arrangeable, Pr
 	@Override
 	public void add(byte value1, byte value2, byte value3, byte value4) {
 		addLast(value1, value2, value3, value4);
+	}
+
+	@Override
+	public void add(byte value1, byte value2, byte value3, byte value4, byte value5) {
+		addLast(value1, value2, value3, value4, value5);
+	}
+
+	@Override
+	public void add(byte value1, byte value2, byte value3, byte value4, byte value5, byte value6) {
+		addLast(value1, value2, value3, value4, value5, value6);
+	}
+
+	@Override
+	public void add(byte value1, byte value2, byte value3, byte value4, byte value5, byte value6,
+	                byte value7) {
+		addLast(value1, value2, value3, value4, value5, value6, value7);
+	}
+
+	@Override
+	public void add(byte value1, byte value2, byte value3, byte value4, byte value5, byte value6,
+	                byte value7, byte value8) {
+		addLast(value1, value2, value3, value4, value5, value6, value7, value8);
 	}
 
 	/**
