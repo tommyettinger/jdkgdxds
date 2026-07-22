@@ -411,8 +411,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4) {
 		FilteredStringSet set = new FilteredStringSet(filter, 5);
-		set.add(item0, item1, item2, item3);
-		set.add(item4);
+		set.add(item0, item1, item2, item3, item4);
 		return set;
 	}
 
@@ -430,8 +429,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5) {
 		FilteredStringSet set = new FilteredStringSet(filter, 6);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5);
+		set.add(item0, item1, item2, item3, item4, item5);
 		return set;
 	}
 
@@ -450,8 +448,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5, String item6) {
 		FilteredStringSet set = new FilteredStringSet(filter, 7);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6);
+		set.add(item0, item1, item2, item3, item4, item5, item6);
 		return set;
 	}
 
@@ -466,12 +463,12 @@ public class FilteredStringSet extends ObjectSet<String> {
 	 * @param item4  a String item
 	 * @param item5  a String item
 	 * @param item6  a String item
+	 * @param item7  a String item
 	 * @return a new FilteredStringSet that holds the given items
 	 */
 	public static FilteredStringSet with(CharFilter filter, String item0, String item1, String item2, String item3, String item4, String item5, String item6, String item7) {
 		FilteredStringSet set = new FilteredStringSet(filter, 8);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6, item7);
+		set.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return set;
 	}
 

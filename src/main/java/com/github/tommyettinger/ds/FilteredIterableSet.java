@@ -406,8 +406,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4) {
 		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 5);
-		set.add(item0, item1, item2, item3);
-		set.add(item4);
+		set.add(item0, item1, item2, item3, item4);
 		return set;
 	}
 
@@ -428,8 +427,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5) {
 		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 6);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5);
+		set.add(item0, item1, item2, item3, item4, item5);
 		return set;
 	}
 
@@ -451,8 +449,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5, I item6) {
 		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 7);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6);
+		set.add(item0, item1, item2, item3, item4, item5, item6);
 		return set;
 	}
 
@@ -475,8 +472,7 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5, I item6, I item7) {
 		FilteredIterableSet<T, I> set = new FilteredIterableSet<>(filter, editor, 8);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6, item7);
+		set.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return set;
 	}
 

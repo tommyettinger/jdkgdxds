@@ -707,8 +707,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 5);
-		set.add(item0, item1, item2, item3);
-		set.add(item4);
+		set.add(item0, item1, item2, item3, item4);
 		return set;
 	}
 
@@ -728,8 +727,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 6);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5);
+		set.add(item0, item1, item2, item3, item4, item5);
 		return set;
 	}
 
@@ -750,8 +748,7 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 7);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6);
+		set.add(item0, item1, item2, item3, item4, item5, item6);
 		return set;
 	}
 
@@ -766,14 +763,14 @@ public class HolderOrderedSet<T, K> extends HolderSet<T, K> implements Ordered<T
 	 * @param item4     a T item
 	 * @param item5     a T item
 	 * @param item6     a T item
+	 * @param item7     a T item
 	 * @param <T>       the type of item, typically inferred
 	 * @param <K>       the type of keys that extractor pulls from T items
 	 * @return a new HolderOrderedSet that holds the given items
 	 */
 	public static <T, K> HolderOrderedSet<T, K> with(ObjToObjFunction<T, K> extractor, T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
 		HolderOrderedSet<T, K> set = new HolderOrderedSet<>(extractor, 8);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6, item7);
+		set.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return set;
 	}
 

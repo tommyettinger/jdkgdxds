@@ -567,8 +567,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4) {
 		FilteredIterableOrderedSet<T, I> set = new FilteredIterableOrderedSet<>(filter, editor, 5);
-		set.add(item0, item1, item2, item3);
-		set.add(item4);
+		set.add(item0, item1, item2, item3, item4);
 		return set;
 	}
 
@@ -589,8 +588,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5) {
 		FilteredIterableOrderedSet<T, I> set = new FilteredIterableOrderedSet<>(filter, editor, 6);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5);
+		set.add(item0, item1, item2, item3, item4, item5);
 		return set;
 	}
 
@@ -612,8 +610,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5, I item6) {
 		FilteredIterableOrderedSet<T, I> set = new FilteredIterableOrderedSet<>(filter, editor, 7);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6);
+		set.add(item0, item1, item2, item3, item4, item5, item6);
 		return set;
 	}
 
@@ -636,8 +633,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	 */
 	public static <T, I extends Iterable<T>> FilteredIterableOrderedSet<T, I> with(ObjPredicate<T> filter, ObjToSameFunction<T> editor, I item0, I item1, I item2, I item3, I item4, I item5, I item6, I item7) {
 		FilteredIterableOrderedSet<T, I> set = new FilteredIterableOrderedSet<>(filter, editor, 8);
-		set.add(item0, item1, item2, item3);
-		set.add(item4, item5, item6, item7);
+		set.add(item0, item1, item2, item3, item4, item5, item6, item7);
 		return set;
 	}
 
