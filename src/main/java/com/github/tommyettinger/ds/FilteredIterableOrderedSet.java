@@ -390,7 +390,7 @@ public class FilteredIterableOrderedSet<T, I extends Iterable<T>> extends Object
 	}
 
 	protected int hashHelper(I s) {
-		int hash = 0;
+		int hash = hashMultiplier;
 		for (T c : s) {
 			if (filter.test(c)) {
 				hash = BitConversion.imul(hash ^ editor.apply(c).hashCode(), 0xC143F257);

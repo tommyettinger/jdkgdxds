@@ -98,4 +98,4 @@ create smaller sets or maps when we use the copy constructor, but
 for putAll(), it might apply if the call we already did to
 ensureCapacity() didn't increase the capacity. If this performs
 worse by a noticeable amount, I might undo the change, but it only
-entails a XOR with `mask` instead of a XOR with a constant.
+entails a XOR with `hashMultiplier` instead of a XOR with a constant.

@@ -151,7 +151,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		this.threshold = map.threshold;
 		this.mask = map.mask;
 		this.shift = map.shift;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - this.shift];
+		this.hashMultiplier = map.hashMultiplier;
 
 		keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
 		valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);

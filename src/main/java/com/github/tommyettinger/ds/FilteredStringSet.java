@@ -45,14 +45,6 @@ import java.util.Collection;
  * will work identically on all platforms.
  */
 public class FilteredStringSet extends ObjectSet<String> {
-	/**
-	 * Used by {@link #hashHelper(String)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This should always change when {@link #shift} changes, meaning, when the backing table resizes.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link FilteredStringOrderedSet}.
-	 */
-	protected int hashMultiplier;
-
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);
 
 	/**

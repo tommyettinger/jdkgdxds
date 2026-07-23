@@ -54,14 +54,6 @@ import java.util.Comparator;
  * for Strings that uses the same rules this class does.
  */
 public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
-
-	/**
-	 * Used by {@link #hashHelper(String)} to mix hashCode() results. Changes on every call to {@link #resize(int)} by default.
-	 * This should always change when {@link #shift} changes, meaning, when the backing table resizes.
-	 * This only needs to be serialized if the full key and value tables are serialized.
-	 */
-	protected int hashMultiplier;
-
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);
 
 	/**

@@ -1,3 +1,7 @@
+[2.1.6]
+- The protected field `hashMultiplier` is back in maps and sets after it was shown by https://sooniln.github.io/posts/hashmap-benchmarks-2026/ that using just the upper bits of colliding hashCode()s, without changing the multiplier or the XOR value, stay colliding even in smaller maps. The new approach avoids collisions when colliding keys are inserted into a different size of map, and when the map resizes, any collisions change.
+- add() methods in EnhancedCollection and all primitive-backed lists, bags, and deques now can take up to 8 parameters without allocating varargs, instead of up to 4 before.
+
 [2.1.5]
 - jdkgdxds is now distributed via JitPack.io for stable releases as well as commit releases.
 - The dependency on digital updated to 0.10.2. This should be identical to 0.10.1 other than coming from JitPack.io .
