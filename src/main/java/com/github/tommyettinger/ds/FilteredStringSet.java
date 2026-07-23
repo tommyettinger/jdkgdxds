@@ -290,7 +290,7 @@ public class FilteredStringSet extends ObjectSet<String> {
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.FILTERED_HASH_MULTIPLIERS[64 - shift];
 
 		Object[] oldKeyTable = keyTable;
 
