@@ -96,6 +96,15 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 */
 	protected int mask;
 
+	/**
+	 * Used by {@link #place} to mix hashCode() results.
+	 * This isn't actually used as a multiplier in most place() implementations, but as a kind of hash seed.
+	 * It usually changes whenever {@link #resize(int)} is called.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization.
+	 */
+	protected int hashMultiplier;
+
 	public long defaultValue = 0;
 
 	/**
@@ -131,6 +140,8 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+
 		keyTable = new long[tableSize];
 		valueTable = new long[tableSize];
 	}
@@ -142,6 +153,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 */
 	public LongLongMap(LongLongMap map) {
 		this((int) (map.keyTable.length * map.loadFactor), map.loadFactor);
+		hashMultiplier = map.hashMultiplier;
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -197,7 +209,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place(long item) {
-		return (int) ((item ^ mask) * 0xD1B54A32D192ED03L >>> shift);
+		return (int) ((item ^ hashMultiplier) * 0xD1B54A32D192ED03L >>> shift);
 	}
 
 	/**
@@ -614,6 +626,7 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 
 		long[] oldKeyTable = keyTable;
 		long[] oldValueTable = valueTable;
@@ -632,21 +645,24 @@ public class LongLongMap implements Iterable<LongLongMap.Entry> {
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is not used currently.
+	 * The "hashMultiplier" is really used like a hash seed to modify how {@link #place} mixes hash codes.
+	 * It changes every time the capacity does, when the table resizes.
 	 *
-	 * @return 1; a hashMultiplier is not used in this class
+	 * @return the hash seed currently used at this capacity
 	 */
 	public int getHashMultiplier() {
-		return 1;
+		return hashMultiplier;
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is not used currently.
-	 * Subclasses can use this to set some kind of identifier or user data, though.
+	 * Sets the "hashMultiplier."
+	 * The "hashMultiplier" is really used like a hash seed to modify how {@link #place} mixes hash codes.
+	 * Subclasses can also use this to set some kind of identifier or user data if they don't use a seed in place().
 	 *
-	 * @param hashMultiplier any int; will not be used
+	 * @param hashMultiplier any int to use as a hash seed; this does not have any constraints in this implementation
 	 */
 	public void setHashMultiplier(int hashMultiplier) {
+		this.hashMultiplier = hashMultiplier;
 	}
 
 	/**
