@@ -48,13 +48,6 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * will work identically on all platforms.
  */
 public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
-	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization. Iteration order is better handled by using {@link FilteredStringOrderedMap}.
-	 */
-	protected int hashMultiplier;
-
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);
 
 	/**

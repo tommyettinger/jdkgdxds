@@ -57,12 +57,6 @@ import static com.github.tommyettinger.ds.Utilities.neverIdentical;
  * for Strings that uses the same rules this class does.
  */
 public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, V> {
-	/**
-	 * Used by {@link #place(Object)} to mix hashCode() results.
-	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
-	 * the same before and after serialization.
-	 */
-	protected int hashMultiplier;
 
 	protected CharFilter filter = CharFilter.getOrCreate("Identity", c -> true, c -> c);
 
