@@ -95,6 +95,15 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 */
 	protected int mask;
 
+	/**
+	 * Used by {@link #place} to mix hashCode() results.
+	 * This isn't actually used as a multiplier in most place() implementations, but as a kind of hash seed.
+	 * It usually changes whenever {@link #resize(int)} is called.
+	 * This only needs to be serialized if the full key and value tables are serialized, or if the iteration order should be
+	 * the same before and after serialization.
+	 */
+	protected int hashMultiplier;
+
 	public float defaultValue = 0;
 
 	/**
@@ -130,6 +139,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
 		keyTable = new int[tableSize];
 		valueTable = new float[tableSize];
 	}
@@ -141,6 +151,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 */
 	public IntFloatMap(IntFloatMap map) {
 		this((int) (map.keyTable.length * map.loadFactor), map.loadFactor);
+		hashMultiplier = map.hashMultiplier;
 		System.arraycopy(map.keyTable, 0, keyTable, 0, map.keyTable.length);
 		System.arraycopy(map.valueTable, 0, valueTable, 0, map.valueTable.length);
 		size = map.size;
@@ -196,7 +207,7 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	 * @return an index between 0 and {@link #mask} (both inclusive)
 	 */
 	protected int place(int item) {
-		return BitConversion.imul(item ^ mask, 0xFAB9E45B) >>> shift;
+		return BitConversion.imul(item ^ hashMultiplier, 0xFAB9E45B) >>> shift;
 	}
 
 	/**
@@ -657,6 +668,8 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+
 		int[] oldKeyTable = keyTable;
 		float[] oldValueTable = valueTable;
 
@@ -674,21 +687,24 @@ public class IntFloatMap implements Iterable<IntFloatMap.Entry> {
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is not used currently.
+	 * The "hashMultiplier" is really used like a hash seed to modify how {@link #place} mixes hash codes.
+	 * It changes every time the capacity does, when the table resizes.
 	 *
-	 * @return 1; a hashMultiplier is not used in this class
+	 * @return the hash seed currently used at this capacity
 	 */
 	public int getHashMultiplier() {
-		return 1;
+		return hashMultiplier;
 	}
 
 	/**
-	 * Effectively does nothing here because the hashMultiplier is not used currently.
-	 * Subclasses can use this to set some kind of identifier or user data, though.
+	 * Sets the "hashMultiplier" if and only if this has size 0.
+	 * The "hashMultiplier" is really used like a hash seed to modify how {@link #place} mixes hash codes.
+	 * Subclasses can also use this to set some kind of identifier or user data if they don't use a seed in place().
 	 *
-	 * @param hashMultiplier any int; will not be used
+	 * @param hashMultiplier any int to use as a hash seed; this does not have any constraints in this implementation
 	 */
 	public void setHashMultiplier(int hashMultiplier) {
+		if(size == 0) this.hashMultiplier = hashMultiplier;
 	}
 
 	/**
