@@ -698,14 +698,14 @@ public class LongFloatMap implements Iterable<LongFloatMap.Entry> {
 	}
 
 	/**
-	 * Sets the "hashMultiplier."
+	 * Sets the "hashMultiplier" if and only if this has size 0.
 	 * The "hashMultiplier" is really used like a hash seed to modify how {@link #place} mixes hash codes.
 	 * Subclasses can also use this to set some kind of identifier or user data if they don't use a seed in place().
 	 *
 	 * @param hashMultiplier any int to use as a hash seed; this does not have any constraints in this implementation
 	 */
 	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = hashMultiplier;
+		if(size == 0) this.hashMultiplier = hashMultiplier;
 	}
 
 	/**
