@@ -311,13 +311,14 @@ public class FilteredStringSet extends ObjectSet<String> {
 
 	/**
 	 * Sets the hashMultiplier to the given int, which will be made odd if even (by OR-ing with 1) and limited to at
-	 * most 16 bits. This can be any odd int, but should almost always be drawn from
+	 * most 16 bits. If this is not empty, this method does nothing.
+	 * The hashMultiplier be any odd int less than 65536, but should almost always be drawn from
 	 * {@link Utilities#FILTERED_HASH_MULTIPLIERS} or something like it.
 	 *
 	 * @param hashMultiplier any int; will be made odd if even, and limited to 16 bits
 	 */
 	public void setHashMultiplier(int hashMultiplier) {
-		this.hashMultiplier = (hashMultiplier & 0xFFFF) | 1;
+		if(size == 0) this.hashMultiplier = (hashMultiplier & 0xFFFF) | 1;
 	}
 
 	/**
