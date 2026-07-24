@@ -489,22 +489,21 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	/**
-	 * Gets the current hashMultiplier, used in {@link #place} to mix hash codes.
-	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
-	 * {@link Utilities#HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.
+	 * The "hashMultiplier" is really used like a hash seed to modify how {@link #place} mixes hash codes.
+	 * It changes every time the capacity does, when the table resizes.
 	 *
-	 * @return the current hashMultiplier
+	 * @return the hash seed currently used at this capacity
 	 */
 	public int getHashMultiplier() {
 		return map.getHashMultiplier();
 	}
 
 	/**
-	 * Sets the hashMultiplier to the given int, which will be made odd if even (by OR-ing with
-	 * 1). This can be any odd int, but should almost always be drawn from
-	 * {@link Utilities#HASH_MULTIPLIERS} or something like it.
+	 * Sets the "hashMultiplier" if and only if this has size 0.
+	 * The "hashMultiplier" is really used like a hash seed to modify how {@link #place} mixes hash codes.
+	 * Subclasses can also use this to set some kind of identifier or user data if they don't use a seed in place().
 	 *
-	 * @param hashMultiplier any int; will be made odd if even.
+	 * @param hashMultiplier any int to use as a hash seed; this does not have any constraints in this implementation
 	 */
 	public void setHashMultiplier(int hashMultiplier) {
 		map.setHashMultiplier(hashMultiplier);
