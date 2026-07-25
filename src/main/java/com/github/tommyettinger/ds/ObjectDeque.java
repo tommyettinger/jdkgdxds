@@ -277,6 +277,108 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 		modCount += 4;
 	}
 
+	public void addLast(T value1, T value2, T value3, T value4, T value5) {
+		T[] items = this.items;
+
+		if (size + 5 > items.length) {
+			resize(size + 5 << 1);
+			items = this.items;
+		}
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		size += 5;
+		modCount += 5;
+	}
+
+	public void addLast(T value1, T value2, T value3, T value4, T value5, T value6) {
+		T[] items = this.items;
+
+		if (size + 6 > items.length) {
+			resize(size + 6 << 1);
+			items = this.items;
+		}
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		size += 6;
+		modCount += 6;
+	}
+
+	public void addLast(T value1, T value2, T value3, T value4, T value5, T value6,
+	                    T value7) {
+		T[] items = this.items;
+
+		if (size + 7 > items.length) {
+			resize(size + 7 << 1);
+			items = this.items;
+		}
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value7;
+		size += 7;
+		modCount += 7;
+	}
+
+	public void addLast(T value1, T value2, T value3, T value4, T value5, T value6,
+	                    T value7, T value8) {
+		T[] items = this.items;
+
+		if (size + 8 > items.length) {
+			resize(size + 8 << 1);
+			items = this.items;
+		}
+		if (++tail == items.length) tail = 0;
+		if (size == 0) tail = head;
+		items[tail] = value1;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value2;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value3;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value4;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value5;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value6;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value7;
+		if (++tail == items.length) tail = 0;
+		items[tail] = value8;
+		size += 8;
+		modCount += 8;
+	}
+
 	/**
 	 * Prepends {@code value} to the head (enqueue to head). Unless backing array needs resizing, operates in O(1) time.
 	 *
@@ -906,6 +1008,30 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 	@Override
 	public boolean add(T item0, T item1, T item2, T item3) {
 		addLast(item0, item1, item2, item3);
+		return true;
+	}
+
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4) {
+		addLast(item0, item1, item2, item3, item4);
+		return true;
+	}
+
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5) {
+		addLast(item0, item1, item2, item3, item4, item5);
+		return true;
+	}
+
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		addLast(item0, item1, item2, item3, item4, item5, item6);
+		return true;
+	}
+
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		addLast(item0, item1, item2, item3, item4, item5, item6, item7);
 		return true;
 	}
 
