@@ -216,6 +216,41 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		}
 	}
 
+	public boolean add(int item0, int item1){
+		ensureCapacity(2);
+		return add(item0) | add(item1);
+	}
+
+	public boolean add(int item0, int item1, int item2){
+		ensureCapacity(3);
+		return add(item0) | add(item1) | add(item2);
+	}
+
+	public boolean add(int item0, int item1, int item2, int item3){
+		ensureCapacity(4);
+		return add(item0) | add(item1) | add(item2) | add(item3);
+	}
+
+	public boolean add(int item0, int item1, int item2, int item3, int item4){
+		ensureCapacity(5);
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4);
+	}
+
+	public boolean add(int item0, int item1, int item2, int item3, int item4, int item5){
+		ensureCapacity(6);
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5);
+	}
+
+	public boolean add(int item0, int item1, int item2, int item3, int item4, int item5, int item6){
+		ensureCapacity(7);
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5) | add(item6);
+	}
+
+	public boolean add(int item0, int item1, int item2, int item3, int item4, int item5, int item6, int item7){
+		ensureCapacity(8);
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5) | add(item6) | add(item7);
+	}
+
 	public boolean addAll(IntList array) {
 		return addAll(array.items, 0, array.size());
 	}
