@@ -151,6 +151,104 @@ public class ObjectList<T> extends ArrayList<T> implements Ordered<T>, EnhancedC
 		addAll(0, other, offset, count);
 	}
 
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1) {
+		ensureCapacity(2);
+		return EnhancedCollection.super.add(item0, item1);
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2) {
+		ensureCapacity(3);
+		return EnhancedCollection.super.add(item0, item1, item2);
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3) {
+		ensureCapacity(4);
+		return EnhancedCollection.super.add(item0, item1, item2, item3);
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4) {
+		ensureCapacity(5);
+		return EnhancedCollection.super.add(item0, item1, item2, item3, item4);
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5) {
+		ensureCapacity(6);
+		return EnhancedCollection.super.add(item0, item1, item2, item3, item4, item5);
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		ensureCapacity(7);
+		return EnhancedCollection.super.add(item0, item1, item2, item3, item4, item5, item6);
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @param item7 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		ensureCapacity(8);
+		return EnhancedCollection.super.add(item0, item1, item2, item3, item4, item5, item6, item7);
+	}
+
 	@Override
 	public void add(int index, T element) {
 		super.add(index, element);
