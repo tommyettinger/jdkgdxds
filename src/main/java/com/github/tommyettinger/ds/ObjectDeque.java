@@ -408,7 +408,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			resize(size + 2 << 1);
 			items = this.items;
 		}
-
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
 		if (size == 0) tail = head;
@@ -449,7 +448,6 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 			resize(size + 4 << 1);
 			items = this.items;
 		}
-
 		int head = this.head - 1;
 		if (head == -1) head = items.length - 1;
 		if (size == 0) tail = head;
@@ -464,6 +462,121 @@ public class ObjectDeque<T> extends AbstractList<T> implements Lisque<T>,
 
 		this.head = head;
 		modCount += 4;
+	}
+
+	public void addFirst(T value1, T value2, T value3, T value4, T value5) {
+		T[] items = this.items;
+
+		if (size + 5 > items.length) {
+			resize(size + 5 << 1);
+			items = this.items;
+		}
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 5;
+
+		this.head = head;
+		modCount += 5;
+	}
+
+	public void addFirst(T value1, T value2, T value3, T value4, T value5,
+	                     T value6) {
+		T[] items = this.items;
+
+		if (size + 6 > items.length) {
+			resize(size + 6 << 1);
+			items = this.items;
+		}
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 6;
+
+		this.head = head;
+		modCount += 6;
+	}
+
+	public void addFirst(T value1, T value2, T value3, T value4, T value5,
+	                     T value6, T value7) {
+		T[] items = this.items;
+
+		if (size + 7 > items.length) {
+			resize(size + 7 << 1);
+			items = this.items;
+		}
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value7;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 7;
+
+		this.head = head;
+		modCount += 7;
+	}
+
+	public void addFirst(T value1, T value2, T value3, T value4, T value5,
+	                     T value6, T value7, T value8) {
+		T[] items = this.items;
+
+		if (size + 8 > items.length) {
+			resize(size + 8 << 1);
+			items = this.items;
+		}
+		int head = this.head - 1;
+		if (head == -1) head = items.length - 1;
+		if (size == 0) tail = head;
+		items[head] = value8;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value7;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value6;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value5;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value4;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value3;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value2;
+		if (--head == -1) head = items.length - 1;
+		items[head] = value1;
+		size += 8;
+
+		this.head = head;
+		modCount += 8;
 	}
 
 	/**
