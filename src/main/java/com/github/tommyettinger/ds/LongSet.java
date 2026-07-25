@@ -217,6 +217,41 @@ public class LongSet implements PrimitiveSet.SetOfLong {
 		}
 	}
 
+	public boolean add(long item0, long item1){
+		ensureCapacity(2);
+		return add(item0) | add(item1);
+	}
+
+	public boolean add(long item0, long item1, long item2){
+		ensureCapacity(3);
+		return add(item0) | add(item1) | add(item2);
+	}
+
+	public boolean add(long item0, long item1, long item2, long item3){
+		ensureCapacity(4);
+		return add(item0) | add(item1) | add(item2) | add(item3);
+	}
+
+	public boolean add(long item0, long item1, long item2, long item3, long item4){
+		ensureCapacity(5);
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4);
+	}
+
+	public boolean add(long item0, long item1, long item2, long item3, long item4, long item5){
+		ensureCapacity(6);
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5);
+	}
+
+	public boolean add(long item0, long item1, long item2, long item3, long item4, long item5, long item6){
+		ensureCapacity(7);
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5) | add(item6);
+	}
+
+	public boolean add(long item0, long item1, long item2, long item3, long item4, long item5, long item6, long item7){
+		ensureCapacity(8);
+		return add(item0) | add(item1) | add(item2) | add(item3) | add(item4) | add(item5) | add(item6) | add(item7);
+	}
+
 	public boolean addAll(LongList array) {
 		return addAll(array.items, 0, array.size);
 	}
