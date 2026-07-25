@@ -728,6 +728,146 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 	}
 
 	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1) {
+		final int s = size();
+		ensureCapacity(2);
+		map.putIfAbsent(item0, s);
+		map.putIfAbsent(item1, size());
+		return s != size();
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2) {
+		final int s = size();
+		ensureCapacity(3);
+		map.putIfAbsent(item0, s);
+		map.putIfAbsent(item1, size());
+		map.putIfAbsent(item2, size());
+		return s != size();
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3) {
+		final int s = size();
+		ensureCapacity(4);
+		map.putIfAbsent(item0, s);
+		map.putIfAbsent(item1, size());
+		map.putIfAbsent(item2, size());
+		map.putIfAbsent(item3, size());
+		return s != size();
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4) {
+		final int s = size();
+		ensureCapacity(5);
+		map.putIfAbsent(item0, s);
+		map.putIfAbsent(item1, size());
+		map.putIfAbsent(item2, size());
+		map.putIfAbsent(item3, size());
+		map.putIfAbsent(item4, size());
+		return s != size();
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5) {
+		final int s = size();
+		ensureCapacity(6);
+		map.putIfAbsent(item0, s);
+		map.putIfAbsent(item1, size());
+		map.putIfAbsent(item2, size());
+		map.putIfAbsent(item3, size());
+		map.putIfAbsent(item4, size());
+		map.putIfAbsent(item5, size());
+		return s != size();
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5, T item6) {
+		final int s = size();
+		ensureCapacity(7);
+		map.putIfAbsent(item0, s);
+		map.putIfAbsent(item1, size());
+		map.putIfAbsent(item2, size());
+		map.putIfAbsent(item3, size());
+		map.putIfAbsent(item4, size());
+		map.putIfAbsent(item5, size());
+		map.putIfAbsent(item6, size());
+		return s != size();
+	}
+
+	/**
+	 * @param item0 a T item
+	 * @param item1 a T item
+	 * @param item2 a T item
+	 * @param item3 a T item
+	 * @param item4 a T item
+	 * @param item5 a T item
+	 * @param item6 a T item
+	 * @param item7 a T item
+	 * @return true if this modified the collection
+	 */
+	@Override
+	public boolean add(T item0, T item1, T item2, T item3, T item4, T item5, T item6, T item7) {
+		final int s = size();
+		ensureCapacity(8);
+		map.putIfAbsent(item0, s);
+		map.putIfAbsent(item1, size());
+		map.putIfAbsent(item2, size());
+		map.putIfAbsent(item3, size());
+		map.putIfAbsent(item4, size());
+		map.putIfAbsent(item5, size());
+		map.putIfAbsent(item6, size());
+		map.putIfAbsent(item7, size());
+		return s != size();
+	}
+
+	/**
 	 * If the given item {@code t} is present, this returns its index without modifying the NumberedSet; otherwise, it
 	 * adds t to the end of the collection and returns the index for it there.
 	 *
