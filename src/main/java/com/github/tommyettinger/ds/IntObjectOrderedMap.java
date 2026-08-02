@@ -26,12 +26,7 @@ import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -360,13 +355,40 @@ public class IntObjectOrderedMap<V> extends IntObjectMap<V> implements Ordered.O
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll(IntObjectOrderedMap<? extends V> map) {
-		ensureCapacity(map.size);
-		IntList ks = map.keys;
-		int kl = ks.size();
-		int k;
-		for (int i = 0; i < kl; i++) {
-			k = ks.get(i);
-			put(k, map.get(k));
+		if(size == 0){
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			IntList ks = map.keys;
+			int kl = ks.size();
+			int k;
+			for (int i = 0; i < kl; i++) {
+				k = ks.get(i);
+				put(k, map.get(k));
+			}
+		}
+	}
+
+	private void resetTo(IntObjectOrderedMap<? extends V> map) {
+		if(loadFactor == map.loadFactor) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+			this.hashMultiplier = map.hashMultiplier;
+
+			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
+			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			size = map.size;
+			keys.addAll(map.keys);
+		} else {
+			ensureCapacity(map.size);
+			IntList ks = map.keys;
+			int kl = ks.size();
+			int k;
+			for (int i = 0; i < kl; i++) {
+				k = ks.get(i);
+				put(k, map.get(k));
+			}
 		}
 	}
 
