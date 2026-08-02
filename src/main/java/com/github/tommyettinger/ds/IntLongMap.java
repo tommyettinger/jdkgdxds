@@ -296,24 +296,62 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll(IntLongMap map) {
-		ensureCapacity(map.size);
-		if (map.hasZeroValue) {
-			if (!hasZeroValue) {
-				size++;
+		if (size == 0) {
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			if (map.hasZeroValue) {
+				if (!hasZeroValue) {
+					size++;
+				}
+				hasZeroValue = true;
+				zeroValue = map.zeroValue;
 			}
-			hasZeroValue = true;
-			zeroValue = map.zeroValue;
-		}
-		int[] keyTable = map.keyTable;
-		long[] valueTable = map.valueTable;
-		int key;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			key = keyTable[i];
-			if (key != 0) {
-				put(key, valueTable[i]);
+			int[] keyTable = map.keyTable;
+			long[] valueTable = map.valueTable;
+			int key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != 0) {
+					put(key, valueTable[i]);
+				}
 			}
 		}
 	}
+
+	private void resetTo(IntLongMap map) {
+		if(loadFactor == map.loadFactor) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+			this.hashMultiplier = map.hashMultiplier;
+			this.hasZeroValue = map.hasZeroValue;
+			this.zeroValue = map.zeroValue;
+
+			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
+			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			size = map.size;
+		} else {
+			ensureCapacity(map.size);
+			if (map.hasZeroValue) {
+				if (!hasZeroValue) {
+					size++;
+				}
+				hasZeroValue = true;
+				zeroValue = map.zeroValue;
+			}
+			int[] keyTable = map.keyTable;
+			long[] valueTable = map.valueTable;
+			int key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != 0) {
+					put(key, valueTable[i]);
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
