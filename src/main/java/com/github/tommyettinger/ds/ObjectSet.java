@@ -435,15 +435,37 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 
 	@Override
 	public boolean addAll(Collection<? extends T> coll) {
-		final int length = coll.size();
-		ensureCapacity(length);
-		int oldSize = size;
-		for (T t : coll) {
-			add(t);
+		final int oldSize = size;
+		if(oldSize == 0 && coll instanceof ObjectSet){
+			resetTo((ObjectSet<? extends T>) coll);
+		} else {
+			final int length = coll.size();
+			ensureCapacity(length);
+			for (T t : coll) {
+				add(t);
+			}
 		}
 		return oldSize != size;
-
 	}
+
+	private void resetTo(ObjectSet<? extends T> set) {
+		if(loadFactor == set.loadFactor && size == 0) {
+			threshold = set.threshold;
+			mask = set.mask;
+			shift = set.shift;
+			hashMultiplier = set.hashMultiplier;
+			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			size = set.size;
+		} else {
+			final int length = set.size();
+			ensureCapacity(length);
+			for (T t : set) {
+				//noinspection UseBulkOperation
+				add(t);
+			}
+		}
+	}
+
 
 	@Override
 	public boolean retainAll(Collection<?> c) {

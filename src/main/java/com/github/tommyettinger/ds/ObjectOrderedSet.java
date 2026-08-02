@@ -18,10 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.PartialParser;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -234,6 +231,40 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 		}
 		items.add(index, key);
 		return true;
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends T> coll) {
+		final int oldSize = size;
+		if(oldSize == 0 && coll instanceof ObjectOrderedSet){
+			resetTo((ObjectOrderedSet<? extends T>) coll);
+		} else {
+			final int length = coll.size();
+			ensureCapacity(length);
+			for (T t : coll) {
+				add(t);
+			}
+		}
+		return oldSize != size;
+	}
+
+	private void resetTo(ObjectOrderedSet<? extends T> set) {
+		if(loadFactor == set.loadFactor && size == 0) {
+			threshold = set.threshold;
+			mask = set.mask;
+			shift = set.shift;
+			hashMultiplier = set.hashMultiplier;
+			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			size = set.size;
+			items.addAll(set.items);
+		} else {
+			final int length = set.size();
+			ensureCapacity(length);
+			for (T t : set) {
+				//noinspection UseBulkOperation
+				add(t);
+			}
+		}
 	}
 
 	/**
