@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.LongIterator;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -252,6 +253,40 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 		}
 		items.insert(index, key);
 		return true;
+	}
+
+	public boolean addAll(LongOrderedSet set){
+		int oldSize = size;
+		if(oldSize == 0){
+			resetTo(set);
+		} else {
+			addAll(set.items);
+		}
+		return size != oldSize;
+	}
+
+	private void resetTo(LongOrderedSet set) {
+		if(loadFactor == set.loadFactor) {
+			threshold = set.threshold;
+			mask = set.mask;
+			shift = set.shift;
+			hashMultiplier = set.hashMultiplier;
+			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			size = set.size;
+			items.addAll(set.items);
+		} else {
+			ensureCapacity(set.size);
+			if (set.hasZeroValue) {
+				add(0);
+			}
+			long[] keyTable = set.keyTable;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				long key = keyTable[i];
+				if (key != 0) {
+					add(key);
+				}
+			}
+		}
 	}
 
 	/**
