@@ -25,12 +25,7 @@ import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.PartialParser;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 import static com.github.tommyettinger.ds.Utilities.tableSize;
 
@@ -313,9 +308,35 @@ public class ObjectIntOrderedMap<K> extends ObjectIntMap<K> implements Ordered<K
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll(ObjectIntOrderedMap<? extends K> map) {
-		ensureCapacity(map.size);
-		for (int i = 0, kl = map.size; i < kl; i++) {
-			put(map.keyAt(i), map.getAt(i));
+		if(size == 0) {
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			for (int i = 0, kl = map.size; i < kl; i++) {
+				put(map.keyAt(i), map.getAt(i));
+			}
+		}
+	}
+
+	private void resetTo(ObjectIntOrderedMap<? extends K> map) {
+		if(loadFactor == map.loadFactor) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+			this.hashMultiplier = map.hashMultiplier;
+
+			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
+			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			size = map.size;
+			keys.addAll(map.keys);
+		} else {
+			ensureCapacity(map.size);
+			ObjectList<? extends K> keys = map.keys;
+			K key;
+			for (int i = 0, n = keys.size(); i < n; i++) {
+				key = keys.get(i);
+				put(key, map.get(key));
+			}
 		}
 	}
 
