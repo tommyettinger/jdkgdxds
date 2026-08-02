@@ -353,7 +353,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 			ensureCapacity(map.size);
 			ObjectList<? extends K> keys = map.keys;
 			K key;
-			for (int i = 0, n = map.size; i < n; i++) {
+			for (int i = 0, n = keys.size(); i < n; i++) {
 				key = keys.get(i);
 				put(key, map.get(key));
 			}
