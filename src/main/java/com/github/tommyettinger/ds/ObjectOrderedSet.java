@@ -249,7 +249,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 	}
 
 	private void resetTo(ObjectOrderedSet<? extends T> set) {
-		if(loadFactor == set.loadFactor && size == 0) {
+		if(loadFactor == set.loadFactor) {
 			threshold = set.threshold;
 			mask = set.mask;
 			shift = set.shift;

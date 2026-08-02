@@ -449,7 +449,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 	}
 
 	private void resetTo(ObjectSet<? extends T> set) {
-		if(loadFactor == set.loadFactor && size == 0) {
+		if(loadFactor == set.loadFactor) {
 			threshold = set.threshold;
 			mask = set.mask;
 			shift = set.shift;

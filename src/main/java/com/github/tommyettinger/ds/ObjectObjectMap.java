@@ -313,14 +313,42 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll(ObjectObjectMap<? extends K, ? extends V> map) {
-		ensureCapacity(map.size);
-		K[] keyTable = map.keyTable;
-		V[] valueTable = map.valueTable;
-		K key;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			key = keyTable[i];
-			if (key != null) {
-				put(key, valueTable[i]);
+		if(size == 0){
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			K[] keyTable = map.keyTable;
+			V[] valueTable = map.valueTable;
+			K key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != null) {
+					put(key, valueTable[i]);
+				}
+			}
+		}
+	}
+
+	private void resetTo(ObjectObjectMap<? extends K, ? extends V> map) {
+		if(loadFactor == map.loadFactor) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+			this.hashMultiplier = map.hashMultiplier;
+
+			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
+			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			size = map.size;
+		} else {
+			ensureCapacity(map.size);
+			K[] keyTable = map.keyTable;
+			V[] valueTable = map.valueTable;
+			K key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != null) {
+					put(key, valueTable[i]);
+				}
 			}
 		}
 	}
