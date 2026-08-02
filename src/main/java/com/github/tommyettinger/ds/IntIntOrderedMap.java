@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -352,13 +353,42 @@ public class IntIntOrderedMap extends IntIntMap implements Ordered.OfInt {
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll(IntIntOrderedMap map) {
-		ensureCapacity(map.size);
-		IntList ks = map.keys;
-		int kl = ks.size();
-		int k;
-		for (int i = 0; i < kl; i++) {
-			k = ks.get(i);
-			put(k, map.get(k));
+		if (size == 0) {
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			IntList ks = map.keys;
+			int kl = ks.size();
+			int k;
+			for (int i = 0; i < kl; i++) {
+				k = ks.get(i);
+				put(k, map.get(k));
+			}
+		}
+	}
+
+	private void resetTo(IntIntOrderedMap map) {
+		if(loadFactor == map.loadFactor) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+			this.hashMultiplier = map.hashMultiplier;
+			this.hasZeroValue = map.hasZeroValue;
+			this.zeroValue = map.zeroValue;
+
+			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
+			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			size = map.size;
+			keys.addAll(map.keys);
+		} else {
+			ensureCapacity(map.size);
+			IntList ks = map.keys;
+			int kl = ks.size();
+			int k;
+			for (int i = 0; i < kl; i++) {
+				k = ks.get(i);
+				put(k, map.get(k));
+			}
 		}
 	}
 

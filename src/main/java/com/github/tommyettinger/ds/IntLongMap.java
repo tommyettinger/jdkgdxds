@@ -352,7 +352,6 @@ public class IntLongMap implements Iterable<IntLongMap.Entry> {
 		}
 	}
 
-
 	/**
 	 * Given two side-by-side arrays, one of keys, one of values, this inserts each pair of key and value into this map with put().
 	 *
