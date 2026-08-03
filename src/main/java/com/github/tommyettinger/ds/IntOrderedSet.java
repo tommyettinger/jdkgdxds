@@ -18,6 +18,7 @@ package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.support.util.IntIterator;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -262,6 +263,40 @@ public class IntOrderedSet extends IntSet implements Ordered.OfInt {
 		}
 		items.insert(index, key);
 		return true;
+	}
+
+	public boolean addAll(IntOrderedSet set){
+		int oldSize = size;
+		if(oldSize == 0){
+			resetTo(set);
+		} else {
+			addAll(set.items);
+		}
+		return size != oldSize;
+	}
+
+	private void resetTo(IntOrderedSet set) {
+		if(loadFactor == set.loadFactor) {
+			threshold = set.threshold;
+			mask = set.mask;
+			shift = set.shift;
+			hashMultiplier = set.hashMultiplier;
+			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			size = set.size;
+			items.addAll(set.items);
+		} else {
+			ensureCapacity(set.size);
+			if (set.hasZeroValue) {
+				add(0);
+			}
+			int[] keyTable = set.keyTable;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				int key = keyTable[i];
+				if (key != 0) {
+					add(key);
+				}
+			}
+		}
 	}
 
 	/**

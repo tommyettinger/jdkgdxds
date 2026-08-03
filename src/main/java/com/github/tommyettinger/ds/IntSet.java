@@ -276,19 +276,46 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 	}
 
 	public boolean addAll(IntSet set) {
-		ensureCapacity(set.size);
 		int oldSize = size;
-		if (set.hasZeroValue) {
-			add(0);
-		}
-		int[] keyTable = set.keyTable;
-		for (int i = 0, n = keyTable.length; i < n; i++) {
-			int key = keyTable[i];
-			if (key != 0) {
-				add(key);
+		if(oldSize == 0){
+			resetTo(set);
+		} else {
+			ensureCapacity(set.size);
+			if (set.hasZeroValue) {
+				add(0);
+			}
+			int[] keyTable = set.keyTable;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				int key = keyTable[i];
+				if (key != 0) {
+					add(key);
+				}
 			}
 		}
 		return size != oldSize;
+	}
+
+	private void resetTo(IntSet set) {
+		if(loadFactor == set.loadFactor) {
+			threshold = set.threshold;
+			mask = set.mask;
+			shift = set.shift;
+			hashMultiplier = set.hashMultiplier;
+			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			size = set.size;
+		} else {
+			ensureCapacity(set.size);
+			if (set.hasZeroValue) {
+				add(0);
+			}
+			int[] keyTable = set.keyTable;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				int key = keyTable[i];
+				if (key != 0) {
+					add(key);
+				}
+			}
+		}
 	}
 
 	/**
