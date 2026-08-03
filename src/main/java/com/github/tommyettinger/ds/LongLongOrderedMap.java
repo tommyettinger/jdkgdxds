@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.support.util.LongAppender;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -352,13 +353,42 @@ public class LongLongOrderedMap extends LongLongMap implements Ordered.OfLong {
 	 * @param map a map with compatible key and value types; will not be modified
 	 */
 	public void putAll(LongLongOrderedMap map) {
-		ensureCapacity(map.size);
-		LongList ks = map.keys;
-		int kl = ks.size();
-		long k;
-		for (int i = 0; i < kl; i++) {
-			k = ks.get(i);
-			put(k, map.get(k));
+		if (size == 0) {
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			LongList ks = map.keys;
+			int kl = ks.size();
+			long k;
+			for (int i = 0; i < kl; i++) {
+				k = ks.get(i);
+				put(k, map.get(k));
+			}
+		}
+	}
+
+	private void resetTo(LongLongOrderedMap map) {
+		if(loadFactor == map.loadFactor) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+			this.hashMultiplier = map.hashMultiplier;
+			this.hasZeroValue = map.hasZeroValue;
+			this.zeroValue = map.zeroValue;
+
+			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
+			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			size = map.size;
+			keys.addAll(map.keys);
+		} else {
+			ensureCapacity(map.size);
+			LongList ks = map.keys;
+			int kl = ks.size();
+			long k;
+			for (int i = 0; i < kl; i++) {
+				k = ks.get(i);
+				put(k, map.get(k));
+			}
 		}
 	}
 
