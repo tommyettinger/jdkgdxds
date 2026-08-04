@@ -95,6 +95,39 @@ public class IdentitySet<T> extends ObjectSet<T> {
 		return h ^ h >>> 16;
 	}
 
+	@Override
+	public boolean addAll(Collection<? extends T> coll) {
+		final int oldSize = size;
+		if(oldSize == 0 && coll instanceof IdentitySet){
+			resetTo((IdentitySet<? extends T>) coll);
+		} else {
+			final int length = coll.size();
+			ensureCapacity(length);
+			for (T t : coll) {
+				add(t);
+			}
+		}
+		return oldSize != size;
+	}
+
+	private void resetTo(IdentitySet<? extends T> set) {
+		if(loadFactor == set.loadFactor) {
+			threshold = set.threshold;
+			mask = set.mask;
+			shift = set.shift;
+			hashMultiplier = set.hashMultiplier;
+			keyTable = Utilities.copyOf(set.keyTable, keyTable);
+			size = set.size;
+		} else {
+			final int length = set.size();
+			ensureCapacity(length);
+			for (T t : set) {
+				//noinspection UseBulkOperation
+				add(t);
+			}
+		}
+	}
+
 	/**
 	 * Constructs an empty set given the type as a generic type argument.
 	 * This is usually less useful than just using the constructor, but can be handy
