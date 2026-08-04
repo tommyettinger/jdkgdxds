@@ -307,6 +307,21 @@ public class FilteredIterableSet<T, I extends Iterable<T>> extends ObjectSet<I> 
 	}
 
 	/**
+	 * @param coll collection containing elements to be added to this set
+	 * @return true if this set was modified as a result of this call
+	 */
+	@Override
+	public boolean addAll(Collection<? extends I> coll) {
+		final int oldSize = size;
+		final int length = coll.size();
+		ensureCapacity(length);
+		for (I t : coll) {
+			add(t);
+		}
+		return oldSize != size;
+	}
+
+	/**
 	 * Constructs a new FilteredIterableSet with the given filter and editor, without contents, and returns the set.
 	 *
 	 * @param filter a {@code ObjPredicate<T>} that should return true iff a sub-item should be considered for equality/hashing
