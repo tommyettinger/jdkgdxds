@@ -484,6 +484,40 @@ public class FilteredStringOrderedSet extends ObjectOrderedSet<String> {
 		}
 	}
 
+	@Override
+	public boolean addAll(Collection<? extends String> coll) {
+		final int oldSize = size;
+		if(oldSize == 0 && coll instanceof FilteredStringOrderedSet){
+			resetTo((FilteredStringOrderedSet) coll);
+		} else {
+			final int length = coll.size();
+			ensureCapacity(length);
+			for (String t : coll) {
+				add(t);
+			}
+		}
+		return oldSize != size;
+	}
+
+	private void resetTo(FilteredStringOrderedSet set) {
+		if(loadFactor == set.loadFactor && filter.equals(set.filter)) {
+			threshold = set.threshold;
+			mask = set.mask;
+			shift = set.shift;
+			hashMultiplier = set.hashMultiplier;
+
+			keyTable = Utilities.copyOf(set.keyTable, keyTable);
+			size = set.size;
+			items.addAll(set.items);
+		} else {
+			final int length = set.size();
+			ensureCapacity(length);
+			for (String t : set) {
+				add(t);
+			}
+		}
+	}
+
 	/**
 	 * Gets the current hashMultiplier, used in {@link #place} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
