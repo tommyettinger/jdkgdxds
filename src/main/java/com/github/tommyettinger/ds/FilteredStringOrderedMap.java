@@ -535,6 +535,48 @@ public class FilteredStringOrderedMap<V> extends ObjectObjectOrderedMap<String, 
 	}
 
 	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical. This will put keys in the order of the given map.
+	 *
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
+	public void putAll(FilteredStringOrderedMap<? extends V> map) {
+		if(size == 0){
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			ObjectList<String> keys = map.keys;
+			String key;
+			for (int i = 0, kl = map.size; i < kl; i++) {
+				key = keys.get(i);
+				put(key, map.get(key));
+			}
+		}
+	}
+
+	private void resetTo(FilteredStringOrderedMap<? extends V> map) {
+		if(loadFactor == map.loadFactor && filter.equals(map.filter)) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+			this.hashMultiplier = map.hashMultiplier;
+
+			keyTable = Utilities.copyOf(map.keyTable, keyTable);
+			valueTable = Utilities.copyOf(map.valueTable, valueTable);
+			size = map.size;
+			keys.addAll(map.keys);
+		} else {
+			ensureCapacity(map.size);
+			ObjectList<String> keys = map.keys;
+			String key;
+			for (int i = 0, kl = map.size; i < kl; i++) {
+				key = keys.get(i);
+				put(key, map.get(key));
+			}
+		}
+	}
+
+	/**
 	 * Gets the current hashMultiplier, used in {@link #place} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
 	 * {@link Utilities#FILTERED_HASH_MULTIPLIERS}, with the index equal to {@code 64 - shift}.

@@ -342,6 +342,47 @@ public class FilteredStringMap<V> extends ObjectObjectMap<String, V> {
 		}
 	}
 
+	public void putAll(FilteredStringMap<? extends V> map) {
+		if(size == 0){
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			Object[] keyTable = map.keyTable;
+			V[] valueTable = map.valueTable;
+			Object key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != null) {
+					put((String) key, valueTable[i]);
+				}
+			}
+		}
+	}
+
+	private void resetTo(FilteredStringMap<? extends V> map) {
+		if(loadFactor == map.loadFactor && filter.equals(map.filter)) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+			this.hashMultiplier = map.hashMultiplier;
+
+			keyTable = Utilities.copyOf(map.keyTable, keyTable);
+			valueTable = Utilities.copyOf(map.valueTable, valueTable);
+			size = map.size;
+		} else {
+			ensureCapacity(map.size);
+			Object[] keyTable = map.keyTable;
+			V[] valueTable = map.valueTable;
+			Object key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != null) {
+					put((String) key, valueTable[i]);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Gets the current hashMultiplier, used in {@link #place} to mix hash codes.
 	 * If {@link #setHashMultiplier(int)} is never called, the hashMultiplier will always be drawn from
