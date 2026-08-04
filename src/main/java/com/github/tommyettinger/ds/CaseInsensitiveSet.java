@@ -166,6 +166,39 @@ public class CaseInsensitiveSet extends ObjectSet<CharSequence> {
 		return h;
 	}
 
+	@Override
+	public boolean addAll(Collection<? extends CharSequence> coll) {
+		final int oldSize = size;
+		if(oldSize == 0 && coll instanceof CaseInsensitiveSet){
+			resetTo((CaseInsensitiveSet) coll);
+		} else {
+			final int length = coll.size();
+			ensureCapacity(length);
+			for (CharSequence t : coll) {
+				add(t);
+			}
+		}
+		return oldSize != size;
+	}
+
+	private void resetTo(CaseInsensitiveSet set) {
+		if(loadFactor == set.loadFactor) {
+			threshold = set.threshold;
+			mask = set.mask;
+			shift = set.shift;
+			hashMultiplier = set.hashMultiplier;
+
+			keyTable = Utilities.copyOf(set.keyTable, keyTable);
+			size = set.size;
+		} else {
+			final int length = set.size();
+			ensureCapacity(length);
+			for (CharSequence t : set) {
+				add(t);
+			}
+		}
+	}
+
 	/**
 	 * Constructs an empty set.
 	 * This is usually less useful than just using the constructor, but can be handy
