@@ -288,6 +288,83 @@ public final class Utilities {
 	}
 
 	/**
+	 * Either copies {@code toCopy} into {@code mayReuse} if they have the same length, or returns a new copy of
+	 * {@code toCopy} if they do not. This is meant to be assigned to the same reference as {@code mayReuse}, as with:
+	 * <br>
+	 * {@code this.table = Utilities.copyOf(other.table, this.table);}
+	 *
+	 * @param toCopy an array to copy
+	 * @param mayReuse an array reference that can be reused if it has the same length as {@code toCopy}
+	 * @return a copy of {@code toCopy}, which may or may not be the same reference as {@code mayReuse}
+	 * @param <T> the type of items in both arrays and the copy to make
+	 */
+	public static <T> T[] copyOf(T[] toCopy, T[] mayReuse) {
+		final int len = toCopy.length;
+		if(mayReuse.length == len){
+			System.arraycopy(toCopy, 0, mayReuse, 0, len);
+			return mayReuse;
+		}
+		return Arrays.copyOf(toCopy, len);
+	}
+
+	/**
+	 * Either copies {@code toCopy} into {@code mayReuse} if they have the same length, or returns a new copy of
+	 * {@code toCopy} if they do not. This is meant to be assigned to the same reference as {@code mayReuse}, as with:
+	 * <br>
+	 * {@code this.table = Utilities.copyOf(other.table, this.table);}
+	 *
+	 * @param toCopy an array to copy
+	 * @param mayReuse an array reference that can be reused if it has the same length as {@code toCopy}
+	 * @return a copy of {@code toCopy}, which may or may not be the same reference as {@code mayReuse}
+	 */
+	public static int[] copyOf(int[] toCopy, int[] mayReuse) {
+		final int len = toCopy.length;
+		if(mayReuse.length == len){
+			System.arraycopy(toCopy, 0, mayReuse, 0, len);
+			return mayReuse;
+		}
+		return Arrays.copyOf(toCopy, len);
+	}
+
+	/**
+	 * Either copies {@code toCopy} into {@code mayReuse} if they have the same length, or returns a new copy of
+	 * {@code toCopy} if they do not. This is meant to be assigned to the same reference as {@code mayReuse}, as with:
+	 * <br>
+	 * {@code this.table = Utilities.copyOf(other.table, this.table);}
+	 *
+	 * @param toCopy an array to copy
+	 * @param mayReuse an array reference that can be reused if it has the same length as {@code toCopy}
+	 * @return a copy of {@code toCopy}, which may or may not be the same reference as {@code mayReuse}
+	 */
+	public static long[] copyOf(long[] toCopy, long[] mayReuse) {
+		final int len = toCopy.length;
+		if(mayReuse.length == len){
+			System.arraycopy(toCopy, 0, mayReuse, 0, len);
+			return mayReuse;
+		}
+		return Arrays.copyOf(toCopy, len);
+	}
+
+	/**
+	 * Either copies {@code toCopy} into {@code mayReuse} if they have the same length, or returns a new copy of
+	 * {@code toCopy} if they do not. This is meant to be assigned to the same reference as {@code mayReuse}, as with:
+	 * <br>
+	 * {@code this.table = Utilities.copyOf(other.table, this.table);}
+	 *
+	 * @param toCopy an array to copy
+	 * @param mayReuse an array reference that can be reused if it has the same length as {@code toCopy}
+	 * @return a copy of {@code toCopy}, which may or may not be the same reference as {@code mayReuse}
+	 */
+	public static float[] copyOf(float[] toCopy, float[] mayReuse) {
+		final int len = toCopy.length;
+		if(mayReuse.length == len){
+			System.arraycopy(toCopy, 0, mayReuse, 0, len);
+			return mayReuse;
+		}
+		return Arrays.copyOf(toCopy, len);
+	}
+
+	/**
 	 * A placeholder Object that should never be reference-equivalent to any Object used as a key or value. This is only public
 	 * so data structures can use it for comparisons; never put it into a data structure.
 	 */
