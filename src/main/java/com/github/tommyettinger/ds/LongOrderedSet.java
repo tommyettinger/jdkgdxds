@@ -271,7 +271,7 @@ public class LongOrderedSet extends LongSet implements Ordered.OfLong {
 			mask = set.mask;
 			shift = set.shift;
 			hashMultiplier = set.hashMultiplier;
-			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			keyTable = Utilities.copyOf(set.keyTable, keyTable);
 			size = set.size;
 			items.addAll(set.items);
 		} else {

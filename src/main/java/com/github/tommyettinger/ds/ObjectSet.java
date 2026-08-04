@@ -454,7 +454,7 @@ public class ObjectSet<T> implements Iterable<T>, Set<T>, EnhancedCollection<T> 
 			mask = set.mask;
 			shift = set.shift;
 			hashMultiplier = set.hashMultiplier;
-			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			keyTable = Utilities.copyOf(set.keyTable, keyTable);
 			size = set.size;
 		} else {
 			final int length = set.size();

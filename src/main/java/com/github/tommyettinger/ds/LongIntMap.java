@@ -330,8 +330,8 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 			this.hasZeroValue = map.hasZeroValue;
 			this.zeroValue = map.zeroValue;
 
-			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
-			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			keyTable = Utilities.copyOf(map.keyTable, keyTable);
+			valueTable = Utilities.copyOf(map.valueTable, valueTable);
 			size = map.size;
 		} else {
 			ensureCapacity(map.size);

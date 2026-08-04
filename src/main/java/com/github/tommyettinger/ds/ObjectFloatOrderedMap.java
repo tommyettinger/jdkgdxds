@@ -331,8 +331,8 @@ public class ObjectFloatOrderedMap<K> extends ObjectFloatMap<K> implements Order
 			this.shift = map.shift;
 			this.hashMultiplier = map.hashMultiplier;
 
-			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
-			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			keyTable = Utilities.copyOf(map.keyTable, keyTable);
+			valueTable = Utilities.copyOf(map.valueTable, valueTable);
 			size = map.size;
 			keys.addAll(map.keys);
 		} else {

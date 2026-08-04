@@ -254,7 +254,7 @@ public class ObjectOrderedSet<T> extends ObjectSet<T> implements Ordered<T> {
 			mask = set.mask;
 			shift = set.shift;
 			hashMultiplier = set.hashMultiplier;
-			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			keyTable = Utilities.copyOf(set.keyTable, keyTable);
 			size = set.size;
 			items.addAll(set.items);
 		} else {

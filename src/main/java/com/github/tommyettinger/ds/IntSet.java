@@ -301,7 +301,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 			mask = set.mask;
 			shift = set.shift;
 			hashMultiplier = set.hashMultiplier;
-			keyTable = Arrays.copyOf(set.keyTable, set.keyTable.length);
+			keyTable = Utilities.copyOf(set.keyTable, keyTable);
 			size = set.size;
 		} else {
 			ensureCapacity(set.size);

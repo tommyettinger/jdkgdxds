@@ -309,8 +309,8 @@ public class LongObjectMap<V> implements Iterable<LongObjectMap.Entry<V>> {
 			this.shift = map.shift;
 			this.hashMultiplier = map.hashMultiplier;
 
-			keyTable = Arrays.copyOf(map.keyTable, map.keyTable.length);
-			valueTable = Arrays.copyOf(map.valueTable, map.valueTable.length);
+			keyTable = Utilities.copyOf(map.keyTable, keyTable);
+			valueTable = Utilities.copyOf(map.valueTable, valueTable);
 			size = map.size;
 		} else {
 			ensureCapacity(map.size);
