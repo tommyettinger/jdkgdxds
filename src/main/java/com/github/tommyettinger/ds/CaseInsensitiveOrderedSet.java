@@ -276,35 +276,12 @@ public class CaseInsensitiveOrderedSet extends ObjectOrderedSet<CharSequence> {
 	@Override
 	public boolean addAll(Collection<? extends CharSequence> coll) {
 		final int oldSize = size;
-		if(oldSize == 0 && coll instanceof CaseInsensitiveOrderedSet){
-			resetTo((CaseInsensitiveOrderedSet) coll);
-		} else {
-			final int length = coll.size();
-			ensureCapacity(length);
-			for (CharSequence t : coll) {
-				add(t);
-			}
+		final int length = coll.size();
+		ensureCapacity(length);
+		for (CharSequence t : coll) {
+			add(t);
 		}
 		return oldSize != size;
-	}
-
-	private void resetTo(CaseInsensitiveOrderedSet set) {
-		if(loadFactor == set.loadFactor) {
-			threshold = set.threshold;
-			mask = set.mask;
-			shift = set.shift;
-			hashMultiplier = set.hashMultiplier;
-
-			keyTable = Utilities.copyOf(set.keyTable, keyTable);
-			size = set.size;
-			items.addAll(set.items);
-		} else {
-			final int length = set.size();
-			ensureCapacity(length);
-			for (CharSequence t : set) {
-				add(t);
-			}
-		}
 	}
 
 	/**

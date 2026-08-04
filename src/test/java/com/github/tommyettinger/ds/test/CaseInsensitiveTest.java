@@ -75,6 +75,7 @@ public class CaseInsensitiveTest {
 	 */
 	@Test
 	public void testOrderedMap() {
+		CharFilter cf = CharFilter.getOrCreate("LetterOnlyCaseInsensitive", CharPredicates.IS_LETTER, Casing::caseUp);
 		CaseInsensitiveOrderedMap<String> map = new CaseInsensitiveOrderedMap<>(
 			new String[]{"foo", "bar", "baz"},
 			new String[]{"foo", "bar", "baz"}
@@ -83,7 +84,7 @@ public class CaseInsensitiveTest {
 			Assert.assertEquals(ent.getKey(), ent.getValue());
 		}
 		FilteredStringOrderedMap<String> fil = new FilteredStringOrderedMap<>(
-			CharFilter.getOrCreate("LetterOnlyCaseInsensitive", Character::isLetter, Character::toUpperCase),
+			cf,
 			new String[]{"foo42", "bar666", "baz9001"},
 			new String[]{"foo", "bar", "baz"}
 		);
@@ -91,7 +92,7 @@ public class CaseInsensitiveTest {
 			Assert.assertTrue(fil.equate(ent.getKey(), ent.getValue()));
 		}
 		fil = new FilteredStringOrderedMap<>(
-			CharFilter.getOrCreate("LetterOnlyCaseInsensitive", CharPredicates.IS_LETTER, Casing::caseUp),
+			cf,
 			new String[]{"foo42", "bar666", "baz9001"},
 			new String[]{"foo", "bar", "baz"}
 		);
@@ -108,7 +109,82 @@ public class CaseInsensitiveTest {
 		Assert.assertEquals(synonyms, syn2);
 		Assert.assertEquals(5, synonyms.getAt(0).size());
 		Assert.assertEquals(5, syn2.getAt(0).size());
+
+
+		FilteredStringOrderedMap<String> fsom2 =
+			new FilteredStringOrderedMap<>();
+		fsom2.putAll(fil);
+		Assert.assertEquals(fil, fsom2);
+
 //		ObjectObjectOrderedMap.OrderedMapEntries<CharSequence, ObjectList<String>> es = new ObjectObjectOrderedMap.OrderedMapEntries<>(syn2);
+//		Iterator<Map.Entry<CharSequence, ObjectList<String>>> it = syn2.iterator();
+//		while (it.hasNext()) {
+//			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();
+//			System.out.print(ent.getKey());
+//			System.out.print(": ");
+//			System.out.println(ent.getValue());
+//		}
+//		it = syn2.iterator();
+//		Assert.assertTrue(it.hasNext());
+//		while (it.hasNext()) {
+//			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();
+//			System.out.print(ent.getKey());
+//			System.out.print(": ");
+//			System.out.println(ent.getValue());
+//		}
+		for(Map.Entry<CharSequence, ObjectList<String>> ent : synonyms){
+			System.out.print(ent.getKey());
+			System.out.print(": ");
+			System.out.println(ent.getValue());
+		}
+		System.out.println(synonyms);
+		for(Map.Entry<CharSequence, ObjectList<String>> ent : synonyms){
+			System.out.print(ent.getKey());
+			System.out.print(": ");
+			System.out.println(ent.getValue());
+		}
+	}
+
+	@Test
+	public void testUnorderedMap() {
+		CharFilter cf = CharFilter.getOrCreate("LetterOnlyCaseInsensitive", CharPredicates.IS_LETTER, Casing::caseUp);
+		CaseInsensitiveMap<String> map = new CaseInsensitiveMap<>(
+			new String[]{"foo", "bar", "baz"},
+			new String[]{"foo", "bar", "baz"}
+		);
+		for (Map.Entry<CharSequence, String> ent : map) {
+			Assert.assertEquals(ent.getKey(), ent.getValue());
+		}
+		FilteredStringMap<String> fil = new FilteredStringMap<>(
+			cf,
+			new String[]{"foo42", "bar666", "baz9001"},
+			new String[]{"foo", "bar", "baz"}
+		);
+		for (Map.Entry<String, String> ent : fil) {
+			Assert.assertTrue(fil.equate(ent.getKey(), ent.getValue()));
+		}
+		fil = new FilteredStringMap<>(
+			cf,
+			new String[]{"foo42", "bar666", "baz9001"},
+			new String[]{"foo", "bar", "baz"}
+		);
+		for (Map.Entry<String, String> ent : fil) {
+			Assert.assertTrue(fil.equate(ent.getKey(), ent.getValue()));
+		}
+		CaseInsensitiveMap<ObjectList<String>> synonyms = CaseInsensitiveMap.with(
+			"intelligence", ObjectList.with("cunning", "acumen", "wits", "wisdom", "intellect"),
+			"strength", ObjectList.with("power", "potency", "brawn", "muscle", "force")
+		);
+		CaseInsensitiveMap<ObjectList<String>> syn2 =
+			new CaseInsensitiveMap<>();
+		syn2.putAll(synonyms); // this was a problem due to some generics... messiness.
+		Assert.assertEquals(synonyms, syn2);
+
+		FilteredStringMap<String> fsm2 =
+			new FilteredStringMap<>();
+		fsm2.putAll(fil);
+		Assert.assertEquals(fil, fsm2);
+//		ObjectObjectMap.MapEntries<CharSequence, ObjectList<String>> es = new ObjectObjectMap.MapEntries<>(syn2);
 //		Iterator<Map.Entry<CharSequence, ObjectList<String>>> it = syn2.iterator();
 //		while (it.hasNext()) {
 //			Map.Entry<CharSequence, ObjectList<String>> ent = it.next();

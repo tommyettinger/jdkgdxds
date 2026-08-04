@@ -188,6 +188,25 @@ public class CaseInsensitiveMap<V> extends ObjectObjectMap<CharSequence, V> {
 		return true;
 	}
 
+	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical.
+	 *
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
+	public void putAll(CaseInsensitiveMap<? extends V> map) {
+		ensureCapacity(map.size);
+		Object[] keyTable = map.keyTable;
+		V[] valueTable = map.valueTable;
+		Object key;
+		for (int i = 0, n = keyTable.length; i < n; i++) {
+			key = keyTable[i];
+			if (key != null) {
+				put((CharSequence) key, valueTable[i]);
+			}
+		}
+	}
+
 	@Override
 	public Keys<CharSequence, V> keySet() {
 		return new CaseInsensitiveKeys<>(this);

@@ -297,6 +297,22 @@ public class CaseInsensitiveOrderedMap<V> extends ObjectObjectOrderedMap<CharSeq
 		return true;
 	}
 
+	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical. This will put keys in the order of the given map.
+	 *
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
+	public void putAll(CaseInsensitiveOrderedMap<? extends V> map) {
+		ensureCapacity(map.size);
+		ObjectList<? extends CharSequence> keys = map.keys;
+		CharSequence key;
+		for (int i = 0, kl = map.size; i < kl; i++) {
+			key = keys.get(i);
+			put(key, map.get(key));
+		}
+	}
+
 	@Override
 	public Keys<CharSequence, V> keySet() {
 		return new CaseInsensitiveKeys<>(this);
