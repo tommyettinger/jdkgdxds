@@ -302,6 +302,12 @@ public class NumberedSet<T> implements Set<T>, Ordered<T>, EnhancedCollection<T>
 		return modified;
 	}
 
+	public boolean addAll(NumberedSet<? extends T> set) {
+		int oldSize = map.size;
+		map.putAll(set.map);
+		return map.size != oldSize;
+	}
+
 	/**
 	 * Adds up to {@code count} items, starting from {@code offset}, in the Ordered {@code other} to this set,
 	 * inserting at the end of the iteration order.
