@@ -358,9 +358,7 @@ public class ObjectObjectOrderedMap<K, V> extends ObjectObjectMap<K, V> implemen
 				put(key, map.get(key));
 			}
 		}
-
 	}
-
 
 	/**
 	 * Adds up to {@code count} entries, starting from {@code offset}, in the map {@code other} to this set,

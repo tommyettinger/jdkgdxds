@@ -251,6 +251,40 @@ public class IdentityObjectOrderedMap<K, V> extends ObjectObjectOrderedMap<K, V>
 		}
 		return h;
 	}
+	public void putAll(IdentityObjectOrderedMap<? extends K, ? extends V> map) {
+		if(size == 0){
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			ObjectList<? extends K> keys = map.keys;
+			K key;
+			for (int i = 0, kl = map.size; i < kl; i++) {
+				key = keys.get(i);
+				put(key, map.get(key));
+			}
+		}
+	}
+
+	private void resetTo(IdentityObjectOrderedMap<? extends K, ? extends V> map) {
+		if(loadFactor == map.loadFactor) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+
+			keyTable = Utilities.copyOf(map.keyTable, keyTable);
+			valueTable = Utilities.copyOf(map.valueTable, valueTable);
+			size = map.size;
+			keys.addAll(map.keys);
+		} else {
+			ensureCapacity(map.size);
+			ObjectList<? extends K> keys = map.keys;
+			K key;
+			for (int i = 0, n = keys.size(); i < n; i++) {
+				key = keys.get(i);
+				put(key, map.get(key));
+			}
+		}
+	}
 
 	/**
 	 * Constructs an empty map given the types as generic type arguments.

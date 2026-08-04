@@ -141,6 +141,46 @@ public class IdentityObjectMap<K, V> extends ObjectObjectMap<K, V> {
 		return h;
 	}
 
+	public void putAll(IdentityObjectMap<? extends K, ? extends V> map) {
+		if(size == 0){
+			resetTo(map);
+		} else {
+			ensureCapacity(map.size);
+			K[] keyTable = map.keyTable;
+			V[] valueTable = map.valueTable;
+			K key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != null) {
+					put(key, valueTable[i]);
+				}
+			}
+		}
+	}
+
+	private void resetTo(IdentityObjectMap<? extends K, ? extends V> map) {
+		if(loadFactor == map.loadFactor) {
+			this.threshold = map.threshold;
+			this.mask = map.mask;
+			this.shift = map.shift;
+
+			keyTable = Utilities.copyOf(map.keyTable, keyTable);
+			valueTable = Utilities.copyOf(map.valueTable, valueTable);
+			size = map.size;
+		} else {
+			ensureCapacity(map.size);
+			K[] keyTable = map.keyTable;
+			V[] valueTable = map.valueTable;
+			K key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != null) {
+					put(key, valueTable[i]);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Constructs an empty map given the types as generic type arguments.
 	 * This is usually less useful than just using the constructor, but can be handy

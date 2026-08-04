@@ -115,7 +115,7 @@ public class IdentitySet<T> extends ObjectSet<T> {
 			threshold = set.threshold;
 			mask = set.mask;
 			shift = set.shift;
-			hashMultiplier = set.hashMultiplier;
+
 			keyTable = Utilities.copyOf(set.keyTable, keyTable);
 			size = set.size;
 		} else {
