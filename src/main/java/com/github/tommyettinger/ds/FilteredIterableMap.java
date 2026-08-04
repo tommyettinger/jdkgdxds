@@ -316,6 +316,25 @@ public class FilteredIterableMap<K, I extends Iterable<K>, V> extends ObjectObje
 	}
 
 	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical.
+	 *
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
+	public void putAll(ObjectObjectMap<? extends I, ? extends V> map) {
+			ensureCapacity(map.size);
+			I[] keyTable = map.keyTable;
+			V[] valueTable = map.valueTable;
+			I key;
+			for (int i = 0, n = keyTable.length; i < n; i++) {
+				key = keyTable[i];
+				if (key != null) {
+					put(key, valueTable[i]);
+				}
+			}
+	}
+
+	/**
 	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this takes no
 	 * keys or values, and doesn't allocate an array from using varargs.
 	 *

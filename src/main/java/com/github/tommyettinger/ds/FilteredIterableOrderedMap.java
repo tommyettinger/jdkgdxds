@@ -478,6 +478,22 @@ public class FilteredIterableOrderedMap<K, I extends Iterable<K>, V> extends Obj
 	}
 
 	/**
+	 * Puts every key-value pair in the given map into this, with the values from the given map
+	 * overwriting the previous values if two keys are identical. This will put keys in the order of the given map.
+	 *
+	 * @param map a map with compatible key and value types; will not be modified
+	 */
+	public void putAll(ObjectObjectOrderedMap<? extends I, ? extends V> map) {
+		ensureCapacity(map.size);
+		ObjectList<? extends I> keys = map.keys;
+		I key;
+		for (int i = 0, kl = map.size; i < kl; i++) {
+			key = keys.get(i);
+			put(key, map.get(key));
+		}
+	}
+
+	/**
 	 * The same as {@link #with(ObjPredicate, ObjToSameFunction, Iterable, Object, Object...)}, except this takes no
 	 * keys or values, and doesn't allocate an array from using varargs.
 	 *
