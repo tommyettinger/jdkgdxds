@@ -23,13 +23,13 @@ further by tools like R8 or ProGuard that perform dead code elimination.
 [FastUtil Core](https://github.com/vigna/fastutil/), if you want! This library uses some code from FastUtil for sorting,
 and both projects are Apache-licensed. Note that FastUtil won't work on all platforms jdkgdxds targets, such as RoboVM.
 
-[JavaDocs are here.](https://tommyettinger.github.io/jdkgdxds/apidocs/)
+[Javadocs are here.](https://tommyettinger.github.io/jdkgdxds/apidocs/)
 
 # tl;dr Instructions
 
 Gradle dependency (for all platforms except GWT):
 ```
-api "com.github.tommyettinger:jdkgdxds:2.1.6"
+api "com.github.tommyettinger:jdkgdxds:2.1.7"
 ```
 
 For GWT, see "How do I get it?" below, or use TeaVM instead.
@@ -218,7 +218,7 @@ gdx-liftoff to create projects, or you are otherwise making a project yourself a
 
 Stable releases use the Gradle dependency:
 ```
-api "com.github.tommyettinger:jdkgdxds:2.1.6"
+api "com.github.tommyettinger:jdkgdxds:2.1.7"
 ```
 You can use `implementation` instead of `api` if you don't use the `java-library` plugin.
 It may not need the JitPack repository to be specified in some cases; if it can't be found, you may need the repository
@@ -236,7 +236,7 @@ If you have an HTML module, add:
 ```
 implementation "com.github.tommyettinger:funderby:0.1.2:sources"
 implementation "com.github.tommyettinger:digital:0.10.2:sources"
-implementation "com.github.tommyettinger:jdkgdxds:2.1.6:sources"
+implementation "com.github.tommyettinger:jdkgdxds:2.1.7:sources"
 ```
 to its
 dependencies, and in its `GdxDefinition.gwt.xml` (in the HTML module), add
@@ -295,7 +295,7 @@ replaced with other commits shown on JitPack. If you need a commit dependency on
 need to exclude the implicit dependency from jdkgdxds on digital and rely on your explicit version of digital:
 ```
 implementation "com.github.tommyettinger:digital:$digitalCommitHashVersion"
-implementation('com.github.tommyettinger:jdkgdxds:2.1.6'){
+implementation('com.github.tommyettinger:jdkgdxds:2.1.7'){
     exclude group: 'com.github.tommyettinger', module: 'digital'
 }
 ```
