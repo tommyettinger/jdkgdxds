@@ -1,3 +1,6 @@
+[2.1.8]
+- The hashMultiplier field (which really acts like a hash seed most of the time) now alternates between even and odd values as the set or map resizes. This allows more bits to change in colliding hash codes and hopefully help break up collisions when we resize. This changes the iteration order for unordered maps and sets, but not ordered ones.
+
 [2.1.7]
 - The addAll() method in hash-based sets and the putAll() method in hash-based maps now can take a faster path if the set or map is empty and another collection of the same type (and sometimes with other constraints, like the same load factor) is being entered into the set or map. This idea came from the Kotlin FastCollect library, which has excellent performance on this type of copying operation. No code from FastCollect is incorporated here; FastCollect uses Robin Hood hashing, while jdkgdxds uses linear probing, open addressed hash tables.
 
