@@ -121,7 +121,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		mask = tableSize - 1;
 		threshold = Math.min((int) (tableSize * (double) loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift] ^ shift;
 
 		keyTable = new int[tableSize];
 	}
@@ -475,7 +475,7 @@ public class IntSet implements PrimitiveSet.SetOfInt {
 		mask = newSize - 1;
 		threshold = Math.min((int) (newSize * (double) loadFactor + 1), mask);
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift] ^ shift;
 
 		int[] oldKeyTable = keyTable;
 

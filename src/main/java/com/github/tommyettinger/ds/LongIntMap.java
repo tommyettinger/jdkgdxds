@@ -139,7 +139,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift] ^ shift;
 
 		keyTable = new long[tableSize];
 		valueTable = new int[tableSize];
@@ -662,7 +662,7 @@ public class LongIntMap implements Iterable<LongIntMap.Entry> {
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift] ^ shift;
 
 		long[] oldKeyTable = keyTable;
 		int[] oldValueTable = valueTable;

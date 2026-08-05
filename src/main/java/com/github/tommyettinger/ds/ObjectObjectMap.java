@@ -136,7 +136,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		threshold = (int) (tableSize * loadFactor);
 		mask = tableSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift] ^ shift;
 		keyTable = (K[]) new Object[tableSize];
 		valueTable = (V[]) new Object[tableSize];
 	}
@@ -713,7 +713,7 @@ public class ObjectObjectMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V
 		threshold = (int) (newSize * loadFactor);
 		mask = newSize - 1;
 		shift = BitConversion.countLeadingZeros(mask) + 32;
-		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift];
+		hashMultiplier = Utilities.HASH_MULTIPLIERS[64 - shift] ^ shift;
 
 		K[] oldKeyTable = keyTable;
 		V[] oldValueTable = valueTable;
