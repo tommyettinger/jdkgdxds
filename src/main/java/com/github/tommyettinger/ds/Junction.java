@@ -97,7 +97,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
 	@Override
 	public final boolean equals(Object o) {
-		if (!(o instanceof Junction)) return Objects.equals(o, root);
+		if (!(o instanceof Junction)) return false;
 
 		Junction<?> junction = (Junction<?>) o;
 		return root.equals(junction.root);
@@ -209,7 +209,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
 		@Override
 		public final boolean equals(Object o) {
-			if (!(o instanceof Junction.Leaf)) return Objects.equals(o, item);
+			if (!(o instanceof Junction.Leaf)) return false;
 
 			Leaf<?> leaf = (Leaf<?>) o;
 			return Objects.equals(item, leaf.item);
@@ -310,10 +310,10 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 
 		@Override
 		public final boolean equals(Object o) {
-			if (!(o instanceof Junction.Not)) return !Objects.equals(o, term);
+			if (!(o instanceof Junction.Not)) return false;
 
 			Not<?> leaf = (Not<?>) o;
-			return !Objects.equals(term, leaf.term);
+			return Objects.equals(term, leaf.term);
 		}
 
 		@Override

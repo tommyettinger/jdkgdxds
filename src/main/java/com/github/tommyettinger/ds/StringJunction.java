@@ -93,7 +93,7 @@ public class StringJunction implements Term<String> {
 
 	@Override
 	public final boolean equals(Object o) {
-		if (!(o instanceof StringJunction)) return Objects.equals(o, root);
+		if (!(o instanceof StringJunction)) return false;
 
 		StringJunction junction = (StringJunction) o;
 		return root.equals(junction.root);
@@ -211,7 +211,7 @@ public class StringJunction implements Term<String> {
 
 		@Override
 		public final boolean equals(Object o) {
-			if (!(o instanceof StringJunction.Leaf)) return Objects.equals(o, item);
+			if (!(o instanceof StringJunction.Leaf)) return false;
 
 			Leaf leaf = (Leaf) o;
 			return Objects.equals(item, leaf.item);
@@ -320,10 +320,10 @@ public class StringJunction implements Term<String> {
 
 		@Override
 		public final boolean equals(Object o) {
-			if (!(o instanceof StringJunction.Not)) return !Objects.equals(o, term);
+			if (!(o instanceof StringJunction.Not)) return false;
 
-			Not leaf = (Not) o;
-			return !Objects.equals(term, leaf.term);
+			Not other = (Not) o;
+			return Objects.equals(term, other.term);
 		}
 
 		@Override
