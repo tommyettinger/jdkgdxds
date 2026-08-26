@@ -408,6 +408,7 @@ public class StringJunction implements Term<String> {
 				Term<String> child = contents.get(i);
 				if (child instanceof Any) {
 					contents.removeAt(i--);
+					n--;
 					contents.addAll(((Any) child).contents);
 				}
 			}
@@ -711,6 +712,7 @@ public class StringJunction implements Term<String> {
 				Term<String> child = contents.get(i);
 				if (child instanceof One) {
 					contents.removeAt(i--);
+					n--;
 					contents.addAll(((One) child).contents);
 				}
 			}

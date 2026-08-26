@@ -401,6 +401,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 				Term<T> child = contents.get(i);
 				if (child instanceof Any) {
 					contents.removeAt(i--);
+					n--;
 					contents.addAll(((Any<T>) child).contents);
 				}
 			}
@@ -688,6 +689,7 @@ public class Junction<T extends Comparable<T>> implements Term<T> {
 				Term<T> child = contents.get(i);
 				if (child instanceof One) {
 					contents.removeAt(i--);
+					n--;
 					contents.addAll(((One<T>) child).contents);
 				}
 			}
