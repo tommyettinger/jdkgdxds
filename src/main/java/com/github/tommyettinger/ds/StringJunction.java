@@ -560,6 +560,7 @@ public class StringJunction implements Term<String> {
 				Term<String> child = contents.get(i);
 				if (child instanceof All) {
 					contents.removeAt(i--);
+					n--;
 					contents.addAll(((All) child).contents);
 				}
 			}
