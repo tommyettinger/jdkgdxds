@@ -17,6 +17,7 @@
 package com.github.tommyettinger.ds;
 
 import com.github.tommyettinger.ds.Junction.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Map;
@@ -64,5 +65,20 @@ public class JunctionTest {
 		System.out.println("Alt:    " + alternate);
 		Junction<String> junction = Junction.parse(text);
 		System.out.println("Parsed: " + junction);
+	}
+
+	@Test
+	public void testCanonicalize() {
+		Term<String> manual = StringJunction.All.of(
+			StringJunction.Any.of(StringJunction.Leaf.of("a"), StringJunction.Leaf.of("c")),
+			StringJunction.All.of(
+				StringJunction.Leaf.of("a"),
+				StringJunction.Any.of(
+					StringJunction.Leaf.of("a"),
+					StringJunction.Leaf.of("b"))));
+		System.out.println(manual);
+		manual.canonicalize();
+		System.out.println(manual);
+		Assert.assertTrue(manual.match(ObjectList.with("a")));
 	}
 }
