@@ -1,3 +1,7 @@
+[2.1.9]
+- Some fixes were applied to Junction and StringJunction for some rare cases.
+- The dependency on digital is now 0.10.3, which only might have different output for one Interpolator type (the cubic Hermite spline, used by `smooth`). Everything else in that version is a new method, not a change.
+
 [2.1.8]
 - The hashMultiplier field (which really acts like a hash seed most of the time) now alternates between even and odd values as the set or map resizes. This allows more bits to change in colliding hash codes and hopefully help break up collisions when we resize. This changes the iteration order for unordered maps and sets, but not ordered ones.
 
