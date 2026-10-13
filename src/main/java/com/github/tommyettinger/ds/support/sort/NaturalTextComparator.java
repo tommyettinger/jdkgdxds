@@ -16,6 +16,8 @@
 
 package com.github.tommyettinger.ds.support.sort;
 
+import com.github.tommyettinger.ds.Casing;
+
 import java.util.Comparator;
 
 /**
@@ -103,8 +105,8 @@ public class NaturalTextComparator implements Comparator<CharSequence> {
 	}
 
 	private int compareChars(char c1, char c2) {
-		char u1 = Character.toUpperCase(c1);
-		char u2 = Character.toUpperCase(c2);
+		char u1 = Casing.caseUp(c1);
+		char u2 = Casing.caseUp(c2);
 		if (caseSensitive) {
 			if ((u1 == c1) && (u2 != c2)) { // c1 is a symbol or capital letter, and c2 is not
 				return Integer.MIN_VALUE;
