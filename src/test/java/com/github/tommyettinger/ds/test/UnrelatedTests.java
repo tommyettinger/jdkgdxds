@@ -36,13 +36,16 @@ public class UnrelatedTests {
 //        System.out.println(Base.BASE16.unsigned(depositPrecomputed((1L << 57) - 1L, -255L)));
 
 		// 16777216 unique results in input range up to (1<<24) inputs, all odd
-		// even with mask=1 !
+		// even with threshold=1 !
 		// 536870912 unique results in input range up to (1<<29) inputs, all odd
-		// even with mask=4 !
-		// but, with mask=1, there is a single collision at this size.
+		// even with threshold=4 !
+		// but, with threshold=1, there is a single collision at this size.
 		// 268435456 unique results in input range up to (1<<28) inputs, all odd
-		// even with mask=1 !
-		testUniquenessFixGamma();
+		// even with threshold=1 !
+//		testUniquenessFixGamma();
+		// 268435456 unique results in input range up to (1<<28) inputs, all odd
+		// even with threshold=1 !
+		testUniquenessFixGammaStrict();
 	}
 
 	public static long fixGamma(long gamma, int threshold) {
@@ -57,11 +60,36 @@ public class UnrelatedTests {
 		return gamma;
 	}
 
+	public static long fixGammaStrict(long gamma, int threshold) {
+		// forces LSB to 1 and MSB to NOT its neighbor, the second-most-significant bit.
+		gamma = (gamma & 0x7FFFFFFFFFFFFFFFL) | (~(gamma << 1) & 0x8000000000000001L);
+		long inverse, add = 0L;
+		while (Math.abs(Long.bitCount(gamma) - 32) > threshold
+			|| Math.abs(Long.bitCount(gamma ^ gamma >>> 1) - 32) > threshold
+			|| Math.abs(Long.bitCount(inverse = MathTools.modularMultiplicativeInverse(gamma)) - 32) > threshold
+			|| Math.abs(Long.bitCount(inverse ^ inverse >>> 1) - 32) > threshold) {
+			gamma = gamma * 0xD1342543DE82EF95L + (add += 2);
+			gamma = (gamma & 0x7FFFFFFFFFFFFFFFL) | (~(gamma << 1) & 0x8000000000000001L);
+		}
+		return gamma;
+	}
+
 	public static void testUniquenessFixGamma() {
+		final long n = 1L << 29;
+		LongSet all = new LongSet((int)(n >>> 1), 0.75f);
+		for (long i = 1; i < n; i += 2L) {
+			if (!all.add(fixGamma(i, 1))) {
+				System.out.println("Collision at size " + all.size() + " !");
+			}
+		}
+		System.out.println(all.size());
+	}
+
+	public static void testUniquenessFixGammaStrict() {
 		LongSet all = new LongSet(1 << 28, 0.75f);
 		final long n = 1L << 29;
 		for (long i = 1; i < n; i += 2L) {
-			if (!all.add(fixGamma(i, 1))) {
+			if (!all.add(fixGammaStrict(i, 1))) {
 				System.out.println("Collision at size " + all.size() + " !");
 			}
 		}
