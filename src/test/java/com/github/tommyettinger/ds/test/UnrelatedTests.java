@@ -43,7 +43,7 @@ public class UnrelatedTests {
 		// 268435456 unique results in input range up to (1<<28) inputs, all odd
 		// even with threshold=1 !
 //		testUniquenessFixGamma();
-		// 268435456 unique results in input range up to (1<<28) inputs, all odd
+		// 536870912 unique results in input range up to (1<<29) inputs, all odd
 		// even with threshold=1 !
 		testUniquenessFixGammaStrict();
 	}
@@ -86,8 +86,8 @@ public class UnrelatedTests {
 	}
 
 	public static void testUniquenessFixGammaStrict() {
-		LongSet all = new LongSet(1 << 28, 0.75f);
-		final long n = 1L << 29;
+		final long n = 1L << 30;
+		LongSet all = new LongSet((int)(n >>> 1), 0.75f);
 		for (long i = 1; i < n; i += 2L) {
 			if (!all.add(fixGammaStrict(i, 1))) {
 				System.out.println("Collision at size " + all.size() + " !");
